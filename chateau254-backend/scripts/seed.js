@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs');
 const { pool, closeDatabase } = require('../config/db');
+const menuItems = require('../../chateau245-direct/src/components/data/menu.json');
+const wines = require('../../chateau245-direct/src/components/data/luxury_wine_list.json');
 
 const admin = { name: 'Chateau Admin', email: 'admin@chateau254.com', password: 'chateau254@1234' };
 const riders = [
@@ -34,6 +36,7 @@ const seed = async () => {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
+
     const adminUser = await upsertUser(client, admin, 'admin');
     for (const rider of riders) {
       const riderUser = await upsertUser(client, rider, 'rider');
@@ -44,8 +47,39 @@ const seed = async () => {
         [riderUser.id, rider.name, rider.phone],
       );
     }
+
+    for (const item of menuItems) {
+      await client.query(
+        `INSERT INTO menu_items (id, name, description, price, category, image_url)
+         VALUES (gen_random_uuid(), $1, $2, $3, $4, $5)
+         ON CONFLICT (name) DO UPDATE SET price = EXCLUDED.price, image_url = EXCLUDED.image_url, updated_at = NOW()`,
+        [item.name, item.description, item.price, item.category, item.image],
+      );
+    }
+
+    for (const wine of wines) {
+      await client.query(
+        `INSERT INTO menu_items (name, description, price, category, image_url, wine_type, region, grape, tasting_notes)
+         VALUES ($1, $2, $3, 'Wine', $4, $5, $6, $7, $8)
+         ON CONFLICT (name) DO UPDATE SET
+           price = EXCLUDED.price, image_url = EXCLUDED.image_url,
+           wine_type = EXCLUDED.wine_type, region = EXCLUDED.region,
+           grape = EXCLUDED.grape, tasting_notes = EXCLUDED.tasting_notes, updated_at = NOW()`,
+        [
+          wine.name,
+          wine.notes || `${wine.type} from ${wine.region}`,
+          6500 + wines.indexOf(wine) * 750,
+          wine.image,
+          wine.type,
+          wine.region,
+          wine.grape,
+          wine.notes,
+        ],
+      );
+    }
+
     await client.query('COMMIT');
-    console.log(`Seeded admin ${adminUser.email} and ${riders.length} riders.`);
+    console.log(`Seeded admin ${adminUser.email}, ${riders.length} riders, ${menuItems.length} menu items, ${wines.length} wines.`);
   } catch (error) {
     await client.query('ROLLBACK');
     throw error;

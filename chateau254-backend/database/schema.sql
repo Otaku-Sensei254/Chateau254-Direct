@@ -40,9 +40,10 @@ CREATE TABLE IF NOT EXISTS user_roles (
 );
 
 CREATE TABLE IF NOT EXISTS menu_items (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(), name VARCHAR(160) NOT NULL,
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(), name VARCHAR(160) NOT NULL UNIQUE,
   description TEXT NOT NULL DEFAULT '', price NUMERIC(12, 2) NOT NULL CHECK (price >= 0),
   category VARCHAR(40) NOT NULL, image_url TEXT, is_available BOOLEAN NOT NULL DEFAULT TRUE,
+  wine_type VARCHAR(80), region VARCHAR(160), grape VARCHAR(160), tasting_notes TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 CREATE TABLE IF NOT EXISTS riders (
@@ -64,6 +65,17 @@ CREATE TABLE IF NOT EXISTS order_items (
   menu_item_id UUID NOT NULL REFERENCES menu_items(id), quantity INTEGER NOT NULL CHECK (quantity > 0),
   unit_price NUMERIC(12, 2) NOT NULL CHECK (unit_price >= 0)
 );
+
+ALTER TABLE menu_items ADD COLUMN IF NOT EXISTS wine_type VARCHAR(80);
+ALTER TABLE menu_items ADD COLUMN IF NOT EXISTS region VARCHAR(160);
+ALTER TABLE menu_items ADD COLUMN IF NOT EXISTS grape VARCHAR(160);
+ALTER TABLE menu_items ADD COLUMN IF NOT EXISTS tasting_notes TEXT;
+
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'menu_items_name_key') THEN
+    ALTER TABLE menu_items ADD CONSTRAINT menu_items_name_key UNIQUE (name);
+  END IF;
+END $$;
 
 CREATE INDEX IF NOT EXISTS orders_status_idx ON orders(status);
 CREATE INDEX IF NOT EXISTS orders_user_id_idx ON orders(user_id);
