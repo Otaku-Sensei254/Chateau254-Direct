@@ -1,0 +1,9 @@
+[
+	{"id":"burger","name":"Château Burger","description":"Beef patty, caramelised onions, tomato, house sauce","price":1450,"category":"Meals","image":"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=900&q=80"},
+	{"id":"lamb","name":"Grilled Lamb Chops","description":"Rosemary lamb with seasonal greens and jus","price":2350,"category":"Meals","image":"https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=900&q=80"},
+	{"id":"salad","name":"Caesar Salad","description":"Crisp romaine, parmesan, croutons, caesar dressing","price":950,"category":"Meals","image":"https://images.unsplash.com/photo-1546793665-c74683f339c1?auto=format&fit=crop&w=900&q=80"},
+	{"id":"pizza","name":"Margherita Pizza","description":"San Marzano tomato, mozzarella, fresh basil","price":1300,"category":"Meals","image":"https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=900&q=80"},
+	{"id":"fish","name":"Pan Seared Tilapia","description":"Garden vegetables, lemon butter and herbs","price":1850,"category":"Meals","image":"https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=900&q=80"},
+	{"id":"cake","name":"Chocolate Fondant","description":"Warm chocolate centre with vanilla ice cream","price":750,"category":"Desserts","image":"https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=900&q=80"},
+	{"id":"juice","name":"Passion Spritz","description":"Fresh passion fruit, citrus and sparkling water","price":550,"category":"Drinks","image":"https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=900&q=80"}
+]

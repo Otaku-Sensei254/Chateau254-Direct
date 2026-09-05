@@ -1,0 +1,6 @@
+import { FiArrowRight, FiMinus, FiPlus, FiShoppingBag } from 'react-icons/fi';
+import { Summary } from './shared';
+
+const Cart = ({ cart, subtotal, delivery, changeQuantity, onCheckout, onMenu }) => { return <main className="content-page cart-page"><div className="page-title"><p className="eyebrow">Almost there</p><h1>Your cart</h1><span>{cart.length} items selected</span></div>{cart.length ? <><div className="cart-list">{cart.map((item) => <div className="cart-item" key={item.id}><div className="thumb" style={{ backgroundImage: `url(${item.image})` }} /><div className="cart-item-copy"><h2>{item.name}</h2><span>KES {item.price.toLocaleString()}</span></div><div className="quantity"><button onClick={() => changeQuantity(item.id, -1)}><FiMinus /></button><b>{item.quantity}</b><button onClick={() => changeQuantity(item.id, 1)}><FiPlus /></button></div></div>)}</div><Summary subtotal={subtotal} delivery={delivery} /><button className="primary-button full" onClick={onCheckout}>Checkout <FiArrowRight /></button></> : <div className="empty-state"><FiShoppingBag /><p>Your cart is waiting for something delicious.</p><button className="primary-button" onClick={onMenu}>Browse menu</button></div>}</main>; };
+
+export default Cart;

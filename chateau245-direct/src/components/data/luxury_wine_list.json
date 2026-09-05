@@ -1,0 +1,146 @@
+ [
+  {
+    "name": "Dom Pérignon",
+    "type": "Champagne",
+    "region": "Champagne, France",
+    "grape": "Chardonnay, Pinot Noir",
+    "notes": "Prestige cuvée, crisp minerality, toasted brioche and citrus",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0OHuRXSWL3z0jFMYlQN4C_w3Az7ieCI1HCCUYEhyWctMpuCyF5GAHE64&s=10"
+  },
+  {
+    "name": "Krug Grande Cuvée",
+    "type": "Champagne",
+    "region": "Champagne, France",
+    "grape": "Chardonnay, Pinot Noir, Pinot Meunier",
+    "notes": "Rich, complex, multi-vintage blend with nutty depth",
+    "image": "https://ik.imagekit.io/drinksvine/products/krug-grande-cuvee.webp"
+  },
+  {
+    "name": "Château Margaux",
+    "type": "Red - Bordeaux Blend",
+    "region": "Margaux, Bordeaux, France",
+    "grape": "Cabernet Sauvignon, Merlot, Petit Verdot, Cabernet Franc",
+    "notes": "Elegant, silky tannins, floral and cedar notes",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHs0yVN6uSQeQL1S_OvDdbEzPEiV1jJ8ReASwbASBRGg&s=10"
+  },
+  {
+    "name": "Château Latour",
+    "type": "Red - Bordeaux Blend",
+    "region": "Pauillac, Bordeaux, France",
+    "grape": "Cabernet Sauvignon dominant",
+    "notes": "Powerful structure, dark fruit, long aging potential",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqtxBxJQLbaAFKsreVxY9g1r0AFhoiZO3SwX0s86SnRQ&s=10"
+  },
+  {
+    "name": "Château Mouton Rothschild",
+    "type": "Red - Bordeaux Blend",
+    "region": "Pauillac, Bordeaux, France",
+    "grape": "Cabernet Sauvignon dominant",
+    "notes": "Bold, opulent, known for artist-designed labels",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSS0VcXCpfC23nsjtSB0gLmtHgBTqpdN56dORs8Gmf58g&s=10"
+  },
+  {
+    "name": "Screaming Eagle",
+    "type": "Red - Cabernet Sauvignon",
+    "region": "Napa Valley, USA",
+    "grape": "Cabernet Sauvignon",
+    "notes": "Cult wine, intensely concentrated, extremely limited production",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlxHZPXJDp1ZGexVnlxHIrO8imL3Ajst869j7kl9kLNQ&s=10"
+  },
+  {
+    "name": "Opus One",
+    "type": "Red - Bordeaux Blend",
+    "region": "Napa Valley, USA",
+    "grape": "Cabernet Sauvignon, Merlot, Cabernet Franc",
+    "notes": "Joint venture prestige wine, polished and refined",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFGdnB0QYVTnLRmZuQkTKH4tXG93YrdTm95XDPazrCEQ&s=10"
+  },
+  {
+    "name": "Sassicaia",
+    "type": "Red - Super Tuscan",
+    "region": "Bolgheri, Tuscany, Italy",
+    "grape": "Cabernet Sauvignon, Cabernet Franc",
+    "notes": "Pioneer of the Super Tuscan movement, structured and aromatic",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSe1EnQBtXtODcQdG_dtqtMAwydlPdOFvXGO1dYuvOQmA&s=10"
+  },
+  {
+    "name": "Barolo Riserva (e.g. Giacomo Conterno Monfortino)",
+    "type": "Red - Nebbiolo",
+    "region": "Piedmont, Italy",
+    "grape": "Nebbiolo",
+    "notes": "'King of wines,' tannic, floral, tar and rose aromas",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXmPLVoCOfJUC4SPeKd_1KES2AodddxfXM7GlBjhOgfA&s=10"
+  },
+  {
+    "name": "Romanée-Conti",
+    "type": "Red - Burgundy",
+    "region": "Vosne-Romanée, Burgundy, France",
+    "grape": "Pinot Noir",
+    "notes": "Among the rarest and most sought-after wines in the world",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXfvv4_q380Bmk4M4shIm2HY168gKWWoIuHd1YlYBg4g&s=10"
+  },
+  {
+    "name": "Château d'Yquem",
+    "type": "Dessert Wine - Sauternes",
+    "region": "Sauternes, Bordeaux, France",
+    "grape": "Sémillon, Sauvignon Blanc",
+    "notes": "Legendary sweet wine, honeyed apricot, botrytis complexity",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRf8t2eG6VTaxfaaTRB2mhSE1EgeAlQRhBzQSFKi8rTIQ&s=10"
+  },
+  {
+    "name": "Montrachet Grand Cru",
+    "type": "White - Burgundy",
+    "region": "Burgundy, France",
+    "grape": "Chardonnay",
+    "notes": "Considered the pinnacle of white Burgundy, rich and mineral-driven",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFvhxYoStUBzuH0j8o4ukJResEZh1-SRJGjCZ6cEbudQ&s=10"
+  },
+  {
+    "name": "Cristal by Louis Roederer",
+    "type": "Champagne",
+    "region": "Champagne, France",
+    "grape": "Chardonnay, Pinot Noir",
+    "notes": "Iconic clear-bottle prestige cuvée, elegant and vibrant",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKvTurx1-IQSRDaCsKVjyY4ryoFaUxzgGYf2-L3LRhmA&s=10"
+  },
+  {
+    "name": "Vega Sicilia Único",
+    "type": "Red - Tempranillo Blend",
+    "region": "Ribera del Duero, Spain",
+    "grape": "Tempranillo, Cabernet Sauvignon",
+    "notes": "Spain's most prestigious wine, aged for a decade before release",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPE9Kdq16mxJt598GvkJYK4g1nvGq1RNahnMACAXOQlQ&s=10"
+  },
+  {
+    "name": "Penfolds Grange",
+    "type": "Red - Shiraz",
+    "region": "South Australia",
+    "grape": "Shiraz",
+    "notes": "Australia's most iconic wine, powerful and richly fruited",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScDI1wqvUt2zRm49m7hv-7z1Sd6fKEke4ewGQOu1P6kQ&s=10"
+  },
+  {
+    "name": "Taylor Fladgate Vintage Port",
+    "type": "Fortified Wine - Port",
+    "region": "Douro Valley, Portugal",
+    "grape": "Touriga Nacional and blends",
+    "notes": "Deep, sweet, and age-worthy, classic after-dinner pour",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJoNsfcR-j9tt8yisksI8RnCzq6Sw9FL2pDo8z0HGG8Q&s=10"
+  },
+  {
+    "name": "Chablis Grand Cru Les Clos",
+    "type": "White - Chardonnay",
+    "region": "Chablis, Burgundy, France",
+    "grape": "Chardonnay",
+    "notes": "Steely, mineral-driven, unoaked or lightly oaked elegance",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQB7-AVg3Zn9ucsvSZRloiTxoe_KGgy0Tdh8veWwO0RQ&s=10"
+  },
+  {
+    "name": "Amarone della Valpolicella",
+    "type": "Red - Blend",
+    "region": "Veneto, Italy",
+    "grape": "Corvina, Rondinella, Molinara",
+    "notes": "Made from dried grapes, rich, velvety, high alcohol",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROyjgqTYKHwQUOD5zNH5WWZX6kFTWjhB_FdPe8SR0fkQ&s=10"
+  }
+]
