@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import { FiBarChart2, FiBell, FiChevronDown, FiEdit2, FiGift, FiGrid, FiLogOut, FiMenu, FiPackage, FiPlus, FiSave, FiSettings, FiShoppingBag, FiTrash2, FiTruck, FiUsers, FiX, FiRefreshCw } from 'react-icons/fi';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { FiBarChart2, FiChevronDown, FiEdit2, FiGift, FiGrid, FiLogOut, FiMenu, FiPackage, FiPlus, FiSave, FiSettings, FiShoppingBag, FiTrash2, FiTruck, FiUsers, FiX, FiRefreshCw } from 'react-icons/fi';
 import { Brand } from '../shared';
 
 const AdminDashboard = ({ user, token, api, onLogout }) => {
@@ -15,35 +15,35 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
   const [error, setError] = useState(null);
   const [updatingOrder, setUpdatingOrder] = useState(null);
 
-  const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
+  const headers = useMemo(() => ({ Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }), [token]);
 
   const fetchOrders = useCallback(async () => {
     const res = await fetch(`${api}/orders`, { headers });
     if (!res.ok) throw new Error('Failed to load orders');
     const data = await res.json();
     setOrders(data.orders || []);
-  }, [api, token]);
+  }, [api, headers]);
 
   const fetchMenu = useCallback(async () => {
     const res = await fetch(`${api}/menu?all=true`, { headers });
     if (!res.ok) throw new Error('Failed to load menu');
     const data = await res.json();
     setMenu(data.items || []);
-  }, [api, token]);
+  }, [api, headers]);
 
   const fetchCustomers = useCallback(async () => {
     const res = await fetch(`${api}/customers`, { headers });
     if (!res.ok) throw new Error('Failed to load customers');
     const data = await res.json();
     setCustomers(data.customers || []);
-  }, [api, token]);
+  }, [api, headers]);
 
   const fetchRiders = useCallback(async () => {
     const res = await fetch(`${api}/riders`, { headers });
     if (!res.ok) throw new Error('Failed to load riders');
     const data = await res.json();
     setRiders(data.riders || []);
-  }, [api, token]);
+  }, [api, headers]);
 
   const loadAll = useCallback(async () => {
     setLoading(true);

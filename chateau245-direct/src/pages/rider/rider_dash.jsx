@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import { FiCheck, FiClock, FiDollarSign, FiGrid, FiHelpCircle, FiList, FiLogOut, FiMapPin, FiMenu, FiNavigation, FiPhone, FiShoppingBag, FiTruck, FiX, FiRefreshCw } from 'react-icons/fi';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { FiCheck, FiClock, FiDollarSign, FiGrid, FiList, FiLogOut, FiMapPin, FiMenu, FiPhone, FiShoppingBag, FiTruck, FiX, FiRefreshCw } from 'react-icons/fi';
 
 const RiderDashboard = ({ user, token, api, onLogout }) => {
   const [rider, setRider] = useState(null);
@@ -12,7 +12,7 @@ const RiderDashboard = ({ user, token, api, onLogout }) => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [error, setError] = useState(null);
 
-  const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
+  const headers = useMemo(() => ({ Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }), [token]);
 
   const fetchRiderProfile = useCallback(async () => {
     const res = await fetch(`${api}/riders/me`, { headers });
@@ -20,7 +20,7 @@ const RiderDashboard = ({ user, token, api, onLogout }) => {
     const data = await res.json();
     setRider(data.rider);
     return data.rider;
-  }, [api, token]);
+  }, [api, headers]);
 
   const fetchActiveOrders = useCallback(async () => {
     const res = await fetch(`${api}/riders/me/orders`, { headers });
@@ -31,14 +31,14 @@ const RiderDashboard = ({ user, token, api, onLogout }) => {
       if (prev && data.orders?.some((o) => o.id === prev)) return prev;
       return data.orders?.[0]?.id || null;
     });
-  }, [api, token]);
+  }, [api, headers]);
 
   const fetchCompletedOrders = useCallback(async () => {
     const res = await fetch(`${api}/riders/me/orders/completed`, { headers });
     if (!res.ok) throw new Error('Failed to load history');
     const data = await res.json();
     setCompleted(data.orders || []);
-  }, [api, token]);
+  }, [api, headers]);
 
   const loadAll = useCallback(async () => {
     setLoading(true);
