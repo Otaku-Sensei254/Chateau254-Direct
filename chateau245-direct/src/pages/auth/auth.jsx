@@ -44,7 +44,7 @@ const Auth = ({ onSuccess, onBack }) => {
       </div>
       <div className="auth-divider"><span>or continue with email</span></div>
       <form className="auth-form" onSubmit={handleSubmit}>
-        {mode === 'signup' && <label><span>Full name</span><div className="auth-input"><FiUser /><input name="name" type="text" placeholder="John Mwangi" required /></div></label>}
+        {mode === 'signup' && <label><span>Full name</span><div className="auth-input"><FiUser /><input name="name" type="text" placeholder="Your Name" required /></div></label>}
         <label><span>Email address</span><div className="auth-input"><FiMail /><input name="email" type="email" placeholder="you@example.com" required /></div></label>
         <label><span>Password</span><div className="auth-input"><FiLock /><input name="password" type="password" placeholder="Enter your password" minLength="6" required /></div></label>
         {mode === 'signin' && <button className="forgot-password" type="button">Forgot password?</button>}
