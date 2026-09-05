@@ -6,7 +6,9 @@ const { authenticate, requireRole } = require('../middleware/auth.middleware');
 const router = express.Router();
 
 router.get('/', asyncHandler(async (req, res) => {
-  const result = await query('SELECT id, name, description, price, category, image_url AS "image", is_available AS "isAvailable", wine_type AS "wineType", region, grape, tasting_notes AS "tastingNotes" FROM menu_items WHERE is_available = TRUE ORDER BY category, name');
+  const showAll = req.query.all === 'true';
+  const where = showAll ? '' : ' WHERE is_available = TRUE';
+  const result = await query(`SELECT id, name, description, price, category, image_url AS "image", is_available AS "availability", wine_type AS "wineType", region, grape, tasting_notes AS "tastingNotes" FROM menu_items${where} ORDER BY category, name`);
   res.json({ items: result.rows });
 }));
 

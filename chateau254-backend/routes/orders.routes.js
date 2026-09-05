@@ -7,17 +7,26 @@ const router = express.Router();
 
 const orderQuery = `
     SELECT o.*, u.full_name AS customer_name, u.email AS customer_email,
-      r.full_name AS rider_name, r.phone AS rider_phone
+      r.full_name AS rider_name, r.phone AS rider_phone,
+      (SELECT COUNT(*) FROM order_items oi WHERE oi.order_id = o.id) AS items_count
   FROM orders o
-  JOIN chateau_users u ON u.id = o.user_id
+  JOIN users u ON u.id = o.user_id
   LEFT JOIN riders r ON r.id = o.rider_id
 `;
 
 router.get('/', authenticate, asyncHandler(async (req, res) => {
+  const isAdmin = req.user.roles?.includes('admin') || req.user.role === 'admin';
   const values = [];
-  const statusFilter = req.query.status;
-  const where = statusFilter ? ' WHERE o.status = $1' : '';
-  if (statusFilter) values.push(statusFilter);
+  let where = '';
+
+  if (!isAdmin) {
+    where = ' WHERE o.user_id = $1';
+    values.push(req.user.id);
+  } else if (req.query.status) {
+    where = ' WHERE o.status = $1';
+    values.push(req.query.status);
+  }
+
   const result = await query(`${orderQuery}${where} ORDER BY o.created_at DESC`, values);
   res.json({ orders: result.rows });
 }));
@@ -25,7 +34,16 @@ router.get('/', authenticate, asyncHandler(async (req, res) => {
 router.get('/:id', authenticate, asyncHandler(async (req, res) => {
   const result = await query(`${orderQuery} WHERE o.id = $1`, [req.params.id]);
   if (!result.rowCount) return res.status(404).json({ error: 'Order not found' });
-  res.json({ order: result.rows[0] });
+
+  const items = await query(
+    `SELECT oi.*, mi.name AS item_name, mi.image_url
+     FROM order_items oi
+     JOIN menu_items mi ON mi.id = oi.menu_item_id
+     WHERE oi.order_id = $1`,
+    [req.params.id],
+  );
+
+  res.json({ order: { ...result.rows[0], items: items.rows } });
 }));
 
 router.post('/', authenticate, requireRole('customer', 'admin'), asyncHandler(async (req, res) => {

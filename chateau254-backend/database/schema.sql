@@ -20,6 +20,17 @@ ALTER TABLE chateau_users ADD COLUMN IF NOT EXISTS loyalty_points INTEGER NOT NU
 ALTER TABLE chateau_users ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
 ALTER TABLE chateau_users DROP COLUMN IF EXISTS role;
 
+CREATE TABLE IF NOT EXISTS users (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  full_name VARCHAR(120) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password_hash TEXT,
+  phone VARCHAR(30),
+  loyalty_points INTEGER NOT NULL DEFAULT 0 CHECK (loyalty_points >= 0),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+ALTER TABLE users ADD COLUMN IF NOT EXISTS phone VARCHAR(30);
+
 CREATE TABLE IF NOT EXISTS roles (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(), name VARCHAR(40) UNIQUE NOT NULL,
   description TEXT NOT NULL DEFAULT '', created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -53,13 +64,36 @@ CREATE TABLE IF NOT EXISTS riders (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 ALTER TABLE riders ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES chateau_users(id) ON DELETE CASCADE;
+
 CREATE TABLE IF NOT EXISTS orders (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(), user_id UUID NOT NULL REFERENCES chateau_users(id),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id),
   rider_id UUID REFERENCES riders(id) ON DELETE SET NULL,
   status VARCHAR(30) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'preparing', 'out_for_delivery', 'completed', 'cancelled')),
   delivery_address TEXT NOT NULL, total_amount NUMERIC(12, 2) NOT NULL CHECK (total_amount >= 0),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+DO $$ DECLARE
+  v_conname TEXT;
+BEGIN
+  SELECT c.conname INTO v_conname FROM pg_constraint c
+  WHERE c.conrelid = 'orders'::regclass AND c.contype = 'f'
+  AND pg_get_constraintdef(c.oid) LIKE '%chateau_users%';
+  IF v_conname IS NOT NULL THEN
+    EXECUTE 'ALTER TABLE orders DROP CONSTRAINT ' || quote_ident(v_conname);
+  END IF;
+END $$;
+
+DO $$ BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint c WHERE c.conrelid = 'orders'::regclass AND c.contype = 'f'
+    AND pg_get_constraintdef(c.oid) LIKE '%users(id)%' AND pg_get_constraintdef(c.oid) NOT LIKE '%chateau_users%'
+  ) THEN
+    ALTER TABLE orders ADD CONSTRAINT orders_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id);
+  END IF;
+END $$;
+
 CREATE TABLE IF NOT EXISTS order_items (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(), order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
   menu_item_id UUID NOT NULL REFERENCES menu_items(id), quantity INTEGER NOT NULL CHECK (quantity > 0),
@@ -82,6 +116,7 @@ CREATE INDEX IF NOT EXISTS orders_user_id_idx ON orders(user_id);
 CREATE INDEX IF NOT EXISTS orders_rider_id_idx ON orders(rider_id);
 CREATE INDEX IF NOT EXISTS menu_items_category_idx ON menu_items(category);
 CREATE INDEX IF NOT EXISTS user_roles_role_id_idx ON user_roles(role_id);
+CREATE INDEX IF NOT EXISTS users_email_idx ON users(email);
 
 INSERT INTO roles (name, description) VALUES
   ('admin', 'Full access to Chateau254 administration'),
@@ -106,7 +141,3 @@ INSERT INTO role_permissions (role_id, permission_id)
 SELECT r.id, p.id FROM roles r JOIN permissions p ON p.name IN ('dashboard.view','orders.view','orders.update_status','profile.manage') WHERE r.name = 'rider' ON CONFLICT DO NOTHING;
 INSERT INTO role_permissions (role_id, permission_id)
 SELECT r.id, p.id FROM roles r JOIN permissions p ON p.name IN ('orders.create','menu.view','profile.manage') WHERE r.name = 'customer' ON CONFLICT DO NOTHING;
-
-INSERT INTO user_roles (user_id, role_id)
-SELECT u.id, r.id FROM chateau_users u JOIN roles r ON r.name = 'customer'
-WHERE NOT EXISTS (SELECT 1 FROM user_roles ur WHERE ur.user_id = u.id);

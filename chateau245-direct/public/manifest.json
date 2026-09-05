@@ -1,25 +1,20 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Château254",
+  "name": "Château254 Restaurant & Wine Cellar",
+  "description": "Order great food and fine wine from Château254, Nairobi's restaurant and wine cellar.",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
-    },
-    {
-      "src": "logo192.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "logo512.png",
-      "type": "image/png",
-      "sizes": "512x512"
+      "src": "chateau254.jpg",
+      "type": "image/jpeg",
+      "sizes": "150x150",
+      "purpose": "any maskable"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "orientation": "portrait-primary",
+  "theme_color": "#761329",
+  "background_color": "#f7f3ef",
+  "categories": ["food", "shopping", "lifestyle"]
 }
