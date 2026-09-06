@@ -30,7 +30,8 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
     on('order:status_changed', handleOrderStatusChanged);
     on('rider:location_updated', handleRiderLocation);
     return () => { leaveRoom('admin'); off('order:created', handleOrderCreated); off('order:status_changed', handleOrderStatusChanged); off('rider:location_updated', handleRiderLocation); };
-  }, [isConnected, joinRoom, leaveRoom, on, off]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isConnected]);
 
   const fetchOrders = useCallback(async () => {
     const res = await fetch(`${api}/orders`, { headers });

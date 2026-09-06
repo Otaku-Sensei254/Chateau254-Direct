@@ -46,7 +46,7 @@ const AdminFleetMap = ({ token, api }) => {
   const [riders, setRiders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [lastUpdated, setLastUpdated] = useState(null);
+
   const { isConnected, joinRoom, leaveRoom, on, off } = useSocket();
 
   const fetchRiderLocations = useCallback(async () => {
@@ -68,7 +68,6 @@ const AdminFleetMap = ({ token, api }) => {
 
       const data = await response.json();
       setRiders(data.locations || []);
-      setLastUpdated(new Date());
     } catch (err) {
       console.error('Failed to fetch rider locations:', err);
       setError(err.message);

@@ -23,7 +23,7 @@ const RiderDashboard = ({ user, token, api, onLogout }) => {
 
   const headers = useMemo(() => ({ Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }), [token]);
   const { isConnected, joinRoom, leaveRoom, on, off } = useSocket();
-  const { location: riderLocation, error: gpsError, isTracking, accuracy } = useLocationTracker(api, token, rider?.status === 'online');
+  const { location: riderLocation, error: gpsError, accuracy } = useLocationTracker(api, token, rider?.status === 'online');
 
   const fetchRiderProfile = useCallback(async () => {
     const res = await fetch(`${api}/riders/me`, { headers });
@@ -76,7 +76,8 @@ const RiderDashboard = ({ user, token, api, onLogout }) => {
     on('order:assigned', handleOrderAssigned);
     on('order:status_changed', handleOrderStatusChanged);
     return () => { leaveRoom(room); off('order:assigned', handleOrderAssigned); off('order:status_changed', handleOrderStatusChanged); };
-  }, [isConnected, rider?.id, joinRoom, leaveRoom, on, off]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isConnected, rider?.id]);
 
   const geocodeCustomerAddresses = useCallback(async () => {
     const locations = {};
@@ -93,7 +94,7 @@ const RiderDashboard = ({ user, token, api, onLogout }) => {
     }
   }, [deliveries, customerLocations]);
 
-  useEffect(() => { if (deliveries.length > 0) geocodeCustomerAddresses(); }, [deliveries.length]);
+  useEffect(() => { if (deliveries.length > 0) geocodeCustomerAddresses(); }, [deliveries.length, geocodeCustomerAddresses]);
 
   const fetchRoute = useCallback(async (orderId) => {
     if (!orderId || !riderLocation) return;
@@ -119,6 +120,7 @@ const RiderDashboard = ({ user, token, api, onLogout }) => {
     if (selectedId && activeTab === 'deliveries') {
       fetchRoute(selectedId);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId, activeTab, riderLocation?.latitude]);
 
   const updateStatus = async (orderId, newStatus) => {

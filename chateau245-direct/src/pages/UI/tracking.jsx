@@ -9,14 +9,12 @@ const Tracking = ({ order, token, api, onMenu }) => {
   const [customerLocation, setCustomerLocation] = useState(null);
   const [routeInfo, setRouteInfo] = useState(null);
   const [currentOrder, setCurrentOrder] = useState(order);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { isConnected, joinRoom, leaveRoom, on, off } = useSocket();
 
   const fetchOrderRoute = useCallback(async () => {
     const o = currentOrder;
     if (!o?.id || !token) return;
-    setLoading(true);
     setError(null);
     try {
       const response = await fetch(`${api}/orders/${o.id}/route`, { headers: { Authorization: `Bearer ${token}` } });
@@ -30,9 +28,8 @@ const Tracking = ({ order, token, api, onMenu }) => {
       if (data.route) setRouteInfo(data.route);
     } catch (err) {
       setError(err.message);
-    } finally {
-      setLoading(false);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentOrder?.id, token, api]);
 
   useEffect(() => {
@@ -59,7 +56,8 @@ const Tracking = ({ order, token, api, onMenu }) => {
     on('rider:location_updated', handleRiderLocation);
     on('order:status_changed', handleOrderStatus);
     return () => { leaveRoom(room); off('rider:location_updated', handleRiderLocation); off('order:status_changed', handleOrderStatus); };
-  }, [isConnected, currentOrder?.id, joinRoom, leaveRoom, on, off]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isConnected, currentOrder?.id]);
 
   useEffect(() => {
     if (!currentOrder?.delivery_address) return;

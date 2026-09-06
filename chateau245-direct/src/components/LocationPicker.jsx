@@ -77,6 +77,7 @@ const LocationPicker = ({ onLocationSelect }) => {
   const debounceRef = useRef(null);
 
   useEffect(() => {
+    const callbackRef = onLocationSelect;
     if (!navigator.geolocation) {
       setGpsStatus('unavailable');
       return;
@@ -85,7 +86,7 @@ const LocationPicker = ({ onLocationSelect }) => {
       (pos) => {
         const newPos = { latitude: pos.coords.latitude, longitude: pos.coords.longitude };
         setPosition([newPos.latitude, newPos.longitude]);
-        onLocationSelect(newPos);
+        callbackRef(newPos);
         setGpsStatus('located');
       },
       () => {
@@ -93,7 +94,7 @@ const LocationPicker = ({ onLocationSelect }) => {
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
-  }, []);
+  }, [onLocationSelect]);
 
   const searchLocation = async (query) => {
     if (!query || query.length < 3) {
