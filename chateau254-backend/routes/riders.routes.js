@@ -81,6 +81,45 @@ router.patch('/me/status', authenticate, requireRole('rider'), asyncHandler(asyn
   res.json({ rider: result.rows[0] });
 }));
 
+router.patch('/me/location', authenticate, requireRole('rider'), asyncHandler(async (req, res) => {
+  const { latitude, longitude } = req.body;
+  if (latitude === undefined || longitude === undefined) {
+    return res.status(400).json({ error: 'Latitude and longitude are required' });
+  }
+  if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+    return res.status(400).json({ error: 'Invalid coordinates' });
+  }
+
+  const riderId = await getRiderId(req.user.id);
+  if (!riderId) return res.status(404).json({ error: 'Rider profile not found' });
+
+  await query(
+    `INSERT INTO rider_locations (rider_id, latitude, longitude, updated_at)
+     VALUES ($1, $2, $3, NOW())
+     ON CONFLICT (rider_id) DO UPDATE SET latitude = $2, longitude = $3, updated_at = NOW()`,
+    [riderId, latitude, longitude],
+  );
+
+  const io = req.app.get('io');
+  if (io) {
+    io.to('admin').emit('rider:location_updated', { riderId, latitude, longitude });
+    io.to(`rider:${riderId}`).emit('rider:location_updated', { riderId, latitude, longitude });
+  }
+
+  res.json({ success: true });
+}));
+
+router.get('/locations', authenticate, requireRole('admin'), asyncHandler(async (req, res) => {
+  const result = await query(
+    `SELECT rl.rider_id, rl.latitude, rl.longitude, rl.updated_at,
+            r.full_name, r.phone, r.status
+     FROM rider_locations rl
+     JOIN riders r ON r.id = rl.rider_id
+     WHERE r.status = 'online'`,
+  );
+  res.json({ locations: result.rows });
+}));
+
 router.get('/', authenticate, requireRole('admin'), asyncHandler(async (req, res) => {
   const result = await query(`SELECT r.id, r.user_id, r.full_name, r.phone, r.status, r.created_at
     FROM riders r JOIN chateau_users u ON u.id = r.user_id ORDER BY r.full_name`);

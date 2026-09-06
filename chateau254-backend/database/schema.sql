@@ -100,6 +100,24 @@ CREATE TABLE IF NOT EXISTS order_items (
   unit_price NUMERIC(12, 2) NOT NULL CHECK (unit_price >= 0)
 );
 
+CREATE TABLE IF NOT EXISTS rider_locations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  rider_id UUID NOT NULL UNIQUE REFERENCES riders(id) ON DELETE CASCADE,
+  latitude NUMERIC(10, 8) NOT NULL,
+  longitude NUMERIC(11, 8) NOT NULL,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_rider_locations_rider_id ON rider_locations(rider_id);
+
+CREATE TABLE IF NOT EXISTS customer_locations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+  latitude NUMERIC(10, 8) NOT NULL,
+  longitude NUMERIC(11, 8) NOT NULL,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_customer_locations_user_id ON customer_locations(user_id);
+
 ALTER TABLE menu_items ADD COLUMN IF NOT EXISTS wine_type VARCHAR(80);
 ALTER TABLE menu_items ADD COLUMN IF NOT EXISTS region VARCHAR(160);
 ALTER TABLE menu_items ADD COLUMN IF NOT EXISTS grape VARCHAR(160);

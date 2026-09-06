@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import menuItems from './components/data/menu.json';
 import wines from './components/data/luxury_wine_list.json';
+import { SocketProvider } from './contexts/SocketContext';
 import Home from './pages/UI/home';
 import Menu from './pages/UI/menu';
 import Cart from './pages/UI/cart';
@@ -85,7 +86,7 @@ const App = () => {
 
   const changeQuantity = (id, amount) => setCart((current) => current.map((item) => item.id === id ? { ...item, quantity: item.quantity + amount } : item).filter((item) => item.quantity > 0));
 
-  const placeOrder = async (event) => {
+  const placeOrder = async (event, coords) => {
     event.preventDefault();
     if (!session?.token) { navigate('/auth'); return; }
     const form = new FormData(event.currentTarget);
@@ -99,6 +100,8 @@ const App = () => {
         user_id: session.user.id,
         delivery_address: deliveryAddress,
         total_amount: subtotal + delivery,
+        latitude: coords?.latitude || null,
+        longitude: coords?.longitude || null,
         items: cart.map((item) => ({
           menu_item_id: nameToId[item.name] || item.id,
           quantity: item.quantity,
@@ -141,12 +144,18 @@ const App = () => {
   useEffect(() => {
     if (!session?.token) return undefined;
     fetch(`${API_URL}/auth/me`, { headers: { Authorization: `Bearer ${session.token}` } })
-      .then((response) => response.ok ? response.json() : Promise.reject(new Error('Session expired')))
+      .then((response) => {
+        if (response.status === 401) throw new Error('Session expired');
+        if (!response.ok) throw new Error('Temporary server error');
+        return response.json();
+      })
       .then((result) => setSession((current) => ({ ...current, user: result.user })))
-      .catch(() => {
-        localStorage.removeItem('chateau254_session');
-        setSession(null);
-        navigate('/');
+      .catch((err) => {
+        if (err.message === 'Session expired') {
+          localStorage.removeItem('chateau254_session');
+          setSession(null);
+          navigate('/');
+        }
       });
     return undefined;
   }, [navigate, session?.token]);
@@ -159,24 +168,26 @@ const App = () => {
       .catch(() => {});
   }, [lastOrderId, order?.id, session?.token]);
 
-  return <div className="app-shell">
-    {location.pathname !== '/' && location.pathname !== '/auth' && !location.pathname.startsWith('/admin') && !location.pathname.startsWith('/rider') && <AppHeader cartCount={cartCount} userName={session?.user?.full_name} onBack={handleBack} onCart={() => navigate('/cart')} onHome={() => navigate('/menu')} onProfile={() => navigate('/profile')} />}
-    <Routes>
-      <Route path="/" element={<Home onOrder={() => navigate('/menu')} onAuth={() => navigate('/auth')} />} />
-      <Route path="/auth" element={<Auth onSuccess={handleAuthSuccess} onBack={() => navigate('/')} />} />
-      <Route path="/admin/*" element={<ProtectedRoute user={session?.user} roles={['admin']}><AdminDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
-      <Route path="/rider" element={<ProtectedRoute user={session?.user} roles={['rider']}><RiderDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
-      <Route path="/menu" element={<Menu items={visibleItems} user={session?.user} categories={categories} filter={filter} setFilter={setFilter} query={query} setQuery={setQuery} addToCart={addToCart} cartCount={cartCount} onCart={() => navigate('/cart')} onViewItem={(item) => navigate(`/item/${item.id}`)} />} />
-      <Route path="/item/:itemId" element={<ItemRoute addToCart={addToCart} />} />
-      <Route path="/cart" element={<Cart cart={cart} subtotal={subtotal} delivery={delivery} changeQuantity={changeQuantity} onCheckout={() => navigate('/checkout')} onMenu={() => navigate('/menu')} />} />
-      <Route path="/checkout" element={<Checkout subtotal={subtotal} delivery={delivery} placeOrder={placeOrder} />} />
-      <Route path="/confirmation" element={<Confirmation order={order} onTrack={() => navigate('/track')} onMenu={() => navigate('/menu')} />} />
-      <Route path="/track" element={<Tracking order={order} onMenu={() => navigate('/menu')} />} />
-      <Route path="/tracking" element={<Navigate to="/track" replace />} />
-      <Route path="/profile" element={<ProtectedRoute user={session?.user} roles={['customer', 'admin']}><Profile user={session?.user} token={session?.token} onBack={handleBack} onLogout={handleLogout} onTrack={(o) => { setOrder({ id: o.id, number: o.id.slice(0, 8), total: Number(o.total_amount) }); navigate('/track'); }} /></ProtectedRoute>} />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
-  </div>;
+  return <SocketProvider token={session?.token}>
+    <div className="app-shell">
+      {location.pathname !== '/' && location.pathname !== '/auth' && !location.pathname.startsWith('/admin') && !location.pathname.startsWith('/rider') && <AppHeader cartCount={cartCount} userName={session?.user?.full_name} onBack={handleBack} onCart={() => navigate('/cart')} onHome={() => navigate('/menu')} onProfile={() => navigate('/profile')} />}
+      <Routes>
+        <Route path="/" element={<Home onOrder={() => navigate('/menu')} onAuth={() => navigate('/auth')} />} />
+        <Route path="/auth" element={<Auth onSuccess={handleAuthSuccess} onBack={() => navigate('/')} />} />
+        <Route path="/admin/*" element={<ProtectedRoute user={session?.user} roles={['admin']}><AdminDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
+        <Route path="/rider" element={<ProtectedRoute user={session?.user} roles={['rider']}><RiderDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
+        <Route path="/menu" element={<Menu items={visibleItems} user={session?.user} categories={categories} filter={filter} setFilter={setFilter} query={query} setQuery={setQuery} addToCart={addToCart} cartCount={cartCount} onCart={() => navigate('/cart')} onViewItem={(item) => navigate(`/item/${item.id}`)} />} />
+        <Route path="/item/:itemId" element={<ItemRoute addToCart={addToCart} />} />
+        <Route path="/cart" element={<Cart cart={cart} subtotal={subtotal} delivery={delivery} changeQuantity={changeQuantity} onCheckout={() => navigate('/checkout')} onMenu={() => navigate('/menu')} />} />
+        <Route path="/checkout" element={<Checkout subtotal={subtotal} delivery={delivery} placeOrder={placeOrder} />} />
+        <Route path="/confirmation" element={<Confirmation order={order} onTrack={() => navigate('/track')} onMenu={() => navigate('/menu')} />} />
+        <Route path="/track" element={<Tracking order={order} token={session?.token} api={API_URL} onMenu={() => navigate('/menu')} />} />
+        <Route path="/tracking" element={<Navigate to="/track" replace />} />
+        <Route path="/profile" element={<ProtectedRoute user={session?.user} roles={['customer', 'admin']}><Profile user={session?.user} token={session?.token} onBack={handleBack} onLogout={handleLogout} onTrack={(o) => { setOrder({ id: o.id, number: o.id.slice(0, 8), total: Number(o.total_amount) }); navigate('/track'); }} /></ProtectedRoute>} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </div>
+  </SocketProvider>;
 };
 
 export default App;

@@ -12,7 +12,7 @@ const pool = new Pool({
   ssl: isNeonConnection || env.nodeEnv === 'production' ? { rejectUnauthorized: false } : false,
   max: 10,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000,
+  connectionTimeoutMillis: 15000,
 });
 
 const query = (text, params) => pool.query(text, params);

@@ -31,11 +31,15 @@ const findStaffByEmail = (email) => query(`${staffSelect} WHERE u.email = $1 GRO
 const findStaffById = (id) => query(`${staffSelect} WHERE u.id = $1 GROUP BY u.id`, [id]);
 
 const findCustomerByEmail = (email) => query(
-  "SELECT id, full_name, email, password_hash, loyalty_points, created_at, ARRAY['customer']::text[] AS roles FROM users WHERE email = $1",
+  `SELECT id, full_name, email, password_hash, loyalty_points, created_at, ARRAY['customer']::text[] AS roles FROM users WHERE email = $1
+   UNION ALL
+   SELECT id, full_name, email, password_hash, loyalty_points, created_at, ARRAY['customer']::text[] AS roles FROM chateau_users WHERE email = $1 AND NOT EXISTS (SELECT 1 FROM users WHERE email = $1)`,
   [email],
 );
 const findCustomerById = (id) => query(
-  "SELECT id, full_name, email, loyalty_points, created_at, ARRAY['customer']::text[] AS roles FROM users WHERE id = $1",
+  `SELECT id, full_name, email, loyalty_points, created_at, ARRAY['customer']::text[] AS roles FROM users WHERE id = $1
+   UNION ALL
+   SELECT id, full_name, email, loyalty_points, created_at, ARRAY['customer']::text[] AS roles FROM chateau_users WHERE id = $1 AND NOT EXISTS (SELECT 1 FROM users WHERE id = $1)`,
   [id],
 );
 

@@ -5,6 +5,7 @@
     --cream: #f7f3ef;
     --muted: #837a75;
     --line: #e9e1dc;
+    --rider-grid-cols: 1fr 1fr;
 }
 
 * {
@@ -2756,5 +2757,39 @@ h1 em {
 
     .profile-card {
         flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 800px) {
+    :root {
+        --rider-grid-cols: 1fr;
+    }
+}
+
+@media (max-width: 800px) and (min-width: 481px) {
+    .rider-page .rider-action-buttons {
+        flex-wrap: wrap;
+    }
+
+    .rider-page .rider-action-buttons > * {
+        flex: 1 1 calc(50% - 0.25rem);
+    }
+}
+
+@media (max-width: 480px) {
+    .rider-page .rider-route-info {
+        flex-direction: column;
+    }
+
+    .rider-page .rider-action-buttons {
+        flex-direction: column;
+    }
+
+    .rider-page .rider-action-buttons > * {
+        flex: 1 1 auto;
+    }
+
+    .rider-page .rider-map-container {
+        height: 220px !important;
     }
 }

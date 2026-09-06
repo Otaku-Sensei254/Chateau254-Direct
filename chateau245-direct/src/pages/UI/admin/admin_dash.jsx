@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { FiBarChart2, FiChevronDown, FiEdit2, FiGift, FiGrid, FiLogOut, FiMenu, FiPackage, FiPlus, FiSave, FiSettings, FiShoppingBag, FiTrash2, FiTruck, FiUsers, FiX, FiRefreshCw } from 'react-icons/fi';
+import { FiBarChart2, FiChevronDown, FiEdit2, FiGift, FiGrid, FiLogOut, FiMenu, FiPackage, FiPlus, FiSave, FiSettings, FiShoppingBag, FiTrash2, FiTruck, FiUsers, FiX, FiRefreshCw, FiMap } from 'react-icons/fi';
 import { Brand } from '../shared';
+import AdminFleetMap from '../../../components/AdminFleetMap';
+import { useSocket } from '../../../contexts/SocketContext';
 
 const AdminDashboard = ({ user, token, api, onLogout }) => {
   const [activePage, setActivePage] = useState('Dashboard');
@@ -16,6 +18,19 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
   const [updatingOrder, setUpdatingOrder] = useState(null);
 
   const headers = useMemo(() => ({ Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }), [token]);
+  const { isConnected, joinRoom, leaveRoom, on, off } = useSocket();
+
+  useEffect(() => {
+    if (!isConnected) return;
+    joinRoom('admin');
+    const handleOrderCreated = () => fetchOrders();
+    const handleOrderStatusChanged = () => fetchOrders();
+    const handleRiderLocation = () => fetchRiders();
+    on('order:created', handleOrderCreated);
+    on('order:status_changed', handleOrderStatusChanged);
+    on('rider:location_updated', handleRiderLocation);
+    return () => { leaveRoom('admin'); off('order:created', handleOrderCreated); off('order:status_changed', handleOrderStatusChanged); off('rider:location_updated', handleRiderLocation); };
+  }, [isConnected, joinRoom, leaveRoom, on, off]);
 
   const fetchOrders = useCallback(async () => {
     const res = await fetch(`${api}/orders`, { headers });
@@ -179,6 +194,7 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
           { label: 'Menu', icon: FiPackage },
           { label: 'Customers', icon: FiUsers },
           { label: 'Riders', icon: FiTruck },
+          { label: 'Fleet Map', icon: FiMap },
           { label: 'Reports', icon: FiBarChart2 },
           { label: 'Promotions', icon: FiGift },
           { label: 'Settings', icon: FiSettings },
@@ -193,6 +209,7 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
       {activePage === 'Menu' && <MenuContent menu={menu} setEditingItem={setEditingItem} onDelete={deleteMenuItem} />}
       {activePage === 'Customers' && <CustomersContent customers={customers} />}
       {activePage === 'Riders' && <RidersContent riders={riders} onAdd={() => setRiderEditorOpen(true)} onRemove={removeRider} />}
+      {activePage === 'Fleet Map' && <FleetMapContent token={token} api={api} />}
       {['Reports', 'Promotions', 'Settings'].includes(activePage) && <PlaceholderContent title={activePage} />}
       {editingItem && <MenuEditor item={editingItem === true ? null : editingItem} onSave={saveMenuItem} onClose={() => setEditingItem(null)} />}
       {riderEditorOpen && <RiderEditor onSave={addRider} onClose={() => setRiderEditorOpen(false)} />}
@@ -250,6 +267,12 @@ const MenuContent = ({ menu, setEditingItem, onDelete }) => <><div className="ad
 const CustomersContent = ({ customers }) => <><div className="admin-content-heading"><div><p className="eyebrow">Loyalty and accounts</p><h2>Customers</h2></div></div><div className="customer-summary"><span><strong>{customers.length}</strong> registered customers</span><span><strong>{customers.filter((c) => c.loyalty_points > 0).length}</strong> with loyalty points</span><span><strong>{customers.reduce((sum, c) => sum + (c.loyalty_points || 0), 0).toLocaleString()}</strong> total points</span></div><div className="admin-table-wrap"><table className="admin-table customer-table"><thead><tr><th>Customer</th><th>Email</th><th>Phone</th><th>Loyalty points</th><th>Joined</th></tr></thead><tbody>{customers.map((customer) => <tr key={customer.id || customer.email}><td><strong>{customer.full_name}</strong></td><td>{customer.email}</td><td>{customer.phone || '—'}</td><td>{customer.loyalty_points || 0} pts</td><td>{new Date(customer.created_at).toLocaleDateString()}</td></tr>)}{!customers.length && <tr><td colSpan={5} style={{ textAlign: 'center', padding: '2rem', color: '#a0958e' }}>No customers yet</td></tr>}</tbody></table></div></>;
 
 const RidersContent = ({ riders, onAdd, onRemove }) => <><div className="admin-content-heading"><div><p className="eyebrow">Delivery team</p><h2>Riders</h2></div><button className="admin-primary" onClick={onAdd}><FiPlus /> Add rider</button></div><div className="customer-summary"><span><strong>{riders.length}</strong> registered riders</span><span><strong>{riders.filter((r) => r.status === 'online').length}</strong> online now</span></div><div className="admin-rider-grid">{riders.map((rider) => <article className="admin-rider-row" key={rider.id}><div className="admin-rider-avatar">{rider.full_name?.split(' ').map((p) => p[0]).join('').slice(0, 2).toUpperCase()}</div><div className="admin-rider-name"><strong>{rider.full_name}</strong><span>{rider.phone}</span></div><span className={`rider-online-status ${rider.status === 'online' ? 'online' : ''}`}>{rider.status === 'online' ? 'Online' : rider.status === 'on_break' ? 'On break' : 'Offline'}</span><button className="admin-remove-rider" onClick={() => { if (window.confirm(`Remove ${rider.full_name}?`)) onRemove(rider.id); }} aria-label={`Remove ${rider.full_name}`}><FiTrash2 /></button></article>)}</div></>;
+
+const FleetMapContent = ({ token, api }) => (
+  <div style={{ height: 'calc(100vh - 200px)', minHeight: '500px' }}>
+    <AdminFleetMap token={token} api={api} />
+  </div>
+);
 
 const PlaceholderContent = ({ title }) => <div className="admin-placeholder"><div className="admin-placeholder-icon"><FiSettings /></div><h2>{title} workspace</h2><p>This section is ready for your {title.toLowerCase()} tools and data.</p></div>;
 
