@@ -131,15 +131,29 @@ router.get('/:id/route', authenticate, asyncHandler(async (req, res) => {
     return res.status(400).json({ error: 'No rider assigned to this order' });
   }
 
-  const locationResult = await query(
-    'SELECT latitude, longitude FROM rider_locations WHERE rider_id = $1',
-    [order.rider_id],
-  );
-  if (!locationResult.rowCount) {
-    return res.status(404).json({ error: 'Rider location not available' });
+  let riderLocation = null;
+
+  const isRider = req.user.roles?.includes('rider') || req.user.role === 'rider';
+  if (isRider) {
+    const liveResult = await query(
+      'SELECT latitude, longitude FROM rider_locations WHERE rider_id = $1',
+      [order.rider_id],
+    );
+    if (liveResult.rowCount) {
+      riderLocation = liveResult.rows[0];
+    }
   }
 
-  const riderLocation = locationResult.rows[0];
+  if (!riderLocation) {
+    const locationResult = await query(
+      'SELECT latitude, longitude FROM rider_locations WHERE rider_id = $1',
+      [order.rider_id],
+    );
+    if (!locationResult.rowCount) {
+      return res.status(404).json({ error: 'Rider location not available' });
+    }
+    riderLocation = locationResult.rows[0];
+  }
 
   let customerLocation = null;
 

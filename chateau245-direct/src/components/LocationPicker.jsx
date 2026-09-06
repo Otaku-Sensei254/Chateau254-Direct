@@ -69,7 +69,7 @@ const MapEvents = ({ onPositionChange }) => {
 };
 
 const LocationPicker = ({ onLocationSelect }) => {
-  const [position, setPosition] = useState([-1.2921, 36.8219]);
+  const [position, setPosition] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [searching, setSearching] = useState(false);
@@ -77,7 +77,10 @@ const LocationPicker = ({ onLocationSelect }) => {
   const debounceRef = useRef(null);
 
   useEffect(() => {
-    if (!navigator.geolocation) return;
+    if (!navigator.geolocation) {
+      setGpsStatus('unavailable');
+      return;
+    }
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const newPos = { latitude: pos.coords.latitude, longitude: pos.coords.longitude };
@@ -86,7 +89,6 @@ const LocationPicker = ({ onLocationSelect }) => {
         setGpsStatus('located');
       },
       () => {
-        onLocationSelect({ latitude: -1.2921, longitude: 36.8219 });
         setGpsStatus('fallback');
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
@@ -220,8 +222,8 @@ const LocationPicker = ({ onLocationSelect }) => {
         border: '1px solid #ddd',
       }}>
         <MapContainer
-          center={position}
-          zoom={15}
+          center={position || [-1.2864, 36.8172]}
+          zoom={position ? 15 : 12}
           style={{ width: '100%', height: '100%' }}
           scrollWheelZoom={true}
         >
@@ -230,7 +232,7 @@ const LocationPicker = ({ onLocationSelect }) => {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           <MapEvents onPositionChange={handlePositionChange} />
-          <DraggableMarker position={position} onPositionChange={handlePositionChange} />
+          {position && <DraggableMarker position={position} onPositionChange={handlePositionChange} />}
         </MapContainer>
       </div>
     </div>

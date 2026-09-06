@@ -44,7 +44,7 @@ const Tracking = ({ order, token, api, onMenu }) => {
 
   useEffect(() => {
     if (!isConnected || !currentOrder?.id) return;
-    const room = `customer:${currentOrder.id}`;
+    const room = `customer:${currentOrder.user_id || currentOrder.id}`;
     joinRoom(room);
 
     const handleRiderLocation = (data) => {

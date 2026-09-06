@@ -78,6 +78,14 @@ router.patch('/me/status', authenticate, requireRole('rider'), asyncHandler(asyn
     [status, req.user.id],
   );
   if (!result.rowCount) return res.status(404).json({ error: 'Rider not found' });
+
+  if (status === 'offline') {
+    const riderId = await getRiderId(req.user.id);
+    if (riderId) {
+      await query('DELETE FROM rider_locations WHERE rider_id = $1', [riderId]).catch(() => {});
+    }
+  }
+
   res.json({ rider: result.rows[0] });
 }));
 

@@ -7,7 +7,6 @@ const useLocationTracker = (api, token, enabled = true, intervalMs = 10000) => {
   const [accuracy, setAccuracy] = useState(null);
   const watchIdRef = useRef(null);
   const intervalRef = useRef(null);
-  const highAccuracyFailedRef = useRef(false);
 
   const sendLocation = useCallback(async (lat, lng, acc) => {
     try {
@@ -22,7 +21,7 @@ const useLocationTracker = (api, token, enabled = true, intervalMs = 10000) => {
 
       if (!response.ok) throw new Error('Failed to update location');
 
-      console.log(`[GPS] Location set: ${lat.toFixed(6)}, ${lng.toFixed(6)} (±${Math.round(acc || 0)}m)`);
+      console.log(`[GPS] ✓ Location set: ${lat.toFixed(6)}, ${lng.toFixed(6)} (±${Math.round(acc || 0)}m)`);
       setLocation({ latitude: lat, longitude: lng });
       setAccuracy(acc || null);
       setError(null);
@@ -39,36 +38,20 @@ const useLocationTracker = (api, token, enabled = true, intervalMs = 10000) => {
 
   const handleError = useCallback((err) => {
     console.error('[GPS] Error:', err.code, err.message);
-
-    if (err.code === 3 && !highAccuracyFailedRef.current) {
-      console.warn('[GPS] High accuracy timed out — falling back to low accuracy');
-      highAccuracyFailedRef.current = true;
-
-      navigator.geolocation.getCurrentPosition(handlePosition, (fallbackErr) => {
-        console.error('[GPS] Fallback also failed:', fallbackErr.code);
-        setError('Location unavailable. Check GPS settings.');
-      }, {
-        enableHighAccuracy: false,
-        timeout: 30000,
-        maximumAge: 10000,
-      });
-      return;
-    }
-
     switch (err.code) {
       case 1:
-        setError('Location permission denied. Enable in browser settings.');
+        setError('Location permission denied. Enable in browser/device settings.');
         break;
       case 2:
         setError('Location unavailable. Check device GPS.');
         break;
       case 3:
-        setError('GPS timed out. Ensure you have GPS signal.');
+        setError('GPS timed out. Retrying with low accuracy...');
         break;
       default:
         setError('Could not get location.');
     }
-  }, [handlePosition]);
+  }, []);
 
   const startTracking = useCallback(() => {
     if (!navigator.geolocation) {
@@ -78,29 +61,46 @@ const useLocationTracker = (api, token, enabled = true, intervalMs = 10000) => {
 
     console.log('[GPS] Starting tracking');
     setIsTracking(true);
-    highAccuracyFailedRef.current = false;
+    setError(null);
 
-    const options = {
-      enableHighAccuracy: true,
-      timeout: 20000,
-      maximumAge: 5000,
+    const tryGetLocation = (highAccuracy) => {
+      const options = {
+        enableHighAccuracy: highAccuracy,
+        timeout: highAccuracy ? 10000 : 30000,
+        maximumAge: 5000,
+      };
+
+      console.log(`[GPS] Trying ${highAccuracy ? 'HIGH' : 'LOW'} accuracy`);
+
+      navigator.geolocation.getCurrentPosition(
+        handlePosition,
+        (err) => {
+          console.error(`[GPS] ${highAccuracy ? 'High' : 'Low'} accuracy failed:`, err.code);
+          if (highAccuracy) {
+            console.log('[GPS] Retrying with low accuracy...');
+            tryGetLocation(false);
+          } else {
+            handleError(err);
+          }
+        },
+        options
+      );
     };
 
-    navigator.geolocation.getCurrentPosition(handlePosition, handleError, options);
+    tryGetLocation(true);
 
     watchIdRef.current = navigator.geolocation.watchPosition(
       handlePosition,
-      handleError,
-      options
+      () => {},
+      { enableHighAccuracy: false, timeout: 30000, maximumAge: 10000 }
     );
 
     intervalRef.current = setInterval(() => {
-      if (!watchIdRef.current) return;
-      navigator.geolocation.getCurrentPosition(handlePosition, handleError, {
-        enableHighAccuracy: !highAccuracyFailedRef.current,
-        timeout: 20000,
-        maximumAge: 0,
-      });
+      navigator.geolocation.getCurrentPosition(
+        handlePosition,
+        () => {},
+        { enableHighAccuracy: false, timeout: 15000, maximumAge: 5000 }
+      );
     }, intervalMs);
   }, [handlePosition, handleError, intervalMs]);
 
