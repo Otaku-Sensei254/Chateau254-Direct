@@ -129,12 +129,37 @@ DO $$ BEGIN
   END IF;
 END $$;
 
+CREATE TABLE IF NOT EXISTS tables (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  table_number INTEGER NOT NULL UNIQUE,
+  capacity INTEGER NOT NULL CHECK (capacity > 0),
+  status VARCHAR(20) NOT NULL DEFAULT 'available' CHECK (status IN ('available', 'reserved', 'occupied')),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS bookings (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  customer_name VARCHAR(120) NOT NULL,
+  party_size INTEGER NOT NULL CHECK (party_size > 0),
+  preferred_item VARCHAR(160),
+  dining_time TIMESTAMPTZ NOT NULL,
+  notes TEXT NOT NULL DEFAULT '',
+  status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'confirmed', 'seated', 'completed', 'cancelled')),
+  table_id UUID REFERENCES tables(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 CREATE INDEX IF NOT EXISTS orders_status_idx ON orders(status);
 CREATE INDEX IF NOT EXISTS orders_user_id_idx ON orders(user_id);
 CREATE INDEX IF NOT EXISTS orders_rider_id_idx ON orders(rider_id);
 CREATE INDEX IF NOT EXISTS menu_items_category_idx ON menu_items(category);
 CREATE INDEX IF NOT EXISTS user_roles_role_id_idx ON user_roles(role_id);
 CREATE INDEX IF NOT EXISTS users_email_idx ON users(email);
+CREATE INDEX IF NOT EXISTS bookings_status_idx ON bookings(status);
+CREATE INDEX IF NOT EXISTS tables_status_idx ON tables(status);
 
 INSERT INTO roles (name, description) VALUES
   ('admin', 'Full access to Chateau254 administration'),

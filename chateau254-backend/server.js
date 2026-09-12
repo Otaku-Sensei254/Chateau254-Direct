@@ -12,6 +12,8 @@ const menuRoutes = require('./routes/menu.routes');
 const ordersRoutes = require('./routes/orders.routes');
 const customersRoutes = require('./routes/customers.routes');
 const ridersRoutes = require('./routes/riders.routes');
+const bookingsRoutes = require('./routes/bookings.routes');
+const tablesRoutes = require('./routes/tables.routes');
 const { notFound, errorHandler } = require('./middleware/error.middleware');
 
 const app = express();
@@ -39,6 +41,8 @@ app.use('/api/menu', menuRoutes);
 app.use('/api/orders', ordersRoutes);
 app.use('/api/customers', customersRoutes);
 app.use('/api/riders', ridersRoutes);
+app.use('/api/bookings', bookingsRoutes);
+app.use('/api/tables', tablesRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

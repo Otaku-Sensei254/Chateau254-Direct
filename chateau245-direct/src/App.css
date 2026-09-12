@@ -33,7 +33,7 @@ button {
     position: relative;
     overflow: hidden;
     color: white;
-    background: linear-gradient(90deg, rgba(13, 9, 7, .84), rgba(13, 9, 7, .3)), url('https://plus.unsplash.com/premium_photo-1682097091093-dd18b37764a5?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8d2luZSUyMGFuZCUyMGRpbmV8ZW58MHx8MHx8fDA%3D') center/cover;
+    background: linear-gradient(90deg, rgba(13, 9, 7, .84), rgba(13, 9, 7, .3)), url('https://images.unsplash.com/photo-1641830879467-e22004141bcb?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHdpbmUlMjB0b2FzdHxlbnwwfHwwfHx8MA%3D%3D') center/cover;
     display: flex;
     flex-direction: column;
     padding: 32px clamp(24px, 7vw, 110px);
@@ -2759,6 +2759,136 @@ h1 em {
         flex-wrap: wrap;
     }
 }
+
+/* Booking page */
+.booking-page {
+    max-width: 560px;
+}
+
+.booking-form {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 24px;
+}
+
+.booking-field {
+    margin-bottom: 20px;
+}
+
+.booking-field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 8px;
+}
+
+.booking-input,
+.booking-textarea {
+    position: relative;
+}
+
+.booking-input svg,
+.booking-textarea svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 16px;
+}
+
+.booking-input input,
+.booking-input select {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 14px 14px 14px 42px;
+    background: white;
+    color: var(--ink);
+    outline-color: var(--wine);
+    font-size: 14px;
+}
+
+.booking-textarea textarea {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 14px 14px 14px 42px;
+    background: white;
+    color: var(--ink);
+    outline-color: var(--wine);
+    font-size: 14px;
+    min-height: 100px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.booking-input input:focus,
+.booking-input select:focus,
+.booking-textarea textarea:focus {
+    border-color: var(--wine);
+}
+
+.booking-success {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+}
+
+.booking-success-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #e8f5e9;
+    color: #2e7d32;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 32px;
+}
+
+.booking-success h2 {
+    margin: 0 0 10px;
+    font: 700 28px Georgia, serif;
+    color: var(--ink);
+}
+
+.booking-success-text {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0 0 8px;
+}
+
+.booking-success-hint {
+    color: var(--muted);
+    font-size: 13px;
+    margin: 0 0 28px;
+}
+
+/* Admin tables and reservations styles */
+.admin-table .rider-select {
+    min-width: 140px;
+}
+
+/* Status badge colors for bookings */
+.status-badge.status-pending { background: #fff3e0; color: #e65100; }
+.status-badge.status-confirmed { background: #e3f2fd; color: #1565c0; }
+.status-badge.status-seated { background: #f3e5f5; color: #7b1fa2; }
+.status-badge.status-completed { background: #e8f5e9; color: #2e7d32; }
+.status-badge.status-cancelled { background: #fce4ec; color: #c62828; }
+
+/* Table status colors in grid */
+.admin-menu-row em.available { color: #4d9057; }
+.admin-menu-row em.unavailable { color: #b36a62; }
+.admin-menu-row em.reserved { color: #e65100; }
 
 @media (max-width: 800px) {
     :root {

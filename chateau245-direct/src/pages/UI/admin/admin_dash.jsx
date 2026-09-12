@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { FiBarChart2, FiChevronDown, FiEdit2, FiGift, FiGrid, FiLogOut, FiMenu, FiPackage, FiPlus, FiSave, FiSettings, FiShoppingBag, FiTrash2, FiTruck, FiUsers, FiX, FiRefreshCw, FiMap } from 'react-icons/fi';
+import { FiBarChart2, FiCalendar, FiChevronDown, FiEdit2, FiGift, FiGrid, FiLogOut, FiMenu, FiPackage, FiPlus, FiSave, FiSettings, FiShoppingBag, FiTable, FiTrash2, FiTruck, FiUsers, FiX, FiRefreshCw, FiMap } from 'react-icons/fi';
 import { Brand } from '../shared';
 import AdminFleetMap from '../../../components/AdminFleetMap';
 import { useSocket } from '../../../contexts/SocketContext';
@@ -11,7 +11,10 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
   const [menu, setMenu] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [riders, setRiders] = useState([]);
+  const [bookings, setBookings] = useState([]);
+  const [tables, setTables] = useState([]);
   const [editingItem, setEditingItem] = useState(null);
+  const [editingTable, setEditingTable] = useState(null);
   const [riderEditorOpen, setRiderEditorOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -26,10 +29,14 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
     const handleOrderCreated = () => fetchOrders();
     const handleOrderStatusChanged = () => fetchOrders();
     const handleRiderLocation = () => fetchRiders();
+    const handleBookingCreated = () => fetchBookings();
+    const handleBookingUpdated = () => { fetchBookings(); fetchTables(); };
     on('order:created', handleOrderCreated);
     on('order:status_changed', handleOrderStatusChanged);
     on('rider:location_updated', handleRiderLocation);
-    return () => { leaveRoom('admin'); off('order:created', handleOrderCreated); off('order:status_changed', handleOrderStatusChanged); off('rider:location_updated', handleRiderLocation); };
+    on('booking:created', handleBookingCreated);
+    on('booking:updated', handleBookingUpdated);
+    return () => { leaveRoom('admin'); off('order:created', handleOrderCreated); off('order:status_changed', handleOrderStatusChanged); off('rider:location_updated', handleRiderLocation); off('booking:created', handleBookingCreated); off('booking:updated', handleBookingUpdated); };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConnected]);
 
@@ -61,17 +68,31 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
     setRiders(data.riders || []);
   }, [api, headers]);
 
+  const fetchBookings = useCallback(async () => {
+    const res = await fetch(`${api}/bookings`, { headers });
+    if (!res.ok) throw new Error('Failed to load reservations');
+    const data = await res.json();
+    setBookings(data.bookings || []);
+  }, [api, headers]);
+
+  const fetchTables = useCallback(async () => {
+    const res = await fetch(`${api}/tables`, { headers });
+    if (!res.ok) throw new Error('Failed to load tables');
+    const data = await res.json();
+    setTables(data.tables || []);
+  }, [api, headers]);
+
   const loadAll = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      await Promise.all([fetchOrders(), fetchMenu(), fetchCustomers(), fetchRiders()]);
+      await Promise.all([fetchOrders(), fetchMenu(), fetchCustomers(), fetchRiders(), fetchBookings(), fetchTables()]);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  }, [fetchOrders, fetchMenu, fetchCustomers, fetchRiders]);
+  }, [fetchOrders, fetchMenu, fetchCustomers, fetchRiders, fetchBookings, fetchTables]);
 
   useEffect(() => { loadAll(); }, [loadAll]);
 
@@ -167,6 +188,87 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
     }
   };
 
+  const saveTable = async (event) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const body = { table_number: Number(form.get('table_number')), capacity: Number(form.get('capacity')) };
+    try {
+      if (editingTable?.id) {
+        const res = await fetch(`${api}/tables/${editingTable.id}`, {
+          method: 'PATCH',
+          headers,
+          body: JSON.stringify(body),
+        });
+        if (!res.ok) throw new Error('Failed to update table');
+        const data = await res.json();
+        setTables((prev) => prev.map((t) => t.id === editingTable.id ? data.table : t));
+      } else {
+        const res = await fetch(`${api}/tables`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(body),
+        });
+        if (!res.ok) throw new Error('Failed to create table');
+        const data = await res.json();
+        setTables((prev) => [...prev, data.table]);
+      }
+      setEditingTable(null);
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const updateTableStatus = async (tableId, status) => {
+    try {
+      const res = await fetch(`${api}/tables/${tableId}/status`, {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({ status }),
+      });
+      if (!res.ok) throw new Error('Failed to update table status');
+      setTables((prev) => prev.map((t) => t.id === tableId ? { ...t, status } : t));
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const deleteTable = async (tableId) => {
+    try {
+      const res = await fetch(`${api}/tables/${tableId}`, { method: 'DELETE', headers });
+      if (!res.ok) throw new Error('Failed to delete table');
+      setTables((prev) => prev.filter((t) => t.id !== tableId));
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const assignTableToBooking = async (bookingId, tableId) => {
+    try {
+      const res = await fetch(`${api}/bookings/${bookingId}/table`, {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({ table_id: tableId }),
+      });
+      if (!res.ok) throw new Error('Failed to assign table');
+      await Promise.all([fetchBookings(), fetchTables()]);
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const unassignTableFromBooking = async (bookingId) => {
+    try {
+      const res = await fetch(`${api}/bookings/${bookingId}/table`, {
+        method: 'DELETE',
+        headers,
+      });
+      if (!res.ok) throw new Error('Failed to unassign table');
+      await Promise.all([fetchBookings(), fetchTables()]);
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
   const todayOrders = orders.filter((o) => {
     const today = new Date().toDateString();
     return new Date(o.created_at).toDateString() === today;
@@ -192,6 +294,8 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
       <nav className="admin-nav">
         {[{ label: 'Dashboard', icon: FiGrid },
           { label: 'Orders', icon: FiShoppingBag, count: orders.filter((o) => o.status === 'pending').length || undefined },
+          { label: 'Reservations', icon: FiCalendar, count: bookings.filter((b) => b.status === 'pending').length || undefined },
+          { label: 'Tables', icon: FiTable },
           { label: 'Menu', icon: FiPackage },
           { label: 'Customers', icon: FiUsers },
           { label: 'Riders', icon: FiTruck },
@@ -207,12 +311,15 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
       <header className="admin-topbar"><div><p className="eyebrow">Château254 management</p><h1>{activePage}</h1></div><div className="admin-top-actions"><div className="admin-top-avatar">{user?.full_name?.slice(0, 2).toUpperCase() || 'AD'}</div></div></header>
       {activePage === 'Dashboard' && <DashboardContent orders={orders} todayOrders={todayOrders} completedToday={completedToday} totalSales={totalSales} formatCurrency={formatCurrency} formatTime={formatTime} onOpenOrders={() => setActivePage('Orders')} />}
       {activePage === 'Orders' && <OrdersContent orders={orders} onUpdateStatus={updateOrderStatus} updatingOrder={updatingOrder} riders={riders} formatCurrency={formatCurrency} formatTime={formatTime} />}
+      {activePage === 'Reservations' && <ReservationsContent bookings={bookings} tables={tables} onAssignTable={assignTableToBooking} onUnassignTable={unassignTableFromBooking} formatTime={formatTime} />}
+      {activePage === 'Tables' && <TablesContent tables={tables} setEditingTable={setEditingTable} onSave={saveTable} onDelete={deleteTable} onUpdateStatus={updateTableStatus} />}
       {activePage === 'Menu' && <MenuContent menu={menu} setEditingItem={setEditingItem} onDelete={deleteMenuItem} />}
       {activePage === 'Customers' && <CustomersContent customers={customers} />}
       {activePage === 'Riders' && <RidersContent riders={riders} onAdd={() => setRiderEditorOpen(true)} onRemove={removeRider} />}
       {activePage === 'Fleet Map' && <FleetMapContent token={token} api={api} />}
       {['Reports', 'Promotions', 'Settings'].includes(activePage) && <PlaceholderContent title={activePage} />}
       {editingItem && <MenuEditor item={editingItem === true ? null : editingItem} onSave={saveMenuItem} onClose={() => setEditingItem(null)} />}
+      {editingTable && <TableEditor table={editingTable === true ? null : editingTable} onSave={saveTable} onClose={() => setEditingTable(null)} />}
       {riderEditorOpen && <RiderEditor onSave={addRider} onClose={() => setRiderEditorOpen(false)} />}
     </section>
   </main>;
@@ -280,5 +387,60 @@ const PlaceholderContent = ({ title }) => <div className="admin-placeholder"><di
 const MenuEditor = ({ item, onSave, onClose }) => <div className="admin-modal-backdrop"><form className="admin-modal" onSubmit={onSave}><button type="button" className="admin-modal-close" onClick={onClose}><FiX /></button><p className="eyebrow">Catalog management</p><h2>{item ? 'Edit menu item' : 'Add menu item'}</h2><label>Item name<input name="name" defaultValue={item?.name || ''} required /></label><label>Category<select name="category" defaultValue={item?.category || 'Meals'}><option>Meals</option><option>Wine</option><option>Drinks</option><option>Desserts</option></select></label><label>Price (KES)<input name="price" type="number" min="0" defaultValue={item?.price || ''} required /></label><button className="admin-primary" type="submit"><FiSave /> Save item</button></form></div>;
 
 const RiderEditor = ({ onSave, onClose }) => <div className="admin-modal-backdrop"><form className="admin-modal" onSubmit={onSave}><button type="button" className="admin-modal-close" onClick={onClose}><FiX /></button><p className="eyebrow">Delivery team</p><h2>Add rider</h2><label>Full name<input name="name" placeholder="Peter Banda" required /></label><label>Phone number<input name="phone" type="tel" placeholder="0712 987 654" required /></label><button className="admin-primary" type="submit"><FiSave /> Add rider</button></form></div>;
+
+const ReservationsContent = ({ bookings, tables, onAssignTable, onUnassignTable, formatTime }) => {
+  const [filter, setFilter] = useState('all');
+  const [assigningId, setAssigningId] = useState(null);
+  const availableTables = tables.filter((t) => t.status === 'available');
+  const filtered = filter === 'all' ? bookings : bookings.filter((b) => b.status === filter);
+  const counts = { pending: bookings.filter((b) => b.status === 'pending').length, confirmed: bookings.filter((b) => b.status === 'confirmed').length, seated: bookings.filter((b) => b.status === 'seated').length, completed: bookings.filter((b) => b.status === 'completed').length, cancelled: bookings.filter((b) => b.status === 'cancelled').length };
+
+  return <><div className="admin-content-heading"><div><p className="eyebrow">Table reservations</p><h2>Reservations</h2></div></div>
+    <div className="admin-tabs">
+      <button className={filter === 'all' ? 'active' : ''} onClick={() => setFilter('all')}>All <b>{bookings.length}</b></button>
+      <button className={filter === 'pending' ? 'active' : ''} onClick={() => setFilter('pending')}>Pending <b>{counts.pending}</b></button>
+      <button className={filter === 'confirmed' ? 'active' : ''} onClick={() => setFilter('confirmed')}>Confirmed <b>{counts.confirmed}</b></button>
+      <button className={filter === 'seated' ? 'active' : ''} onClick={() => setFilter('seated')}>Seated <b>{counts.seated}</b></button>
+      <button className={filter === 'completed' ? 'active' : ''} onClick={() => setFilter('completed')}>Completed <b>{counts.completed}</b></button>
+      <button className={filter === 'cancelled' ? 'active' : ''} onClick={() => setFilter('cancelled')}>Cancelled <b>{counts.cancelled}</b></button>
+    </div>
+    <div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>Reservation</th><th>Guest</th><th>Party</th><th>Preferred</th><th>Dining time</th><th>Notes</th><th>Status</th><th>Table</th><th>Action</th></tr></thead><tbody>{filtered.map((booking) => <tr key={booking.id}>
+      <td>#{booking.id.slice(0, 8)}</td>
+      <td>{booking.customer_name}</td>
+      <td>{booking.party_size}</td>
+      <td>{booking.preferred_item || '—'}</td>
+      <td>{formatTime(booking.dining_time)}</td>
+      <td style={{ maxWidth: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{booking.notes || '—'}</td>
+      <td><span className={`status-badge status-${booking.status}`}>{booking.status}</span></td>
+      <td>{booking.table_number ? `Table ${booking.table_number}` : '—'}</td>
+      <td>
+        {assigningId === booking.id && availableTables.length > 0 && <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+          <select className="rider-select" value="" onChange={(e) => { if (e.target.value) onAssignTable(booking.id, e.target.value); setAssigningId(null); }}>
+            <option value="">Select table</option>
+            {availableTables.map((t) => <option key={t.id} value={t.id}>Table {t.table_number} (seats {t.capacity})</option>)}
+          </select>
+          <button className="reject-button" onClick={() => setAssigningId(null)}>Cancel</button>
+        </div>}
+        {!booking.table_id && assigningId !== booking.id && availableTables.length > 0 && <button className="accept-button" onClick={() => setAssigningId(booking.id)}>Assign table</button>}
+        {booking.table_id && <button className="reject-button" onClick={() => onUnassignTable(booking.id)}>Release</button>}
+      </td>
+    </tr>)}{!filtered.length && <tr><td colSpan={9} style={{ textAlign: 'center', padding: '2rem', color: '#a0958e' }}>No reservations found</td></tr>}</tbody></table></div></>;
+};
+
+const TablesContent = ({ tables, setEditingTable, onSave, onDelete, onUpdateStatus }) => {
+  const statusColors = { available: '#4d9057', reserved: '#e65100', occupied: '#7b1fa2' };
+  const statusBg = { available: '#e8f5e9', reserved: '#fff3e0', occupied: '#f3e5f5' };
+  return <><div className="admin-content-heading"><div><p className="eyebrow">Floor plan</p><h2>Tables</h2></div><button className="admin-primary" onClick={() => setEditingTable(true)}><FiPlus /> Add table</button></div>
+    <div className="admin-menu-grid">{tables.map((table) => <article className="admin-menu-row" key={table.id}><div className="admin-menu-icon"><FiTable /></div><div><strong>Table {table.table_number}</strong><span>Seats {table.capacity}</span></div><b><span style={{ display: 'inline-block', padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 700, background: statusBg[table.status] || '#f5f5f5', color: statusColors[table.status] || '#666', textTransform: 'capitalize' }}>{table.status}</span></b><em className={table.status === 'available' ? 'available' : table.status === 'reserved' ? 'unavailable' : 'unavailable'}>{table.status}</em><div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+        <select className="rider-select" value={table.status} onChange={(e) => onUpdateStatus(table.id, e.target.value)}>
+          <option value="available">Available</option>
+          <option value="reserved">Reserved</option>
+          <option value="occupied">Occupied</option>
+        </select>
+        <button onClick={() => { if (window.confirm(`Delete Table ${table.table_number}?`)) onDelete(table.id); }} aria-label={`Delete Table ${table.table_number}`}><FiTrash2 /></button>
+      </div></article>)}</div>{!tables.length && <div className="admin-placeholder"><div className="admin-placeholder-icon"><FiTable /></div><h2>No tables yet</h2><p>Add tables to manage floor reservations.</p></div>}</>;
+};
+
+const TableEditor = ({ table, onSave, onClose }) => <div className="admin-modal-backdrop"><form className="admin-modal" onSubmit={onSave}><button type="button" className="admin-modal-close" onClick={onClose}><FiX /></button><p className="eyebrow">Floor plan</p><h2>{table ? 'Edit table' : 'Add table'}</h2><label>Table number<input name="table_number" type="number" min="1" defaultValue={table?.table_number || ''} required /></label><label>Capacity<input name="capacity" type="number" min="1" max="20" defaultValue={table?.capacity || '2'} required /></label><button className="admin-primary" type="submit"><FiSave /> Save table</button></form></div>;
 
 export default AdminDashboard;

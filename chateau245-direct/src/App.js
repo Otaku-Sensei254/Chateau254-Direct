@@ -16,7 +16,7 @@ import AppHeader from './pages/UI/shared';
 import Auth from './pages/auth/auth';
 import AdminDashboard from './pages/UI/admin/admin_dash';
 import RiderDashboard from './pages/rider/rider_dash';
-
+import Booking from './pages/UI/booking';
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 const categories = ['All', 'Meals', 'Wine', 'Drinks', 'Desserts'];
 const normalizedWines = wines.map((wine, index) => ({
@@ -51,6 +51,21 @@ const storedSession = () => {
 const ProtectedRoute = ({ user, roles, children }) => {
   if (!user) return <Navigate to="/auth" replace />;
   if (roles && !roles.includes(user.role)) return <Navigate to="/menu" replace />;
+  return children;
+};
+
+const GuestRoute = ({ user, children }) => {
+  if (user) {
+    const destination = user.role === 'admin' ? '/admin' : user.role === 'rider' ? '/rider' : '/menu';
+    return <Navigate to={destination} replace />;
+  }
+  return children;
+};
+
+const ProfileRoute = ({ user, children }) => {
+  if (!user) return <Navigate to="/auth" replace />;
+  if (user.role === 'admin') return <Navigate to="/admin" replace />;
+  if (user.role === 'rider') return <Navigate to="/rider" replace />;
   return children;
 };
 
@@ -172,18 +187,19 @@ const App = () => {
     <div className="app-shell">
       {location.pathname !== '/' && location.pathname !== '/auth' && !location.pathname.startsWith('/admin') && !location.pathname.startsWith('/rider') && <AppHeader cartCount={cartCount} userName={session?.user?.full_name} onBack={handleBack} onCart={() => navigate('/cart')} onHome={() => navigate('/menu')} onProfile={() => navigate('/profile')} />}
       <Routes>
-        <Route path="/" element={<Home onOrder={() => navigate('/menu')} onAuth={() => navigate('/auth')} />} />
+        <Route path="/" element={<GuestRoute user={session?.user}><Home onOrder={() => navigate('/menu')} onAuth={() => navigate('/auth')} /></GuestRoute>} />
         <Route path="/auth" element={<Auth onSuccess={handleAuthSuccess} onBack={() => navigate('/')} />} />
         <Route path="/admin/*" element={<ProtectedRoute user={session?.user} roles={['admin']}><AdminDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
         <Route path="/rider" element={<ProtectedRoute user={session?.user} roles={['rider']}><RiderDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
-        <Route path="/menu" element={<Menu items={visibleItems} user={session?.user} categories={categories} filter={filter} setFilter={setFilter} query={query} setQuery={setQuery} addToCart={addToCart} cartCount={cartCount} onCart={() => navigate('/cart')} onViewItem={(item) => navigate(`/item/${item.id}`)} />} />
+        <Route path="/booking" element={<ProtectedRoute user={session?.user}><Booking user={session?.user} token={session?.token} items={catalog} /></ProtectedRoute>} />
+        <Route path="/menu" element={<Menu items={visibleItems} user={session?.user} categories={categories} filter={filter} setFilter={setFilter} query={query} setQuery={setQuery} addToCart={addToCart} cartCount={cartCount} onCart={() => navigate('/cart')} onViewItem={(item) => navigate(`/item/${item.id}`)} onBooking={() => navigate('/booking')} />} />
         <Route path="/item/:itemId" element={<ItemRoute addToCart={addToCart} />} />
         <Route path="/cart" element={<Cart cart={cart} subtotal={subtotal} delivery={delivery} changeQuantity={changeQuantity} onCheckout={() => navigate('/checkout')} onMenu={() => navigate('/menu')} />} />
         <Route path="/checkout" element={<Checkout subtotal={subtotal} delivery={delivery} placeOrder={placeOrder} />} />
         <Route path="/confirmation" element={<Confirmation order={order} onTrack={() => navigate('/track')} onMenu={() => navigate('/menu')} />} />
         <Route path="/track" element={<Tracking order={order} token={session?.token} api={API_URL} onMenu={() => navigate('/menu')} />} />
         <Route path="/tracking" element={<Navigate to="/track" replace />} />
-        <Route path="/profile" element={<ProtectedRoute user={session?.user} roles={['customer', 'admin']}><Profile user={session?.user} token={session?.token} onBack={handleBack} onLogout={handleLogout} onTrack={(o) => { setOrder({ id: o.id, number: o.id.slice(0, 8), total: Number(o.total_amount) }); navigate('/track'); }} /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProfileRoute user={session?.user}><Profile user={session?.user} token={session?.token} onBack={handleBack} onLogout={handleLogout} onTrack={(o) => { setOrder({ id: o.id, number: o.id.slice(0, 8), total: Number(o.total_amount) }); navigate('/track'); }} onBooking={() => navigate('/booking')} /></ProfileRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
