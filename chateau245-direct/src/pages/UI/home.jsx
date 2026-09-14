@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 const typewriterPhrases = [
   "Welcome to Chateau254",
   "Serene Dining",
-  "Ecstatic events Events",
+  "Ecstatic Events",
   "Fine Wine",
   "Thrilling Chateau Experience",
 ];
