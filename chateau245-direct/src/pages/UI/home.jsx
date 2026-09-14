@@ -86,7 +86,7 @@ const Home = ({ onTakeout, onDining, onEvents, onAuth }) => {
               <FiTruck /> Take Out
             </button>
             <button className="cta-button cta-dining" onClick={onDining}>
-              <FiCoffee /> Dining
+              <FiCoffee /> Dine-in
             </button>
             <button className="cta-button cta-events" onClick={onEvents}>
               <FiGift /> Events
