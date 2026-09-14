@@ -1,0 +1,78 @@
+.checkout-page form {
+    max-width: 560px;
+}
+
+.checkout-page label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    margin: 17px 0;
+}
+
+.checkout-page input,
+.checkout-page textarea {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 14px;
+    margin-top: 8px;
+    background: white;
+    color: var(--ink);
+    outline-color: var(--wine);
+    font-size: 12px;
+}
+
+.checkout-page textarea {
+    min-height: 82px;
+    resize: vertical;
+}
+
+.form-section {
+    margin-top: 28px;
+}
+
+.form-section h2 {
+    font: 700 14px Georgia, serif;
+}
+
+.option-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.option {
+    border: 1px solid var(--line);
+    padding: 14px;
+    display: flex !important;
+    align-items: center;
+    gap: 9px;
+    margin: 0 !important;
+    color: var(--muted);
+}
+
+.option.active {
+    border-color: var(--wine);
+    color: var(--wine);
+}
+
+.option span {
+    display: flex;
+    flex-direction: column;
+}
+
+.option small {
+    color: var(--muted);
+    font-weight: 400;
+    margin-top: 4px;
+}
+
+.payment-option {
+    font-weight: 400 !important;
+    margin: 10px 0 !important;
+}
+
+.checkout-page .summary {
+    margin-top: 30px;
+}

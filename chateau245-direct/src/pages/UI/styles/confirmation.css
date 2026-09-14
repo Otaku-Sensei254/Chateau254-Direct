@@ -1,0 +1,61 @@
+.confirmation-page {
+    text-align: center;
+    max-width: 540px;
+}
+
+.success-icon {
+    width: 64px;
+    height: 64px;
+    display: grid;
+    place-items: center;
+    border: 2px solid var(--wine);
+    border-radius: 50%;
+    color: var(--wine);
+    font-size: 31px;
+    margin: 25px auto 28px;
+}
+
+.confirmation-page h1 {
+    font-size: 47px;
+    margin-bottom: 12px;
+}
+
+.confirmation-page > p:not(.eyebrow) {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.order-ticket {
+    text-align: left;
+    margin: 28px 0;
+    padding: 18px;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    display: grid;
+    gap: 7px;
+}
+
+.order-ticket span {
+    color: var(--wine);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.order-ticket strong {
+    font: 700 23px Georgia, serif;
+}
+
+.order-ticket small {
+    color: var(--muted);
+}
+
+.text-button {
+    border: 0;
+    background: transparent;
+    margin-top: 18px;
+    color: var(--wine);
+    font-size: 12px;
+    font-weight: 700;
+}

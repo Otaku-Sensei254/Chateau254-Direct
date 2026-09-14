@@ -1,0 +1,327 @@
+.home-page {
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    color: white;
+    background: linear-gradient(90deg, rgba(13, 9, 7, .84), rgba(13, 9, 7, .3)), url('https://images.unsplash.com/photo-1641830879467-e22004141bcb?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHdpbmUlMjB0b2FzdHxlbnwwfHwwfHx8MA%3D%3D') center/cover;
+    display: flex;
+    flex-direction: column;
+    padding: 32px clamp(24px, 7vw, 110px);
+    animation: home-image-reveal 1.2s ease-out both;
+}
+
+.home-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 78% 20%, rgba(147, 71, 52, .2), transparent 34%), linear-gradient(0deg, rgba(20, 9, 8, .75), transparent 50%);
+    pointer-events: none;
+    animation: home-overlay-settle 1.4s ease-out both;
+}
+
+/* Hero Right - Typewriter */
+.hero-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+}
+
+.typewriter-container {
+    display: flex;
+    align-items: center;
+}
+
+.typewriter-text {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 600;
+    font-style: italic;
+    font-size: clamp(52px, 6.5vw, 96px);
+    color: #bc9660;
+    white-space: nowrap;
+    letter-spacing: 1px;
+}
+
+.typewriter-cursor {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 300;
+    font-size: clamp(52px, 6.5vw, 96px);
+    color: #bc9660;
+    animation: blink 0.8s step-end infinite;
+    margin-left: 2px;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.home-nav,
+.home-foot,
+.hero-section {
+    position: relative;
+    z-index: 1;
+}
+
+.home-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    animation: home-rise .8s .12s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font: 700 15px 'Playfair Display', Georgia, serif;
+    letter-spacing: 1.7px;
+    color: inherit;
+    text-align: left;
+}
+
+.brand > span:last-child > span {
+    color: #bc9660;
+}
+
+.brand small {
+    display: block;
+    font: 6px 'Montserrat', Arial, sans-serif;
+    letter-spacing: 1.1px;
+    margin-top: 3px;
+    opacity: .75;
+}
+
+.brand-mark {
+    font-size: 31px;
+    line-height: 1;
+    color: #bc9660;
+}
+
+.hero-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+    padding: 90px 0 50px;
+    animation: home-rise .9s .24s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.hero-left {
+    flex: 0 0 50%;
+    max-width: 540px;
+}
+
+.home-page .eyebrow {
+    color: #d8ab76;
+    font-family: 'Montserrat', Arial, sans-serif;
+}
+
+.hero-section h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+}
+
+.hero-text {
+    font: 400 20px/1.45 'Playfair Display', Georgia, serif;
+    color: #eee6df;
+    margin-bottom: 28px;
+}
+
+.options {
+    display: block;
+    font: 500 22px 'Playfair Display', Georgia, serif;
+    margin-bottom: 1.2rem;
+    color: #d4b896;
+    letter-spacing: 0.5px;
+}
+
+/* CTA Buttons */
+.cta-btns {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 0 24px;
+    border: none;
+    border-radius: 6px;
+    font: 700 11px 'Montserrat', Arial, sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+}
+
+.cta-button svg {
+    font-size: 16px;
+}
+
+.cta-takeout {
+    background: linear-gradient(135deg, #761329, #9a1a3a);
+    box-shadow: 0 8px 24px rgba(118, 19, 41, 0.35);
+}
+
+.cta-takeout:hover {
+    background: linear-gradient(135deg, #8b1c35, #b02045);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(118, 19, 41, 0.45);
+}
+
+.cta-dining {
+    background: linear-gradient(135deg, #bc9660, #d4b07a);
+    box-shadow: 0 8px 24px rgba(188, 150, 96, 0.35);
+    color: #1a1210;
+}
+
+.cta-dining:hover {
+    background: linear-gradient(135deg, #cca670, #e4c08a);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(188, 150, 96, 0.45);
+}
+
+.cta-events {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(4px);
+}
+
+.cta-events:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.home-foot {
+    display: flex;
+    gap: 28px;
+    color: rgba(255, 255, 255, .7);
+    font: 400 11px 'Montserrat', Arial, sans-serif;
+    animation: home-rise .8s .55s cubic-bezier(.22, 1, .36, 1) both;
+    margin-top: auto;
+}
+
+.home-foot span {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+.whatsapp-float {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 10px;
+    right: 40px;
+    background-color: #25d366;
+    color: #FFF;
+    border-radius: 50px;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 2px 2px 3px #999;
+    z-index: 1000;
+}
+.hero-section .eyebrow { animation: home-rise .7s .4s cubic-bezier(.22, 1, .36, 1) both; }
+.hero-section h1 { animation: home-rise .8s .48s cubic-bezier(.22, 1, .36, 1) both; }
+.hero-section .hero-text { animation: home-rise .8s .58s cubic-bezier(.22, 1, .36, 1) both; }
+.hero-section .cta-btns { animation: home-rise .8s .7s cubic-bezier(.22, 1, .36, 1) both; }
+
+@keyframes home-rise {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes home-image-reveal {
+    from { opacity: 0; transform: scale(1.025); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes home-overlay-settle {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-page,
+    .home-overlay,
+    .home-nav,
+    .hero-section,
+    .home-foot,
+    .hero-section .eyebrow,
+    .hero-section h1,
+    .hero-section .hero-text,
+    .hero-section .cta-btns {
+        animation: none;
+    }
+}
+
+@media (min-width: 760px) {
+    .hero-section {
+        margin-top: 6vh;
+    }
+}
+
+@media (max-width: 900px) {
+    .hero-section {
+        flex-direction: column;
+        gap: 2rem;
+        text-align: center;
+    }
+
+    .hero-left {
+        flex: none;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .hero-right {
+        width: 100%;
+    }
+
+    .cta-btns {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 540px) {
+    .home-page {
+        padding: 24px 20px;
+    }
+
+    .home-foot {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .cta-btns {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .cta-button {
+        justify-content: center;
+    }
+
+    .typewriter-text,
+    .typewriter-cursor {
+        font-size: clamp(28px, 8vw, 48px);
+    }
+    .whatsapp-float {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+        bottom: 10px;
+        right: 0;
+    }
+}

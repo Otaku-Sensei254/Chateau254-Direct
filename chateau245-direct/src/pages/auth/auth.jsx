@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FiArrowLeft, FiArrowRight, FiMail, FiLock, FiUser, FiEye, FiEyeOff } from 'react-icons/fi';
+import { FiArrowLeft, FiArrowRight, FiMail, FiLock, FiUser, FiPhone, FiEye, FiEyeOff } from 'react-icons/fi';
 import { Brand } from '../UI/shared';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
@@ -16,7 +16,10 @@ const Auth = ({ onSuccess, onBack }) => {
     setLoading(true);
     const form = new FormData(event.currentTarget);
     const payload = { email: form.get('email'), password: form.get('password') };
-    if (mode === 'signup') payload.name = form.get('name');
+    if (mode === 'signup') {
+      payload.name = form.get('name');
+      payload.phone = form.get('phone');
+    }
 
     try {
       const response = await fetch(`${API_URL}/auth/${mode}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
@@ -45,7 +48,24 @@ const Auth = ({ onSuccess, onBack }) => {
       </div>
       <div className="auth-divider"><span>or continue with email</span></div>
       <form className="auth-form" onSubmit={handleSubmit}>
-        {mode === 'signup' && <label><span>Full name</span><div className="auth-input"><FiUser /><input name="name" type="text" placeholder="Your Name" required /></div></label>}
+        {mode === 'signup' && (
+          <>
+            <label>
+              <span>Full name</span>
+              <div className="auth-input">
+                <FiUser />
+                <input name="name" type="text" placeholder="Your Name" required />
+              </div>
+            </label>
+            <label>
+              <span>Phone number</span>
+              <div className="auth-input">
+                <FiPhone />
+                <input name="phone" type="tel" placeholder="+254 7XX XXX XXX" required />
+              </div>
+            </label>
+          </>
+        )}
         <label><span>Email address</span><div className="auth-input"><FiMail /><input name="email" type="email" placeholder="you@example.com" required /></div></label>
         <label><span>Password</span><div className="auth-input"><FiLock /><input name="password" type={showPassword ? 'text' : 'password'} placeholder="Enter your password" minLength="6" required /><button type="button" className="auth-toggle-password" onClick={() => setShowPassword((prev) => !prev)} tabIndex={-1}>{showPassword ? <FiEyeOff /> : <FiEye />}</button></div></label>
         {mode === 'signin' && <button className="forgot-password" type="button">Forgot password?</button>}
@@ -53,7 +73,7 @@ const Auth = ({ onSuccess, onBack }) => {
         <button className="primary-button auth-submit" type="submit" disabled={loading}>{loading ? 'Please wait...' : mode === 'signin' ? 'Sign in' : 'Create account'} {!loading && <FiArrowRight />}</button>
       </form>
       <p className="auth-switch">{mode === 'signin' ? "Don't have an account?" : 'Already have an account?'} <button onClick={() => setMode(mode === 'signin' ? 'signup' : 'signin')}>{mode === 'signin' ? 'Sign up' : 'Sign in'}</button></p>
-      <small className="auth-demo-note">Demo mode: authentication is simulated.</small>
+      {/* <small className="auth-demo-note">Demo mode: authentication is simulated.</small> */}
     </div>
   </main>;
 };

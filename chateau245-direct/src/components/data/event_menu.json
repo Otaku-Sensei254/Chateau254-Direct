@@ -1,0 +1,269 @@
+{
+  "event_menu": [
+    {
+      "category": "Canapés & Starters",
+      "items": [
+        {
+          "name": "Beef Skewers (Mini)",
+          "description": "Bite-sized marinated beef skewers, grilled and served with dipping sauce",
+          "price_range_kes": {
+            "min": 50,
+            "max": 100
+          },
+          "unit": "per piece",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Beef%20Skewers%20%28Mini%29%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Chicken Samosas (Mini)",
+          "description": "Small crispy pastries filled with spiced chicken",
+          "price_range_kes": {
+            "min": 30,
+            "max": 70
+          },
+          "unit": "per piece",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Chicken%20Samosas%20%28Mini%29%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Stuffed Mushrooms",
+          "description": "Mushroom caps filled with cheese and herbs, oven-baked",
+          "price_range_kes": {
+            "min": 50,
+            "max": 100
+          },
+          "unit": "per piece",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Stuffed%20Mushrooms%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Smoked Salmon Canapés",
+          "description": "Cream cheese and smoked salmon on toasted crostini",
+          "price_range_kes": {
+            "min": 80,
+            "max": 150
+          },
+          "unit": "per piece",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Smoked%20Salmon%20Canap%C3%A9s%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Vegetable Spring Rolls",
+          "description": "Crispy rolls filled with mixed vegetables, served with sweet chili sauce",
+          "price_range_kes": {
+            "min": 40,
+            "max": 90
+          },
+          "unit": "per piece",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Vegetable%20Spring%20Rolls%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Bruschetta Platter",
+          "description": "Toasted baguette slices topped with tomato, basil, and olive oil",
+          "price_range_kes": {
+            "min": 1500,
+            "max": 2500
+          },
+          "unit": "per platter (serves 10)",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Bruschetta%20Platter%20food&title=Special:MediaSearch&type=image"
+        }
+      ]
+    },
+    {
+      "category": "Buffet Mains",
+      "items": [
+        {
+          "name": "Whole Roasted Chicken (Carving Station)",
+          "description": "Herb-roasted whole chickens, carved to order",
+          "price_range_kes": {
+            "min": 1200,
+            "max": 1800
+          },
+          "unit": "per chicken (serves 4-6)",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Whole%20Roasted%20Chicken%20%28Carving%20Station%29%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Beef Pilau (Catering Tray)",
+          "description": "Large tray of spiced beef pilau for group serving",
+          "price_range_kes": {
+            "min": 4000,
+            "max": 7000
+          },
+          "unit": "per tray (serves 20)",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Beef%20Pilau%20%28Catering%20Tray%29%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Nyama Choma Platter (5kg)",
+          "description": "Traditional grilled goat/beef, served with kachumbari",
+          "price_range_kes": {
+            "min": 6000,
+            "max": 9000
+          },
+          "unit": "per 5kg platter",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Nyama%20Choma%20Platter%20%285kg%29%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Vegetable Biryani (Catering Tray)",
+          "description": "Fragrant spiced rice with mixed vegetables",
+          "price_range_kes": {
+            "min": 3500,
+            "max": 6000
+          },
+          "unit": "per tray (serves 20)",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Vegetable%20Biryani%20%28Catering%20Tray%29%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Grilled Fish Platter",
+          "description": "Whole grilled tilapia, seasoned and served with ugali on the side",
+          "price_range_kes": {
+            "min": 1500,
+            "max": 2500
+          },
+          "unit": "per fish",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Grilled%20Fish%20Platter%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Pasta Bar (Catering Tray)",
+          "description": "Choice of pasta with tomato, alfredo, or pesto sauce",
+          "price_range_kes": {
+            "min": 3000,
+            "max": 5500
+          },
+          "unit": "per tray (serves 20)",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Pasta%20Bar%20%28Catering%20Tray%29%20food&title=Special:MediaSearch&type=image"
+        }
+      ]
+    },
+    {
+      "category": "Salads & Sides",
+      "items": [
+        {
+          "name": "Greek Salad (Catering Bowl)",
+          "description": "Cucumber, tomato, feta, olives, and red onion",
+          "price_range_kes": {
+            "min": 2000,
+            "max": 3500
+          },
+          "unit": "per bowl (serves 15)",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Greek%20Salad%20%28Catering%20Bowl%29%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Coleslaw (Catering Bowl)",
+          "description": "Shredded cabbage and carrot in a creamy dressing",
+          "price_range_kes": {
+            "min": 1500,
+            "max": 2500
+          },
+          "unit": "per bowl (serves 15)",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Coleslaw%20%28Catering%20Bowl%29%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Roasted Vegetable Medley",
+          "description": "Seasonal vegetables roasted with herbs and olive oil",
+          "price_range_kes": {
+            "min": 2000,
+            "max": 3500
+          },
+          "unit": "per tray (serves 15)",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Roasted%20Vegetable%20Medley%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Garlic Bread Basket",
+          "description": "Toasted baguette slices with garlic butter",
+          "price_range_kes": {
+            "min": 1000,
+            "max": 1800
+          },
+          "unit": "per basket (serves 10)",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Garlic%20Bread%20Basket%20food&title=Special:MediaSearch&type=image"
+        }
+      ]
+    },
+    {
+      "category": "Desserts & Cakes",
+      "items": [
+        {
+          "name": "Celebration Cake (2-tier)",
+          "description": "Custom-decorated cake for birthdays, weddings, or corporate events",
+          "price_range_kes": {
+            "min": 8000,
+            "max": 20000
+          },
+          "unit": "per cake (serves 40-60)",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Celebration%20Cake%20%282-tier%29%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Cupcake Tower (Dozen)",
+          "description": "Assorted flavored cupcakes, decorated to match event theme",
+          "price_range_kes": {
+            "min": 2500,
+            "max": 4500
+          },
+          "unit": "per dozen",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Cupcake%20Tower%20%28Dozen%29%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Mini Dessert Platter",
+          "description": "Assortment of bite-sized cheesecakes, brownies, and tarts",
+          "price_range_kes": {
+            "min": 3000,
+            "max": 5500
+          },
+          "unit": "per platter (serves 20)",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Mini%20Dessert%20Platter%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Fruit Platter (Large)",
+          "description": "Seasonal fresh fruit arranged for group serving",
+          "price_range_kes": {
+            "min": 2000,
+            "max": 4000
+          },
+          "unit": "per platter (serves 20)",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Fruit%20Platter%20%28Large%29%20food&title=Special:MediaSearch&type=image"
+        }
+      ]
+    },
+    {
+      "category": "Beverage Service",
+      "items": [
+        {
+          "name": "Coffee/Tea Station",
+          "description": "Self-serve station with coffee, tea, milk, and sugar",
+          "price_range_kes": {
+            "min": 3000,
+            "max": 6000
+          },
+          "unit": "per station (serves 30)",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Coffee/Tea%20Station%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Fresh Juice Dispenser",
+          "description": "Large dispenser of mixed fresh fruit juice",
+          "price_range_kes": {
+            "min": 2500,
+            "max": 4500
+          },
+          "unit": "per dispenser (serves 25)",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Fresh%20Juice%20Dispenser%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Soda Crate Assortment",
+          "description": "Mixed crate of soft drinks for guest service",
+          "price_range_kes": {
+            "min": 1800,
+            "max": 3000
+          },
+          "unit": "per crate (24 bottles)",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Soda%20Crate%20Assortment%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Water Bottles (Case)",
+          "description": "Case of 500ml bottled water for guests",
+          "price_range_kes": {
+            "min": 1200,
+            "max": 2000
+          },
+          "unit": "per case (24 bottles)",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Water%20Bottles%20%28Case%29%20food&title=Special:MediaSearch&type=image"
+        }
+      ]
+    }
+  ]
+}

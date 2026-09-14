@@ -1,0 +1,244 @@
+{
+  "takeout_orderout_wine_list": [
+    {
+      "name": "Barefoot Pinot Grigio",
+      "type": "White",
+      "region": "California, USA",
+      "grape": "Pinot Grigio",
+      "notes": "Light, crisp, citrus and green apple, easy-drinking crowd pleaser",
+      "classification": {
+        "color": "White",
+        "carbonation": "Still",
+        "sweetness": "Off-dry",
+        "fortification": "Unfortified",
+        "closure": "Screw cap",
+        "quality_tier": "Everyday table wine"
+      },
+      "price_range_kes": {
+        "min": 900,
+        "max": 1500
+      },
+      "image": "https://commons.wikimedia.org/w/index.php?search=Barefoot%20Pinot%20Grigio%20wine%20bottle&title=Special:MediaSearch&type=image"
+    },
+    {
+      "name": "Yellow Tail Shiraz",
+      "type": "Red",
+      "region": "South Eastern Australia",
+      "grape": "Shiraz",
+      "notes": "Juicy, jammy dark fruit, soft tannins, very approachable",
+      "classification": {
+        "color": "Red",
+        "carbonation": "Still",
+        "sweetness": "Off-dry",
+        "fortification": "Unfortified",
+        "closure": "Screw cap",
+        "quality_tier": "Everyday table wine"
+      },
+      "price_range_kes": {
+        "min": 900,
+        "max": 1400
+      },
+      "image": "https://commons.wikimedia.org/w/index.php?search=Yellow%20Tail%20Shiraz%20wine%20bottle&title=Special:MediaSearch&type=image"
+    },
+    {
+      "name": "Four Cousins Sweet Red",
+      "type": "Red",
+      "region": "Western Cape, South Africa",
+      "grape": "Blend",
+      "notes": "Popular semi-sweet party wine, berry-forward and smooth",
+      "classification": {
+        "color": "Red",
+        "carbonation": "Still",
+        "sweetness": "Sweet",
+        "fortification": "Unfortified",
+        "closure": "Screw cap",
+        "quality_tier": "Everyday table wine"
+      },
+      "price_range_kes": {
+        "min": 800,
+        "max": 1200
+      },
+      "image": "https://commons.wikimedia.org/w/index.php?search=Four%20Cousins%20Sweet%20Red%20wine%20bottle&title=Special:MediaSearch&type=image"
+    },
+    {
+      "name": "Nederburg Baronne",
+      "type": "Red",
+      "region": "Western Cape, South Africa",
+      "grape": "Cabernet Sauvignon, Shiraz blend",
+      "notes": "Medium-bodied, soft tannins, a step up from entry-level but still casual",
+      "classification": {
+        "color": "Red",
+        "carbonation": "Still",
+        "sweetness": "Dry",
+        "fortification": "Unfortified",
+        "closure": "Screw cap",
+        "quality_tier": "Everyday-premium table wine"
+      },
+      "price_range_kes": {
+        "min": 1200,
+        "max": 1800
+      },
+      "image": "https://commons.wikimedia.org/w/index.php?search=Nederburg%20Baronne%20wine%20bottle&title=Special:MediaSearch&type=image"
+    },
+    {
+      "name": "Robertson Winery Chardonnay",
+      "type": "White",
+      "region": "Robertson, South Africa",
+      "grape": "Chardonnay",
+      "notes": "Light oak, tropical fruit, affordable and food-friendly",
+      "classification": {
+        "color": "White",
+        "carbonation": "Still",
+        "sweetness": "Dry",
+        "fortification": "Unfortified",
+        "closure": "Screw cap",
+        "quality_tier": "Everyday table wine"
+      },
+      "price_range_kes": {
+        "min": 900,
+        "max": 1400
+      },
+      "image": "https://commons.wikimedia.org/w/index.php?search=Robertson%20Winery%20Chardonnay%20wine%20bottle&title=Special:MediaSearch&type=image"
+    },
+    {
+      "name": "Drostdy-Hof Sweet Rosé",
+      "type": "Rosé",
+      "region": "Western Cape, South Africa",
+      "grape": "Blend",
+      "notes": "Light pink, fruity and slightly sweet, popular casual choice",
+      "classification": {
+        "color": "Rosé",
+        "carbonation": "Still",
+        "sweetness": "Semi-sweet",
+        "fortification": "Unfortified",
+        "closure": "Screw cap",
+        "quality_tier": "Everyday table wine"
+      },
+      "price_range_kes": {
+        "min": 800,
+        "max": 1200
+      },
+      "image": "https://commons.wikimedia.org/w/index.php?search=Drostdy-Hof%20Sweet%20Ros%C3%A9%20wine%20bottle&title=Special:MediaSearch&type=image"
+    },
+    {
+      "name": "Cellar Cask Dry Red",
+      "type": "Red",
+      "region": "Kenya (locally bottled/blended)",
+      "grape": "Blend",
+      "notes": "Budget-friendly local favorite, simple and drinkable",
+      "classification": {
+        "color": "Red",
+        "carbonation": "Still",
+        "sweetness": "Dry",
+        "fortification": "Unfortified",
+        "closure": "Screw cap",
+        "quality_tier": "Value/economy table wine"
+      },
+      "price_range_kes": {
+        "min": 500,
+        "max": 900
+      },
+      "image": "https://commons.wikimedia.org/w/index.php?search=Cellar%20Cask%20Dry%20Red%20wine%20bottle&title=Special:MediaSearch&type=image"
+    },
+    {
+      "name": "Caprice Sparkling Perle",
+      "type": "Sparkling",
+      "region": "South Africa",
+      "grape": "Chenin Blanc blend",
+      "notes": "Light, bubbly, semi-sweet — a casual celebratory pick for takeout occasions",
+      "classification": {
+        "color": "White",
+        "carbonation": "Sparkling",
+        "sweetness": "Semi-sweet",
+        "fortification": "Unfortified",
+        "closure": "Cork with wire cage",
+        "quality_tier": "Everyday sparkling wine"
+      },
+      "price_range_kes": {
+        "min": 1000,
+        "max": 1600
+      },
+      "image": "https://commons.wikimedia.org/w/index.php?search=Caprice%20Sparkling%20Perle%20wine%20bottle&title=Special:MediaSearch&type=image"
+    },
+    {
+      "name": "Kumala Merlot",
+      "type": "Red",
+      "region": "Western Cape, South Africa",
+      "grape": "Merlot",
+      "notes": "Soft, plummy, easy-drinking, common pizza/takeout pairing",
+      "classification": {
+        "color": "Red",
+        "carbonation": "Still",
+        "sweetness": "Dry",
+        "fortification": "Unfortified",
+        "closure": "Screw cap",
+        "quality_tier": "Everyday table wine"
+      },
+      "price_range_kes": {
+        "min": 900,
+        "max": 1400
+      },
+      "image": "https://commons.wikimedia.org/w/index.php?search=Kumala%20Merlot%20wine%20bottle&title=Special:MediaSearch&type=image"
+    },
+    {
+      "name": "Autumn Harvest Crackling",
+      "type": "Sparkling (semi-sweet)",
+      "region": "Western Cape, South Africa",
+      "grape": "Blend",
+      "notes": "Very popular budget bubbly for casual get-togethers and takeout celebrations",
+      "classification": {
+        "color": "White",
+        "carbonation": "Semi-sparkling (crackling/perlé)",
+        "sweetness": "Sweet",
+        "fortification": "Unfortified",
+        "closure": "Screw cap",
+        "quality_tier": "Value/economy sparkling wine"
+      },
+      "price_range_kes": {
+        "min": 700,
+        "max": 1100
+      },
+      "image": "https://commons.wikimedia.org/w/index.php?search=Autumn%20Harvest%20Crackling%20wine%20bottle&title=Special:MediaSearch&type=image"
+    },
+    {
+      "name": "Casillero del Diablo Cabernet Sauvignon",
+      "type": "Red",
+      "region": "Central Valley, Chile",
+      "grape": "Cabernet Sauvignon",
+      "notes": "Reliable mid-range choice, dark fruit and light spice, good with grilled takeout",
+      "classification": {
+        "color": "Red",
+        "carbonation": "Still",
+        "sweetness": "Dry",
+        "fortification": "Unfortified",
+        "closure": "Screw cap",
+        "quality_tier": "Everyday-premium table wine"
+      },
+      "price_range_kes": {
+        "min": 1400,
+        "max": 2000
+      },
+      "image": "https://commons.wikimedia.org/w/index.php?search=Casillero%20del%20Diablo%20Cabernet%20Sauvignon%20wine%20bottle&title=Special:MediaSearch&type=image"
+    },
+    {
+      "name": "Tanqueray-style Sangria (Ready-to-Drink)",
+      "type": "Flavored Wine Beverage",
+      "region": "Various",
+      "grape": "Wine-based blend with fruit flavoring",
+      "notes": "Pre-mixed, fruity, chilled and ready to pour — a common casual takeout/delivery add-on",
+      "classification": {
+        "color": "Red/Rosé blend",
+        "carbonation": "Still or lightly sparkling",
+        "sweetness": "Sweet",
+        "fortification": "Unfortified",
+        "closure": "Screw cap/can",
+        "quality_tier": "Ready-to-drink casual wine beverage"
+      },
+      "price_range_kes": {
+        "min": 600,
+        "max": 1000
+      },
+      "image": "https://commons.wikimedia.org/w/index.php?search=Tanqueray-style%20Sangria%20%28Ready-to-Drink%29%20wine%20bottle&title=Special:MediaSearch&type=image"
+    }
+  ]
+}

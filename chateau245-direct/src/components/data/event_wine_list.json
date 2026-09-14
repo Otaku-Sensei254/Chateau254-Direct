@@ -1,0 +1,204 @@
+{
+  "event_wine_list": [
+    {
+      "name": "JC Le Roux Sparkling Brut",
+      "type": "Sparkling",
+      "region": "Western Cape, South Africa",
+      "grape": "Chenin Blanc, Colombard blend",
+      "notes": "Crowd-pleasing bubbly, ideal for toasts and celebrations",
+      "classification": {
+        "color": "White",
+        "carbonation": "Sparkling",
+        "sweetness": "Dry (Brut)",
+        "fortification": "Unfortified",
+        "closure": "Cork with wire cage"
+      },
+      "event_fit": "Toasts, weddings, corporate launches",
+      "price_range_kes": {
+        "min": 1200,
+        "max": 2000
+      },
+      "image": "https://commons.wikimedia.org/w/index.php?search=JC%20Le%20Roux%20Sparkling%20Brut%20wine%20bottle&title=Special:MediaSearch&type=image"
+    },
+    {
+      "name": "Moët & Chandon Impérial",
+      "type": "Champagne",
+      "region": "Champagne, France",
+      "grape": "Chardonnay, Pinot Noir, Pinot Meunier",
+      "notes": "Classic prestige champagne, fresh fruitiness with elegant structure",
+      "classification": {
+        "color": "White",
+        "carbonation": "Sparkling",
+        "sweetness": "Dry (Brut)",
+        "fortification": "Unfortified",
+        "closure": "Cork with wire cage"
+      },
+      "event_fit": "Weddings, VIP tables, milestone celebrations",
+      "price_range_kes": {
+        "min": 8000,
+        "max": 14000
+      },
+      "image": "https://commons.wikimedia.org/w/index.php?search=Mo%C3%ABt%20%26%20Chandon%20Imp%C3%A9rial%20wine%20bottle&title=Special:MediaSearch&type=image"
+    },
+    {
+      "name": "Nederburg Cuvée Brut",
+      "type": "Sparkling",
+      "region": "Western Cape, South Africa",
+      "grape": "Chenin Blanc, Chardonnay blend",
+      "notes": "Affordable bubbly option for large guest counts, crisp and light",
+      "classification": {
+        "color": "White",
+        "carbonation": "Sparkling",
+        "sweetness": "Dry (Brut)",
+        "fortification": "Unfortified",
+        "closure": "Cork with wire cage"
+      },
+      "event_fit": "Large receptions, bulk toasting wine",
+      "price_range_kes": {
+        "min": 1500,
+        "max": 2500
+      },
+      "image": "https://commons.wikimedia.org/w/index.php?search=Nederburg%20Cuv%C3%A9e%20Brut%20wine%20bottle&title=Special:MediaSearch&type=image"
+    },
+    {
+      "name": "Robertson Winery Sauvignon Blanc",
+      "type": "White",
+      "region": "Robertson, South Africa",
+      "grape": "Sauvignon Blanc",
+      "notes": "Zesty, citrus-driven, pairs well with canapés and buffet starters",
+      "classification": {
+        "color": "White",
+        "carbonation": "Still",
+        "sweetness": "Dry",
+        "fortification": "Unfortified",
+        "closure": "Screw cap"
+      },
+      "event_fit": "Cocktail hour, buffet pairing",
+      "price_range_kes": {
+        "min": 1000,
+        "max": 1600
+      },
+      "image": "https://commons.wikimedia.org/w/index.php?search=Robertson%20Winery%20Sauvignon%20Blanc%20wine%20bottle&title=Special:MediaSearch&type=image"
+    },
+    {
+      "name": "Nederburg Cabernet Sauvignon",
+      "type": "Red",
+      "region": "Western Cape, South Africa",
+      "grape": "Cabernet Sauvignon",
+      "notes": "Medium-full bodied, dark fruit, versatile crowd-pleaser for dinner service",
+      "classification": {
+        "color": "Red",
+        "carbonation": "Still",
+        "sweetness": "Dry",
+        "fortification": "Unfortified",
+        "closure": "Screw cap"
+      },
+      "event_fit": "Seated dinners, buffet mains pairing",
+      "price_range_kes": {
+        "min": 1200,
+        "max": 1900
+      },
+      "image": "https://commons.wikimedia.org/w/index.php?search=Nederburg%20Cabernet%20Sauvignon%20wine%20bottle&title=Special:MediaSearch&type=image"
+    },
+    {
+      "name": "Four Cousins Sweet Rosé",
+      "type": "Rosé",
+      "region": "Western Cape, South Africa",
+      "grape": "Blend",
+      "notes": "Light, sweet, and easy-drinking — popular with mixed-preference guest lists",
+      "classification": {
+        "color": "Rosé",
+        "carbonation": "Still",
+        "sweetness": "Sweet",
+        "fortification": "Unfortified",
+        "closure": "Screw cap"
+      },
+      "event_fit": "Bridal showers, birthday parties, casual mixers",
+      "price_range_kes": {
+        "min": 800,
+        "max": 1300
+      },
+      "image": "https://commons.wikimedia.org/w/index.php?search=Four%20Cousins%20Sweet%20Ros%C3%A9%20wine%20bottle&title=Special:MediaSearch&type=image"
+    },
+    {
+      "name": "Veuve Clicquot Yellow Label",
+      "type": "Champagne",
+      "region": "Champagne, France",
+      "grape": "Pinot Noir, Chardonnay, Pinot Meunier",
+      "notes": "Bold, rich prestige champagne for premium event moments",
+      "classification": {
+        "color": "White",
+        "carbonation": "Sparkling",
+        "sweetness": "Dry (Brut)",
+        "fortification": "Unfortified",
+        "closure": "Cork with wire cage"
+      },
+      "event_fit": "High-end weddings, corporate galas",
+      "price_range_kes": {
+        "min": 9000,
+        "max": 15000
+      },
+      "image": "https://commons.wikimedia.org/w/index.php?search=Veuve%20Clicquot%20Yellow%20Label%20wine%20bottle&title=Special:MediaSearch&type=image"
+    },
+    {
+      "name": "Kumala Merlot",
+      "type": "Red",
+      "region": "Western Cape, South Africa",
+      "grape": "Merlot",
+      "notes": "Soft and plummy, safe universally-liked pour for large events",
+      "classification": {
+        "color": "Red",
+        "carbonation": "Still",
+        "sweetness": "Dry",
+        "fortification": "Unfortified",
+        "closure": "Screw cap"
+      },
+      "event_fit": "Large receptions, bulk pours",
+      "price_range_kes": {
+        "min": 900,
+        "max": 1400
+      },
+      "image": "https://commons.wikimedia.org/w/index.php?search=Kumala%20Merlot%20wine%20bottle&title=Special:MediaSearch&type=image"
+    },
+    {
+      "name": "Autumn Harvest Crackling",
+      "type": "Semi-Sparkling",
+      "region": "Western Cape, South Africa",
+      "grape": "Blend",
+      "notes": "Budget-friendly bubbly for large-scale toasting without the champagne price tag",
+      "classification": {
+        "color": "White",
+        "carbonation": "Semi-sparkling (crackling/perlé)",
+        "sweetness": "Sweet",
+        "fortification": "Unfortified",
+        "closure": "Screw cap"
+      },
+      "event_fit": "Bulk toasting, large guest counts, budget events",
+      "price_range_kes": {
+        "min": 700,
+        "max": 1100
+      },
+      "image": "https://commons.wikimedia.org/w/index.php?search=Autumn%20Harvest%20Crackling%20wine%20bottle&title=Special:MediaSearch&type=image"
+    },
+    {
+      "name": "Graham's Fine Ruby Port",
+      "type": "Fortified",
+      "region": "Douro Valley, Portugal",
+      "grape": "Touriga Nacional and blends",
+      "notes": "Sweet, rich, served in small pours for an elegant after-dinner close",
+      "classification": {
+        "color": "Red",
+        "carbonation": "Still",
+        "sweetness": "Sweet",
+        "fortification": "Fortified",
+        "closure": "Cork"
+      },
+      "event_fit": "After-dinner service, dessert pairing",
+      "price_range_kes": {
+        "min": 2500,
+        "max": 4000
+      },
+      "image": "https://commons.wikimedia.org/w/index.php?search=Graham%27s%20Fine%20Ruby%20Port%20wine%20bottle&title=Special:MediaSearch&type=image"
+    }
+  ]
+}

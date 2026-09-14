@@ -1,0 +1,111 @@
+.booking-page {
+    max-width: 560px;
+}
+
+.booking-form {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 24px;
+}
+
+.booking-field {
+    margin-bottom: 20px;
+}
+
+.booking-field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 8px;
+}
+
+.booking-input,
+.booking-textarea {
+    position: relative;
+}
+
+.booking-input svg,
+.booking-textarea svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 16px;
+}
+
+.booking-input input,
+.booking-input select {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 14px 14px 14px 42px;
+    background: white;
+    color: var(--ink);
+    outline-color: var(--wine);
+    font-size: 14px;
+}
+
+.booking-textarea textarea {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 14px 14px 14px 42px;
+    background: white;
+    color: var(--ink);
+    outline-color: var(--wine);
+    font-size: 14px;
+    min-height: 100px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.booking-input input:focus,
+.booking-input select:focus,
+.booking-textarea textarea:focus {
+    border-color: var(--wine);
+}
+
+.booking-success {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+}
+
+.booking-success-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #e8f5e9;
+    color: #2e7d32;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 32px;
+}
+
+.booking-success h2 {
+    margin: 0 0 10px;
+    font: 700 28px Georgia, serif;
+    color: var(--ink);
+}
+
+.booking-success-text {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0 0 8px;
+}
+
+.booking-success-hint {
+    color: var(--muted);
+    font-size: 13px;
+    margin: 0 0 28px;
+}

@@ -1,0 +1,340 @@
+{
+  "takeout_menu": [
+    {
+      "category": "Coffee & Hot Drinks",
+      "items": [
+        {
+          "name": "Americano",
+          "description": "Espresso shots topped with hot water, light and simple",
+          "price_range_kes": {
+            "min": 150,
+            "max": 300
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Americano%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Cappuccino",
+          "description": "Espresso with steamed milk and thick foam",
+          "price_range_kes": {
+            "min": 200,
+            "max": 350
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Cappuccino%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Latte",
+          "description": "Espresso with steamed milk, light foam layer",
+          "price_range_kes": {
+            "min": 200,
+            "max": 380
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Latte%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Mocha",
+          "description": "Espresso, chocolate syrup, and steamed milk",
+          "price_range_kes": {
+            "min": 250,
+            "max": 400
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Mocha%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Kenyan Chai (Milk Tea)",
+          "description": "Spiced black tea brewed with milk, a local staple",
+          "price_range_kes": {
+            "min": 100,
+            "max": 200
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Kenyan%20Chai%20%28Milk%20Tea%29%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Hot Chocolate",
+          "description": "Rich cocoa with steamed milk, topped with cream or marshmallows",
+          "price_range_kes": {
+            "min": 200,
+            "max": 350
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Hot%20Chocolate%20food&title=Special:MediaSearch&type=image"
+        }
+      ]
+    },
+    {
+      "category": "Cold Drinks",
+      "items": [
+        {
+          "name": "Soda (Coca-Cola, Fanta, Sprite)",
+          "description": "Classic 300-500ml carbonated soft drink",
+          "price_range_kes": {
+            "min": 60,
+            "max": 150
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Soda%20%28Coca-Cola%2C%20Fanta%2C%20Sprite%29%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Bottled Water (500ml)",
+          "description": "Still mineral water",
+          "price_range_kes": {
+            "min": 50,
+            "max": 100
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Bottled%20Water%20%28500ml%29%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Sparkling Water",
+          "description": "Carbonated mineral water",
+          "price_range_kes": {
+            "min": 100,
+            "max": 200
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Sparkling%20Water%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Fresh Juice (Mango, Passion, Watermelon)",
+          "description": "Freshly blended seasonal fruit juice",
+          "price_range_kes": {
+            "min": 150,
+            "max": 300
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Fresh%20Juice%20%28Mango%2C%20Passion%2C%20Watermelon%29%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Iced Tea",
+          "description": "Chilled black tea, lightly sweetened, often with lemon",
+          "price_range_kes": {
+            "min": 150,
+            "max": 250
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Iced%20Tea%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Milkshake",
+          "description": "Blended milk, ice cream, and flavor syrup (vanilla, chocolate, strawberry)",
+          "price_range_kes": {
+            "min": 250,
+            "max": 450
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Milkshake%20food&title=Special:MediaSearch&type=image"
+        }
+      ]
+    },
+    {
+      "category": "Fast Food",
+      "items": [
+        {
+          "name": "Beef Burger & Fries",
+          "description": "Grilled beef patty, lettuce, tomato, cheese, served with fries",
+          "price_range_kes": {
+            "min": 400,
+            "max": 800
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Beef%20Burger%20%26%20Fries%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Chicken Burger & Fries",
+          "description": "Crispy or grilled chicken fillet burger with fries",
+          "price_range_kes": {
+            "min": 400,
+            "max": 750
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Chicken%20Burger%20%26%20Fries%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Hot Dog",
+          "description": "Grilled sausage in a bun with condiments",
+          "price_range_kes": {
+            "min": 200,
+            "max": 400
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Hot%20Dog%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Loaded Fries",
+          "description": "Fries topped with cheese, sauce, and choice of protein",
+          "price_range_kes": {
+            "min": 350,
+            "max": 600
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Loaded%20Fries%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Chicken Wings (6pc)",
+          "description": "Fried or grilled wings with a dipping sauce",
+          "price_range_kes": {
+            "min": 350,
+            "max": 650
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Chicken%20Wings%20%286pc%29%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Beef Samosas (3pc)",
+          "description": "Crispy pastry filled with spiced minced beef",
+          "price_range_kes": {
+            "min": 150,
+            "max": 300
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Beef%20Samosas%20%283pc%29%20food&title=Special:MediaSearch&type=image"
+        }
+      ]
+    },
+    {
+      "category": "Fried Chicken",
+      "items": [
+        {
+          "name": "2pc Fried Chicken & Chips",
+          "description": "Two pieces of crispy fried chicken with a side of fries",
+          "price_range_kes": {
+            "min": 400,
+            "max": 700
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=2pc%20Fried%20Chicken%20%26%20Chips%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "5pc Fried Chicken Bucket",
+          "description": "Family-style bucket of crispy fried chicken pieces",
+          "price_range_kes": {
+            "min": 900,
+            "max": 1500
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=5pc%20Fried%20Chicken%20Bucket%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Fried Chicken Wrap",
+          "description": "Crispy chicken strips, lettuce, and sauce in a tortilla wrap",
+          "price_range_kes": {
+            "min": 300,
+            "max": 550
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Fried%20Chicken%20Wrap%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Spicy Fried Chicken Strips",
+          "description": "Breaded chicken tenders with a spicy seasoning",
+          "price_range_kes": {
+            "min": 350,
+            "max": 600
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Spicy%20Fried%20Chicken%20Strips%20food&title=Special:MediaSearch&type=image"
+        }
+      ]
+    },
+    {
+      "category": "Lunch / Mains",
+      "items": [
+        {
+          "name": "Beef Pilau",
+          "description": "Spiced rice cooked with beef and aromatic spices",
+          "price_range_kes": {
+            "min": 350,
+            "max": 600
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Beef%20Pilau%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Chicken Biryani",
+          "description": "Layered spiced rice with marinated chicken",
+          "price_range_kes": {
+            "min": 400,
+            "max": 700
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Chicken%20Biryani%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Ugali with Beef Stew",
+          "description": "Maize meal staple served with a rich beef stew",
+          "price_range_kes": {
+            "min": 300,
+            "max": 550
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Ugali%20with%20Beef%20Stew%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Nyama Choma (Grilled Meat, 1kg)",
+          "description": "Traditional grilled goat or beef, served with kachumbari",
+          "price_range_kes": {
+            "min": 1200,
+            "max": 2000
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Nyama%20Choma%20%28Grilled%20Meat%2C%201kg%29%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Grilled Chicken with Vegetables",
+          "description": "Grilled chicken breast served with seasonal vegetables",
+          "price_range_kes": {
+            "min": 500,
+            "max": 850
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Grilled%20Chicken%20with%20Vegetables%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Vegetable Curry with Chapati",
+          "description": "Mixed vegetable curry served with soft chapati",
+          "price_range_kes": {
+            "min": 300,
+            "max": 500
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Vegetable%20Curry%20with%20Chapati%20food&title=Special:MediaSearch&type=image"
+        }
+      ]
+    },
+    {
+      "category": "Desserts",
+      "items": [
+        {
+          "name": "Chocolate Cake Slice",
+          "description": "Rich moist chocolate cake with ganache",
+          "price_range_kes": {
+            "min": 250,
+            "max": 450
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Chocolate%20Cake%20Slice%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Cheesecake Slice",
+          "description": "Creamy baked cheesecake, classic or fruit-topped",
+          "price_range_kes": {
+            "min": 300,
+            "max": 500
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Cheesecake%20Slice%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Ice Cream (2 scoops)",
+          "description": "Choice of vanilla, chocolate, or strawberry",
+          "price_range_kes": {
+            "min": 200,
+            "max": 400
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Ice%20Cream%20%282%20scoops%29%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Fruit Salad with Cream",
+          "description": "Mixed seasonal fruits topped with fresh cream",
+          "price_range_kes": {
+            "min": 250,
+            "max": 400
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Fruit%20Salad%20with%20Cream%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Doughnuts (3pc)",
+          "description": "Soft glazed or sugared doughnuts",
+          "price_range_kes": {
+            "min": 150,
+            "max": 300
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Doughnuts%20%283pc%29%20food&title=Special:MediaSearch&type=image"
+        },
+        {
+          "name": "Brownie with Ice Cream",
+          "description": "Warm chocolate brownie topped with a scoop of ice cream",
+          "price_range_kes": {
+            "min": 300,
+            "max": 500
+          },
+          "image": "https://commons.wikimedia.org/w/index.php?search=Brownie%20with%20Ice%20Cream%20food&title=Special:MediaSearch&type=image"
+        }
+      ]
+    }
+  ]
+}

@@ -1,11 +1,19 @@
- [
+[
   {
     "name": "Dom Pérignon",
     "type": "Champagne",
     "region": "Champagne, France",
     "grape": "Chardonnay, Pinot Noir",
     "notes": "Prestige cuvée, crisp minerality, toasted brioche and citrus",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0OHuRXSWL3z0jFMYlQN4C_w3Az7ieCI1HCCUYEhyWctMpuCyF5GAHE64&s=10"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0OHuRXSWL3z0jFMYlQN4C_w3Az7ieCI1HCCUYEhyWctMpuCyF5GAHE64&s=10",
+    "classification": {
+      "color": "White",
+      "carbonation": "Sparkling",
+      "sweetness": "Dry (Brut)",
+      "fortification": "Unfortified",
+      "production_method": "Traditional Method",
+      "quality_tier": "AOC Champagne — Prestige Cuvée"
+    }
   },
   {
     "name": "Krug Grande Cuvée",
@@ -13,7 +21,15 @@
     "region": "Champagne, France",
     "grape": "Chardonnay, Pinot Noir, Pinot Meunier",
     "notes": "Rich, complex, multi-vintage blend with nutty depth",
-    "image": "https://ik.imagekit.io/drinksvine/products/krug-grande-cuvee.webp"
+    "image": "https://ik.imagekit.io/drinksvine/products/krug-grande-cuvee.webp",
+    "classification": {
+      "color": "White",
+      "carbonation": "Sparkling",
+      "sweetness": "Dry (Brut)",
+      "fortification": "Unfortified",
+      "production_method": "Traditional Method, Multi-Vintage Blend",
+      "quality_tier": "AOC Champagne — Prestige Cuvée"
+    }
   },
   {
     "name": "Château Margaux",
@@ -21,7 +37,15 @@
     "region": "Margaux, Bordeaux, France",
     "grape": "Cabernet Sauvignon, Merlot, Petit Verdot, Cabernet Franc",
     "notes": "Elegant, silky tannins, floral and cedar notes",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHs0yVN6uSQeQL1S_OvDdbEzPEiV1jJ8ReASwbASBRGg&s=10"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHs0yVN6uSQeQL1S_OvDdbEzPEiV1jJ8ReASwbASBRGg&s=10",
+    "classification": {
+      "color": "Red",
+      "carbonation": "Still",
+      "sweetness": "Dry",
+      "fortification": "Unfortified",
+      "production_method": "Barrel-Aged Blend",
+      "quality_tier": "AOC Margaux — Premier Cru Classé (1855 Classification)"
+    }
   },
   {
     "name": "Château Latour",
@@ -29,7 +53,15 @@
     "region": "Pauillac, Bordeaux, France",
     "grape": "Cabernet Sauvignon dominant",
     "notes": "Powerful structure, dark fruit, long aging potential",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqtxBxJQLbaAFKsreVxY9g1r0AFhoiZO3SwX0s86SnRQ&s=10"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqtxBxJQLbaAFKsreVxY9g1r0AFhoiZO3SwX0s86SnRQ&s=10",
+    "classification": {
+      "color": "Red",
+      "carbonation": "Still",
+      "sweetness": "Dry",
+      "fortification": "Unfortified",
+      "production_method": "Barrel-Aged Blend",
+      "quality_tier": "AOC Pauillac — Premier Cru Classé (1855 Classification)"
+    }
   },
   {
     "name": "Château Mouton Rothschild",
@@ -37,7 +69,15 @@
     "region": "Pauillac, Bordeaux, France",
     "grape": "Cabernet Sauvignon dominant",
     "notes": "Bold, opulent, known for artist-designed labels",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSS0VcXCpfC23nsjtSB0gLmtHgBTqpdN56dORs8Gmf58g&s=10"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSS0VcXCpfC23nsjtSB0gLmtHgBTqpdN56dORs8Gmf58g&s=10",
+    "classification": {
+      "color": "Red",
+      "carbonation": "Still",
+      "sweetness": "Dry",
+      "fortification": "Unfortified",
+      "production_method": "Barrel-Aged Blend",
+      "quality_tier": "AOC Pauillac — Premier Cru Classé (1855 Classification)"
+    }
   },
   {
     "name": "Screaming Eagle",
@@ -45,7 +85,15 @@
     "region": "Napa Valley, USA",
     "grape": "Cabernet Sauvignon",
     "notes": "Cult wine, intensely concentrated, extremely limited production",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlxHZPXJDp1ZGexVnlxHIrO8imL3Ajst869j7kl9kLNQ&s=10"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlxHZPXJDp1ZGexVnlxHIrO8imL3Ajst869j7kl9kLNQ&s=10",
+    "classification": {
+      "color": "Red",
+      "carbonation": "Still",
+      "sweetness": "Dry",
+      "fortification": "Unfortified",
+      "production_method": "Barrel-Aged Single Varietal",
+      "quality_tier": "Napa Valley AVA — Cult Wine (no formal cru system in the US)"
+    }
   },
   {
     "name": "Opus One",
@@ -53,7 +101,15 @@
     "region": "Napa Valley, USA",
     "grape": "Cabernet Sauvignon, Merlot, Cabernet Franc",
     "notes": "Joint venture prestige wine, polished and refined",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFGdnB0QYVTnLRmZuQkTKH4tXG93YrdTm95XDPazrCEQ&s=10"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFGdnB0QYVTnLRmZuQkTKH4tXG93YrdTm95XDPazrCEQ&s=10",
+    "classification": {
+      "color": "Red",
+      "carbonation": "Still",
+      "sweetness": "Dry",
+      "fortification": "Unfortified",
+      "production_method": "Barrel-Aged Blend",
+      "quality_tier": "Napa Valley AVA — Prestige Joint-Venture Wine"
+    }
   },
   {
     "name": "Sassicaia",
@@ -61,7 +117,15 @@
     "region": "Bolgheri, Tuscany, Italy",
     "grape": "Cabernet Sauvignon, Cabernet Franc",
     "notes": "Pioneer of the Super Tuscan movement, structured and aromatic",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSe1EnQBtXtODcQdG_dtqtMAwydlPdOFvXGO1dYuvOQmA&s=10"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSe1EnQBtXtODcQdG_dtqtMAwydlPdOFvXGO1dYuvOQmA&s=10",
+    "classification": {
+      "color": "Red",
+      "carbonation": "Still",
+      "sweetness": "Dry",
+      "fortification": "Unfortified",
+      "production_method": "Barrel-Aged Blend",
+      "quality_tier": "DOC Bolgheri Sassicaia — Super Tuscan"
+    }
   },
   {
     "name": "Barolo Riserva (e.g. Giacomo Conterno Monfortino)",
@@ -69,7 +133,15 @@
     "region": "Piedmont, Italy",
     "grape": "Nebbiolo",
     "notes": "'King of wines,' tannic, floral, tar and rose aromas",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXmPLVoCOfJUC4SPeKd_1KES2AodddxfXM7GlBjhOgfA&s=10"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXmPLVoCOfJUC4SPeKd_1KES2AodddxfXM7GlBjhOgfA&s=10",
+    "classification": {
+      "color": "Red",
+      "carbonation": "Still",
+      "sweetness": "Dry",
+      "fortification": "Unfortified",
+      "production_method": "Extended Barrel & Bottle Aging",
+      "quality_tier": "DOCG Barolo — Riserva (extended aging classification)"
+    }
   },
   {
     "name": "Romanée-Conti",
@@ -77,7 +149,15 @@
     "region": "Vosne-Romanée, Burgundy, France",
     "grape": "Pinot Noir",
     "notes": "Among the rarest and most sought-after wines in the world",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXfvv4_q380Bmk4M4shIm2HY168gKWWoIuHd1YlYBg4g&s=10"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXfvv4_q380Bmk4M4shIm2HY168gKWWoIuHd1YlYBg4g&s=10",
+    "classification": {
+      "color": "Red",
+      "carbonation": "Still",
+      "sweetness": "Dry",
+      "fortification": "Unfortified",
+      "production_method": "Single Vineyard, Barrel-Aged",
+      "quality_tier": "AOC Romanée-Conti — Grand Cru (Burgundy Cru hierarchy)"
+    }
   },
   {
     "name": "Château d'Yquem",
@@ -85,7 +165,15 @@
     "region": "Sauternes, Bordeaux, France",
     "grape": "Sémillon, Sauvignon Blanc",
     "notes": "Legendary sweet wine, honeyed apricot, botrytis complexity",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRf8t2eG6VTaxfaaTRB2mhSE1EgeAlQRhBzQSFKi8rTIQ&s=10"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRf8t2eG6VTaxfaaTRB2mhSE1EgeAlQRhBzQSFKi8rTIQ&s=10",
+    "classification": {
+      "color": "White",
+      "carbonation": "Still",
+      "sweetness": "Sweet (Dessert Wine, Botrytized)",
+      "fortification": "Unfortified",
+      "production_method": "Noble Rot (Botrytis cinerea) Late Harvest",
+      "quality_tier": "AOC Sauternes — Premier Cru Supérieur (1855 Classification)"
+    }
   },
   {
     "name": "Montrachet Grand Cru",
@@ -93,7 +181,15 @@
     "region": "Burgundy, France",
     "grape": "Chardonnay",
     "notes": "Considered the pinnacle of white Burgundy, rich and mineral-driven",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFvhxYoStUBzuH0j8o4ukJResEZh1-SRJGjCZ6cEbudQ&s=10"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFvhxYoStUBzuH0j8o4ukJResEZh1-SRJGjCZ6cEbudQ&s=10",
+    "classification": {
+      "color": "White",
+      "carbonation": "Still",
+      "sweetness": "Dry",
+      "fortification": "Unfortified",
+      "production_method": "Barrel-Fermented Single Varietal",
+      "quality_tier": "AOC Montrachet — Grand Cru (Burgundy Cru hierarchy)"
+    }
   },
   {
     "name": "Cristal by Louis Roederer",
@@ -101,7 +197,15 @@
     "region": "Champagne, France",
     "grape": "Chardonnay, Pinot Noir",
     "notes": "Iconic clear-bottle prestige cuvée, elegant and vibrant",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKvTurx1-IQSRDaCsKVjyY4ryoFaUxzgGYf2-L3LRhmA&s=10"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKvTurx1-IQSRDaCsKVjyY4ryoFaUxzgGYf2-L3LRhmA&s=10",
+    "classification": {
+      "color": "White",
+      "carbonation": "Sparkling",
+      "sweetness": "Dry (Brut)",
+      "fortification": "Unfortified",
+      "production_method": "Traditional Method",
+      "quality_tier": "AOC Champagne — Prestige Cuvée"
+    }
   },
   {
     "name": "Vega Sicilia Único",
@@ -109,7 +213,15 @@
     "region": "Ribera del Duero, Spain",
     "grape": "Tempranillo, Cabernet Sauvignon",
     "notes": "Spain's most prestigious wine, aged for a decade before release",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPE9Kdq16mxJt598GvkJYK4g1nvGq1RNahnMACAXOQlQ&s=10"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPE9Kdq16mxJt598GvkJYK4g1nvGq1RNahnMACAXOQlQ&s=10",
+    "classification": {
+      "color": "Red",
+      "carbonation": "Still",
+      "sweetness": "Dry",
+      "fortification": "Unfortified",
+      "production_method": "Extended Barrel & Bottle Aging (Gran Reserva level)",
+      "quality_tier": "DO Ribera del Duero — Gran Reserva-equivalent aging"
+    }
   },
   {
     "name": "Penfolds Grange",
@@ -117,7 +229,15 @@
     "region": "South Australia",
     "grape": "Shiraz",
     "notes": "Australia's most iconic wine, powerful and richly fruited",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScDI1wqvUt2zRm49m7hv-7z1Sd6fKEke4ewGQOu1P6kQ&s=10"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScDI1wqvUt2zRm49m7hv-7z1Sd6fKEke4ewGQOu1P6kQ&s=10",
+    "classification": {
+      "color": "Red",
+      "carbonation": "Still",
+      "sweetness": "Dry",
+      "fortification": "Unfortified",
+      "production_method": "Barrel-Aged Single Varietal",
+      "quality_tier": "South Australia — Icon Wine (no formal cru system in Australia)"
+    }
   },
   {
     "name": "Taylor Fladgate Vintage Port",
@@ -125,7 +245,15 @@
     "region": "Douro Valley, Portugal",
     "grape": "Touriga Nacional and blends",
     "notes": "Deep, sweet, and age-worthy, classic after-dinner pour",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJoNsfcR-j9tt8yisksI8RnCzq6Sw9FL2pDo8z0HGG8Q&s=10"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJoNsfcR-j9tt8yisksI8RnCzq6Sw9FL2pDo8z0HGG8Q&s=10",
+    "classification": {
+      "color": "Red",
+      "carbonation": "Still",
+      "sweetness": "Sweet (Fortified Dessert Style)",
+      "fortification": "Fortified (grape spirit added)",
+      "production_method": "Fortified, Vintage-Declared",
+      "quality_tier": "DOC Douro — Vintage Port designation"
+    }
   },
   {
     "name": "Chablis Grand Cru Les Clos",
@@ -133,7 +261,15 @@
     "region": "Chablis, Burgundy, France",
     "grape": "Chardonnay",
     "notes": "Steely, mineral-driven, unoaked or lightly oaked elegance",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQB7-AVg3Zn9ucsvSZRloiTxoe_KGgy0Tdh8veWwO0RQ&s=10"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQB7-AVg3Zn9ucsvSZRloiTxoe_KGgy0Tdh8veWwO0RQ&s=10",
+    "classification": {
+      "color": "White",
+      "carbonation": "Still",
+      "sweetness": "Dry",
+      "fortification": "Unfortified",
+      "production_method": "Unoaked/Lightly Oaked Single Varietal",
+      "quality_tier": "AOC Chablis — Grand Cru (Burgundy Cru hierarchy)"
+    }
   },
   {
     "name": "Amarone della Valpolicella",
@@ -141,6 +277,14 @@
     "region": "Veneto, Italy",
     "grape": "Corvina, Rondinella, Molinara",
     "notes": "Made from dried grapes, rich, velvety, high alcohol",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROyjgqTYKHwQUOD5zNH5WWZX6kFTWjhB_FdPe8SR0fkQ&s=10"
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROyjgqTYKHwQUOD5zNH5WWZX6kFTWjhB_FdPe8SR0fkQ&s=10",
+    "classification": {
+      "color": "Red",
+      "carbonation": "Still",
+      "sweetness": "Dry (high alcohol, rich fruit)",
+      "fortification": "Unfortified",
+      "production_method": "Appassimento (Dried-Grape / Passito Method)",
+      "quality_tier": "DOCG Amarone della Valpolicella"
+    }
   }
 ]
