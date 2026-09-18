@@ -3,14 +3,14 @@ import {
   FiClock,
   FiMapPin,
   FiUser,
-  FiTruck,
-  FiCoffee,
   FiGift,
 } from "react-icons/fi";
 import { Brand } from "./shared";
 import { RiWhatsappFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
-
+import { RiEBike2Fill } from "react-icons/ri";
+import { GiMeal } from "react-icons/gi";
+import { GiPartyPopper } from "react-icons/gi";
 const typewriterPhrases = [
   "Welcome to Chateau254",
   "Serene Dining",
@@ -83,13 +83,13 @@ const Home = ({ onTakeout, onDining, onEvents, onAuth }) => {
           <span className="options">Enjoy our Chateau Options:</span>
           <div className="cta-btns">
             <button className="cta-button cta-takeout" onClick={onTakeout}>
-              <FiTruck /> Take Out
+              <RiEBike2Fill /> Take Out
             </button>
             <button className="cta-button cta-dining" onClick={onDining}>
-              <FiCoffee /> Dine-in
+              <GiMeal /> Dine-in
             </button>
             <button className="cta-button cta-events" onClick={onEvents}>
-              <FiGift /> Events
+              <GiPartyPopper />Events
             </button>
           </div>
         </div>
@@ -108,14 +108,14 @@ const Home = ({ onTakeout, onDining, onEvents, onAuth }) => {
           <FiClock /> Open until 11:00 PM
         </span>
         <div className="whatsapp-float">
-        <Link
-          to="https://wa.me/254114100680"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <RiWhatsappFill />
-        </Link>
-      </div>
+          <Link
+            to="https://wa.me/254114100680"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <RiWhatsappFill />
+          </Link>
+        </div>
       </div>
     </main>
   );

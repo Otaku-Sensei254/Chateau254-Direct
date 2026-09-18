@@ -1,12 +1,14 @@
 import React from "react";
 import { RiEBike2Fill } from "react-icons/ri";
-import { FiCalendar, FiPlus, FiSearch } from "react-icons/fi";
+import { FiCalendar, FiPlus, FiSearch, FiArrowLeft } from "react-icons/fi";
+import { LuPackageOpen } from "react-icons/lu";
+import { GiMeal } from "react-icons/gi";
 // Classification filter groups shown when Wine category is active
 const WINE_CLASS_FILTERS = [
   {
     label: "Colour",
     field: "color",
-    options: ["Red", "White","Rosé"],
+    options: ["Red", "White", "Rosé"],
   },
   {
     label: "Bubbles",
@@ -50,6 +52,8 @@ const menu = ({
   mode,
   winePairingFilter,
   onClearWinePairingFilter,
+  onModeChange,
+  onBack,
 }) => {
   const isWineActive = filter === "Wine";
 
@@ -80,6 +84,13 @@ const menu = ({
           <FiCalendar /> Make reservations
         </button>
       </div>
+      {user && (
+        <div className="menu-mode-toggle">
+          <button className="mode-button" onClick={() => onModeChange(mode === "takeout" ? "dinein" : "takeout")} type="button">
+            {mode === "takeout" ? <> Dine In <GiMeal className="mode-icon" /></> : <>Take Out <LuPackageOpen className="mode-icon"/> </>}
+          </button>
+        </div>
+      )}
       <div className="search-box">
         <FiSearch />
         <input
@@ -183,7 +194,7 @@ const menu = ({
           View cart <span>{cartCount}</span>
         </button>
       )}
-     
+
       {/* <div className="whatsapp-float">
         <Link
           to="https://wa.me/254114100680"

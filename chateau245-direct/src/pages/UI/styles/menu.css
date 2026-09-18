@@ -18,7 +18,9 @@
     display: flex;
     gap: 5px;
     align-items: center;
+    justify-content: center;
     padding-bottom: 9px;
+    border:none;
 }
 
 .search-box {
@@ -56,6 +58,22 @@
     padding: 6px 14px;
     margin-bottom: 14px;
     letter-spacing: 0.3px;
+}
+.mode-button{
+    background:rgb(229, 203, 161);
+    display:"flex";
+    align-items: center;
+    justify-content: center;
+    border:none;
+    margin-bottom:0.5rem;
+    font-size: 18px;
+    border-radius:25px;
+    width:120px;
+    padding:4px;
+    color: #4f7b55;
+}
+.mode-icon{
+    color:white;
 }
 
 .filter-row {
