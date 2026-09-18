@@ -1,0 +1,285 @@
+{
+  "takeaway_combo_menu": {
+    "currency": "KES",
+    "notes": {
+      "pending_from_client": [
+        "Item 1: which sauce accompanies the whole chicken? Needs naming on the menu.",
+        "Item 5: contents of the 'Nairobi-style board' were not specified.",
+        "No-wine pricing not yet supplied for any item — all listed prices include a bottle."
+      ],
+      "wine_stock_note": "All 8 dishes are covered by 6 SKUs: Chardonnay, Sauvignon Blanc, Dry Rosé, Malbec/Cabernet Sauvignon, Shiraz/Pinotage, and one sparkling (Cap Classique or Prosecco).",
+      "pricing_disclaimer": "meal_only_kes and wine_only_kes are estimated à la carte reference prices used to calculate the displayed savings. Replace with Agnes's actual standalone menu prices once confirmed."
+    },
+    "categories": [
+      {
+        "category": "Plated Combos",
+        "items": [
+          {
+            "id": "COMBO-001",
+            "name": "Whole Chicken Takeaway",
+            "description": "Whole chicken served with a side of fries, crispy fried onions, and sauce",
+            "components": [
+              "Whole chicken",
+              "Fries",
+              "Crispy fried onions",
+              "Sauce (to be specified)"
+            ],
+            "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMxYWbK2Lch9tTAGjufli8MWbDjNJwgAfJW-yzzSEIGw&s=10 ",
+            "wine_pairing": {
+              "primary": "Lightly oaked Chardonnay",
+              "alternative": "Dry",
+              "reasoning": "Roast chicken fat and fried onions need weight without tannin. Rosé works as a lighter alternative."
+            },
+            "pricing": {
+              "meal_only_kes": 6200,
+              "wine_only_kes": 2000,
+              "standalone_total_kes": 8200,
+              "bundle_price_with_wine_kes": 7000,
+              "you_save_kes": 1200,
+              "you_save_percent": 15,
+              "display_text": "Order together and save KES 1200 (15%)"
+            }
+          },
+          {
+            "id": "COMBO-002",
+            "name": "T-Bone or Sirloin Steak (½ kg)",
+            "description": "Half-kilo T-bone or sirloin steak with fries, fried onions, and chimichurri sauce",
+            "components": [
+              "½ kg T-bone or sirloin steak",
+              "Fries",
+              "Fried onions",
+              "Chimichurri sauce"
+            ],
+            "image": "https://commons.wikimedia.org/w/index.php?search=t-bone%20steak%20chimichurri%20food&title=Special:MediaSearch&type=image",
+            "wine_pairing": {
+              "primary": "Argentine Malbec",
+              "alternative": "Cabernet Sauvignon",
+              "reasoning": "Chimichurri is acidic and herbaceous — Malbec is the classic Argentine match. Cabernet if more structure is wanted."
+            },
+            "pricing": {
+              "meal_only_kes": 6000,
+              "wine_only_kes": 2500,
+              "standalone_total_kes": 8500,
+              "bundle_price_with_wine_kes": 7000,
+              "you_save_kes": 1500,
+              "you_save_percent": 18,
+              "display_text": "Order together and save KES 1500 (18%)"
+            }
+          },
+          {
+            "id": "COMBO-003",
+            "name": "Stir-Fried Tenderloin (½ kg)",
+            "description": "Half-kilo stir-fried tenderloin with fried rice and seasonal vegetables",
+            "components": [
+              "½ kg stir-fried tenderloin",
+              "Fried rice",
+              "Seasonal vegetables"
+            ],
+            "image": "https://commons.wikimedia.org/w/index.php?search=stir%20fried%20beef%20tenderloin%20fried%20rice%20food&title=Special:MediaSearch&type=image",
+            "wine_pairing": {
+              "primary": "Pinot Noir",
+              "alternative": "Off-dry Shiraz",
+              "reasoning": "Soy and stir-fry seasoning clash with big tannins. Lower tannin and some fruit sweetness works better."
+            },
+            "pricing": {
+              "meal_only_kes": 6300,
+              "wine_only_kes": 2200,
+              "standalone_total_kes": 8500,
+              "bundle_price_with_wine_kes": 7000,
+              "you_save_kes": 1500,
+              "you_save_percent": 18,
+              "display_text": "Order together and save KES 1500 (18%)"
+            }
+          },
+          {
+            "id": "COMBO-004",
+            "name": "Beef or Chicken Wraps (2 Portions)",
+            "description": "Two portions of beef or chicken wrap with a side of fries or salad",
+            "components": [
+              "2 × beef or chicken wrap",
+              "Fries or salad (choice)"
+            ],
+            "image": "https://commons.wikimedia.org/w/index.php?search=beef%20chicken%20wrap%20fries%20food&title=Special:MediaSearch&type=image",
+            "wine_pairing": {
+              "primary": "Dry Rosé",
+              "alternative": "Sauvignon Blanc",
+              "reasoning": "Casual food at the lowest price point — keep the bottle light and inexpensive to protect margin."
+            },
+            "pricing": {
+              "meal_only_kes": 4800,
+              "wine_only_kes": 1200,
+              "standalone_total_kes": 6000,
+              "bundle_price_with_wine_kes": 5000,
+              "you_save_kes": 1000,
+              "you_save_percent": 17,
+              "display_text": "Order together and save KES 1000 (17%)"
+            }
+          }
+        ]
+      },
+      {
+        "category": "Sharing Boards",
+        "items": [
+          {
+            "id": "BOARD-001",
+            "name": "Nairobi-Style Board",
+            "description": "Local-style sharing board with grilled meats and traditional sides (placeholder components — pending Agnes's actual list)",
+            "components": [
+              "Nyama choma (grilled beef/goat)",
+              "Mutura (African sausage)",
+              "Grilled smokies",
+              "Kachumbari",
+              "Ugali fingers",
+              "Chapati"
+            ],
+            "image": "https://commons.wikimedia.org/w/index.php?search=nyama%20choma%20platter%20kenyan%20food&title=Special:MediaSearch&type=image",
+            "wine_pairing": {
+              "primary": "Shiraz",
+              "alternative": "Pinotage",
+              "reasoning": "Grilled and smoky meats with spice. Pinotage's smokiness is a strong match for local grilled food."
+            },
+            "pricing": {
+              "meal_only_kes": 9500,
+              "wine_only_kes": 1800,
+              "standalone_total_kes": 11300,
+              "bundle_price_with_wine_kes": 10000,
+              "you_save_kes": 1300,
+              "you_save_percent": 12,
+              "display_text": "Order together and save KES 1300 (12%)"
+            }
+          },
+          {
+            "id": "BOARD-002",
+            "name": "Cheese & Charcuterie Board",
+            "description": "Assorted cheeses and cured meats with accompaniments",
+            "components": [
+              "Assorted cheeses",
+              "Cured meats",
+              "Accompaniments"
+            ],
+            "image": "https://commons.wikimedia.org/w/index.php?search=cheese%20charcuterie%20board%20food&title=Special:MediaSearch&type=image",
+            "wine_pairing": {
+              "primary": "Sparkling (Cap Classique or Prosecco)",
+              "alternative": "Merlot",
+              "reasoning": "Bubbles cut salt and fat better than anything else. If a red is preferred, keep it soft."
+            },
+            "pricing": {
+              "meal_only_kes": 9500,
+              "wine_only_kes": 2000,
+              "standalone_total_kes": 11500,
+              "bundle_price_with_wine_kes": 10000,
+              "you_save_kes": 1500,
+              "you_save_percent": 13,
+              "display_text": "Order together and save KES 1500 (13%)"
+            }
+          },
+          {
+            "id": "BOARD-003",
+            "name": "Mediterranean Mezze Board",
+            "description": "Mediterranean-style sharing board with dips, olives, and breads",
+            "components": [
+              "Dips (hummus, etc.)",
+              "Olives",
+              "Breads",
+              "Mediterranean accompaniments"
+            ],
+            "image": "https://commons.wikimedia.org/w/index.php?search=mediterranean%20mezze%20platter%20food&title=Special:MediaSearch&type=image",
+            "wine_pairing": {
+              "primary": "Sauvignon Blanc",
+              "alternative": "Dry Rosé",
+              "reasoning": "Hummus, olives, lemon and herbs need acidity rather than oak."
+            },
+            "pricing": {
+              "meal_only_kes": 6500,
+              "wine_only_kes": 1500,
+              "standalone_total_kes": 8000,
+              "bundle_price_with_wine_kes": 7000,
+              "you_save_kes": 1000,
+              "you_save_percent": 12,
+              "display_text": "Order together and save KES 1000 (12%)"
+            }
+          },
+          {
+            "id": "BOARD-004",
+            "name": "Steak Board",
+            "description": "Premium steak sharing board — highest price point on the menu",
+            "components": [
+              "Assorted steak cuts",
+              "Accompaniments"
+            ],
+            "image": "https://commons.wikimedia.org/w/index.php?search=steak%20sharing%20board%20platter%20food&title=Special:MediaSearch&type=image",
+            "wine_pairing": {
+              "primary": "Cabernet Sauvignon",
+              "alternative": "Bordeaux blend",
+              "reasoning": "Highest price point on the menu, so the bottle should be the most serious pour on the list."
+            },
+            "pricing": {
+              "meal_only_kes": 11500,
+              "wine_only_kes": 3000,
+              "standalone_total_kes": 14500,
+              "bundle_price_with_wine_kes": 12500,
+              "you_save_kes": 2000,
+              "you_save_percent": 14,
+              "display_text": "Order together and save KES 2000 (14%)"
+            }
+          }
+        ]
+      }
+    ],
+    "recommended_wine_stock": [
+      {
+        "sku": "W-CHARD",
+        "varietal": "Lightly oaked Chardonnay",
+        "covers": [
+          "COMBO-001"
+        ],
+        "image": "https://commons.wikimedia.org/w/index.php?search=Chardonnay%20wine%20bottle&title=Special:MediaSearch&type=image"
+      },
+      {
+        "sku": "W-SAUVB",
+        "varietal": "Sauvignon Blanc",
+        "covers": [
+          "COMBO-004",
+          "BOARD-003"
+        ],
+        "image": "https://commons.wikimedia.org/w/index.php?search=Sauvignon%20Blanc%20wine%20bottle&title=Special:MediaSearch&type=image"
+      },
+      {
+        "sku": "W-ROSE",
+        "varietal": "Dry Rosé",
+        "covers": [
+          "COMBO-001",
+          "COMBO-004",
+          "BOARD-003"
+        ],
+        "image": "https://commons.wikimedia.org/w/index.php?search=Rose%20wine%20bottle&title=Special:MediaSearch&type=image"
+      },
+      {
+        "sku": "W-MALBEC",
+        "varietal": "Malbec / Cabernet Sauvignon",
+        "covers": [
+          "COMBO-002",
+          "BOARD-004"
+        ],
+        "image": "https://commons.wikimedia.org/w/index.php?search=Malbec%20wine%20bottle&title=Special:MediaSearch&type=image"
+      },
+      {
+        "sku": "W-SHIRAZ",
+        "varietal": "Shiraz / Pinotage",
+        "covers": [
+          "COMBO-003",
+          "BOARD-001"
+        ],
+        "image": "https://commons.wikimedia.org/w/index.php?search=Shiraz%20Pinotage%20wine%20bottle&title=Special:MediaSearch&type=image"
+      },
+      {
+        "sku": "W-SPARK",
+        "varietal": "Sparkling (Cap Classique / Prosecco)",
+        "covers": [
+          "BOARD-002"
+        ],
+        "image": "https://commons.wikimedia.org/w/index.php?search=sparkling%20wine%20bottle&title=Special:MediaSearch&type=image"
+      }
+    ]
+  }
+}

@@ -5,9 +5,11 @@ import menuItems from './components/data/menu.json';
 import wines from './components/data/luxury_wine_list.json';
 import takeoutMenuData from './components/data/takeout_menu.json';
 import takeoutWinesData from './components/data/takeout_wine_list.json';
+import takeawayComboData from './components/data/chateau_takeaway_menu.json';
 import eventMenuData from './components/data/event_menu.json';
 import eventWinesData from './components/data/event_wine_list.json';
 import { SocketProvider } from './contexts/SocketContext';
+import { useToast } from './contexts/ToastContext';
 import Home from './pages/UI/home';
 import Menu from './pages/UI/menu';
 import Cart from './pages/UI/cart';
@@ -69,11 +71,33 @@ const normalizeWineList = (wineArr, prefix) =>
     eventFit: wine.event_fit || null,
   }));
 
+const normalizeTakeawayCombos = (data, prefix) => {
+  const combos = data?.takeaway_combo_menu?.categories || [];
+  return combos.flatMap(({ category, items }) =>
+    (items || []).map((item, i) => ({
+      id: `${prefix}-${category.replace(/\W+/g, '-').toLowerCase()}-${i}`,
+      name: item.name,
+      description: item.description,
+      price: item.pricing?.bundle_price_with_wine_kes || Math.round(((item.pricing?.meal_only_kes || 0) + (item.pricing?.wine_only_kes || 0)) / 2),
+      priceRange: item.pricing ? { min: item.pricing.meal_only_kes, max: item.pricing.bundle_price_with_wine_kes } : null,
+      category,
+      image: item.image || '',
+      unit: null,
+      winePairing: item.wine_pairing,
+      pricing: item.pricing,
+      components: item.components,
+      youSave: item.pricing?.you_save_kes,
+      youSavePercent: item.pricing?.you_save_percent,
+    }))
+  );
+};
+
 const CATALOGS = {
   dining: [...menuItems, ...normalizedWines],
   takeout: [
     ...normalizeGroupedMenu(takeoutMenuData.takeout_menu, 'takeout'),
     ...normalizeWineList(takeoutWinesData.takeout_orderout_wine_list, 'takeout'),
+    ...normalizeTakeawayCombos(takeawayComboData, 'takeout'),
   ],
   events: [
     ...normalizeGroupedMenu(eventMenuData.event_menu, 'events'),
@@ -117,11 +141,11 @@ const ProfileRoute = ({ user, children }) => {
   return children;
 };
 
-const ItemRoute = ({ addToCart, onWineFactSelect, activeCatalog = [] }) => {
+const ItemRoute = ({ addToCart, onWineFactSelect, onWinePairingSelect }) => {
   const { itemId } = useParams();
   const navigate = useNavigate();
-  const item = activeCatalog.find((catalogItem) => catalogItem.id === itemId);
-  return <ViewItem item={item} addToCart={addToCart} onBack={() => navigate('/menu')} onCart={() => navigate('/cart')} onWineFactSelect={onWineFactSelect} />;
+  const item = Object.values(CATALOGS).flat().find((catalogItem) => catalogItem.id === itemId);
+  return <ViewItem item={item} addToCart={addToCart} onBack={() => navigate('/menu')} onCart={() => navigate('/cart')} onWineFactSelect={onWineFactSelect} onWinePairingSelect={onWinePairingSelect} />;
 };
 
 const App = () => {
@@ -130,12 +154,14 @@ const App = () => {
   const [query, setQuery] = useState('');
   const [wineFilter, setWineFilter] = useState(null);
   const [wineClassFilter, setWineClassFilter] = useState(null);
+  const [winePairingFilter, setWinePairingFilter] = useState(null);
   const [cart, setCart] = useState(loadCart);
   const [order, setOrder] = useState(null);
   const [lastOrderId, setLastOrderId] = useState(loadLastOrder);
   const [session, setSession] = useState(storedSession);
   const location = useLocation();
   const navigate = useNavigate();
+  const { addToast } = useToast();
 
   const activeCatalog = CATALOGS[mode] || CATALOGS.dining;
   const activeCategories = useMemo(() => {
@@ -149,8 +175,12 @@ const App = () => {
     if (wineClassFilter) {
       results = results.filter((item) => item.category === 'Wine' && item.classification?.[wineClassFilter.field] === wineClassFilter.value);
     }
+    if (winePairingFilter) {
+      const searchTerm = winePairingFilter.toLowerCase();
+      results = results.filter((item) => item.category === 'Wine' && (item.name?.toLowerCase().includes(searchTerm) || item.type?.toLowerCase().includes(searchTerm) || item.grape?.toLowerCase().includes(searchTerm)));
+    }
     return results;
-  }, [activeCatalog, filter, query, wineFilter, wineClassFilter]);
+  }, [activeCatalog, filter, query, wineFilter, wineClassFilter, winePairingFilter]);
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
   const subtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
   const delivery = subtotal ? 250 : 0;
@@ -161,6 +191,7 @@ const App = () => {
 
   const addToCart = (item) => setCart((current) => {
     const found = current.find((cartItem) => cartItem.id === item.id);
+    addToast(`${item.name} added to cart`, 'success');
     return found ? current.map((cartItem) => cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem) : [...current, { ...item, quantity: 1 }];
   });
 
@@ -257,7 +288,7 @@ const App = () => {
   }, [lastOrderId, order?.id, session?.token]);
 
   return <SocketProvider token={session?.token}>
-    <div className="app-shell">
+      <div className="app-shell">
       {location.pathname !== '/' && location.pathname !== '/auth' && !location.pathname.startsWith('/admin') && !location.pathname.startsWith('/rider') && <AppHeader cartCount={cartCount} userName={session?.user?.full_name} onBack={handleBack} onCart={() => navigate('/cart')} onHome={() => navigate('/menu')} onProfile={() => navigate('/profile')} />}
       <Routes>
         <Route path="/" element={<GuestRoute user={session?.user}><Home onTakeout={() => { switchMode('takeout'); navigate('/menu'); }} onDining={() => { switchMode('dining'); navigate('/menu'); }} onEvents={() => navigate('/events')} onAuth={() => navigate('/auth')} /></GuestRoute>} />
@@ -266,11 +297,19 @@ const App = () => {
         <Route path="/admin/*" element={<ProtectedRoute user={session?.user} roles={['admin']}><AdminDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
         <Route path="/rider" element={<ProtectedRoute user={session?.user} roles={['rider']}><RiderDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
         <Route path="/booking" element={<ProtectedRoute user={session?.user}><Booking user={session?.user} token={session?.token} items={CATALOGS.dining} /></ProtectedRoute>} />
-        <Route path="/menu" element={<Menu items={visibleItems} user={session?.user} categories={activeCategories} filter={filter} setFilter={(cat) => { setFilter(cat); if (cat !== 'Wine') setWineClassFilter(null); }} query={query} setQuery={setQuery} addToCart={addToCart} cartCount={cartCount} onCart={() => navigate('/cart')} onViewItem={(item) => navigate(`/item/${item.id}`)} onBooking={() => navigate('/booking')} wineFilter={wineFilter} onClearWineFilter={() => setWineFilter(null)} wineClassFilter={wineClassFilter} setWineClassFilter={setWineClassFilter} mode={mode} />} />
-        <Route path="/item/:itemId" element={<ItemRoute activeCatalog={activeCatalog} addToCart={addToCart} onWineFactSelect={(field, value) => {
+        <Route path="/menu" element={<Menu items={visibleItems} user={session?.user} categories={activeCategories} filter={filter} setFilter={(cat) => { setFilter(cat); if (cat !== 'Wine') setWineClassFilter(null); }} query={query} setQuery={setQuery} addToCart={addToCart} cartCount={cartCount} onCart={() => navigate('/cart')} onViewItem={(item) => navigate(`/item/${item.id}`)} onBooking={() => navigate('/booking')} wineFilter={wineFilter} onClearWineFilter={() => { setWineFilter(null); setWinePairingFilter(null); }} wineClassFilter={wineClassFilter} setWineClassFilter={setWineClassFilter} mode={mode} winePairingFilter={winePairingFilter} onClearWinePairingFilter={() => setWinePairingFilter(null)} />} />
+        <Route path="/item/:itemId" element={<ItemRoute addToCart={addToCart} onWineFactSelect={(field, value) => {
           setFilter('Wine');
           setQuery('');
           setWineFilter({ field, value });
+          setWinePairingFilter(null);
+          navigate('/menu');
+        }} onWinePairingSelect={(pairingName) => {
+          setFilter('Wine');
+          setQuery('');
+          setWineFilter(null);
+          setWineClassFilter(null);
+          setWinePairingFilter(pairingName);
           navigate('/menu');
         }} />} />
         <Route path="/cart" element={<Cart cart={cart} subtotal={subtotal} delivery={delivery} changeQuantity={changeQuantity} onCheckout={() => navigate('/checkout')} onMenu={() => navigate('/menu')} />} />

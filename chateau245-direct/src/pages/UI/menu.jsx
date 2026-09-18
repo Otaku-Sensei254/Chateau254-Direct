@@ -1,13 +1,12 @@
 import React from "react";
 import { RiEBike2Fill } from "react-icons/ri";
 import { FiCalendar, FiPlus, FiSearch } from "react-icons/fi";
-
 // Classification filter groups shown when Wine category is active
 const WINE_CLASS_FILTERS = [
   {
     label: "Colour",
     field: "color",
-    options: ["Red", "White"],
+    options: ["Red", "White","Rosé"],
   },
   {
     label: "Bubbles",
@@ -49,6 +48,8 @@ const menu = ({
   wineClassFilter,
   setWineClassFilter,
   mode,
+  winePairingFilter,
+  onClearWinePairingFilter,
 }) => {
   const isWineActive = filter === "Wine";
 
@@ -134,6 +135,12 @@ const menu = ({
         <div className="wine-filter-chip">
           <span>Wine {wineFilter.field}: {wineFilter.value}</span>
           <button type="button" onClick={onClearWineFilter}>Clear</button>
+        </div>
+      )}
+      {winePairingFilter && (
+        <div className="wine-filter-chip">
+          <span>Wine pairing: {winePairingFilter}</span>
+          <button type="button" onClick={onClearWinePairingFilter}>Clear</button>
         </div>
       )}
       <div className="menu-grid">

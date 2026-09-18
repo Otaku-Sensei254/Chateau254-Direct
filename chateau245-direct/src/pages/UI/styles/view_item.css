@@ -135,6 +135,242 @@
     padding: 8px 0;
 }
 
+/* Wine pairing section */
+.wine-pairing-section {
+    margin: 25px 0;
+    padding: 20px;
+    background: #faf8f6;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    width:fit-content;
+}
+
+.wine-pairing-section h3 {
+    margin: 0 0 16px;
+    font: 700 16px Georgia, serif;
+    color: var(--wine);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.wine-pairing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+.recom{
+    display:flex;
+    flex-direction:column;
+}
+.recom-inner{
+    display:flex;
+    flex:row;
+    gap:10px;
+}
+.pairing-card {
+    padding: 14px 16px;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+}
+
+.pairing-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 4px;
+}
+
+.pairing-card strong {
+    font-size: 14px;
+    color: var(--ink);
+}
+
+.pairing-reasoning {
+    font-size: 13px;
+    color: var(--muted);
+    font-style: italic;
+    line-height: 1.5;
+    margin: 0;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+}
+
+/* Components section */
+.components-section {
+    margin: 25px 0;
+}
+
+.components-section h3 {
+    margin: 0 0 12px;
+    font: 700 16px Georgia, serif;
+    color: var(--wine);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.components-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 8px;
+}
+
+.components-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: #faf8f6;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--ink);
+}
+
+.components-list li svg {
+    color: #4d9057;
+    flex-shrink: 0;
+}
+
+/* Pricing section */
+.pricing-section {
+    margin: 25px 0;
+    padding: 20px;
+    background: #f5f0eb;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+}
+
+.pricing-section h3 {
+    margin: 0 0 16px;
+    font: 700 16px Georgia, serif;
+    color: var(--wine);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Pricing options (radio cards) */
+.pricing-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pricing-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: white;
+    border: 2px solid var(--line);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color .2s, background .2s, box-shadow .2s;
+}
+
+.pricing-option:hover {
+    border-color: var(--wine);
+    background: #fffaf5;
+}
+
+.pricing-option.selected {
+    border-color: var(--wine);
+    background: #fffaf5;
+    box-shadow: 0 0 0 2px rgba(118, 19, 41, 0.15);
+}
+
+.pricing-option input[type="radio"] {
+    display: none;
+}
+
+.radio-icon {
+    color: var(--muted);
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.pricing-option.selected .radio-icon {
+    color: var(--wine);
+}
+
+.option-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.option-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 4px;
+}
+
+.option-header strong {
+    font-size: 14px;
+    color: var(--ink);
+}
+
+.option-price {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--wine);
+    white-space: nowrap;
+}
+
+.option-savings {
+    font-size: 12px;
+    color: #2e7d32;
+    font-weight: 600;
+}
+
+.pricing-display {
+    margin: 8px 0 0;
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+}
+
+/* Pairing card as button */
+.pairing-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color .2s, background .2s;
+    text-align: left;
+}
+
+.pairing-card:hover {
+    border-color: var(--wine);
+    background: #fffaf5;
+}
+
+.pairing-link {
+    color: var(--muted);
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+
+.pairing-card:hover .pairing-link {
+    color: var(--wine);
+}
+
 @media (max-width: 700px) {
     .item-detail {
         grid-template-columns: 1fr;
@@ -147,5 +383,13 @@
 
     .detail-copy {
         padding-top: 0;
+    }
+
+    .wine-pairing-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .components-list {
+        grid-template-columns: 1fr;
     }
 }
