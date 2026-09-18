@@ -74,10 +74,15 @@ const LocationPicker = ({ onLocationSelect }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [searching, setSearching] = useState(false);
   const [gpsStatus, setGpsStatus] = useState(null);
+  const [manuallySelected, setManuallySelected] = useState(false);
   const debounceRef = useRef(null);
+  const onLocationSelectRef = useRef(onLocationSelect);
 
   useEffect(() => {
-    const callbackRef = onLocationSelect;
+    onLocationSelectRef.current = onLocationSelect;
+  }, [onLocationSelect]);
+
+  useEffect(() => {
     if (!navigator.geolocation) {
       setGpsStatus('unavailable');
       return;
@@ -85,16 +90,20 @@ const LocationPicker = ({ onLocationSelect }) => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const newPos = { latitude: pos.coords.latitude, longitude: pos.coords.longitude };
-        setPosition([newPos.latitude, newPos.longitude]);
-        callbackRef(newPos);
-        setGpsStatus('located');
+        if (!manuallySelected) {
+          setPosition([newPos.latitude, newPos.longitude]);
+          onLocationSelectRef.current(newPos);
+          setGpsStatus('located');
+        }
       },
       () => {
-        setGpsStatus('fallback');
+        if (!manuallySelected) {
+          setGpsStatus('fallback');
+        }
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
-  }, [onLocationSelect]);
+  }, []);
 
   const searchLocation = async (query) => {
     if (!query || query.length < 3) {
@@ -128,11 +137,13 @@ const LocationPicker = ({ onLocationSelect }) => {
     setPosition([newPos.latitude, newPos.longitude]);
     setSearchQuery(item.display_name);
     setSuggestions([]);
+    setManuallySelected(true);
     onLocationSelect(newPos);
   };
 
   const handlePositionChange = (newPos) => {
     setPosition([newPos.latitude, newPos.longitude]);
+    setManuallySelected(true);
     onLocationSelect(newPos);
   };
 
