@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { FiArrowLeft, FiPlus, FiShoppingBag, FiTag, FiCheckCircle, FiClipboard, FiRadio, FiExternalLink, FiCoffee } from 'react-icons/fi';
-
+import { FiArrowLeft, FiPlus, FiShoppingBag, FiTag, FiCheckCircle, FiClipboard, FiRadio, FiExternalLink } from 'react-icons/fi';
+import { PiWineFill } from "react-icons/pi";
 const DetailFacts = ({ item, onWineFactSelect }) => {
   if (item.category !== 'Wine') return null;
 
@@ -30,7 +30,7 @@ const WinePairing = ({ winePairing, onWinePairingSelect }) => {
   if (!winePairing) return null;
   return (
     <div className="wine-pairing-section">
-      <h3><FiCoffee /> Wine Pairing</h3>
+      <h3><PiWineFill /> Wine Pairing</h3>
       <div className="wine-pairing-grid">
         <button className="pairing-card" type="button" onClick={() => onWinePairingSelect?.(winePairing.primary)}>
           <div className="recom">
