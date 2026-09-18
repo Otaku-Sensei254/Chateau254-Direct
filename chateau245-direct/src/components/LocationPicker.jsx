@@ -75,12 +75,17 @@ const LocationPicker = ({ onLocationSelect }) => {
   const [searching, setSearching] = useState(false);
   const [gpsStatus, setGpsStatus] = useState(null);
   const [manuallySelected, setManuallySelected] = useState(false);
+  const manuallySelectedRef = useRef(false);
   const debounceRef = useRef(null);
   const onLocationSelectRef = useRef(onLocationSelect);
 
   useEffect(() => {
     onLocationSelectRef.current = onLocationSelect;
   }, [onLocationSelect]);
+
+  useEffect(() => {
+    manuallySelectedRef.current = manuallySelected;
+  }, [manuallySelected]);
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -90,14 +95,14 @@ const LocationPicker = ({ onLocationSelect }) => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const newPos = { latitude: pos.coords.latitude, longitude: pos.coords.longitude };
-        if (!manuallySelected) {
+        if (!manuallySelectedRef.current) {
           setPosition([newPos.latitude, newPos.longitude]);
           onLocationSelectRef.current(newPos);
           setGpsStatus('located');
         }
       },
       () => {
-        if (!manuallySelected) {
+        if (!manuallySelectedRef.current) {
           setGpsStatus('fallback');
         }
       },
