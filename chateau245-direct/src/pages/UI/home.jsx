@@ -3,7 +3,6 @@ import {
   FiClock,
   FiMapPin,
   FiUser,
-  FiGift,
 } from "react-icons/fi";
 import { Brand } from "./shared";
 import { RiWhatsappFill } from "react-icons/ri";

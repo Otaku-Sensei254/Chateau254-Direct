@@ -1,6 +1,6 @@
 import React from "react";
 import { RiEBike2Fill } from "react-icons/ri";
-import { FiCalendar, FiPlus, FiSearch, FiArrowLeft } from "react-icons/fi";
+import { FiCalendar, FiPlus, FiSearch} from "react-icons/fi";
 import { LuPackageOpen } from "react-icons/lu";
 import { GiMeal } from "react-icons/gi";
 // Classification filter groups shown when Wine category is active
