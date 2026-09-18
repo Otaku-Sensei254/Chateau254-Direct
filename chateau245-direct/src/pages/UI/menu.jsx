@@ -84,13 +84,13 @@ const menu = ({
           <FiCalendar /> Make reservations
         </button>
       </div>
-      {user && (
+      
         <div className="menu-mode-toggle">
           <button className="mode-button" onClick={() => onModeChange(mode === "takeout" ? "dinein" : "takeout")} type="button">
             {mode === "takeout" ? <> Dine In <GiMeal className="mode-icon" /></> : <>Take Out <LuPackageOpen className="mode-icon"/> </>}
           </button>
         </div>
-      )}
+      
       <div className="search-box">
         <FiSearch />
         <input
