@@ -2,6 +2,9 @@ const bcrypt = require('bcryptjs');
 const { pool, closeDatabase } = require('../config/db');
 const menuItems = require('../../chateau245-direct/src/components/data/menu.json');
 const wines = require('../../chateau245-direct/src/components/data/luxury_wine_list.json');
+const takeoutMenu = require('../../chateau245-direct/src/components/data/takeout_menu.json');
+const eventMenu = require('../../chateau245-direct/src/components/data/event_menu.json');
+const takeawayCombos = require('../../chateau245-direct/src/components/data/chateau_takeaway_menu.json');
 
 const admin = { name: 'Chateau Admin', email: 'admin@chateau254.com', password: 'chateau254@1234' };
 const riders = [
@@ -32,6 +35,24 @@ const upsertUser = async (client, account, role) => {
   return user;
 };
 
+const seedGroupedMenu = async (client, data, key) => {
+  const categories = data?.[key] || [];
+  for (const category of categories) {
+    for (const item of (category.items || [])) {
+      const price = item.price_range_kes
+        ? Math.round((item.price_range_kes.min + item.price_range_kes.max) / 2)
+        : item.pricing?.bundle_price_with_wine_kes || item.pricing?.meal_only_kes || null;
+      if (!price) continue;
+      await client.query(
+        `INSERT INTO menu_items (id, name, description, price, category, image_url)
+         VALUES (gen_random_uuid(), $1, $2, $3, $4, $5)
+         ON CONFLICT (name) DO UPDATE SET price = EXCLUDED.price, image_url = EXCLUDED.image_url, updated_at = NOW()`,
+        [item.name, item.description || '', price, category.category, item.image || null],
+      );
+    }
+  }
+};
+
 const seed = async () => {
   const client = await pool.connect();
   try {
@@ -57,6 +78,27 @@ const seed = async () => {
       );
     }
 
+    await seedGroupedMenu(client, takeoutMenu, 'takeout_menu');
+    await seedGroupedMenu(client, eventMenu, 'event_menu');
+
+    const comboCategories = takeawayCombos?.takeaway_combo_menu?.categories || [];
+    for (const category of comboCategories) {
+      for (const item of (category.items || [])) {
+        const price = item.pricing?.bundle_price_with_wine_kes
+          ? item.pricing.bundle_price_with_wine_kes
+          : item.pricing?.meal_only_kes && item.pricing?.wine_only_kes
+            ? Math.round((item.pricing.meal_only_kes + item.pricing.wine_only_kes) / 2)
+            : item.pricing?.meal_only_kes || null;
+        if (!price) continue;
+        await client.query(
+          `INSERT INTO menu_items (id, name, description, price, category, image_url)
+           VALUES (gen_random_uuid(), $1, $2, $3, $4, $5)
+           ON CONFLICT (name) DO UPDATE SET price = EXCLUDED.price, image_url = EXCLUDED.image_url, updated_at = NOW()`,
+          [item.name, item.description || '', price, category.category, item.image || null],
+        );
+      }
+    }
+
     for (const wine of wines) {
       await client.query(
         `INSERT INTO menu_items (name, description, price, category, image_url, wine_type, region, grape, tasting_notes)
@@ -79,7 +121,7 @@ const seed = async () => {
     }
 
     await client.query('COMMIT');
-    console.log(`Seeded admin ${adminUser.email}, ${riders.length} riders, ${menuItems.length} menu items, ${wines.length} wines.`);
+    console.log(`Seeded admin ${adminUser.email}, ${riders.length} riders, ${menuItems.length} menu items, ${wines.length} wines, takeout, event, and combo menus.`);
   } catch (error) {
     await client.query('ROLLBACK');
     throw error;

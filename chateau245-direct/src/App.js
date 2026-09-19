@@ -207,6 +207,13 @@ const App = () => {
       const menuData = await menuRes.json();
       const nameToId = {};
       (menuData.items || []).forEach((item) => { nameToId[item.name] = item.id; });
+
+      const unresolved = cart.filter((item) => !nameToId[item.name]);
+      if (unresolved.length) {
+        alert(`These items are no longer available on the backend menu: ${unresolved.map((i) => i.name).join(', ')}. Please remove them before checkout.`);
+        return;
+      }
+
       const body = {
         user_id: session.user.id,
         delivery_address: deliveryAddress,
@@ -214,7 +221,7 @@ const App = () => {
         latitude: coords?.latitude || null,
         longitude: coords?.longitude || null,
         items: cart.map((item) => ({
-          menu_item_id: nameToId[item.name] || item.id,
+          menu_item_id: nameToId[item.name],
           quantity: item.quantity,
           unit_price: item.price,
         })),
@@ -224,8 +231,9 @@ const App = () => {
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.token}` },
         body: JSON.stringify(body),
       });
-      if (!res.ok) throw new Error('Failed to place order');
-      const data = await res.json();
+      const errorPayload = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(errorPayload.error || 'Failed to place order');
+      const data = errorPayload;
       const placedOrder = { id: data.order.id, number: data.order.id.slice(0, 8), total: Number(data.order.total_amount) };
       setOrder(placedOrder);
       localStorage.setItem('chateau254_last_order', placedOrder.id);
