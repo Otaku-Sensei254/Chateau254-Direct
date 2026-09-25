@@ -34,7 +34,7 @@
               "meal_only_kes": 6200,
               "wine_only_kes": 2000,
               "standalone_total_kes": 8200,
-              "bundle_price_with_wine_kes": 7000,
+              "paired_price_with_wine_kes": 7000,
               "you_save_kes": 1200,
               "you_save_percent": 15,
               "display_text": "Order together and save KES 1200 (15%)"
@@ -60,7 +60,7 @@
               "meal_only_kes": 6000,
               "wine_only_kes": 2500,
               "standalone_total_kes": 8500,
-              "bundle_price_with_wine_kes": 7000,
+              "paired_price_with_wine_kes": 7000,
               "you_save_kes": 1500,
               "you_save_percent": 18,
               "display_text": "Order together and save KES 1500 (18%)"
@@ -85,7 +85,7 @@
               "meal_only_kes": 6300,
               "wine_only_kes": 2200,
               "standalone_total_kes": 8500,
-              "bundle_price_with_wine_kes": 7000,
+              "paired_price_with_wine_kes": 7000,
               "you_save_kes": 1500,
               "you_save_percent": 18,
               "display_text": "Order together and save KES 1500 (18%)"
@@ -109,7 +109,7 @@
               "meal_only_kes": 4800,
               "wine_only_kes": 1200,
               "standalone_total_kes": 6000,
-              "bundle_price_with_wine_kes": 5000,
+              "paired_price_with_wine_kes": 5000,
               "you_save_kes": 1000,
               "you_save_percent": 17,
               "display_text": "Order together and save KES 1000 (17%)"
@@ -142,7 +142,7 @@
               "meal_only_kes": 9500,
               "wine_only_kes": 1800,
               "standalone_total_kes": 11300,
-              "bundle_price_with_wine_kes": 10000,
+              "paired_price_with_wine_kes": 10000,
               "you_save_kes": 1300,
               "you_save_percent": 12,
               "display_text": "Order together and save KES 1300 (12%)"
@@ -167,7 +167,7 @@
               "meal_only_kes": 9500,
               "wine_only_kes": 2000,
               "standalone_total_kes": 11500,
-              "bundle_price_with_wine_kes": 10000,
+              "paired_price_with_wine_kes": 10000,
               "you_save_kes": 1500,
               "you_save_percent": 13,
               "display_text": "Order together and save KES 1500 (13%)"
@@ -193,7 +193,7 @@
               "meal_only_kes": 6500,
               "wine_only_kes": 1500,
               "standalone_total_kes": 8000,
-              "bundle_price_with_wine_kes": 7000,
+              "paired_price_with_wine_kes": 7000,
               "you_save_kes": 1000,
               "you_save_percent": 12,
               "display_text": "Order together and save KES 1000 (12%)"
@@ -217,7 +217,7 @@
               "meal_only_kes": 11500,
               "wine_only_kes": 3000,
               "standalone_total_kes": 14500,
-              "bundle_price_with_wine_kes": 12500,
+              "paired_price_with_wine_kes": 12500,
               "you_save_kes": 2000,
               "you_save_percent": 14,
               "display_text": "Order together and save KES 2000 (14%)"

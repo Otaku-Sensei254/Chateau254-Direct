@@ -78,10 +78,10 @@ const ComponentsList = ({ components }) => {
 
 const PricingOptions = ({ pricing, price, selectedOption, onSelectOption }) => {
   if (!pricing) return null;
-  const { meal_only_kes, wine_only_kes, standalone_total_kes, bundle_price_with_wine_kes, you_save_kes, you_save_percent, display_text } = pricing;
+  const { meal_only_kes, wine_only_kes, standalone_total_kes, paired_price_with_wine_kes, you_save_kes, you_save_percent, display_text } = pricing;
 
   const options = [
-    { key: 'bundle', label: 'Bundle (meal + wine)', price: bundle_price_with_wine_kes, savings: you_save_kes && you_save_percent ? `Save KES ${you_save_kes.toLocaleString()} (${you_save_percent}%)` : null },
+    { key: 'paired', label: 'Bundle (meal + wine)', price: paired_price_with_wine_kes, savings: you_save_kes && you_save_percent ? `Save KES ${you_save_kes.toLocaleString()} (${you_save_percent}%)` : null },
     { key: 'separate', label: 'Meal + Wine (separate)', price: standalone_total_kes, savings: null },
     { key: 'meal', label: 'Meal only', price: meal_only_kes, savings: null },
     { key: 'wine', label: 'Wine only', price: wine_only_kes, savings: null },
@@ -116,7 +116,7 @@ const PricingOptions = ({ pricing, price, selectedOption, onSelectOption }) => {
 };
 
 const ViewItem = ({ item, addToCart, onBack, onCart, onWineFactSelect, onWinePairingSelect }) => {
-  const [selectedPricing, setSelectedPricing] = useState('bundle');
+  const [selectedPricing, setSelectedPricing] = useState('paired');
   const [selectedPrice, setSelectedPrice] = useState(item?.price || 0);
 
   if (!item) return <main className="content-page empty-state"><p>We could not find that item.</p><button className="primary-button" onClick={onBack}>Back to menu</button></main>;

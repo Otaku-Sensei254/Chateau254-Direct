@@ -41,7 +41,7 @@ const seedGroupedMenu = async (client, data, key) => {
     for (const item of (category.items || [])) {
       const price = item.price_range_kes
         ? Math.round((item.price_range_kes.min + item.price_range_kes.max) / 2)
-        : item.pricing?.bundle_price_with_wine_kes || item.pricing?.meal_only_kes || null;
+        : item.pricing?.paired_price_with_wine_kes || item.pricing?.meal_only_kes || null;
       if (!price) continue;
       await client.query(
         `INSERT INTO menu_items (id, name, description, price, category, image_url)
@@ -84,8 +84,8 @@ const seed = async () => {
     const comboCategories = takeawayCombos?.takeaway_combo_menu?.categories || [];
     for (const category of comboCategories) {
       for (const item of (category.items || [])) {
-        const price = item.pricing?.bundle_price_with_wine_kes
-          ? item.pricing.bundle_price_with_wine_kes
+        const price = item.pricing?.paired_price_with_wine_kes
+          ? item.pricing.paired_price_with_wine_kes
           : item.pricing?.meal_only_kes && item.pricing?.wine_only_kes
             ? Math.round((item.pricing.meal_only_kes + item.pricing.wine_only_kes) / 2)
             : item.pricing?.meal_only_kes || null;
