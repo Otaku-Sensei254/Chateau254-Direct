@@ -1,0 +1,527 @@
+{
+  "restaurant": "Chateau254",
+  "menu_type": "Dine-In Menu",
+  "currency": "KES",
+  "notes": {
+    "pending_from_client": [
+      "Appetizer item 6 (Tomatoes with Olive Oil, Balsamic & Honey) has no price — marked Limited Edition (LE), price pending confirmation.",
+      "Signature Mains sides list is a placeholder carried over from Chateau Classics/Local Favorites — Agnes will confirm the actual sides for this category.",
+      "A few items in Chateau Classics and Light Fair had missing or placeholder descriptions in the source data — reasonable filler descriptions were added and are flagged with 'placeholder_description': true for easy find-and-replace later."
+    ]
+  },
+  "categories": [
+    {
+      "category": "Appetizers",
+      "slug": "appetizers",
+      "items": [
+        {
+          "name": "Herb Roasted Red Peppers in Olive Oil",
+          "price": 400,
+          "description": "Sweet red peppers slow-roasted with fresh herbs and finished with a drizzle of olive oil.",
+          "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Classic Hummus with Olives, Olive Oil & Paprika",
+          "price": 450,
+          "description": "Silky chickpea hummus topped with olives, a swirl of olive oil and a dusting of smoked paprika.",
+          "image": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Beetroot Hummus with Herbs & Beetroot Shavings",
+          "price": 450,
+          "description": "Vibrant beetroot-infused hummus finished with fresh herbs and delicate beetroot shavings.",
+          "image": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Bruschetta with an Extra Touch of Herbs",
+          "price": 350,
+          "description": "Toasted bread topped with fresh tomatoes, garlic and a generous touch of aromatic herbs.",
+          "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Caprese: Cherry Tomatoes, Bocconcini & Basil",
+          "price": 550,
+          "description": "Sweet cherry tomatoes and creamy bocconcini paired with fresh basil and a light olive oil dressing.",
+          "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Tomatoes with Olive Oil Drizzled with Balsamic & Honey",
+          "price": null,
+          "tag": "Limited Edition (LE)",
+          "description": "Fresh tomatoes and olives drizzled with a balsamic and honey glaze — a limited edition seasonal starter.",
+          "image": "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Whipped Feta with Roasted Tomatoes, Honey & Hot Pepper Flakes",
+          "price": 750,
+          "description": "Creamy whipped feta topped with roasted tomatoes, a touch of honey and a kick of hot pepper flakes.",
+          "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=80"
+        }
+      ]
+    },
+    {
+      "category": "Soups",
+      "slug": "soups",
+      "items": [
+        {
+          "name": "Creamy Tomato & Basil Soup",
+          "price": 650,
+          "description": "A velvety blend of sun-ripened tomatoes and fresh basil, simmered slow for a comforting, deeply aromatic finish.",
+          "image": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Carrot & Ginger Soup",
+          "price": 750,
+          "description": "Sweet garden carrots and warming ginger blended into a silky, vibrant soup with a gentle spicy kick.",
+          "image": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Butternut Squash & Almond Soup",
+          "price": 850,
+          "description": "Roasted butternut squash pureed with toasted almonds for a rich, nutty soup with a hint of natural sweetness.",
+          "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "High Protein Broccoli Feta Immunity Soup",
+          "price": 900,
+          "description": "A nourishing blend of fresh broccoli and creamy feta, packed with protein and immunity-boosting goodness.",
+          "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Creamy Mushroom & Feta Soup",
+          "price": 950,
+          "description": "Earthy mushrooms folded into a luxuriously creamy base, finished with tangy feta for depth and character.",
+          "image": "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Mediterranean Chicken Lemon Soup",
+          "price": 1000,
+          "description": "Tender chicken in a bright, lemon-infused broth layered with Mediterranean herbs — light yet deeply satisfying.",
+          "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "French Oxtail Soup with Red Wine Flambé",
+          "price": 1200,
+          "note": "Wine flambé is optional",
+          "description": "Slow-braised oxtail in a rich, deeply savoury broth, finished tableside with an optional red wine flambé for true French flair.",
+          "image": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Saffron & White Wine Shrimp Veloute",
+          "price": 1450,
+          "description": "Delicate shrimp veloute infused with saffron and white wine, a silky, indulgent starter with a subtle coastal elegance.",
+          "image": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=900&q=80"
+        }
+      ]
+    },
+    {
+      "category": "Salads",
+      "slug": "salads",
+      "items": [
+        {
+          "name": "Avocado and Mango Salad",
+          "price": 600,
+          "description": "Creamy avocado and sweet ripe mango tossed together for a refreshing, tropical balance of textures and flavour.",
+          "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Beetroot Seasonal Garden Salad",
+          "price": 900,
+          "description": "Earthy roasted beetroot paired with the season's freshest garden greens, light, colourful and full of flavour.",
+          "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Grilled Cajun Chicken Salad",
+          "price": 1200,
+          "description": "Smoky Cajun-spiced grilled chicken atop crisp greens, delivering a bold kick in every bite.",
+          "image": "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Goat Cheese, Pears & Crispy Apple Salad",
+          "price": 1000,
+          "description": "Creamy goat cheese, juicy pears and crisp apple slices come together for a delicate sweet-and-savoury balance.",
+          "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Ham, Mozzarella and Rocket Salad",
+          "price": 1200,
+          "description": "Thinly sliced ham and soft mozzarella layered over peppery rocket for a simple, satisfying classic.",
+          "image": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Golden Thai Beef & Mango Mosaic",
+          "price": 1500,
+          "description": "Seared beef strips with sweet mango and a zesty Thai-inspired dressing, a vibrant fusion of bold and fresh flavours.",
+          "image": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=900&q=80"
+        }
+      ]
+    },
+    {
+      "category": "Signature Mains",
+      "slug": "signature-mains",
+      "items": [
+        {
+          "name": "Apple & Bleu-Stuffed Chicken Supreme",
+          "portion": "250g",
+          "price": 3300,
+          "description": "Juicy chicken supreme stuffed with sweet apple and bold blue cheese, a striking balance of rich and refreshing flavours.",
+          "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "28-Day Aged T-Bone Steak",
+          "portion": "300g",
+          "price": 3200,
+          "description": "Dry-aged for 28 days to concentrate flavour and tenderness, char-grilled to your liking for a robust, satisfying steak experience.",
+          "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "28-Day Aged Sirloin Steak",
+          "portion": "300g",
+          "price": 3400,
+          "description": "A well-marbled sirloin, dry-aged for 28 days and fired to perfection for deep, savoury flavour in every cut.",
+          "image": "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "28-Day Aged Ribeye Steak",
+          "portion": "300g",
+          "price": 3800,
+          "description": "Generously marbled and dry-aged for 28 days, grilled to a smoky char for maximum richness and tenderness.",
+          "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Signature Truffle Risotto",
+          "price": 4200,
+          "description": "Creamy Arborio rice slow-stirred to perfection and finished with fragrant truffle for an indulgent, restaurant-signature dish.",
+          "image": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Master's 28-Day Aged Reserve Tomahawk",
+          "portion": "600g",
+          "price": 6500,
+          "tag": "Special Edition",
+          "description": "Our showstopper cut — a majestic 28-day aged tomahawk, fire-grilled to order for the ultimate carnivore's centrepiece.",
+          "image": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=900&q=80"
+        }
+      ],
+      "sides": [
+        "Steamed rice",
+        "Hand cut chips",
+        "Garlic potatoes",
+        "Mashed potatoes",
+        "Sauteed potato wedges",
+        "Roasted potatoes",
+        "Butternut chapati",
+        "Brown ugali",
+        "White ugali",
+        "Grilled garden vegetables"
+      ],
+      "sides_note": "Placeholder — carried over from Chateau Classics/Local Favorites, pending Agnes's confirmed list for this category"
+    },
+    {
+      "category": "Farinaceous Delicacies",
+      "slug": "farinaceous-delicacies",
+      "items": [
+        {
+          "name": "Fusilli alla Crudaiolla",
+          "vegetarian": true,
+          "price": 1300,
+          "description": "Fusilli tossed with fresh raw tomatoes, garlic and basil, a light, vibrant pasta bursting with summer flavour.",
+          "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Tagliatelle alla Vodka Cream & Fine Herbs",
+          "vegetarian": true,
+          "price": 1600,
+          "description": "Silky tagliatelle coated in a velvety vodka cream sauce, finished with a delicate touch of fine herbs.",
+          "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Chicken Mushroom Alfredo",
+          "price": 1800,
+          "description": "Tender chicken and earthy mushrooms folded into a rich, creamy Alfredo sauce for pure comfort on a plate.",
+          "image": "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Penne alla Prima Vera",
+          "price": 1500,
+          "description": "Penne tossed with a colourful medley of fresh seasonal vegetables in a light, fragrant sauce.",
+          "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Fusilli alla Puttanesca Reduction",
+          "price": 2300,
+          "description": "Fusilli in a bold, slow-reduced puttanesca sauce with olives, capers and a punchy tomato base.",
+          "image": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Verdant Chicken Pesto Pasta",
+          "price": 2100,
+          "description": "Tender chicken tossed through a vibrant basil pesto pasta, fresh, herbaceous and full of character.",
+          "image": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=900&q=80"
+        }
+      ]
+    },
+    {
+      "category": "Chateau Classics",
+      "slug": "chateau-classics",
+      "items": [
+        {
+          "name": "Stuffed Chicken Alla Mediterranea",
+          "price": 2300,
+          "description": "Stuffed with a medley of green olives, gooey mozzarella, tangy sundried tomatoes, aromatic rosemary and thyme, garnished with white wine sauce.",
+          "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Milk-Fed Molo Lamb Cutlets",
+          "portion": "300g",
+          "price": 2400,
+          "description": "Tender and flavourful lamb chops from Molo, raised on a milk-fed diet and expertly grilled to perfection. Garnished with mint sauce.",
+          "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Pepper Crusted Sirloin Steak",
+          "portion": "350g",
+          "price": 2400,
+          "description": "Prime sirloin, expertly grilled to lock in its natural juiciness, finished with herb butter and served with seasonal accompaniments.",
+          "image": "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Chimichurri T-Bone Steak",
+          "portion": "400g",
+          "price": 2400,
+          "description": "A perfectly seared T-bone steak topped with vibrant chimichurri sauce, bursting with fresh herbs and tangy flavour.",
+          "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Chateaubriand Tenderloin",
+          "portion": "350g",
+          "price": 2600,
+          "description": "A succulent centre-cut beef tenderloin, expertly roasted and served with a rich red wine reduction.",
+          "image": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Grilled Snapper with Creamy Lemon Sauce",
+          "price": 2600,
+          "description": "Line-caught snapper charred over high heat to a crisp golden skin, served with a silky lemon sauce and seasonal baby vegetables.",
+          "image": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Garlic Butter Ribeye",
+          "portion": "400g",
+          "price": 3000,
+          "description": "A succulent ribeye steak grilled to perfection and topped with a rich garlic butter sauce.",
+          "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Gratin Loaded with a Side of Salad",
+          "price": 2200,
+          "description": "A rich, oven-baked gratin served alongside a crisp, lightly dressed side salad.",
+          "placeholder_description": true,
+          "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Biryani",
+          "price": 2500,
+          "description": "Fragrant spiced rice layered with tender marinated meat, slow-cooked for deep flavour.",
+          "placeholder_description": true,
+          "image": "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Chicken Curry",
+          "price": 2300,
+          "description": "Tender chicken simmered in a rich, aromatic curry sauce, served with your choice of side.",
+          "placeholder_description": true,
+          "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=80"
+        }
+      ],
+      "sides": [
+        "Steamed rice",
+        "Hand cut chips",
+        "Garlic potatoes",
+        "Mashed potatoes",
+        "Sauteed potato wedges",
+        "Roasted potatoes",
+        "Butternut chapati",
+        "Brown ugali",
+        "White ugali",
+        "Grilled garden vegetables"
+      ]
+    },
+    {
+      "category": "Local Favorites",
+      "slug": "local-favorites",
+      "items": [
+        {
+          "name": "Aromatic Whole Lake Tilapia, Garlic & Ginger",
+          "price": 1200,
+          "description": "Fresh whole tilapia marinated with aromatic herbs, soy, lemon and a blend of spices. Grilled to perfection and served with a side.",
+          "image": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=900&q=80"
+        }
+      ],
+      "sides": [
+        "Steamed rice",
+        "Hand cut chips",
+        "Garlic potatoes",
+        "Mashed potatoes",
+        "Sauteed potato wedges",
+        "Roasted potatoes",
+        "Butternut chapati",
+        "Brown ugali",
+        "White ugali",
+        "Grilled garden vegetables"
+      ]
+    },
+    {
+      "category": "Chateau Lunchbox",
+      "slug": "chateau-lunchbox",
+      "available": "12 PM - 3 PM",
+      "items": [
+        {
+          "name": "Coastal Mbaazi in Creamy Coconut Emulsion",
+          "price": 450,
+          "description": "Creamy mbaazi simmered in a rich, velvety coconut sauce, tropical, comforting and bursting with coastal flavours. Served with fried chapati.",
+          "image": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Luxury Beef Bourguignon",
+          "portion": "120g",
+          "price": 600,
+          "description": "Tender, slow-cooked beef in a rich red wine sauce, infused with aromatic herbs and vegetables. A classic French indulgence.",
+          "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Slow Roasted Kenyan Country Chicken",
+          "pricing_options": [
+            {
+              "portion": "Quarter",
+              "price": 600
+            },
+            {
+              "portion": "Half",
+              "price": 1200
+            }
+          ],
+          "description": "Tender chicken slow-roasted to deepen its natural flavour, finished with fragrant herbs for a rich, comforting taste.",
+          "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Golden Chicken Stew Dhania Infused Jus",
+          "price": 600,
+          "description": "Succulent grilled chicken served with a fragrant coriander jus, aromatic, flavourful and elegantly satisfying. Served with creamy mashed potatoes.",
+          "image": "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=900&q=80"
+        }
+      ]
+    },
+    {
+      "category": "Light Fair",
+      "slug": "bar-bites",
+      "items": [
+        {
+          "name": "Grilled Kenyan Sausages",
+          "quantity": 2,
+          "price": 300,
+          "description": "Two perfectly grilled Kenyan beef sausages served with a side of salsa.",
+          "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Classic Home Fries",
+          "price": 400,
+          "description": "Crispy, golden home fries seasoned with a blend of herbs and spices.",
+          "image": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Beef Samosa",
+          "price": 600,
+          "description": "Crispy pastry filled with seasoned beef and melted cheddar, golden-fried and irresistibly savoury.",
+          "image": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Vegetable Skewers",
+          "price": 450,
+          "description": "Colourful skewers of fresh vegetables, grilled to perfection and lightly seasoned.",
+          "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Parmesan Fries",
+          "price": 750,
+          "description": "Crispy golden fries generously sprinkled with freshly grated Parmesan cheese and smoked paprika.",
+          "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Crispy Feta Samosas",
+          "quantity": 3,
+          "price": 750,
+          "description": "Golden, flaky parcels filled with creamy feta and aromatic herbs, perfect as a starter or snack.",
+          "image": "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Char Grilled Beef / Chicken Skewers",
+          "price": 800,
+          "description": "Juicy, marinated skewers grilled to perfection, smoky and flavourful, served sizzling.",
+          "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Nocturnal House Wings",
+          "price": 800,
+          "description": "Crispy, saucy house chicken wings for the late-night crowd, served with a touch of salsa.",
+          "image": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Paneer | Naan Bread",
+          "price": 1200,
+          "description": "Soft, pillowy naan bread served alongside grilled paneer cheese.",
+          "placeholder_description": true,
+          "image": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Beef Sandwich",
+          "price": 1200,
+          "description": "A hearty sandwich layered with tender seasoned beef and fresh accompaniments.",
+          "placeholder_description": true,
+          "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=80"
+        }
+      ]
+    },
+    {
+      "category": "Platters & Boards",
+      "slug": "platters-and-boards",
+      "items": [
+        {
+          "name": "Mezzo Board",
+          "serves": "4 Pax",
+          "price": 4500,
+          "description": "An array of crisp greens, roasted and stuffed vegetables, citrusy and herby salads, delicate dressings and edible blooms. Served with bread or roasted potatoes.",
+          "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Nairobi Style Board",
+          "serves": "4 Pax",
+          "price": 4500,
+          "description": "Includes Oriental BBQ chicken wings, lamb sausages, beef skewers, Maryland chicken drumsticks and cheese balls, served with vegetables and Kenyan salsa, fried onions and chillies.",
+          "image": "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Artisanal Cheese Board",
+          "serves": "4-6 Pax",
+          "price": 6500,
+          "description": "An elevated selection of artisan cheeses, nuts, fruits and carefully selected accompaniments.",
+          "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Lamb Leg A La Maison",
+          "serves": "4-6 Pax",
+          "price": 9500,
+          "description": "Slow-roasted Kenyan lamb infused with garlic, ginger, thyme and rosemary, seasoned with salt, pepper and signature herbs.",
+          "image": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=900&q=80"
+        },
+        {
+          "name": "Carnivore Indulgence",
+          "serves": "6 Pax",
+          "price": 12500,
+          "description": "A premium selection of tender ribeye, T-bone, sirloin, lamb, juicy beef ribs and fillet strips, served with roast potatoes, bread, grilled vegetables and Kenyan salsa.",
+          "image": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=900&q=80"
+        }
+      ]
+    }
+  ]
+}

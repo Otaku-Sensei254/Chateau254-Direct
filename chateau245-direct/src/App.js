@@ -2,6 +2,7 @@ import './App.css';
 import { useEffect, useMemo, useState } from 'react';
 import { Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import menuItems from './components/data/menu.json';
+import fullMenu from './components/data/chateau254_full_menu.json';
 import wines from './components/data/luxury_wine_list.json';
 import takeoutMenuData from './components/data/takeout_menu.json';
 import takeoutWinesData from './components/data/takeout_wine_list.json';
@@ -24,6 +25,7 @@ import Auth from './pages/auth/auth';
 import AdminDashboard from './pages/UI/admin/admin_dash';
 import RiderDashboard from './pages/rider/rider_dash';
 import Booking from './pages/UI/booking';
+import FullMenu from './pages/UI/full_menu';
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const normalizedWines = wines.map((wine, index) => ({
@@ -92,8 +94,31 @@ const normalizeTakeawayCombos = (data, prefix) => {
   );
 };
 
+const normalizeFullMenu = (data) => {
+  const categories = data?.categories || [];
+  return categories.flatMap(({ category, items }) =>
+    (items || []).map((item, i) => ({
+      id: `full-${category.replace(/\W+/g, '-').toLowerCase()}-${i}`,
+      name: item.name,
+      description: item.description || '',
+      price: item.price || 0,
+      category,
+      image: item.image || '',
+      tag: item.tag || null,
+      portion: item.portion || null,
+      serves: item.serves || null,
+      quantity: item.quantity || null,
+      vegetarian: item.vegetarian || false,
+      note: item.note || null,
+      pricing_options: item.pricing_options || null,
+      sides: item.sides || null,
+      sides_note: item.sides_note || null,
+    }))
+  );
+};
+
 const CATALOGS = {
-  dining: [...menuItems, ...normalizedWines],
+  dining: [...normalizeFullMenu(fullMenu), ...normalizedWines],
   takeout: [
     ...normalizeGroupedMenu(takeoutMenuData.takeout_menu, 'takeout'),
     ...normalizeWineList(takeoutWinesData.takeout_orderout_wine_list, 'takeout'),
@@ -159,6 +184,7 @@ const App = () => {
   const [order, setOrder] = useState(null);
   const [lastOrderId, setLastOrderId] = useState(loadLastOrder);
   const [session, setSession] = useState(storedSession);
+  const [dineInSelections, setDineInSelections] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
   const { addToast } = useToast();
@@ -255,6 +281,13 @@ const App = () => {
 
   const handleBack = () => navigate(-1);
 
+  const addDineInItem = (item) => {
+    setDineInSelections((prev) => {
+      if (prev.find((selected) => selected.id === item.id)) return prev;
+      return [...prev, item];
+    });
+  };
+
   const handleAuthSuccess = (user, token) => {
     const nextSession = { user, token };
     localStorage.setItem('chateau254_session', JSON.stringify(nextSession));
@@ -304,8 +337,9 @@ const App = () => {
         <Route path="/auth" element={<Auth onSuccess={handleAuthSuccess} onBack={() => navigate('/')} />} />
         <Route path="/admin/*" element={<ProtectedRoute user={session?.user} roles={['admin']}><AdminDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
         <Route path="/rider" element={<ProtectedRoute user={session?.user} roles={['rider']}><RiderDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
-        <Route path="/booking" element={<ProtectedRoute user={session?.user}><Booking user={session?.user} token={session?.token} items={CATALOGS.dining} /></ProtectedRoute>} />
-        <Route path="/menu" element={<Menu items={visibleItems} user={session?.user} categories={activeCategories} filter={filter} setFilter={(cat) => { setFilter(cat); if (cat !== 'Wine') setWineClassFilter(null); }} query={query} setQuery={setQuery} addToCart={addToCart} cartCount={cartCount} onCart={() => navigate('/cart')} onViewItem={(item) => navigate(`/item/${item.id}`)} onBooking={() => navigate('/booking')} wineFilter={wineFilter} onClearWineFilter={() => { setWineFilter(null); setWinePairingFilter(null); }} wineClassFilter={wineClassFilter} setWineClassFilter={setWineClassFilter} mode={mode} winePairingFilter={winePairingFilter} onClearWinePairingFilter={() => setWinePairingFilter(null)} onModeChange={switchMode} onBack={handleBack} />} />
+        <Route path="/booking" element={<ProtectedRoute user={session?.user}><Booking user={session?.user} token={session?.token} selectedItems={dineInSelections} onClearSelections={() => setDineInSelections([])} /></ProtectedRoute>} />
+        <Route path="/menu" element={<Menu items={visibleItems} user={session?.user} categories={activeCategories} filter={filter} setFilter={(cat) => { setFilter(cat); if (cat !== 'Wine') setWineClassFilter(null); }} query={query} setQuery={setQuery} addToCart={addToCart} cartCount={cartCount} onCart={() => navigate('/cart')} onViewItem={(item) => navigate(`/item/${item.id}`)} onBooking={() => navigate('/booking')} wineFilter={wineFilter} onClearWineFilter={() => { setWineFilter(null); setWinePairingFilter(null); }} wineClassFilter={wineClassFilter} setWineClassFilter={setWineClassFilter} mode={mode} winePairingFilter={winePairingFilter} onClearWinePairingFilter={() => setWinePairingFilter(null)} onModeChange={switchMode} onBack={handleBack} dineInSelections={dineInSelections} addDineInItem={addDineInItem} />} />
+        <Route path="/full-menu" element={<FullMenu onMakeOrder={() => { switchMode('takeout'); navigate('/menu'); }} onReserveTable={() => navigate('/booking')} />} />
         <Route path="/item/:itemId" element={<ItemRoute addToCart={addToCart} onWineFactSelect={(field, value) => {
           setFilter('Wine');
           setQuery('');

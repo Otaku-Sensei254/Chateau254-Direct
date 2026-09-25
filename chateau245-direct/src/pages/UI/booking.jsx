@@ -1,19 +1,11 @@
 import { useState } from 'react';
-import { FiArrowLeft, FiCalendar, FiSave, FiUser, FiUsers, FiClipboard } from 'react-icons/fi';
+import { FiArrowLeft, FiCalendar, FiSave, FiUser, FiUsers, FiClipboard, FiX } from 'react-icons/fi';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const today = () => new Date().toISOString().slice(0, 16);
 
-const packages = [
-  { value: '', label: '— Select a package or item —' },
-  { value: 'Chef\'s Tasting Menu', label: 'Chef\'s Tasting Menu' },
-  { value: 'Wine Pairing Package', label: 'Wine Pairing Package' },
-  { value: 'Couple\'s Special', label: 'Couple\'s Special' },
-  { value: 'À La Carte', label: 'À La Carte' },
-];
-
-const Booking = ({ user, token, items = [] }) => {
+const Booking = ({ user, token, selectedItems = [], onClearSelections }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -37,9 +29,9 @@ const Booking = ({ user, token, items = [] }) => {
     const body = {
       customer_name: form.get('name'),
       party_size: partySize,
-      preferred_item: form.get('preferred_item') || null,
+      preferred_item: selectedItems.length ? selectedItems.map((i) => i.name).join(', ') : null,
       dining_time: form.get('dining_time'),
-      notes: form.get('notes') || '',
+      notes: [form.get('notes') || '', selectedItems.length ? `Selected items: ${selectedItems.map((i) => `${i.name} — KES ${Number(i.price).toLocaleString()}`).join(', ')}` : ''].filter(Boolean).join('\n'),
     };
     try {
       const res = await fetch(`${API_URL}/bookings`, {
@@ -49,6 +41,7 @@ const Booking = ({ user, token, items = [] }) => {
       });
       if (!res.ok) throw new Error('Failed to create reservation');
       setSubmitted(true);
+      onClearSelections?.();
     } catch (err) {
       setError(err.message || 'Something went wrong. Please try again.');
     } finally {
@@ -89,13 +82,22 @@ const Booking = ({ user, token, items = [] }) => {
       </div>
 
       <div className="booking-field">
-        <label htmlFor="booking-item">Preferred item / package</label>
-        <div className="booking-input"><FiClipboard /><select id="booking-item" name="preferred_item">
-          {packages.map((p) => <option key={p.value} value={p.value}>{p.label}</option>)}
-          {items.length > 0 && <optgroup label="Menu items">
-            {items.map((item) => <option key={item.id} value={item.name}>{item.name} — KES {Number(item.price).toLocaleString()}</option>)}
-          </optgroup>}
-        </select></div>
+        <label>Selected items</label>
+        {selectedItems.length === 0 ? (
+          <p style={{ color: '#837a75', fontSize: '13px' }}>No items selected yet. Browse the Dine-in menu and add items before booking.</p>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {selectedItems.map((item) => (
+              <div key={item.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', padding: '8px 10px', border: '1px solid #e9e1dc', borderRadius: '8px', background: '#fff' }}>
+                <div>
+                  <strong>{item.name}</strong>
+                  <span style={{ marginLeft: '8px', color: '#837a75', fontSize: '12px' }}>KES {Number(item.price).toLocaleString()}</span>
+                </div>
+                <button type="button" onClick={() => onClearSelections((prev) => prev.filter((i) => i.id !== item.id))} style={{ background: 'none', border: 'none', color: '#c62828', cursor: 'pointer' }}><FiX /></button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="booking-field">

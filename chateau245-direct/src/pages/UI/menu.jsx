@@ -3,6 +3,7 @@ import { RiEBike2Fill } from "react-icons/ri";
 import { FiCalendar, FiPlus, FiSearch} from "react-icons/fi";
 import { LuPackageOpen } from "react-icons/lu";
 import { GiMeal } from "react-icons/gi";
+import { useToast } from "../../contexts/ToastContext";
 // Classification filter groups shown when Wine category is active
 const WINE_CLASS_FILTERS = [
   {
@@ -28,11 +29,12 @@ const WINE_CLASS_FILTERS = [
 ];
 
 const MODE_LABELS = {
+  dinein: '🍽️ Dine In Menu',
   takeout: '🛍️ Take Out Menu',
   events: '🎉 Event Catering & Beverage Menu',
 };
 
-const menu = ({
+const Menu = ({
   items,
   categories,
   filter,
@@ -54,7 +56,10 @@ const menu = ({
   onClearWinePairingFilter,
   onModeChange,
   onBack,
+  dineInSelections,
+  addDineInItem,
 }) => {
+  const { addToast } = useToast();
   const isWineActive = filter === "Wine";
 
   const handleClassFilter = (field, value) => {
@@ -81,7 +86,7 @@ const menu = ({
           <RiEBike2Fill /> 45 min delivery
         </span>
         <button className="order-badge" onClick={onBooking}>
-          <FiCalendar /> Make reservations
+          <FiCalendar /> My Reservations {dineInSelections.length > 0 && <span className="reservation-count">{dineInSelections.length}</span>}
         </button>
       </div>
       
@@ -178,10 +183,17 @@ const menu = ({
             </button>
             <button
               className="add-button"
-              aria-label={`Add ${item.name}`}
-              onClick={() => addToCart(item)}
+              aria-label={mode === "dinein" ? `Book ${item.name}` : `Add ${item.name}`}
+              onClick={() => {
+                if (mode === "dinein") {
+                  addDineInItem(item);
+                  addToast(`${item.name} added to reservation`, "success");
+                } else {
+                  addToCart(item);
+                }
+              }}
             >
-              <FiPlus />
+              {mode === "dinein" ? <FiCalendar /> : <FiPlus />}
             </button>
           </article>
         ))}
@@ -208,4 +220,4 @@ const menu = ({
   );
 };
 
-export default menu;
+export default Menu;

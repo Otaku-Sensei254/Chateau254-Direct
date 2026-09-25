@@ -23,6 +23,17 @@
     border:none;
 }
 
+.reservation-count {
+    background: var(--wine);
+    color: white;
+    font: 700 9px Arial;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+}
+
 .search-box {
     background: white;
     border: 1px solid var(--line);
@@ -339,4 +350,20 @@
         font-size: 8px;
         padding: 4px;
     }
+}
+
+.full-menu-page .action-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.menu-category-section {
+    margin-bottom: 32px;
+}
+
+.menu-category-section h2 {
+    font-size: 24px;
+    margin-bottom: 16px;
+    color: #3e2723;
 }
