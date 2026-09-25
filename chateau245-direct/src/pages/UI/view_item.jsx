@@ -81,7 +81,7 @@ const PricingOptions = ({ pricing, price, selectedOption, onSelectOption }) => {
   const { meal_only_kes, wine_only_kes, standalone_total_kes, paired_price_with_wine_kes, you_save_kes, you_save_percent, display_text } = pricing;
 
   const options = [
-    { key: 'paired', label: 'Bundle (meal + wine)', price: paired_price_with_wine_kes, savings: you_save_kes && you_save_percent ? `Save KES ${you_save_kes.toLocaleString()} (${you_save_percent}%)` : null },
+    { key: 'paired', label: 'Paired (meal + wine)', price: paired_price_with_wine_kes, savings: you_save_kes && you_save_percent ? `Save KES ${you_save_kes.toLocaleString()} (${you_save_percent}%)` : null },
     { key: 'separate', label: 'Meal + Wine (separate)', price: standalone_total_kes, savings: null },
     { key: 'meal', label: 'Meal only', price: meal_only_kes, savings: null },
     { key: 'wine', label: 'Wine only', price: wine_only_kes, savings: null },
