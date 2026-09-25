@@ -1,7 +1,6 @@
 import './App.css';
 import { useEffect, useMemo, useState } from 'react';
 import { Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
-import menuItems from './components/data/menu.json';
 import fullMenu from './components/data/chateau254_full_menu.json';
 import wines from './components/data/luxury_wine_list.json';
 import takeoutMenuData from './components/data/takeout_menu.json';
