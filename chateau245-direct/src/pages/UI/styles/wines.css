@@ -165,39 +165,263 @@
 }
 
 .wines-search-input:focus {
-  border-color: #2c5f2d;
+  border-color: var(--wine, #761329);
   background: #fff;
-  box-shadow: 0 0 0 3px rgba(44, 95, 45, 0.12);
+  box-shadow: 0 0 0 3px rgba(118, 19, 41, 0.12);
 }
 
+/* ==========================================================================
+   CHATEAU254 BRAND-THEMED DROPDOWNS
+   ========================================================================== */
+
+.wine-dropdown-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 0 1 230px;
+  min-width: 190px;
+}
+
+.wine-dropdown-label {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink, #211d1b);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: 0.2px;
+}
+
+.wine-dropdown-label-icon {
+  color: var(--wine, #761329);
+}
+
+.wine-dropdown-active-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--wine, #761329);
+  margin-left: 2px;
+}
+
+/* Trigger Button */
+.wine-dropdown-trigger {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px 0 14px;
+  background: #ffffff;
+  border: 1.5px solid var(--line, #e2d9cf);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.wine-dropdown-trigger:hover {
+  border-color: var(--wine, #761329);
+  background: #fffdfb;
+  box-shadow: 0 3px 10px rgba(118, 19, 41, 0.08);
+}
+
+.wine-dropdown-trigger.open {
+  border-color: var(--wine, #761329);
+  box-shadow: 0 0 0 3px rgba(118, 19, 41, 0.14);
+  background: #ffffff;
+}
+
+.wine-dropdown-trigger.active-filter {
+  border-color: var(--wine, #761329);
+  background: #fdf8f6;
+}
+
+.wine-dropdown-selected-text {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink, #211d1b);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.wine-dropdown-trigger.active-filter .wine-dropdown-selected-text {
+  color: var(--wine, #761329);
+}
+
+.wine-dropdown-count-pill {
+  font-size: 11px;
+  font-weight: 700;
+  background: #f6ece7;
+  color: var(--wine, #761329);
+  padding: 2px 7px;
+  border-radius: 12px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.wine-dropdown-chevron {
+  color: var(--muted, #837a75);
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1), color 0.2s;
+  flex-shrink: 0;
+}
+
+.wine-dropdown-trigger:hover .wine-dropdown-chevron,
+.wine-dropdown-trigger.open .wine-dropdown-chevron,
+.wine-dropdown-trigger.active-filter .wine-dropdown-chevron {
+  color: var(--wine, #761329);
+}
+
+.wine-dropdown-chevron.rotated {
+  transform: rotate(180deg);
+}
+
+/* Floating Dropdown Menu */
+.wine-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  min-width: 230px;
+  background: #ffffff;
+  border: 1.5px solid var(--line, #e2d9cf);
+  border-radius: 12px;
+  box-shadow: 0 14px 32px -4px rgba(33, 29, 27, 0.18), 0 4px 10px rgba(0, 0, 0, 0.04);
+  z-index: 120;
+  overflow: hidden;
+  animation: wineDropdownFade 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes wineDropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.wine-dropdown-list {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  max-height: 250px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #d1c7bc transparent;
+}
+
+.wine-dropdown-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.wine-dropdown-list::-webkit-scrollbar-thumb {
+  background: #d1c7bc;
+  border-radius: 10px;
+}
+
+.wine-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink, #211d1b);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.wine-dropdown-item:hover {
+  background: #fdf5f2;
+  color: var(--wine, #761329);
+}
+
+.wine-dropdown-item.selected {
+  background: var(--wine, #761329);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.wine-dropdown-item-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wine-dropdown-item-sub {
+  font-size: 12px;
+  margin-right: 4px;
+}
+
+.wine-dropdown-item-count {
+  font-size: 11px;
+  font-weight: 600;
+  background: #f4ece7;
+  color: var(--wine, #761329);
+  padding: 2px 6px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.wine-dropdown-item.selected .wine-dropdown-item-count {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+.wine-dropdown-check {
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+/* Polished Fallback native select */
 .wines-select {
   width: 100%;
-  padding: 10px 14px;
-  border: 1px solid var(--line, #e0d8d0);
-  border-radius: 8px;
-  font-size: 14px;
-  background: #faf8f5;
+  height: 42px;
+  padding: 0 34px 0 14px;
+  border: 1.5px solid var(--line, #e0d8d0);
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink, #211d1b);
+  background: #faf8f5 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23761329' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 12px center;
+  appearance: none;
   cursor: pointer;
   outline: none;
   transition: all 0.2s ease;
   box-sizing: border-box;
 }
 
+.wines-select:hover {
+  border-color: var(--wine, #761329);
+  background-color: #fff;
+}
+
 .wines-select:focus {
-  border-color: #2c5f2d;
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(44, 95, 45, 0.12);
+  border-color: var(--wine, #761329);
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(118, 19, 41, 0.14);
 }
 
 .wines-clear-btn {
-  padding: 10px 16px;
+  padding: 0 16px;
   background: #faf8f5;
-  border: 1px solid var(--line, #e0d8d0);
-  border-radius: 8px;
+  border: 1.5px solid var(--line, #e0d8d0);
+  border-radius: 10px;
   cursor: pointer;
   font-size: 13px;
   font-weight: 600;
-  color: #666;
+  color: var(--ink, #211d1b);
   height: 42px;
   display: inline-flex;
   align-items: center;
@@ -207,8 +431,9 @@
 }
 
 .wines-clear-btn:hover {
-  background: #f0ebe4;
-  color: #211d1b;
+  background: var(--wine, #761329);
+  border-color: var(--wine, #761329);
+  color: #ffffff;
 }
 
 /* ==========================================================================
