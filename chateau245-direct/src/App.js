@@ -25,6 +25,7 @@ import AdminDashboard from './pages/UI/admin/admin_dash';
 import RiderDashboard from './pages/rider/rider_dash';
 import Booking from './pages/UI/booking';
 import FullMenu from './pages/UI/full_menu';
+import WinesPage from './pages/UI/wines';
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const normalizedWines = wines.map((wine, index) => ({
@@ -359,6 +360,7 @@ const App = () => {
         <Route path="/track" element={<Tracking order={order} token={session?.token} api={API_URL} onMenu={() => navigate('/menu')} />} />
         <Route path="/tracking" element={<Navigate to="/track" replace />} />
         <Route path="/profile" element={<ProfileRoute user={session?.user}><Profile user={session?.user} token={session?.token} onBack={handleBack} onLogout={handleLogout} onTrack={(o) => { setOrder({ id: o.id, number: o.id.slice(0, 8), total: Number(o.total_amount) }); navigate('/track'); }} onBooking={() => navigate('/booking')} /></ProfileRoute>} />
+        <Route path="/wines" element={<WinesPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>

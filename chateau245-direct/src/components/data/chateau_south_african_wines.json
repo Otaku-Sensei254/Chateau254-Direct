@@ -1,0 +1,920 @@
+{
+  "region": "South Africa",
+  "backstory_scope": "per_variant",
+  "notes": {
+    "confidence_key": {
+      "confirmed": "Producer and wine verified through research",
+      "likely": "Producer identity or exact line name reasonably inferred but not fully confirmed",
+      "unconfirmed": "Could not verify through research — needs a direct label check before publishing"
+    },
+    "flagged_for_dennis": [
+      "The PDF contains several transcription-sensitive names: De Trafford Belfield Cabernet Sauvignon, Tokara Contirie/Contre, and The Fledge & Co line wording should be checked against the physical labels.",
+      "The PDF wording 'Pilot noir' has been interpreted as Pinot Noir for Benguela Cove, but the exact label should be checked.",
+      "The PDF lists Sweet Lips as Premium Natural Sweet White, Rosé and Red; these are treated as three variants."
+    ],
+    "rating_coverage": "Ratings are included only where a specific bottling could be verified from a named source. Unrated wines use rating.found: false rather than JSON null."
+  },
+  "producers": [
+    {
+      "producer": "De Trafford",
+      "producer_region": "Stellenbosch, South Africa",
+      "wines": [
+        {
+          "name": "De Trafford Belfield Cabernet Sauvignon",
+          "color": "Red",
+          "category_filter": "RED",
+          "backstory": "Belfield is a De Trafford red label from Stellenbosch. The producer currently lists Belfield separately from its Cabernet Sauvignon bottling, so the Cabernet Sauvignon wording on the supplied sheet should be checked against the bottle label.",
+          "confidence": "likely",
+          "source_note": "De Trafford Belfield / Cabernet Sauvignon",
+          "image": "https://www.google.com/search?tbm=isch&q=De+Trafford+Belfield+Cabernet+Sauvignon+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Lourensford",
+      "producer_region": "Helderberg, Western Cape, South Africa",
+      "wines": [
+        {
+          "name": "Lourensford The Dome Cabernet Sauvignon",
+          "color": "Red",
+          "category_filter": "RED",
+          "backstory": "The Dome Cabernet Sauvignon comes from Lourensford's Helderberg estate. The current 2022 release shows blackberry, dark chocolate and cassis supported by firm tannins and a lingering mineral finish.",
+          "confidence": "confirmed",
+          "source_note": "Lourensford The Dome Cabernet Sauvignon",
+          "image": "https://www.google.com/search?tbm=isch&q=Lourensford+The+Dome+Cabernet+Sauvignon+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Vilafonté",
+      "producer_region": "Paarl / Western Cape, South Africa",
+      "wines": [
+        {
+          "name": "Seriously Old Dirt by Vilafonté",
+          "color": "Red",
+          "category_filter": "RED",
+          "backstory": "Seriously Old Dirt began as a Bordeaux-style second wine in 2012 and takes its name from the ancient soils of the Cape. It is now a Cabernet Sauvignon-led blend drawing fruit from multiple Western Cape sites under Vilafonté's direction.",
+          "confidence": "confirmed",
+          "source_note": "Seriously Old Dirt by Vilafonté",
+          "image": "https://www.port2port.wine/wines/vilafonte/ultimate-seriously-old-dirt-collection",
+          "rating": {
+            "source": "James Suckling / Wine Spectator / Robert Parker",
+            "score": "92 / 92 / 91",
+            "scale": "out of 100",
+            "count": "Vintage-specific",
+            "found": true
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Oldenburg Vineyards",
+      "producer_region": "Banghoek Valley, Stellenbosch, South Africa",
+      "wines": [
+        {
+          "name": "One Man Band",
+          "color": "Red",
+          "category_filter": "RED",
+          "backstory": "One Man Band is an Oldenburg Vineyards red blend combining fruit from warmer and cooler vineyard conditions. The producer describes its Syrah component as dense and powerful, balanced by cooler-climate fruit from Elgin.",
+          "confidence": "confirmed",
+          "source_note": "One Man Band",
+          "image": "https://www.google.com/search?tbm=isch&q=Oldenburg+Vineyards+One+Man+Band+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Radford Dale",
+      "producer_region": "Elgin, Western Cape, South Africa",
+      "wines": [
+        {
+          "name": "Higher Purpose Cabernet Franc",
+          "color": "Red",
+          "category_filter": "RED",
+          "backstory": "Higher Purpose is an organic Elgin Cabernet Franc from elevated, cool-climate vineyards. Recent releases use whole-bunch fermentation and concrete-egg maturation alongside older oak, producing a bright, herbal, mineral-driven style.",
+          "confidence": "confirmed",
+          "source_note": "Organic Higher Purpose Cabernet Franc",
+          "image": "https://www.radforddale.com/products/organic-higher-purpose-cabernet-franc-elgin",
+          "rating": {
+            "source": "WineMag / Tim Atkin / Jancis Robinson",
+            "score": "94 / 94 / 17.5",
+            "scale": "100 / 100 / 20",
+            "count": "2024 vintage",
+            "found": true
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Waterford Estate",
+      "producer_region": "Stellenbosch, South Africa",
+      "wines": [
+        {
+          "name": "Waterford Antigo",
+          "color": "Red",
+          "category_filter": "RED",
+          "backstory": "Antigo is a Cabernet Sauvignon-dominant blend named for the reddish-brown clay soils of the Waterford vineyard. The estate describes red-currant fruit, tobacco, creamy oak and a structured Helderberg palate.",
+          "confidence": "confirmed",
+          "source_note": "Waterford Antigo",
+          "image": "https://www.nickplummer.wine/Store/Waterford-Antigo-p792761451",
+          "rating": {
+            "source": "Tim Atkin",
+            "score": "92",
+            "scale": "out of 100",
+            "count": "2021 vintage",
+            "found": true
+          }
+        },
+        {
+          "name": "Waterford Estate Cabernet Sauvignon, Stellenbosch",
+          "color": "Red",
+          "category_filter": "RED",
+          "backstory": "Waterford's Estate Cabernet Sauvignon is one of the estate's signature wines, built around Helderberg fruit and the combination of ancient soils, cooling False Bay influences and structured tannins.",
+          "confidence": "confirmed",
+          "source_note": "Waterford Estate Stellenbosch Cabernet Sauvignon",
+          "image": "https://www.google.com/search?tbm=isch&q=Waterford+Estate+Cabernet+Sauvignon+Stellenbosch+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        },
+        {
+          "name": "Waterford Elgin Sauvignon Blanc",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "Waterford's Elgin Sauvignon Blanc comes from the cooler Elgin region and is offered as a 500ml estate bottling. The winery places it alongside its mature-vine white wine portfolio.",
+          "confidence": "confirmed",
+          "source_note": "Waterford Elgin Sauvignon Blanc",
+          "image": "https://www.google.com/search?tbm=isch&q=Waterford+Elgin+Sauvignon+Blanc+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        },
+        {
+          "name": "Waterford Estate Chardonnay, Stellenbosch",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "Waterford's Estate Chardonnay is sourced from mature plantings dating to 1988 and is made with minimal oak and natural fermentation to emphasize purity, balance and site character.",
+          "confidence": "confirmed",
+          "source_note": "Waterford Estate Chardonnay",
+          "image": "https://www.google.com/search?tbm=isch&q=Waterford+Estate+Chardonnay+Stellenbosch+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Mont Rochelle",
+      "producer_region": "Franschhoek, Western Cape, South Africa",
+      "wines": [
+        {
+          "name": "Miko Chardonnay",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "Miko Chardonnay is produced in honour of the late Miko Rwayitare and is released only in exceptional vintages. The wine is made to express Mont Rochelle's Franschhoek terroir with minimal cellar intervention.",
+          "confidence": "confirmed",
+          "source_note": "Mont Rochelle Miko Chardonnay",
+          "image": "https://www.google.com/search?tbm=isch&q=Mont+Rochelle+Miko+Chardonnay+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Babylonstoren",
+      "producer_region": "Paarl / Simonsberg, Western Cape, South Africa",
+      "wines": [
+        {
+          "name": "Babylonstoren Chardonnay",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "Babylonstoren's Chardonnay is a fuller, oak-matured white from the Simonsberg slopes, with citrus and mineral character alongside vanilla and layered texture.",
+          "confidence": "confirmed",
+          "source_note": "Babylonstoren Chardonnay",
+          "image": "https://www.google.com/search?tbm=isch&q=Babylonstoren+Chardonnay+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        },
+        {
+          "name": "Babylonstoren Chenin Blanc",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "A dry, crisp Chenin Blanc from the Simonsberg slopes, showing white peach, pineapple, citrus and a balanced streak of acidity. A portion of the blend is matured in cement eggs and terracotta amphorae.",
+          "confidence": "confirmed",
+          "source_note": "Babylonstoren Chenin Blanc",
+          "image": "https://www.google.com/search?tbm=isch&q=Babylonstoren+Chenin+Blanc+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        },
+        {
+          "name": "Babel",
+          "color": "Red",
+          "category_filter": "RED",
+          "backstory": "Babel is Babylonstoren's Bordeaux-influenced red blend, with red berry, chocolate, tobacco and fynbos notes. The producer lists Cabernet Sauvignon and other Bordeaux cultivars among its red range.",
+          "confidence": "confirmed",
+          "source_note": "Babylonstoren Babel",
+          "image": "https://www.google.com/search?tbm=isch&q=Babylonstoren+Babel+red+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Zevenwacht",
+      "producer_region": "Stellenbosch, South Africa",
+      "wines": [
+        {
+          "name": "Zevenwacht Syrah",
+          "color": "Red",
+          "category_filter": "RED",
+          "backstory": "Zevenwacht's Syrah from the Z Collection is a structured, dark-fruited expression with blackberry, plum, pepper and spice, designed as a food-oriented premium wine.",
+          "confidence": "confirmed",
+          "source_note": "Zevenwacht Z Collection Syrah",
+          "image": "https://www.google.com/search?tbm=isch&q=Zevenwacht+Z+Collection+Syrah+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        },
+        {
+          "name": "Zevenwacht Chenin Blanc",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "The Z Collection Chenin Blanc is a mineral, citrus-led Stellenbosch Chenin with white nectarine, mandarin and lime, finishing with a saline edge.",
+          "confidence": "confirmed",
+          "source_note": "Zevenwacht Z Collection Chenin Blanc",
+          "image": "https://www.google.com/search?tbm=isch&q=Zevenwacht+Z+Collection+Chenin+Blanc+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        },
+        {
+          "name": "Zevenwacht Sauvignon Blanc",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "The Z Collection Sauvignon Blanc combines lime, gooseberry and nectarine with natural acidity and subtle oak spice.",
+          "confidence": "confirmed",
+          "source_note": "Zevenwacht Z Collection Sauvignon Blanc",
+          "image": "https://www.google.com/search?tbm=isch&q=Zevenwacht+Z+Collection+Sauvignon+Blanc+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        },
+        {
+          "name": "Zevenwacht Reserve",
+          "color": "Red",
+          "category_filter": "RED",
+          "backstory": "The Z Collection Reserve is a full-bodied Stellenbosch red showing dark berries, tobacco, rhubarb, baking spice and graphite, with enough structure for extended development.",
+          "confidence": "confirmed",
+          "source_note": "Zevenwacht Z Collection Reserve",
+          "image": "https://www.google.com/search?tbm=isch&q=Zevenwacht+Z+Collection+Reserve+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Creation",
+      "producer_region": "Hemel-en-Aarde Ridge, Walker Bay, South Africa",
+      "wines": [
+        {
+          "name": "Creation Chardonnay",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "Creation's Chardonnay comes from the cool Hemel-en-Aarde Ridge, a region known for maritime influence and Burgundian varieties. The style typically emphasizes freshness, texture and restrained oak.",
+          "confidence": "confirmed",
+          "source_note": "Creation Chardonnay",
+          "image": "https://www.google.com/search?tbm=isch&q=Creation+Chardonnay+South+Africa+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        },
+        {
+          "name": "Creation Sauvignon Blanc",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "Creation's Sauvignon Blanc expresses the cool Hemel-en-Aarde climate through fresh citrus, green-fruit and mineral character.",
+          "confidence": "confirmed",
+          "source_note": "Creation Sauvignon Blanc",
+          "image": "https://www.google.com/search?tbm=isch&q=Creation+Sauvignon+Blanc+South+Africa+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        },
+        {
+          "name": "Creation Chenin Blanc",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "Creation's Chenin Blanc is a cool-climate South African expression of the country's signature white grape, combining fruit freshness with texture and mineral length.",
+          "confidence": "confirmed",
+          "source_note": "Creation Chenin Blanc",
+          "image": "https://www.google.com/search?tbm=isch&q=Creation+Chenin+Blanc+South+Africa+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Benguela Cove",
+      "producer_region": "Walker Bay, Hermanus, South Africa",
+      "wines": [
+        {
+          "name": "Benguela Cove Estate Pinot Noir",
+          "color": "Red",
+          "category_filter": "RED",
+          "backstory": "Benguela Cove's Estate Pinot Noir comes from ocean-facing Walker Bay vineyards. The estate's cool maritime setting is central to its red-fruit-driven, fresh-climate style.",
+          "confidence": "likely",
+          "source_note": "PDF says 'Pilot noir'; interpreted as Pinot Noir",
+          "image": "https://www.google.com/search?tbm=isch&q=Benguela+Cove+Estate+Pinot+Noir+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        },
+        {
+          "name": "Benguela Cove Estate Chardonnay",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "The Estate Chardonnay comes from Benguela Cove's ocean-influenced Walker Bay vineyards. The estate lists Chardonnay among its core white wines and has received multiple recent awards for the wine.",
+          "confidence": "confirmed",
+          "source_note": "Benguela Cove Estate Chardonnay",
+          "image": "https://www.google.com/search?tbm=isch&q=Benguela+Cove+Estate+Chardonnay+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        },
+        {
+          "name": "Benguela Cove Estate Collage",
+          "color": "Red",
+          "category_filter": "RED",
+          "backstory": "Collage is Benguela Cove's estate red blend, built around multiple Bordeaux-style varieties to express the diversity of the Walker Bay estate.",
+          "confidence": "confirmed",
+          "source_note": "Benguela Cove Estate Collage",
+          "image": "https://www.google.com/search?tbm=isch&q=Benguela+Cove+Estate+Collage+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        },
+        {
+          "name": "Lighthouse Collection Moody Lagoon",
+          "color": "Red",
+          "category_filter": "RED",
+          "backstory": "Moody Lagoon is the Lighthouse Collection's red blend, named after the nearby Bot River lagoon. The 2020 blend combined Shiraz, Merlot, Cabernet Franc and Petit Verdot and was matured in French oak.",
+          "confidence": "confirmed",
+          "source_note": "Benguela Cove Lighthouse Collection Moody Lagoon",
+          "image": "https://www.google.com/search?tbm=isch&q=Benguela+Cove+Lighthouse+Collection+Moody+Lagoon+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Tokara",
+      "producer_region": "Stellenbosch, Western Cape, South Africa",
+      "wines": [
+        {
+          "name": "Tokara Reserve Collection Stellenbosch Chardonnay",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "Tokara's Reserve Collection Chardonnay is made from Stellenbosch fruit grown on the Simonsberg slopes. It is barrel fermented and matured on lees, combining citrus, toasted almond, saline freshness and creamy texture.",
+          "confidence": "confirmed",
+          "source_note": "Tokara Reserve Collection Stellenbosch Chardonnay",
+          "image": "https://www.google.com/search?tbm=isch&q=Tokara+Reserve+Collection+Stellenbosch+Chardonnay+wine+bottle",
+          "rating": {
+            "source": "Tim Atkin / Decanter / Veritas",
+            "score": "92 / Silver / Gold",
+            "scale": "100 / medal",
+            "count": "Vintage-specific",
+            "found": true
+          }
+        },
+        {
+          "name": "Tokara Director's Reserve",
+          "color": "Red",
+          "category_filter": "RED",
+          "backstory": "Tokara Director's Reserve is a Stellenbosch red blend built around Cabernet Sauvignon with supporting Bordeaux varieties. The 2022 release is listed as 71% Cabernet Sauvignon, 14% Petit Verdot, 10% Merlot and 5% Cabernet Franc.",
+          "confidence": "confirmed",
+          "source_note": "Tokara Director's Reserve 2022",
+          "image": "https://www.google.com/search?tbm=isch&q=Tokara+Director's+Reserve+wine+bottle",
+          "rating": {
+            "source": "IWSC",
+            "score": "Silver",
+            "scale": "medal",
+            "count": "2022 vintage",
+            "found": true
+          }
+        },
+        {
+          "name": "Tokara Contirie Chenin Blanc & Grenache Blanc",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "The supplied sheet identifies a Tokara white blend as Chenin Blanc and Grenache Blanc. The exact spelling of 'Contirie' could not be independently verified and should be checked against the label.",
+          "confidence": "unconfirmed",
+          "source_note": "PDF wording: Contirie chenin Blanc & Grenache Blanc",
+          "image": "https://www.google.com/search?tbm=isch&q=Tokara+Chenin+Blanc+Grenache+Blanc+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Almenkerk Wine Estate",
+      "producer_region": "Elgin, Western Cape, South Africa",
+      "wines": [
+        {
+          "name": "Almenkerk Sauvignon Blanc",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "Almenkerk's Sauvignon Blanc comes from a high-elevation Elgin vineyard and uses a mix of barrel and tank fermentation followed by extended lees contact. The wine shows gooseberry, green guava, pomelo, lime and mineral-saline character.",
+          "confidence": "confirmed",
+          "source_note": "Almenkerk Sauvignon Blanc",
+          "image": "https://www.google.com/search?tbm=isch&q=Almenkerk+Sauvignon+Blanc+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        }
+      ]
+    },
+    {
+      "producer": "L'Avenir",
+      "producer_region": "Stellenbosch, South Africa",
+      "wines": [
+        {
+          "name": "L'Avenir Provenance Pinotage",
+          "color": "Red",
+          "category_filter": "RED",
+          "backstory": "Provenance Pinotage is one of L'Avenir's defining wines and helped establish the estate's reputation for modern Stellenbosch Pinotage. It is medium-bodied, fruit-driven and built around the character of South Africa's signature red grape.",
+          "confidence": "confirmed",
+          "source_note": "L'Avenir Provenance Pinotage",
+          "image": "https://www.vinmonopolet.no/Land/S%C3%B8r-Afrika/Coastal-Region/Stellenbosch/L%27Avenir-Provenance-Pinotage-2022/p/16015501",
+          "rating": {
+            "source": "IWSC / Gilbert & Gaillard",
+            "score": "Bronze / Medal result",
+            "scale": "medal",
+            "count": "Vintage-specific",
+            "found": true
+          }
+        },
+        {
+          "name": "L'Avenir Horizon Pinotage",
+          "color": "Red",
+          "category_filter": "RED",
+          "backstory": "Horizon Pinotage is part of L'Avenir's Stellenbosch Pinotage portfolio and sits alongside Provenance and the estate's Single Block expressions.",
+          "confidence": "confirmed",
+          "source_note": "WOSA 2025 wine directory lists L'Avenir Horizon Pinotage",
+          "image": "https://www.google.com/search?tbm=isch&q=L'Avenir+Horizon+Pinotage+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        },
+        {
+          "name": "L'Avenir Sauvignon Blanc",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "A Stellenbosch Sauvignon Blanc from the L'Avenir estate, reflecting the estate's focus on fresh, expressive varietal wines alongside its Pinotage and Chenin Blanc portfolio.",
+          "confidence": "likely",
+          "source_note": "L'Avenir Sauvignon Blanc",
+          "image": "https://www.google.com/search?tbm=isch&q=L'Avenir+Sauvignon+Blanc+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        },
+        {
+          "name": "L'Avenir Chenin Blanc",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "L'Avenir's Chenin Blanc is a Stellenbosch expression built from old-vine fruit, combining natural acidity and tropical fruit with texture and subtle oak complexity.",
+          "confidence": "confirmed",
+          "source_note": "L'Avenir Chenin Blanc",
+          "image": "https://www.google.com/search?tbm=isch&q=L'Avenir+Chenin+Blanc+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Paul Clüver Family Wines",
+      "producer_region": "Elgin, Western Cape, South Africa",
+      "wines": [
+        {
+          "name": "Paul Clüver Estate Chardonnay",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "Paul Clüver's Estate Chardonnay is a site-specific Elgin wine from the family's long-established Chardonnay vineyards, matured in French oak to express the estate's cool-climate terroir.",
+          "confidence": "confirmed",
+          "source_note": "Paul Clüver Estate Chardonnay",
+          "image": "https://weinkarte.zentral-amberg.de/fileadmin/_processed_/8/f/csm_csm_916828-es_02_8832605d20_lw_9c083aeb32.png",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        },
+        {
+          "name": "Paul Clüver Sauvignon Blanc",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "Paul Clüver's Sauvignon Blanc uses multiple clones and free-run juice, with fine-lees time adding richness. The cool Elgin climate helps preserve citrus, tropical fruit and acidity.",
+          "confidence": "confirmed",
+          "source_note": "Paul Clüver Sauvignon Blanc",
+          "image": "https://www.google.com/search?tbm=isch&q=Paul+Cluver+Sauvignon+Blanc+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        },
+        {
+          "name": "Paul Clüver Village Chardonnay",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "Village Chardonnay is made from younger vines and matured in used French oak, offering a more accessible expression of Paul Clüver's Elgin Chardonnay style.",
+          "confidence": "confirmed",
+          "source_note": "Paul Clüver Village Chardonnay",
+          "image": "https://www.google.com/search?tbm=isch&q=Paul+Cluver+Village+Chardonnay+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        }
+      ]
+    },
+    {
+      "producer": "The Fledge & Co",
+      "producer_region": "Calitzdorp, Klein Karoo, South Africa",
+      "wines": [
+        {
+          "name": "The Fledge & Co Fumé Blanc",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "The Fledge & Co is a small Calitzdorp producer focused on hand-crafted wines from characterful vineyards in the Klein Karoo. The exact Fumé Blanc bottling on the supplied sheet should be checked against the label.",
+          "confidence": "likely",
+          "source_note": "PDF: The Fledge & Co Fume Blanc",
+          "image": "https://www.google.com/search?tbm=isch&q=The+Fledge+&+Co+Fume+Blanc+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        },
+        {
+          "name": "The Fledge & Co Crafted Unified & Unfiltered",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "The supplied sheet identifies a Fledge & Co wine as 'crafted unified & unfiltered'. The phrase and exact bottling identity require a direct label check before a more specific backstory is published.",
+          "confidence": "unconfirmed",
+          "source_note": "PDF wording",
+          "image": "https://www.google.com/search?tbm=isch&q=The+Fledge+Co+Crafted+Unified+Unfiltered+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        },
+        {
+          "name": "The Fledge & Co Vinho Branco",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "Vinho Branco means white wine in Portuguese. The Fledge & Co is based in Calitzdorp in South Africa's Klein Karoo; the exact blend behind this bottling should be checked against the label.",
+          "confidence": "likely",
+          "source_note": "PDF: vinho Branco",
+          "image": "https://www.google.com/search?tbm=isch&q=The+Fledge+&+Co+Vinho+Branco+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Jordan Wine Estate",
+      "producer_region": "Stellenbosch, South Africa",
+      "wines": [
+        {
+          "name": "Jordan Stellenbosch Chardonnay",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "Jordan's Stellenbosch Chardonnay is a cool-climate estate Chardonnay from the Stellenbosch Kloof, where granite-derived soils and varied slopes contribute freshness, texture and mineral character.",
+          "confidence": "confirmed",
+          "source_note": "Jordan Chardonnay",
+          "image": "https://www.google.com/search?tbm=isch&q=Jordan+Stellenbosch+Chardonnay+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        },
+        {
+          "name": "Jordan Inspector Péringuey Chenin Blanc",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "Inspector Péringuey honours the South African Inspector General of Vineyards associated with the fight against phylloxera. Jordan's oldest Chenin block is used for the wine, with barrel fermentation and extended lees maturation.",
+          "confidence": "confirmed",
+          "source_note": "Jordan Inspector Péringuey",
+          "image": "https://cdn.webshopapp.com/shops/247139/files/265297616/800x1024x2/jordan-jordan-inspector-peringuey-bf-chenin-blanc.jpg",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Iona",
+      "producer_region": "Elgin Highlands, South Africa",
+      "wines": [
+        {
+          "name": "Iona Monopole Elgin Highlands Sauvignon Blanc",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "Iona's Monopole Sauvignon Blanc comes from the cool Elgin Highlands and is wild-fermented in large-format wood. The style emphasizes minerality, salinity, citrus, stone fruit and a long zesty finish.",
+          "confidence": "confirmed",
+          "source_note": "Iona Monopole Elgin Highlands Sauvignon Blanc",
+          "image": "https://veritas-entries.foneworx.co.za/private-file/wine_uploads/2MklAlkyptfu8CJbw6r9m39HtrVQhAlyAFjPohH4.jpg",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Sweet Lips",
+      "producer_region": "South Africa",
+      "wines": [
+        {
+          "name": "Sweet Lips Premium Natural Sweet White",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "A South African natural sweet white wine in the Sweet Lips range. The supplied sheet identifies it as a premium natural sweet white rather than a dry table wine.",
+          "confidence": "confirmed",
+          "source_note": "Sweet Lips Premium Natural Sweet White",
+          "image": "https://www.google.com/search?tbm=isch&q=Sweet+Lips+Premium+Natural+Sweet+White+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        },
+        {
+          "name": "Sweet Lips Premium Natural Sweet Rosé",
+          "color": "Rosé",
+          "category_filter": "ROSE",
+          "backstory": "A sweet rosé in the Sweet Lips range, positioned alongside the brand's natural sweet white and red variants.",
+          "confidence": "confirmed",
+          "source_note": "Sweet Lips Premium Natural Sweet Rose",
+          "image": "https://www.google.com/search?tbm=isch&q=Sweet+Lips+Premium+Natural+Sweet+Rose+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        },
+        {
+          "name": "Sweet Lips Premium Natural Sweet Red",
+          "color": "Red",
+          "category_filter": "RED",
+          "backstory": "A South African natural sweet red in the Sweet Lips range. The brand is documented in South African wine listings alongside its natural sweet white and rosé.",
+          "confidence": "confirmed",
+          "source_note": "Sweet Lips Premium Natural Sweet Red",
+          "image": "https://www.google.com/search?tbm=isch&q=Sweet+Lips+Premium+Natural+Sweet+Red+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Diemersdal",
+      "producer_region": "Durbanville, Western Cape, South Africa",
+      "wines": [
+        {
+          "name": "Diemersdal Estate Pinotage Reserve",
+          "color": "Red",
+          "category_filter": "RED",
+          "backstory": "Diemersdal's Pinotage Reserve is part of the estate's Reserve range. The winery notes that 50% of the grapes in the 2021 Reserve came from 48-year-old bush vines.",
+          "confidence": "confirmed",
+          "source_note": "Diemersdal Pinotage Reserve",
+          "image": "https://www.google.com/search?tbm=isch&q=Diemersdal+Pinotage+Reserve+wine+bottle",
+          "rating": {
+            "source": "Not rated",
+            "score": "Not rated",
+            "scale": "N/A",
+            "count": "N/A",
+            "found": false,
+            "reason": "No individually verified public rating found for this specific bottling."
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Stark-Condé",
+      "producer_region": "Jonkershoek Valley, Stellenbosch, South Africa",
+      "wines": [
+        {
+          "name": "Stark-Condé The Field Blend",
+          "color": "White",
+          "category_filter": "WHITE",
+          "backstory": "The Field Blend is an aromatic white from a single Jonkershoek Valley block planted specifically for the blend. Roussanne and Viognier provide richness and texture while Chenin Blanc and Verdelho bring acidity and bright fruit.",
+          "confidence": "confirmed",
+          "source_note": "Stark-Condé The Field Blend",
+          "image": "https://75cl.sg/cdn/shop/files/STARKCONDEFIELDBLEND_grande.png?v=1749711104",
+          "rating": {
+            "source": "Wine Enthusiast",
+            "score": "90",
+            "scale": "out of 100",
+            "count": "2022 vintage",
+            "found": true
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -2,6 +2,7 @@ import React from 'react';
 import {FiShoppingBag } from 'react-icons/fi';
 import Logo from "../../components/images/chateauLogo2.png"
 import { Link } from 'react-router-dom';
+import InstallButton from '../../components/InstallButton';
 export const Brand = () => {
   return (
     <div className="brand">
@@ -45,6 +46,8 @@ const AppHeader = ({ cartCount, onBack, onCart, onHome, onProfile, userName = ''
         <button className="welcome-link" onClick={onProfile}>
           Hi, {userName || 'Guest'}
         </button>
+        
+        <InstallButton />
         
         <button className="bag-button" aria-label="Open cart" onClick={onCart}>
           <FiShoppingBag />
