@@ -32,6 +32,74 @@
   font-size: 15px;
 }
 
+/* Collection Filter Buttons */
+.wines-collection-filter {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 14px 20px;
+  background: #faf8f5;
+  border: 1px solid var(--line, #e9e1dc);
+  border-radius: 14px;
+  flex-wrap: wrap;
+}
+
+.wines-collection-filter-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #55504c;
+  white-space: nowrap;
+}
+
+.wines-collection-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.wines-collection-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: #ffffff;
+  border: 2px solid var(--line, #e0d8d0);
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.wines-collection-btn:hover {
+  background: #f0ebe4;
+  border-color: #c8b8a8;
+  color: #211d1b;
+}
+
+.wines-collection-btn.active {
+  background: #2c5f2d;
+  border-color: #2c5f2d;
+  color: #fff;
+}
+
+.wines-collection-icon {
+  font-size: 16px;
+}
+
+.wines-collection-count {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.wines-collection-btn.active .wines-collection-count {
+  opacity: 1;
+}
+
 /* Filters */
 .wines-filters {
   display: flex;
@@ -187,7 +255,7 @@
 
 .wine-card-thumb img {
   height: 100%;
-  max-height: 188px;
+  max-height: 250px;
   width: 100%;
   max-width: 100%;
   object-fit: cover;

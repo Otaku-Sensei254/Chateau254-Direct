@@ -1,0 +1,316 @@
+{
+  "region": "France",
+  "backstory_scope": "French wine selection for Chateau254",
+  "notes": {
+    "source": "Chateau French wines PDF supplied by the user",
+    "source_file": "Chateau French wines_260926_140852.pdf",
+    "variant_count": 18,
+    "image_strategy": "Direct bottle-image URLs are used where a suitable image source was found; Google Images search URLs are used as fallbacks elsewhere.",
+    "confidence_key": {
+      "verified": "Producer/product identity independently supported by web research.",
+      "source_list": "Entry preserved from the supplied PDF but exact product identity was not fully independently verified.",
+      "uncertain": "The PDF itself indicates uncertainty or the transcription is materially ambiguous."
+    },
+    "important": "OCR/transcription-sensitive names are deliberately preserved and flagged rather than silently corrected."
+  },
+  "producers": [
+    {
+      "producer": "Vignobles Vellas",
+      "producer_region": "Languedoc / Pays d'Oc, France",
+      "wines": [
+        {
+          "name": "Vignobles Vellas Chardonnay Pays d'Oc",
+          "color": "White",
+          "category_filter": "white",
+          "backstory": "A Pays d'Oc Chardonnay from Vignobles Vellas in southern France.",
+          "confidence": "source_list",
+          "source_note": "Listed in the supplied French wine list; exact product details not independently verified.",
+          "image": "https://www.google.com/search?tbm=isch&q=Vignobles+Vellas+Chardonnay+Pays+d%27Oc+bottle",
+          "rating": {
+            "found": false
+          }
+        },
+        {
+          "name": "Bourbon Barrel Vignobles Vellas Cabernet Sauvignon Pays d'Oc",
+          "color": "Red",
+          "category_filter": "red",
+          "backstory": "A Vignobles Vellas Cabernet Sauvignon from IGP Pays d'Oc, matured in bourbon barrels.",
+          "confidence": "verified",
+          "source_note": "Exact Bourbon Barrel Cabernet Sauvignon verified from Vignobles Vellas sources.",
+          "image": "https://pravaliaculicori.ro/2344-large_default/bourbon-barrel-cabernet-sauvignon-075l.jpg",
+          "rating": {
+            "found": false
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Cadre Heritage",
+      "producer_region": "France",
+      "wines": [
+        {
+          "name": "Cadre Heritage Chardonnay Vin Biologique",
+          "color": "White",
+          "category_filter": "white",
+          "backstory": "The supplied list identifies this as a biologically produced Chardonnay.",
+          "confidence": "source_list",
+          "source_note": "Preserved from the supplied list; exact producer/product identity could not be independently verified with sufficient confidence.",
+          "image": "https://www.google.com/search?tbm=isch&q=Cadre+Heritage+Chardonnay+vin+biologique+bottle",
+          "rating": {
+            "found": false
+          }
+        },
+        {
+          "name": "Cadre Heritage Cahors",
+          "color": "Red",
+          "category_filter": "red",
+          "backstory": "A second Cadre Heritage entry associated with Cahors.",
+          "confidence": "uncertain",
+          "source_note": "PDF transcription reads 'Maybe cadres heritage Cahors'; kept as uncertain rather than silently correcting it.",
+          "image": "https://www.google.com/search?tbm=isch&q=Cadre+Heritage+Cahors+wine+bottle",
+          "rating": {
+            "found": false
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Le Jardin du Curé",
+      "producer_region": "Chablis, Burgundy, France",
+      "wines": [
+        {
+          "name": "Chablis Le Jardin du Curé",
+          "color": "White",
+          "category_filter": "white",
+          "backstory": "A Chablis entry listed under the Le Jardin du Curé name.",
+          "confidence": "source_list",
+          "source_note": "Preserved from the supplied list; exact producer identity was not sufficiently verified.",
+          "image": "https://www.google.com/search?tbm=isch&q=Chablis+Le+Jardin+du+Cure+bottle",
+          "rating": {
+            "found": false
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Domaine Chante Cigale",
+      "producer_region": "Châteauneuf-du-Pape, Rhône, France",
+      "wines": [
+        {
+          "name": "Domaine Chante Cigale Apostrophe",
+          "color": "Red",
+          "category_filter": "red",
+          "backstory": "The list names an 'Apostrophe' cuvée under Domaine Chante Cigale, a family estate in Châteauneuf-du-Pape.",
+          "confidence": "source_list",
+          "source_note": "Producer and appellation verified; exact 'Apostrophe' cuvée not sufficiently verified.",
+          "image": "https://www.google.com/search?tbm=isch&q=Domaine+Chante+Cigale+Apostrophe+wine+bottle",
+          "rating": {
+            "found": false
+          }
+        },
+        {
+          "name": "Domaine Chante Cigale Châteauneuf-du-Pape",
+          "color": "Red",
+          "category_filter": "red",
+          "backstory": "A Châteauneuf-du-Pape from the family-run Domaine Chante Cigale, whose history begins in 1874.",
+          "confidence": "verified",
+          "source_note": "Domaine Chante Cigale and its Châteauneuf-du-Pape wines verified on the official estate site.",
+          "image": "https://www.google.com/search?tbm=isch&q=Domaine+Chante+Cigale+Chateauneuf+du+Pape+bottle",
+          "rating": {
+            "found": false
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Sancerre Lemont",
+      "producer_region": "Sancerre, Loire, France",
+      "wines": [
+        {
+          "name": "Sancerre Lemont",
+          "color": "White",
+          "category_filter": "white",
+          "backstory": "A Sancerre entry listed as Lemont in the supplied wine list.",
+          "confidence": "source_list",
+          "source_note": "Name preserved from the supplied list; exact producer spelling/identity remains uncertain.",
+          "image": "https://www.google.com/search?tbm=isch&q=Sancerre+Lemont+wine+bottle",
+          "rating": {
+            "found": false
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Fitou / Les Schistes",
+      "producer_region": "Fitou, Languedoc, France",
+      "wines": [
+        {
+          "name": "Fitou Les Schistes Brun Millésime",
+          "color": "Red",
+          "category_filter": "red",
+          "backstory": "A Fitou red associated in the list with schist soils and a vintage.",
+          "confidence": "source_list",
+          "source_note": "Fitou and schist-soil context verified; exact 'Les Schistes Brun' product identity not sufficiently verified.",
+          "image": "https://www.google.com/search?tbm=isch&q=Fitou+Les+Schistes+Brun+wine+bottle",
+          "rating": {
+            "found": false
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Réserve des Moines / Saint Gabin",
+      "producer_region": "Languedoc, France",
+      "wines": [
+        {
+          "name": "Réserve des Moines Saint Gabin Grand Vin de Languedoc",
+          "color": "Red",
+          "category_filter": "red",
+          "backstory": "A Languedoc red listed as a Grand Vin under the Réserve des Moines / Saint Gabin naming.",
+          "confidence": "source_list",
+          "source_note": "Name preserved from the supplied list; exact product identity not independently verified.",
+          "image": "https://www.google.com/search?tbm=isch&q=Reserve+des+Moines+Saint+Gabin+Grand+Vin+Languedoc+bottle",
+          "rating": {
+            "found": false
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Terrasses",
+      "producer_region": "Languedoc, France",
+      "wines": [
+        {
+          "name": "Terrasses Vegan",
+          "color": "Red",
+          "category_filter": "red",
+          "backstory": "The supplied list identifies a vegan wine under the Terrasses name.",
+          "confidence": "source_list",
+          "source_note": "Preserved from the supplied list; exact producer and cuvée could not be sufficiently verified.",
+          "image": "https://www.google.com/search?tbm=isch&q=Terrasses+vegan+French+wine+bottle",
+          "rating": {
+            "found": false
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Miraval",
+      "producer_region": "Côtes de Provence, Provence, France",
+      "wines": [
+        {
+          "name": "Miraval Côtes de Provence",
+          "color": "Rosé",
+          "category_filter": "rose",
+          "backstory": "Miraval's signature Provence rosé is an AOC Côtes de Provence wine, built around Cinsault, Grenache, Rolle and Syrah.",
+          "confidence": "verified",
+          "source_note": "Official Miraval sources verify the Côtes de Provence rosé and production details.",
+          "image": "https://www.google.com/search?tbm=isch&q=Miraval+Cotes+de+Provence+Rose+bottle",
+          "rating": {
+            "found": false
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Le Paradou",
+      "producer_region": "Provence, France",
+      "wines": [
+        {
+          "name": "Le Paradou Cinsault",
+          "color": "Red",
+          "category_filter": "red",
+          "backstory": "A Provence Cinsault from Le Paradou; the producer describes its Cinsault Rouge as 100% Cinsault, fresh and supple.",
+          "confidence": "verified",
+          "source_note": "Official Le Paradou site verifies Cinsault Rouge; bottle image source found.",
+          "image": "https://www.vino.com/dettaglio/cinsault-rouge-le-paradou-2022.html",
+          "rating": {
+            "found": false
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Cellier des Princes",
+      "producer_region": "Châteauneuf-du-Pape, Rhône, France",
+      "wines": [
+        {
+          "name": "Cellier des Princes Châteauneuf-du-Pape",
+          "color": "Red",
+          "category_filter": "red",
+          "backstory": "A Châteauneuf-du-Pape from Cellier des Princes, a cooperative rooted in the southern Rhône.",
+          "confidence": "verified",
+          "source_note": "Cellier des Princes and its Châteauneuf-du-Pape range verified on official sources.",
+          "image": "https://www.google.com/search?tbm=isch&q=Cellier+des+Princes+Chateauneuf+du+Pape+bottle",
+          "rating": {
+            "found": false
+          }
+        },
+        {
+          "name": "Cellier des Princes Les Safres Châteauneuf-du-Pape",
+          "color": "Red",
+          "category_filter": "red",
+          "backstory": "The list identifies Les Safres as a Châteauneuf-du-Pape entry; Safres is one of the terroirs referenced by Cellier des Princes.",
+          "confidence": "source_list",
+          "source_note": "Terroir reference verified; exact standalone bottle name not sufficiently verified.",
+          "image": "https://www.google.com/search?tbm=isch&q=Cellier+des+Princes+Les+Safres+Chateauneuf+du+Pape+bottle",
+          "rating": {
+            "found": false
+          }
+        },
+        {
+          "name": "Cellier des Princes Quintessence",
+          "color": "Red",
+          "category_filter": "red",
+          "backstory": "A Quintessence entry listed under Cellier des Princes.",
+          "confidence": "source_list",
+          "source_note": "Name preserved from the supplied list; exact cuvée/appellation not sufficiently verified.",
+          "image": "https://www.google.com/search?tbm=isch&q=Cellier+des+Princes+Quintessence+wine+bottle",
+          "rating": {
+            "found": false
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Château Beaumont",
+      "producer_region": "Haut-Médoc, Bordeaux, France",
+      "wines": [
+        {
+          "name": "Château Beaumont Cru Bourgeois Supérieur Haut-Médoc",
+          "color": "Red",
+          "category_filter": "red",
+          "backstory": "Château Beaumont is a Haut-Médoc estate classified as Cru Bourgeois Supérieur, with Cabernet Sauvignon dominant in the blend.",
+          "confidence": "verified",
+          "source_note": "Haut-Médoc and Cru Bourgeois Supérieur status verified; Cabernet Sauvignon dominance independently documented.",
+          "image": "https://www.thewinesociety.com/product/chateau-beaumont-haut-medoc-2021/",
+          "rating": {
+            "found": true,
+            "score": 93,
+            "scale": 100,
+            "source": "Vertdevin",
+            "vintage": 2023
+          }
+        }
+      ]
+    },
+    {
+      "producer": "Thomas Barton",
+      "producer_region": "Médoc, Bordeaux, France",
+      "wines": [
+        {
+          "name": "Thomas Barton Médoc",
+          "color": "Red",
+          "category_filter": "red",
+          "backstory": "A Médoc wine listed under the Thomas Barton name.",
+          "confidence": "source_list",
+          "source_note": "Preserved from the supplied list; exact cuvée/vintage not independently verified.",
+          "image": "https://www.google.com/search?tbm=isch&q=Thomas+Barton+Medoc+wine+bottle",
+          "rating": {
+            "found": false
+          }
+        }
+      ]
+    }
+  ]
+}

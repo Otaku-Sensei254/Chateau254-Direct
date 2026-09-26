@@ -14,6 +14,7 @@ import {
   BookOpen
 } from 'lucide-react';
 import italianWinesData from '../../components/data/italian_wines_producer_grouped.json';
+import southAfricanWinesData from '../../components/data/chateau_south_african_wines.json';
 import './styles/wines.css';
 
 // Stylized realistic Italian Wine Bottle Graphic for wines without direct photos
@@ -23,7 +24,7 @@ const WineBottleGraphic = ({ wine, size = 'card' }) => {
   const width = isModal ? 120 : isSibling ? 46 : 82;
   const height = isModal ? 370 : isSibling ? 96 : 190;
   const color = (wine?.color || '').toLowerCase();
-  
+
   // Choose bottle glass color & capsule colors based on wine color
   let glassDark = '#1b0c10';
   let glassLight = '#3e1622';
@@ -305,44 +306,67 @@ const getConfidenceBadgeClass = (confidence) => {
 };
 
 const WinesPage = () => {
+  const [selectedCollection, setSelectedCollection] = useState('all');
   const [selectedProducer, setSelectedProducer] = useState(null);
   const [selectedRegion, setSelectedRegion] = useState('All');
   const [selectedWine, setSelectedWine] = useState(null);
   const [siblingIndex, setSiblingIndex] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const producers = useMemo(() => {
-    return italianWinesData.producers.map(p => ({
-      name: p.producer,
-      region: p.producer_region,
-      wineCount: p.wines.length
-    }));
-  }, []);
+  const collections = useMemo(() => [
+    { id: 'italian', name: 'Italian Wines', icon: '🇮🇹', data: italianWinesData },
+    { id: 'south-african', name: 'South African Wines', icon: '🇿🇦', data: southAfricanWinesData }
+  ], []);
 
-  const regions = useMemo(() => {
-    const regionSet = new Set();
-    italianWinesData.producers.forEach(p => {
-      const region = p.producer_region.split(',')[0].trim();
-      regionSet.add(region);
-    });
-    return ['All', ...Array.from(regionSet).sort()];
-  }, []);
-
+  // Merge all wines from both collections into one unified list
   const allWines = useMemo(() => {
     const wines = [];
-    italianWinesData.producers.forEach(producer => {
-      producer.wines.forEach((wine, idx) => {
-        wines.push({
-          ...wine,
-          producer: producer.producer,
-          producerRegion: producer.producer_region,
-          producerIndex: idx,
-          siblings: producer.wines
+    collections.forEach(collection => {
+      collection.data.producers.forEach(producer => {
+        producer.wines.forEach((wine, idx) => {
+          wines.push({
+            ...wine,
+            producer: producer.producer,
+            producerRegion: producer.producer_region,
+            producerIndex: idx,
+            siblings: producer.wines,
+            collection: collection.id
+          });
         });
       });
     });
     return wines;
-  }, []);
+  }, [collections]);
+
+  const producers = useMemo(() => {
+    const producerMap = new Map();
+    allWines.forEach(wine => {
+      if (!producerMap.has(wine.producer)) {
+        producerMap.set(wine.producer, {
+          name: wine.producer,
+          region: wine.producerRegion,
+          wineCount: 0,
+          collections: new Set()
+        });
+      }
+      const p = producerMap.get(wine.producer);
+      p.wineCount++;
+      p.collections.add(wine.collection);
+    });
+    return Array.from(producerMap.values()).map(p => ({
+      ...p,
+      collections: Array.from(p.collections)
+    }));
+  }, [allWines]);
+
+  const regions = useMemo(() => {
+    const regionSet = new Set();
+    allWines.forEach(wine => {
+      const region = wine.producerRegion.split(',')[0].trim();
+      regionSet.add(region);
+    });
+    return ['All', ...Array.from(regionSet).sort()];
+  }, [allWines]);
 
   const filteredWines = useMemo(() => {
     return allWines.filter(wine => {
@@ -351,9 +375,10 @@ const WinesPage = () => {
       const matchesRegion = selectedRegion === 'All' || 
                            wine.producerRegion.includes(selectedRegion);
       const matchesProducer = !selectedProducer || wine.producer === selectedProducer;
-      return matchesSearch && matchesRegion && matchesProducer;
+      const matchesCollection = selectedCollection === 'all' || wine.collection === selectedCollection;
+      return matchesSearch && matchesRegion && matchesProducer && matchesCollection;
     });
-  }, [allWines, searchTerm, selectedRegion, selectedProducer]);
+  }, [allWines, searchTerm, selectedRegion, selectedProducer, selectedCollection]);
 
   const handleWineClick = (wine) => {
     setSelectedWine(wine);
@@ -394,10 +419,10 @@ const WinesPage = () => {
     <div className="wines-page">
       <header className="wines-header">
         <h1 className="wines-header-title">
-          <Wine size={32} /> Italian Wine Collection
+          <Wine size={32} /> Chateau Wine Collection
         </h1>
         <p className="wines-header-subtitle">
-          {allWines.length} wines from {producers.length} producers across Italy
+          {allWines.length} wines from {producers.length} producers across Italy & South Africa
         </p>
       </header>
 
@@ -443,14 +468,16 @@ const WinesPage = () => {
           >
             <option value="">All Producers</option>
             {producers.map(p => (
-              <option key={p.name} value={p.name}>{p.name} ({p.wineCount})</option>
+              <option key={p.name} value={p.name}>
+                {p.name} ({p.wineCount}) {p.collections.includes('italian') ? '🇮🇹' : ''} {p.collections.includes('south-african') ? '🇿🇦' : ''}
+              </option>
             ))}
           </select>
         </div>
 
         <button
           type="button"
-          onClick={() => { setSearchTerm(''); setSelectedRegion('All'); setSelectedProducer(null); }}
+          onClick={() => { setSearchTerm(''); setSelectedRegion('All'); setSelectedProducer(null); setSelectedCollection('all'); }}
           className="wines-clear-btn"
           title="Reset filters"
         >
@@ -458,10 +485,44 @@ const WinesPage = () => {
         </button>
       </div>
 
+      {/* Collection Filter Buttons */}
+      <div className="wines-collection-filter">
+        <span className="wines-collection-filter-label">Collection:</span>
+        <div className="wines-collection-buttons">
+          <button
+            type="button"
+            className={`wines-collection-btn ${selectedCollection === 'all' ? 'active' : ''}`}
+            onClick={() => setSelectedCollection('all')}
+          >
+            <span className="wines-collection-icon">🌍</span>
+            <span className="wines-collection-name">All Wines</span>
+            <span className="wines-collection-count">({allWines.length})</span>
+          </button>
+          <button
+            type="button"
+            className={`wines-collection-btn ${selectedCollection === 'italian' ? 'active' : ''}`}
+            onClick={() => setSelectedCollection('italian')}
+          >
+            <span className="wines-collection-icon">🇮🇹</span>
+            <span className="wines-collection-name">Italian</span>
+            <span className="wines-collection-count">({allWines.filter(w => w.collection === 'italian').length})</span>
+          </button>
+          <button
+            type="button"
+            className={`wines-collection-btn ${selectedCollection === 'south-african' ? 'active' : ''}`}
+            onClick={() => setSelectedCollection('south-african')}
+          >
+            <span className="wines-collection-icon">🇿🇦</span>
+            <span className="wines-collection-name">South African</span>
+            <span className="wines-collection-count">({allWines.filter(w => w.collection === 'south-african').length})</span>
+          </button>
+        </div>
+      </div>
+
       {/* Wine Grid */}
       <div style={{ marginTop: '20px' }}>
         <h2 style={{ marginBottom: '16px', color: '#211d1b', fontSize: '20px', fontWeight: 700 }}>
-          {selectedProducer ? `Wines from ${selectedProducer}` : selectedRegion !== 'All' ? `Wines from ${selectedRegion}` : 'All Italian Wines'}
+          {selectedProducer ? `Wines from ${selectedProducer}` : selectedRegion !== 'All' ? `Wines from ${selectedRegion}` : selectedCollection === 'italian' ? 'Italian Wines' : selectedCollection === 'south-african' ? 'South African Wines' : 'All Wines'}
           <span style={{ fontWeight: 400, fontSize: '16px', color: '#746c65', marginLeft: '10px' }}>
             ({filteredWines.length})
           </span>
@@ -504,7 +565,7 @@ const WinesPage = () => {
                         <Star size={11} fill="currentColor" /> {wine.rating.score}
                       </span>
                     )}
-                    <span 
+                    <span
                       className={`wine-badge ${getConfidenceBadgeClass(wine.confidence)}`}
                       style={{ padding: '2px 8px', fontSize: '11px', marginLeft: 'auto' }}
                     >
