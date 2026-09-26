@@ -810,7 +810,7 @@
   }
 
   .wines-grid {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
   }
 
@@ -861,22 +861,109 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 640px) {
+  .wines-page {
+    padding: 12px 10px;
+  }
+
+  /* 2-column layout strictly preserved on mobile */
   .wines-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .wine-card {
+    border-radius: 12px;
   }
 
   .wine-card-thumb {
-    height: 200px;
+    height: 165px;
+    padding: 10px 8px;
   }
 
-  .wine-modal-title {
-    font-size: 19px;
+  .wine-card-thumb img,
+  .wine-card-thumb svg {
+    max-height: 145px;
+  }
+
+  .wine-card-badge {
+    top: 8px;
+    right: 8px;
+    padding: 2px 7px;
+    font-size: 9px;
+  }
+
+  .wine-card-info {
+    padding: 10px 10px 12px;
+  }
+
+  .wine-card-producer {
+    font-size: 10px;
+  }
+
+  .wine-card-region-pill {
+    font-size: 9px;
+    padding: 1px 5px;
+  }
+
+  .wine-card-title {
+    font-size: 13px;
+    height: 35px;
+    margin-bottom: 6px;
+    line-height: 1.35;
+  }
+
+  .wine-card-category-badge {
+    font-size: 10.5px;
+  }
+
+  .wine-card-meta {
+    gap: 5px;
+    padding-top: 8px;
+  }
+
+  .wine-modal-overlay {
+    padding: 6px;
+  }
+
+  .wine-modal-body {
+    padding: 14px;
+    gap: 16px;
   }
 
   .wine-main-thumb-box {
-    height: 300px;
-    min-height: 270px;
+    height: 280px;
+    min-height: 250px;
     padding: 12px;
+  }
+
+  .wine-modal-title {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 380px) {
+  .wines-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .wine-card-thumb {
+    height: 145px;
+    padding: 8px 6px;
+  }
+
+  .wine-card-thumb img,
+  .wine-card-thumb svg {
+    max-height: 128px;
+  }
+
+  .wine-card-info {
+    padding: 8px 8px 10px;
+  }
+
+  .wine-card-title {
+    font-size: 12px;
+    height: 32px;
   }
 }
