@@ -1,19 +1,21 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { 
-  Wine, 
-  Star, 
-  X, 
-  ChevronLeft, 
-  ChevronRight, 
+import {
+  Wine,
+  Star,
+  X,
+  ChevronLeft,
+  ChevronRight,
   ChevronDown,
   Check,
-  MapPin, 
-  Search, 
+  MapPin,
+  Search,
   RotateCcw,
-  CheckCircle2, 
-  AlertCircle, 
-  HelpCircle, 
-  BookOpen
+  CheckCircle2,
+  AlertCircle,
+  HelpCircle,
+  BookOpen,
+  Tag,
+  Filter
 } from 'lucide-react';
 import italianWinesData from '../../components/data/italian_wines_producer_grouped.json';
 import southAfricanWinesData from '../../components/data/chateau_south_african_wines.json';
@@ -406,6 +408,7 @@ const WinesPage = () => {
   const [selectedCollection, setSelectedCollection] = useState('all');
   const [selectedProducer, setSelectedProducer] = useState(null);
   const [selectedRegion, setSelectedRegion] = useState('All');
+  const [selectedGrape, setSelectedGrape] = useState('All');
   const [selectedWine, setSelectedWine] = useState(null);
   const [siblingIndex, setSiblingIndex] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
@@ -466,12 +469,33 @@ const WinesPage = () => {
     return ['All', ...Array.from(regionSet).sort()];
   }, [allWines]);
 
+  const grapes = useMemo(() => {
+    const grapeSet = new Set();
+    allWines.forEach(wine => {
+      if (wine.grape) {
+        // Split by comma and clean up each grape
+        wine.grape.split(',').forEach(g => {
+          const cleaned = g.trim();
+          if (cleaned) grapeSet.add(cleaned);
+        });
+      }
+    });
+    return ['All', ...Array.from(grapeSet).sort()];
+  }, [allWines]);
+
   const regionOptions = useMemo(() => {
     return regions.map(r => ({
       value: r,
       label: r === 'All' ? 'All Regions' : r
     }));
   }, [regions]);
+
+  const grapeOptions = useMemo(() => {
+    return grapes.map(g => ({
+      value: g,
+      label: g === 'All' ? 'All Grapes' : g
+    }));
+  }, [grapes]);
 
   const producerOptions = useMemo(() => {
     const allOption = { value: '', label: 'All Producers', count: allWines.length };
@@ -495,14 +519,16 @@ const WinesPage = () => {
   const filteredWines = useMemo(() => {
     return allWines.filter(wine => {
       const matchesSearch = wine.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           wine.producer.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesRegion = selectedRegion === 'All' || 
-                           wine.producerRegion.includes(selectedRegion);
+        wine.producer.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesRegion = selectedRegion === 'All' ||
+        wine.producerRegion.includes(selectedRegion);
+      const matchesGrape = selectedGrape === 'All' ||
+        (wine.grape && wine.grape.split(',').map(g => g.trim()).includes(selectedGrape));
       const matchesProducer = !selectedProducer || wine.producer === selectedProducer;
       const matchesCollection = selectedCollection === 'all' || wine.collection === selectedCollection;
-      return matchesSearch && matchesRegion && matchesProducer && matchesCollection;
+      return matchesSearch && matchesRegion && matchesGrape && matchesProducer && matchesCollection;
     });
-  }, [allWines, searchTerm, selectedRegion, selectedProducer, selectedCollection]);
+  }, [allWines, searchTerm, selectedRegion, selectedGrape, selectedProducer, selectedCollection]);
 
   const handleWineClick = (wine) => {
     setSelectedWine(wine);
@@ -578,6 +604,15 @@ const WinesPage = () => {
         />
 
         <WineDropdown
+          label="Grape"
+          icon={Filter}
+          value={selectedGrape}
+          onChange={(val) => setSelectedGrape(val)}
+          options={grapeOptions}
+          placeholder="All Grapes"
+        />
+
+        <WineDropdown
           label="Producer"
           icon={Wine}
           value={selectedProducer || ''}
@@ -588,7 +623,7 @@ const WinesPage = () => {
 
         <button
           type="button"
-          onClick={() => { setSearchTerm(''); setSelectedRegion('All'); setSelectedProducer(null); setSelectedCollection('all'); }}
+          onClick={() => { setSearchTerm(''); setSelectedRegion('All'); setSelectedGrape('All'); setSelectedProducer(null); setSelectedCollection('all'); }}
           className="wines-clear-btn"
           title="Reset filters"
         >
@@ -692,6 +727,30 @@ const WinesPage = () => {
                       {wine.confidence}
                     </span>
                   </div>
+                  {wine.grape && (
+                    <div className="wine-card-grape">
+                      <span className="wine-grape-label">
+                        <Wine size={10} /> Grape:
+                      </span>
+                      <span 
+                        className="wine-grape-value clickable"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const firstGrape = wine.grape.split(',')[0].trim();
+                          setSelectedGrape(firstGrape);
+                        }}
+                        title="Click to filter by this grape"
+                      >
+                        {wine.grape}
+                      </span>
+                    </div>
+                  )}
+                  {wine.price_range_kes && (
+                    <div className="wine-card-price">
+                      <Tag size={11} className="wine-price-icon" />
+                      <span>KES {wine.price_range_kes.min.toLocaleString()} - {wine.price_range_kes.max.toLocaleString()}</span>
+                    </div>
+                  )}
                   {wine.producerIndex > 0 && (
                     <div style={{ marginTop: '8px', fontSize: '11px', color: '#8c8278' }}>
                       {wine.producerIndex + 1} of {wine.siblings.length} from {wine.producer}
@@ -849,6 +908,40 @@ const WinesPage = () => {
                     </span>
                   )}
                 </div>
+
+                {/* Grape & Price */}
+                {(selectedWine.grape || selectedWine.price_range_kes) && (
+                  <div className="wine-grape-price-row">
+                    {selectedWine.grape && (
+                      <div className="wine-info-card wine-grape-card">
+                        <div className="wine-info-card-header">
+                          <Wine size={14} />
+                          <span>Grape Type</span>
+                        </div>
+                        <p className="wine-info-card-value clickable"
+                           onClick={() => {
+                             const firstGrape = selectedWine.grape.split(',')[0].trim();
+                             setSelectedGrape(firstGrape);
+                             closeDetail();
+                           }}
+                           title="Click to filter by this grape">
+                          {selectedWine.grape}
+                        </p>
+                      </div>
+                    )}
+                    {selectedWine.price_range_kes && (
+                      <div className="wine-info-card wine-price-card">
+                        <div className="wine-info-card-header">
+                          <Tag size={14} />
+                          <span>Price Range</span>
+                        </div>
+                        <p className="wine-info-card-value">
+                          KES {selectedWine.price_range_kes.min.toLocaleString()} - {selectedWine.price_range_kes.max.toLocaleString()}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* Region */}
                 <div className="wine-info-card">

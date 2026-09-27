@@ -17,7 +17,7 @@ const staffSelect = `
 `;
 
 const publicUser = (record) => ({
-  id: record.id, full_name: record.full_name, email: record.email,
+  id: record.id, full_name: record.full_name, email: record.email, phone: record.phone,
   role: record.roles[0] || 'customer', roles: record.roles,
   loyalty_points: record.loyalty_points, created_at: record.created_at,
 });
@@ -31,20 +31,20 @@ const findStaffByEmail = (email) => query(`${staffSelect} WHERE u.email = $1 GRO
 const findStaffById = (id) => query(`${staffSelect} WHERE u.id = $1 GROUP BY u.id`, [id]);
 
 const findCustomerByEmail = (email) => query(
-  `SELECT id, full_name, email, password_hash, loyalty_points, created_at, ARRAY['customer']::text[] AS roles FROM users WHERE email = $1
+  `SELECT id, full_name, email, phone, password_hash, loyalty_points, created_at, ARRAY['customer']::text[] AS roles FROM users WHERE email = $1
    UNION ALL
-   SELECT id, full_name, email, password_hash, loyalty_points, created_at, ARRAY['customer']::text[] AS roles FROM chateau_users WHERE email = $1 AND NOT EXISTS (SELECT 1 FROM users WHERE email = $1)`,
+   SELECT id, full_name, email, NULL::varchar(30) AS phone, password_hash, loyalty_points, created_at, ARRAY['customer']::text[] AS roles FROM chateau_users WHERE email = $1 AND NOT EXISTS (SELECT 1 FROM users WHERE email = $1)`,
   [email],
 );
 const findCustomerById = (id) => query(
-  `SELECT id, full_name, email, loyalty_points, created_at, ARRAY['customer']::text[] AS roles FROM users WHERE id = $1
+  `SELECT id, full_name, email, phone, loyalty_points, created_at, ARRAY['customer']::text[] AS roles FROM users WHERE id = $1
    UNION ALL
-   SELECT id, full_name, email, loyalty_points, created_at, ARRAY['customer']::text[] AS roles FROM chateau_users WHERE id = $1 AND NOT EXISTS (SELECT 1 FROM users WHERE id = $1)`,
+   SELECT id, full_name, email, NULL::varchar(30) AS phone, loyalty_points, created_at, ARRAY['customer']::text[] AS roles FROM chateau_users WHERE id = $1 AND NOT EXISTS (SELECT 1 FROM users WHERE id = $1)`,
   [id],
 );
 
 router.post('/signup', asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, phone } = req.body;
   if (!name || !email || !password) return res.status(400).json({ error: 'Name, email, and password are required' });
   if (password.length < 6) return res.status(400).json({ error: 'Password must be at least 6 characters' });
   const normalizedEmail = email.trim().toLowerCase();
@@ -56,8 +56,8 @@ router.post('/signup', asyncHandler(async (req, res) => {
 
   const passwordHash = await bcrypt.hash(password, 12);
   const result = await query(
-    'INSERT INTO users (full_name, email, password_hash) VALUES ($1, $2, $3) RETURNING id, full_name, email, loyalty_points, created_at',
-    [name.trim(), normalizedEmail, passwordHash],
+    'INSERT INTO users (full_name, email, password_hash, phone) VALUES ($1, $2, $3, $4) RETURNING id, full_name, email, phone, loyalty_points, created_at',
+    [name.trim(), normalizedEmail, passwordHash, phone?.trim() || null],
   );
   const user = publicUser({ ...result.rows[0], roles: ['customer'] });
   res.status(201).json({ user, token: tokenFor(user) });

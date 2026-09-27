@@ -5,7 +5,7 @@
 .wines-page {
   padding: 24px clamp(16px, 4vw, 40px);
   max-width: 1400px;
-  margin: 0 auto;
+  margin: 5rem auto;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   color: var(--ink, #211d1b);
 }
@@ -1259,4 +1259,91 @@
     font-size: 12px;
     height: 32px;
   }
+}
+
+/* ==========================================================================
+   GRAPE & PRICE DISPLAY STYLES
+   ========================================================================== */
+
+.wine-card-grape {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 6px 10px;
+  background: #faf8f5;
+  border-radius: 8px;
+  border: 1px solid #efe8e0;
+  font-size: 12px;
+}
+
+.wine-grape-label {
+  color: #746c65;
+  font-weight: 600;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.wine-grape-value {
+  color: #2c5f2d;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+  transition: color 0.2s ease;
+}
+
+.wine-grape-value:hover {
+  color: #1e4d1e;
+  text-decoration-style: solid;
+}
+
+.wine-card-price {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 6px 10px;
+  background: #f5f0e9;
+  border-radius: 8px;
+  border: 1px solid #e8ded4;
+  font-size: 12px;
+}
+
+.wine-price-icon {
+  color: #854d0e;
+  flex-shrink: 0;
+}
+
+.wine-card-price span {
+  color: #5c4a3a;
+  font-weight: 600;
+}
+
+.wine-grape-price-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.wine-grape-card,
+.wine-price-card {
+  flex: 1;
+  min-width: 180px;
+}
+
+.wine-grape-card .wine-info-card-value,
+.wine-price-card .wine-info-card-value {
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+  transition: color 0.2s ease;
+}
+
+.wine-grape-card .wine-info-card-value:hover {
+  color: #1e4d1e;
 }

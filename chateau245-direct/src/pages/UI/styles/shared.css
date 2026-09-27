@@ -176,7 +176,7 @@ h1 em {
 
 .content-page {
     max-width: 900px;
-    margin: auto;
+    margin:5rem auto;
     padding: 35px 25px 65px;
     min-height: calc(100vh - 74px);
 }

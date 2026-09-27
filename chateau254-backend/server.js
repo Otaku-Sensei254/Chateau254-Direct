@@ -5,7 +5,7 @@ const morgan = require('morgan');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 const env = require('./config/env');
-const { closeDatabase } = require('./config/db');
+const { closeDatabase, initializePool } = require('./config/db');
 const healthRoutes = require('./routes/health.routes');
 const authRoutes = require('./routes/auth.routes');
 const menuRoutes = require('./routes/menu.routes');
@@ -18,6 +18,8 @@ const { notFound, errorHandler } = require('./middleware/error.middleware');
 
 const app = express();
 const httpServer = createServer(app);
+
+let server = null;
 
 const io = new Server(httpServer, {
   cors: {
@@ -75,9 +77,19 @@ io.on('connection', (socket) => {
 
 app.set('io', io);
 
-const server = httpServer.listen(env.port, () => {
-  console.log(`Château254 API listening on port ${env.port}`);
-});
+const startServer = async () => {
+  try {
+    await initializePool();
+    server = httpServer.listen(env.port, () => {
+      console.log(`Château254 API listening on port ${env.port}`);
+    });
+  } catch (err) {
+    console.error('Failed to initialize database:', err.message);
+    process.exit(1);
+  }
+};
+
+startServer();
 
 const shutdown = async (signal) => {
   console.log(`${signal} received. Closing server...`);

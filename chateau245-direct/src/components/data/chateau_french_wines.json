@@ -28,6 +28,11 @@
           "image": "https://www.google.com/search?tbm=isch&q=Vignobles+Vellas+Chardonnay+Pays+d%27Oc+bottle",
           "rating": {
             "found": false
+          },
+          "grape": "Chardonnay",
+          "price_range_kes": {
+            "min": 1800,
+            "max": 2800
           }
         },
         {
@@ -40,6 +45,11 @@
           "image": "https://pravaliaculicori.ro/2344-large_default/bourbon-barrel-cabernet-sauvignon-075l.jpg",
           "rating": {
             "found": false
+          },
+          "grape": "Cabernet Sauvignon",
+          "price_range_kes": {
+            "min": 2500,
+            "max": 3800
           }
         }
       ]
@@ -58,6 +68,11 @@
           "image": "https://www.google.com/search?tbm=isch&q=Cadre+Heritage+Chardonnay+vin+biologique+bottle",
           "rating": {
             "found": false
+          },
+          "grape": "Chardonnay (organic)",
+          "price_range_kes": {
+            "min": 2200,
+            "max": 3500
           }
         },
         {
@@ -70,6 +85,11 @@
           "image": "https://www.google.com/search?tbm=isch&q=Cadre+Heritage+Cahors+wine+bottle",
           "rating": {
             "found": false
+          },
+          "grape": "Malbec (Côt) — Cahors AOC",
+          "price_range_kes": {
+            "min": 2200,
+            "max": 3500
           }
         }
       ]
@@ -88,6 +108,11 @@
           "image": "https://www.google.com/search?tbm=isch&q=Chablis+Le+Jardin+du+Cure+bottle",
           "rating": {
             "found": false
+          },
+          "grape": "Chardonnay",
+          "price_range_kes": {
+            "min": 3800,
+            "max": 5500
           }
         }
       ]
@@ -106,6 +131,11 @@
           "image": "https://www.google.com/search?tbm=isch&q=Domaine+Chante+Cigale+Apostrophe+wine+bottle",
           "rating": {
             "found": false
+          },
+          "grape": "Grenache-led Rhône blend (Grenache, Syrah, Mourvèdre — likely)",
+          "price_range_kes": {
+            "min": 3200,
+            "max": 4800
           }
         },
         {
@@ -118,6 +148,11 @@
           "image": "https://www.google.com/search?tbm=isch&q=Domaine+Chante+Cigale+Chateauneuf+du+Pape+bottle",
           "rating": {
             "found": false
+          },
+          "grape": "Grenache, Syrah, Mourvèdre blend",
+          "price_range_kes": {
+            "min": 6500,
+            "max": 9500
           }
         }
       ]
@@ -136,6 +171,11 @@
           "image": "https://www.google.com/search?tbm=isch&q=Sancerre+Lemont+wine+bottle",
           "rating": {
             "found": false
+          },
+          "grape": "Sauvignon Blanc",
+          "price_range_kes": {
+            "min": 3800,
+            "max": 5500
           }
         }
       ]
@@ -154,6 +194,11 @@
           "image": "https://www.google.com/search?tbm=isch&q=Fitou+Les+Schistes+Brun+wine+bottle",
           "rating": {
             "found": false
+          },
+          "grape": "Carignan, Grenache, Syrah blend",
+          "price_range_kes": {
+            "min": 2500,
+            "max": 3800
           }
         }
       ]
@@ -172,6 +217,11 @@
           "image": "https://www.google.com/search?tbm=isch&q=Reserve+des+Moines+Saint+Gabin+Grand+Vin+Languedoc+bottle",
           "rating": {
             "found": false
+          },
+          "grape": "Syrah, Grenache, Carignan blend (likely)",
+          "price_range_kes": {
+            "min": 2200,
+            "max": 3500
           }
         }
       ]
@@ -190,6 +240,11 @@
           "image": "https://www.google.com/search?tbm=isch&q=Terrasses+vegan+French+wine+bottle",
           "rating": {
             "found": false
+          },
+          "grape": "Grenache, Syrah, Carignan blend (likely, vegan-certified)",
+          "price_range_kes": {
+            "min": 2000,
+            "max": 3200
           }
         }
       ]
@@ -208,6 +263,11 @@
           "image": "https://www.google.com/search?tbm=isch&q=Miraval+Cotes+de+Provence+Rose+bottle",
           "rating": {
             "found": false
+          },
+          "grape": "Cinsault, Grenache, Rolle (Vermentino), Syrah",
+          "price_range_kes": {
+            "min": 4500,
+            "max": 6800
           }
         }
       ]
@@ -226,6 +286,11 @@
           "image": "https://www.vino.com/dettaglio/cinsault-rouge-le-paradou-2022.html",
           "rating": {
             "found": false
+          },
+          "grape": "Cinsault",
+          "price_range_kes": {
+            "min": 2000,
+            "max": 3200
           }
         }
       ]
@@ -244,6 +309,11 @@
           "image": "https://www.google.com/search?tbm=isch&q=Cellier+des+Princes+Chateauneuf+du+Pape+bottle",
           "rating": {
             "found": false
+          },
+          "grape": "Grenache, Syrah, Mourvèdre blend",
+          "price_range_kes": {
+            "min": 5500,
+            "max": 8000
           }
         },
         {
@@ -256,6 +326,11 @@
           "image": "https://www.google.com/search?tbm=isch&q=Cellier+des+Princes+Les+Safres+Chateauneuf+du+Pape+bottle",
           "rating": {
             "found": false
+          },
+          "grape": "Grenache, Syrah, Mourvèdre blend",
+          "price_range_kes": {
+            "min": 5500,
+            "max": 8000
           }
         },
         {
@@ -268,6 +343,11 @@
           "image": "https://www.google.com/search?tbm=isch&q=Cellier+des+Princes+Quintessence+wine+bottle",
           "rating": {
             "found": false
+          },
+          "grape": "Grenache-dominant blend (likely, prestige cuvée)",
+          "price_range_kes": {
+            "min": 7000,
+            "max": 10500
           }
         }
       ]
@@ -290,6 +370,11 @@
             "scale": 100,
             "source": "Vertdevin",
             "vintage": 2023
+          },
+          "grape": "Cabernet Sauvignon, Merlot blend",
+          "price_range_kes": {
+            "min": 4800,
+            "max": 7200
           }
         }
       ]
@@ -308,6 +393,11 @@
           "image": "https://www.google.com/search?tbm=isch&q=Thomas+Barton+Medoc+wine+bottle",
           "rating": {
             "found": false
+          },
+          "grape": "Cabernet Sauvignon, Merlot blend",
+          "price_range_kes": {
+            "min": 2800,
+            "max": 4200
           }
         }
       ]

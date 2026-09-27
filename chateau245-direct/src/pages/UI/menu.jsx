@@ -29,6 +29,7 @@ const WINE_CLASS_FILTERS = [
 ];
 
 const MODE_LABELS = {
+  dining: '🍽️ Dine In Menu',
   dinein: '🍽️ Dine In Menu',
   takeout: '🛍️ Take Out Menu',
   events: '🎉 Event Catering & Beverage Menu',
@@ -91,7 +92,7 @@ const Menu = ({
       </div>
       
         <div className="menu-mode-toggle">
-          <button className="mode-button" onClick={() => onModeChange(mode === "takeout" ? "dinein" : "takeout")} type="button">
+          <button className="mode-button" onClick={() => onModeChange(mode === "takeout" ? "dining" : "takeout")} type="button">
             {mode === "takeout" ? <> Dine In <GiMeal className="mode-icon" /></> : <>Take Out <LuPackageOpen className="mode-icon"/> </>}
           </button>
         </div>

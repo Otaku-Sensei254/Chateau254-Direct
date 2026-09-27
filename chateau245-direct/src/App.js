@@ -1,5 +1,5 @@
 import './App.css';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import fullMenu from './components/data/chateau254_full_menu.json';
 import wines from './components/data/luxury_wine_list.json';
@@ -19,7 +19,7 @@ import Tracking from './pages/UI/tracking';
 import Profile from './pages/UI/profile';
 import ViewItem from './pages/UI/view_item';
 import EventsPage from './pages/UI/events';
-import AppHeader from './pages/UI/shared';
+import AppHeader from './components/Navigation';
 import Auth from './pages/auth/auth';
 import AdminDashboard from './pages/UI/admin/admin_dash';
 import RiderDashboard from './pages/rider/rider_dash';
@@ -174,7 +174,16 @@ const ItemRoute = ({ addToCart, onWineFactSelect, onWinePairingSelect }) => {
 };
 
 const App = () => {
-  const [mode, setMode] = useState('dining');
+  const [mode, setMode] = useState(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const m = params.get('mode');
+      if (m === 'dinein' || m === 'dining') return 'dining';
+      if (m === 'takeout') return 'takeout';
+      if (m === 'events') return 'events';
+    } catch {}
+    return 'dining';
+  });
   const [filter, setFilter] = useState('All');
   const [query, setQuery] = useState('');
   const [wineFilter, setWineFilter] = useState(null);
@@ -188,6 +197,7 @@ const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { addToast } = useToast();
+  const isProgrammaticNav = useRef(false);
 
   const activeCatalog = CATALOGS[mode] || CATALOGS.dining;
   const activeCategories = useMemo(() => {
@@ -271,12 +281,35 @@ const App = () => {
     }
   };
 
+  useEffect(() => {
+    // Ignore URL changes triggered by our own switchMode()
+    if (isProgrammaticNav.current) {
+      isProgrammaticNav.current = false;
+      return;
+    }
+    const params = new URLSearchParams(location.search);
+    const modeParam = params.get('mode');
+    if (modeParam) {
+      const normalized = (modeParam === 'dinein' || modeParam === 'dining') ? 'dining' : modeParam;
+      if (normalized !== mode && CATALOGS[normalized]) {
+        setMode(normalized);
+        setFilter('All');
+        setQuery('');
+        setWineFilter(null);
+        setWineClassFilter(null);
+      }
+    }
+  }, [location.search, mode]);
+
   const switchMode = (newMode) => {
-    setMode(newMode);
+    const normalized = (newMode === 'dinein' || newMode === 'dining') ? 'dining' : newMode;
+    setMode(normalized);
     setFilter('All');
     setQuery('');
     setWineFilter(null);
     setWineClassFilter(null);
+    isProgrammaticNav.current = true;
+    navigate(`/menu?mode=${normalized}`);
   };
 
   const handleBack = () => navigate(-1);

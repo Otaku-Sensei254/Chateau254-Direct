@@ -1,0 +1,619 @@
+/* ==========================================================================
+   Staggered Menu Navigation — React Bits + Chateau254 Brand Theme
+   ========================================================================== */
+
+.staggered-menu-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.staggered-menu-wrapper.fixed-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Semi-transparent backdrop scrim when menu is open */
+.sm-scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 20;
+  pointer-events: auto;
+  animation: smScrimFade 0.25s ease-out;
+}
+
+@keyframes smScrimFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Prelayers - colored background layers that animate in behind the panel */
+.sm-prelayers {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: clamp(280px, 38vw, 440px);
+  pointer-events: none;
+  z-index: 25;
+  opacity: 0;
+}
+
+[data-position='left'] .sm-prelayers {
+  right: auto;
+  left: 0;
+}
+
+.sm-prelayer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  transform: translateX(0);
+  opacity: 0;
+}
+
+/* ==========================================================================
+   Header Bar
+   ========================================================================== */
+
+.staggered-menu-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid #e9e1dc;
+  z-index: 40;
+  pointer-events: auto;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.sm-logo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.sm-logo-img {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+}
+
+.sm-logo:hover .sm-logo-img {
+  transform: scale(1.03);
+}
+
+/* ==========================================================================
+   Desktop Navigation
+   ========================================================================== */
+
+.sm-desktop-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.sm-desktop-list {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sm-desktop-item {
+  position: relative;
+}
+
+.sm-desktop-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: none;
+  border: none;
+  border-radius: 20px;
+  font-family: inherit;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.sm-desktop-link:hover {
+  background: #f5f0e9;
+  color: var(--sm-accent, #2c5f2d);
+}
+
+.sm-desktop-link.active {
+  background: #e8f5e9;
+  color: var(--sm-accent, #2c5f2d);
+  font-weight: 700;
+}
+
+.sm-desktop-chevron {
+  transition: transform 0.2s ease;
+  color: #777;
+}
+
+.sm-desktop-chevron.rotated {
+  transform: rotate(180deg);
+  color: var(--sm-accent, #2c5f2d);
+}
+
+/* Desktop Dropdown */
+.sm-desktop-dropdown-wrap {
+  position: relative;
+}
+
+.sm-desktop-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 180px;
+  background: #ffffff;
+  border: 1px solid #e9e1dc;
+  border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 50;
+  animation: smDropdownFade 0.18s ease-out;
+}
+
+/* Invisible hover bridge connecting trigger button and menu */
+.sm-desktop-dropdown-menu::before {
+  content: '';
+  position: absolute;
+  top: -16px;
+  left: 0;
+  right: 0;
+  height: 16px;
+  background: transparent;
+}
+
+@keyframes smDropdownFade {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -6px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.sm-desktop-dropdown-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.sm-desktop-dropdown-item:hover {
+  background: #f5f0e9;
+  color: var(--sm-accent, #2c5f2d);
+}
+
+.sm-desktop-dropdown-item.active {
+  background: #e8f5e9;
+  color: var(--sm-accent, #2c5f2d);
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   Header Actions (Profile, Cart, Hamburger Toggle)
+   ========================================================================== */
+
+.sm-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* Welcome / Profile button */
+.sm-welcome {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f5f0e9;
+  border: none;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 20px;
+  color: var(--sm-accent, #2c5f2d);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.sm-welcome:hover {
+  background: #e8f5e9;
+  color: #1e4d1e;
+}
+
+/* Cart button */
+.sm-cart {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: var(--sm-accent, #2c5f2d);
+  transition: transform 0.2s ease, background 0.2s ease;
+  flex-shrink: 0;
+}
+
+.sm-cart:hover {
+  transform: scale(1.05);
+  background: #1e4d1e;
+}
+
+.sm-cart:active {
+  transform: scale(0.95);
+}
+
+.sm-cart-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 18px;
+  height: 18px;
+  background: #e53935;
+  color: #fff;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 2px solid #fff;
+}
+
+/* Mobile Hamburger Toggle (hidden on desktop, shown on smaller screens) */
+.sm-mobile-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1.5px solid #e9e1dc;
+  color: var(--sm-accent, #2c5f2d);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sm-mobile-toggle:hover {
+  border-color: var(--sm-accent, #2c5f2d);
+  background: #f5f0e9;
+  transform: scale(1.04);
+}
+
+.sm-mobile-toggle:active {
+  transform: scale(0.96);
+}
+
+/* ==========================================================================
+   Panel — Slide-in Drawer on Smaller Screens (Controlled by GSAP)
+   ========================================================================== */
+
+.staggered-menu-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: clamp(280px, 40vw, 440px);
+  height: 100%;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  padding: 88px 32px 32px 32px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  z-index: 30;
+  pointer-events: auto;
+  opacity: 0;
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.12);
+}
+
+[data-position='left'] .staggered-menu-panel {
+  right: auto;
+  left: 0;
+  box-shadow: 8px 0 32px rgba(0, 0, 0, 0.12);
+}
+
+.sm-panel-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Menu Items List */
+.sm-panel-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sm-panel-itemWrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.sm-panel-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  color: #1a1a1a;
+  font-weight: 700;
+  font-size: 24px;
+  cursor: pointer;
+  line-height: 1.2;
+  font-family: 'Playfair Display', Georgia, serif;
+  background: none;
+  border: none;
+  padding: 12px 0;
+  text-align: left;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  will-change: transform;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sm-panel-item:hover {
+  color: var(--sm-accent, #2c5f2d);
+}
+
+.sm-panel-itemLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  will-change: transform;
+  transform-origin: 50% 100%;
+}
+
+.sm-panel-list[data-numbering] {
+  counter-reset: smItem;
+}
+
+.sm-panel-list[data-numbering] .sm-panel-item::after {
+  counter-increment: smItem;
+  content: counter(smItem, decimal-leading-zero);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--sm-accent, #2c5f2d);
+  font-family: 'Montserrat', Arial, sans-serif;
+  opacity: var(--sm-num-opacity, 0);
+  transition: opacity 0.3s ease;
+}
+
+/* Drawer Dropdown */
+.sm-dropdown {
+  width: 100%;
+}
+
+.sm-dropdown-chevron {
+  transition: transform 0.25s ease;
+  color: #888;
+}
+
+.sm-dropdown-chevron.is-rotated {
+  transform: rotate(180deg);
+  color: var(--sm-accent, #2c5f2d);
+}
+
+.sm-dropdown-menu {
+  margin: 4px 0 10px 0;
+  padding: 8px 12px;
+  background: #f7f4ef;
+  border-radius: 12px;
+  border: 1px solid #e9e1dc;
+  animation: smDropdownSlide 0.2s ease-out;
+}
+
+@keyframes smDropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sm-dropdown-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sm-dropdown-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  font-family: inherit;
+}
+
+.sm-dropdown-item:hover {
+  background: #eae3d9;
+  color: var(--sm-accent, #2c5f2d);
+}
+
+.sm-dropdown-item.active {
+  background: #e8f5e9;
+  color: var(--sm-accent, #2c5f2d);
+  font-weight: 700;
+}
+
+/* Socials */
+.sm-socials {
+  margin-top: auto;
+  padding-top: 24px;
+  border-top: 1px solid #e9e1dc;
+}
+
+.sm-socials-title {
+  margin: 0 0 12px 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #888;
+  font-family: 'Montserrat', Arial, sans-serif;
+}
+
+.sm-socials-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sm-socials-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: #f5f0e9;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.sm-socials-link:hover {
+  background: var(--sm-accent, #2c5f2d);
+  color: #fff;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   Desktop view (> 900px): Shows inline menu items, hides hamburger.
+   Smaller screens (<= 900px): Hides inline menu items, shows hamburger.
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .sm-desktop-nav {
+    display: none !important;
+  }
+
+  .sm-mobile-toggle {
+    display: inline-flex !important;
+  }
+
+  .sm-prelayers,
+  .staggered-menu-panel {
+    width: clamp(280px, 50vw, 440px);
+  }
+}
+
+@media (max-width: 640px) {
+  .staggered-menu-header {
+    height: 60px;
+    padding: 0 16px;
+  }
+
+  .sm-logo-img {
+    height: 30px;
+  }
+
+  .sm-prelayers,
+  .staggered-menu-panel {
+    width: 100%;
+  }
+
+  .staggered-menu-panel {
+    padding: 76px 20px 24px;
+  }
+
+  .sm-welcome span {
+    display: none;
+  }
+
+  .sm-welcome {
+    padding: 8px;
+  }
+
+  .sm-mobile-toggle {
+    width: 38px;
+    height: 38px;
+  }
+}

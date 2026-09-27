@@ -1,0 +1,385 @@
+/* ==========================================================================
+   Bubble Menu Navigation
+   ========================================================================== */
+
+.bubble-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: transparent;
+  padding: 12px 20px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.bubble-menu.absolute {
+  position: absolute;
+}
+
+/* Bubbles */
+.bubble {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.logo-bubble {
+  width: 56px;
+  height: 56px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.logo-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bubble-logo {
+  height: 36px;
+  width: auto;
+}
+
+.toggle-bubble {
+  width: 56px;
+  height: 56px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.user-bubble {
+  width: auto;
+  height: 48px;
+  background: #fff;
+  border-radius: 24px;
+  padding: 0 16px;
+  gap: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+}
+
+/* Menu Button (Hamburger) */
+.menu-btn {
+  position: relative;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+}
+
+.menu-line {
+  display: block;
+  width: 24px;
+  height: 2px;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.menu-line.short {
+  width: 16px;
+  align-self: flex-end;
+}
+
+.menu-btn.open .menu-line:first-child {
+  transform: rotate(45deg) translate(2px, 2px);
+}
+
+.menu-btn.open .menu-line:last-child {
+  transform: rotate(-45deg) translate(2px, -2px);
+  width: 24px;
+}
+
+/* Welcome Link */
+.welcome-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+  color: #2c5f2d;
+}
+
+.welcome-link:hover {
+  background: #e8f5e9;
+  color: #1e4d1e;
+}
+
+/* Cart Button */
+.bag-button {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: #fff;
+}
+
+.bag-button:hover {
+  transform: scale(1.05);
+}
+
+.cart-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 18px;
+  height: 18px;
+  background: #e53935;
+  color: #fff;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 2px solid #fff;
+}
+
+/* Overlay / Menu Items */
+.bubble-menu-items {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  pointer-events: none;
+}
+
+.bubble-menu-items.fixed {
+  position: fixed;
+}
+
+.pill-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 80px 20px 40px;
+  margin: 0;
+  list-style: none;
+  pointer-events: auto;
+}
+
+.pill-col {
+  margin: 8px 0;
+  width: 100%;
+  max-width: 320px;
+  text-align: center;
+}
+
+.pill-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 18px 28px;
+  font-size: 20px;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--pill-color, #111);
+  background: var(--pill-bg, #fff);
+  border-radius: 60px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  transform: rotate(var(--item-rot, 0deg));
+  width: 100%;
+  white-space: nowrap;
+}
+
+.pill-link:hover {
+  background: var(--hover-bg, #f3f4f6);
+  color: var(--hover-color, #111);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  transform: rotate(var(--item-rot, 0deg)) scale(1.02);
+}
+
+.pill-link.dropdown-trigger {
+  cursor: pointer;
+}
+
+.pill-label {
+  display: inline-block;
+}
+
+/* Dropdown */
+.dropdown-menu {
+  margin-top: 12px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  border: 1px solid #e9e1dc;
+  overflow: hidden;
+  animation: dropdownSlideIn 0.25s ease-out;
+}
+
+@keyframes dropdownSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-list {
+  list-style: none;
+  margin: 0;
+  padding: 8px 0;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  width: 100%;
+  text-align: left;
+}
+
+.dropdown-item:hover {
+  background: #f5f0e9;
+  color: #2c5f2d;
+}
+
+.dropdown-item svg {
+  flex-shrink: 0;
+  color: #888;
+}
+
+.dropdown-item:hover svg {
+  color: #2c5f2d;
+}
+
+/* Mobile Responsive */
+@media (max-width: 900px) {
+  .bubble-menu {
+    padding: 10px 16px;
+    height: 64px;
+  }
+
+  .logo-bubble {
+    width: 48px;
+    height: 48px;
+  }
+
+  .bubble-logo {
+    height: 32px;
+  }
+
+  .toggle-bubble {
+    width: 48px;
+    height: 48px;
+  }
+
+  .user-bubble {
+    height: 44px;
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .welcome-link {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .bag-button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .pill-link {
+    font-size: 18px;
+    padding: 16px 24px;
+  }
+
+  .pill-col {
+    max-width: 280px;
+  }
+
+  .dropdown-item {
+    font-size: 15px;
+    padding: 12px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .bubble-menu {
+    padding: 8px 12px;
+  }
+
+  .logo-bubble {
+    width: 44px;
+    height: 44px;
+  }
+
+  .bubble-logo {
+    height: 28px;
+  }
+
+  .toggle-bubble {
+    width: 44px;
+    height: 44px;
+  }
+
+  .user-bubble {
+    gap: 6px;
+  }
+
+  .welcome-link span {
+    display: none;
+  }
+
+  .welcome-link {
+    padding: 8px;
+  }
+
+  .pill-link {
+    font-size: 16px;
+    padding: 14px 20px;
+  }
+
+  .pill-col {
+    max-width: 260px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .pill-link,
+  .menu-line,
+  .dropdown-menu {
+    animation: none !important;
+    transition: none !important;
+  }
+}

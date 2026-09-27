@@ -26,7 +26,7 @@
           "backstory": "Astoria built its name in Prosecco country near Treviso, but this bottling steps into Valpolicella's signature style — grapes dried for months before fermenting, concentrating the fruit into something dense, raisined and warming. A rich departure from the house's usual sparkling identity.",
           "confidence": "confirmed",
           "source_note": "Astrolia Amarone, Della valpolicella",
-          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRAoRuMFLmAgAOk-0PBuYDZKfjAy-xWOeU7xdX35_uoz7xjRnNkQuRwNI&s=10",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Astoria%20Amarone%20della%20Valpolicella%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -34,6 +34,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Corvina, Rondinella (dried-grape blend)",
+          "price_range_kes": {
+            "min": 4500,
+            "max": 6500
           }
         },
         {
@@ -43,7 +48,7 @@
           "backstory": "Ripasso takes a finished Valpolicella and re-ferments it over the leftover Amarone skins, picking up extra depth and a touch of dried-fruit richness along the way — often called 'baby Amarone' for exactly that reason.",
           "confidence": "confirmed",
           "source_note": "Astrolia ripasso",
-          "image": "https://i0.wp.com/thewineshopgibraltar.com/wp-content/uploads/2020/10/20201027_182633.jpg?fit=1766%2C3140&ssl=1",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Astoria%20Ripasso%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -51,6 +56,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Corvina, Rondinella (Ripasso method)",
+          "price_range_kes": {
+            "min": 3200,
+            "max": 4800
           }
         }
       ]
@@ -60,13 +70,13 @@
       "producer_region": "Italy (unconfirmed)",
       "wines": [
         {
-          "name": "Salsedine Vino Rosso D'Italia",
-          "color": "Red",
-          "category_filter": "RED",
-          "backstory": "A versatile Italian red blend — food-friendly with savory first courses, offering bright acidity and approachable tannins for everyday enjoyment.",
-          "confidence": "likely",
-          "source_note": "Salsedine Vino Rosso D'Italia",
-          "image": "https://www.scopertadivino.nl/wp-content/uploads/2025/03/vino-rosso-ditalia-salsadine.png",
+          "name": "Salsedine",
+          "color": "Unconfirmed",
+          "category_filter": "Unclassified — color unconfirmed",
+          "backstory": "Could not verify this producer or wine through research — the name may be misheard or misspelled from the label. Needs a bottle-in-hand check before publishing any story or region claim.",
+          "confidence": "unconfirmed",
+          "source_note": "Salsedine",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Salsedine%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -74,23 +84,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
-          }
-        },
-        {
-          "name": "Salsedine Negroamaro Puglia IGT",
-          "color": "Red",
-          "category_filter": "RED",
-          "backstory": "Puglia's signature Negroamaro — dark, rustic and full of character. Ideal with first courses, red meat, game, and aged cheeses. A bold expression of the heel of Italy's boot.",
-          "confidence": "likely",
-          "source_note": "Salsedine Negroamaro Puglia IGT",
-          "image": "https://prontoitalia24.de/cdn/shop/files/Negroamaro_Salsedine.jpg?v=1781171602&width=1920",
-          "rating": {
-            "source": "Not rated",
-            "score": "Not rated",
-            "scale": "N/A",
-            "count": "N/A",
-            "found": false,
-            "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Unconfirmed",
+          "price_range_kes": {
+            "min": "Not available",
+            "max": "Not available"
           }
         }
       ]
@@ -106,13 +104,18 @@
           "backstory": "Collefrisio's playful 'In&Out' line got its own limited run for a golf-club event — same bold Montepulciano d'Abruzzo character underneath, dressed up for the occasion. A conversation-starter bottle as much as a pour.",
           "confidence": "confirmed",
           "source_note": "Collefrisio #limitededition for the golf, In&Out",
-          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwyOcGoyuZlX0SN8vOtHbO-RFJ5SI_pJQiBNX8Gb1OjgGFCMZA--NJ7jQ&s=10",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Collefrisio%20In%26Out%20Montepulciano%20d%27Abruzzo%20%28Limited%20Edition%20%E2%80%93%20Golf%29%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Delectable",
             "score": 9.22,
             "scale": "out of 10",
             "count": "N/A",
             "found": true
+          },
+          "grape": "Montepulciano",
+          "price_range_kes": {
+            "min": 2500,
+            "max": 3800
           }
         },
         {
@@ -122,7 +125,7 @@
           "backstory": "Abruzzo isn't Primitivo's home turf, but Collefrisio's take leans into the grape's natural jammy richness — ripe dark berries and a warm, generous finish built for grilled meats.",
           "confidence": "confirmed",
           "source_note": "Collefrisio Primitivo",
-          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDm3MDKLCaXGW2ltgQyJVGfxB2S06wTcLTKlqU9nRxt3n4YWGCAbTMi9dU&s=10",
+          "image": "https://images.vivino.com/thumbs/KnlQDW9yR3yo9D3u2oaj9w_pb_x600.png",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -130,6 +133,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Primitivo",
+          "price_range_kes": {
+            "min": 2200,
+            "max": 3500
           }
         },
         {
@@ -139,7 +147,7 @@
           "backstory": "Made using the appassimento method — grapes partially dried before pressing — this concentrates sugar and flavor for a fuller-bodied, almost velvety red, a technique the estate borrows from Veneto's Amarone tradition.",
           "confidence": "confirmed",
           "source_note": "Collefrisio Appasimento",
-          "image": "https://www.curiouswines.ie/wp-content/uploads/2018/11/Collefrisio-Appassimento.jpg",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Collefrisio%20Appassimento%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -147,6 +155,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Montepulciano (appassimento method)",
+          "price_range_kes": {
+            "min": 2800,
+            "max": 4200
           }
         },
         {
@@ -156,7 +169,7 @@
           "backstory": "The estate's everyday white — light, easy-drinking, built to open without ceremony alongside antipasti or a simple seafood plate.",
           "confidence": "confirmed",
           "source_note": "Collefrisio Bianco",
-          "image": "https://winecellar.vn/wp-content/uploads/2024/03/cf-collefrisio-bianco-gallery.jpg",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Collefrisio%20Bianco%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -164,6 +177,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "White blend (Trebbiano/Pecorino base)",
+          "price_range_kes": {
+            "min": 1500,
+            "max": 2500
           }
         },
         {
@@ -173,7 +191,7 @@
           "backstory": "Falanghina is one of Italy's oldest cultivated grapes, reportedly the base of ancient Roman Falernian wine. Collefrisio's version keeps it fresh and aromatic, with citrus and orchard-fruit lift.",
           "confidence": "confirmed",
           "source_note": "Collefrisio Falanghina",
-          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMivxqDOjxoo3ggqfI5BcFLKyLVXkB6D-5-LU8e1wGBCvkGd8Ih04oxrFn&s=10",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Collefrisio%20Falanghina%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -181,6 +199,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Falanghina",
+          "price_range_kes": {
+            "min": 1800,
+            "max": 2800
           }
         },
         {
@@ -190,13 +213,18 @@
           "backstory": "Pecorino very nearly disappeared as a grape variety before Abruzzo producers revived it in the 1990s. Collefrisio's Vignaquadra bottling shows why it's worth the effort — crisp acidity with a distinctive herbal, saline edge.",
           "confidence": "confirmed",
           "source_note": "Collefrisio Vignaquadra Pecorino",
-          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCX3dj63NtYyBEGWgmPma7r6n4M0ZXSFtIivY-DF6kP2VgKgPKrLIY10ai&s=10",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Collefrisio%20Vignaquadra%20Pecorino%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "VertdeVin",
             "score": "90",
             "scale": "out of 100",
             "count": "N/A",
             "found": true
+          },
+          "grape": "Pecorino",
+          "price_range_kes": {
+            "min": 2000,
+            "max": 3200
           }
         },
         {
@@ -206,7 +234,7 @@
           "backstory": "'Filare' means vine row in Italian — a nod to the estate's single-vineyard focus for this bottling, aiming for a purer expression of site over blend.",
           "confidence": "confirmed",
           "source_note": "Collefrisio Filare",
-          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS74Hqc9_oNqQlBpUiP52Bs8uyCPxZXonUwHs84_ZYfLjnCDNpXpTDKA5g&s=10",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Collefrisio%20Filare%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -214,6 +242,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Montepulciano (single-vineyard bottling — likely)",
+          "price_range_kes": {
+            "min": 2500,
+            "max": 3800
           }
         },
         {
@@ -223,7 +256,7 @@
           "backstory": "A brief skin contact with Montepulciano grapes gives this rosé its coral-pink hue — light, dry, and built for warm-weather sipping.",
           "confidence": "confirmed",
           "source_note": "Collefrisio Rose",
-          "image": "https://www.universalfws.com/wp-content/uploads/2024/08/image-product-8033389860585.jpg",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Collefrisio%20Ros%C3%A9%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -231,6 +264,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Montepulciano (rosé/Cerasuolo style)",
+          "price_range_kes": {
+            "min": 1500,
+            "max": 2500
           }
         },
         {
@@ -240,7 +278,7 @@
           "backstory": "The bolder sibling in the 'In&Out' range — a darker, more structured expression aimed at those who want more grip and intensity than the standard bottling.",
           "confidence": "confirmed",
           "source_note": "Collefrisio In and Out Black Edition",
-          "image": "https://data.negoziodelvino.it/imgprodotto/montepulciano-dabruzzo-in-out-black-edition-doc_15801.jpg",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Collefrisio%20In%26Out%20Black%20Edition%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -248,6 +286,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Montepulciano",
+          "price_range_kes": {
+            "min": 2800,
+            "max": 4200
           }
         }
       ]
@@ -263,7 +306,7 @@
           "backstory": "Producer could not be independently confirmed — may be a small or regional label not well indexed online, or a misheard name (possibly confused with 'Pasqua', a well-known Primitivo producer also in this cellar). Verify against the actual bottle before publishing.",
           "confidence": "unconfirmed",
           "source_note": "Pajaru primitivo",
-          "image": "https://www.bswliquor.com/cdn/shop/files/Tenuta_del_Pajaru_Picuraru_Primitivo.png?v=1776708793",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Pajaru%20Primitivo%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -271,22 +314,27 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Primitivo",
+          "price_range_kes": {
+            "min": 2000,
+            "max": 3200
           }
         }
       ]
     },
     {
       "producer": "Mala More",
-      "producer_region": "Abruzzo, Italy",
+      "producer_region": "Italy (unconfirmed)",
       "wines": [
         {
-          "name": "Mala More Montepulciano d'Abruzzo Riserva DOC",
-          "color": "White",
-          "category_filter": "WHITE",
-          "backstory": "A rare white Montepulciano d'Abruzzo Riserva from the Abruzzo region — an unusual expression of the typically red grape, aged to develop complexity and depth.",
-          "confidence": "likely",
-          "source_note": "Mala more Montepulciano d'Abruzzo Riserva",
-          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWwYWSI8VdWFyuJS5rr5JflZ7FFrtc0YIpEzuY__T2qQ&s=10",
+          "name": "Mala More",
+          "color": "Unconfirmed",
+          "category_filter": "Unclassified — color unconfirmed",
+          "backstory": "Could not verify this name through research. Likely a transcription issue from the handwritten note — needs a label check.",
+          "confidence": "unconfirmed",
+          "source_note": "Mala more",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Mala%20More%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -294,6 +342,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Unconfirmed",
+          "price_range_kes": {
+            "min": "Not available",
+            "max": "Not available"
           }
         }
       ]
@@ -309,7 +362,7 @@
           "backstory": "Blasi Cantina farms the Upper Tiber Valley in Umbria, a stretch of countryside making wine since the 1700s under the old Bertanzi Counts' estate. Founded in 2004 by Anna and Mauro Blasi, the winery replanted the vineyards and restored the historic cellar beneath Palazzo Bertanzi. This Colli Altotiberini red blends Sangiovese with Cabernet Sauvignon and Merlot, a house style built on that same land.",
           "confidence": "confirmed",
           "source_note": "Cervo rosso colli Altotiberini (must be Blasi Cantina)",
-          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWwYWSI8VdWFyuJS5rr5JflZ7FFrtc0YIpEzuY__T2qQ&s=10",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Cervo%20Rosso%2C%20Colli%20Altotiberini%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -317,6 +370,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Sangiovese, Cabernet Sauvignon, Merlot blend",
+          "price_range_kes": {
+            "min": 2200,
+            "max": 3500
           }
         }
       ]
@@ -332,13 +390,18 @@
           "backstory": "Barolo carries the nickname 'the king of wines, the wine of kings' — Nebbiolo grown on the steep hills around the town of Barolo, aged for years before release, built to soften into something floral, tarry and long-lived.",
           "confidence": "confirmed",
           "source_note": "Balbi Soprani",
-          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuImlADlzUnerX_c54bJ2D-2J-W0UxbKvuG2le-yvPCg&s=10",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Balbi%20Soprani%20Barolo%20DOCG%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Retailer/critic scores (varies by vintage)",
             "score": "92-93",
             "scale": "out of 100",
             "count": "N/A",
             "found": true
+          },
+          "grape": "Nebbiolo",
+          "price_range_kes": {
+            "min": 5500,
+            "max": 8500
           }
         },
         {
@@ -348,13 +411,18 @@
           "backstory": "Barbaresco is Barolo's neighboring appellation and often called its more elegant sibling — same Nebbiolo grape, slightly shorter aging requirement, generally a touch softer and more approachable young.",
           "confidence": "confirmed",
           "source_note": "Balbi Soprani Barbaresco",
-          "image": "https://balbisoprani.it/images/vini/bottle-box-barbaresco.png",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Balbi%20Soprani%20Barbaresco%20DOCG%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Retailer/critic scores (varies by vintage)",
             "score": "94-95",
             "scale": "out of 100",
             "count": "N/A",
             "found": true
+          },
+          "grape": "Nebbiolo",
+          "price_range_kes": {
+            "min": 5500,
+            "max": 8500
           }
         },
         {
@@ -364,7 +432,7 @@
           "backstory": "Made from the Cortese grape around the town of Gavi, this white built its reputation as an elegant, mineral-driven alternative to heavier Piedmont whites — crisp enough to pair with the region's seafood.",
           "confidence": "confirmed",
           "source_note": "Balbi Soprani Gavi",
-          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1XPANJMwko22gfPfMEPp57d07aFhmaPQ2KKpUtKfHfwSzbaYZXqrjsCA&s=10",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Balbi%20Soprani%20Gavi%20DOCG%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -372,6 +440,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Cortese",
+          "price_range_kes": {
+            "min": 2200,
+            "max": 3500
           }
         },
         {
@@ -381,7 +454,7 @@
           "backstory": "A more accessible entry point into Nebbiolo than Barolo or Barbaresco — same grape, shorter aging, meant to be enjoyed younger while still showing the variety's signature perfume of rose and tar.",
           "confidence": "confirmed",
           "source_note": "Balbi Soprani Nebbiolo D'alba",
-          "image": "https://winesellersdirect.com.au/cdn/shop/files/balbi-soprani-nebbiolo-dalba-2023-italy.webp?v=1784595906&width=1946",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Balbi%20Soprani%20Nebbiolo%20d%27Alba%20DOC%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -389,6 +462,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Nebbiolo",
+          "price_range_kes": {
+            "min": 3200,
+            "max": 4800
           }
         },
         {
@@ -398,7 +476,7 @@
           "backstory": "One of the estate's regional blends, built for everyday drinking rather than the cellar — a more relaxed counterpart to the house's flagship Barolo and Barbaresco bottlings.",
           "confidence": "confirmed",
           "source_note": "Balbi Soprani La Baudria DOCG",
-          "image": "https://balbisoprani.it/images/vini/bottle-box-baudria.png",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Balbi%20Soprani%20La%20Baudria%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -406,6 +484,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Barbera (likely)",
+          "price_range_kes": {
+            "min": 2200,
+            "max": 3500
           }
         }
       ]
@@ -421,7 +504,7 @@
           "backstory": "Part of the Araldica cooperative group, Ca' Bianca makes Piedmont classics accessible without straying from tradition — this Barolo is 100% Nebbiolo, aged the required minimum before release, aiming for approachable rather than cellar-only.",
           "confidence": "confirmed",
           "source_note": "Ca Bianca barolo",
-          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjTGA_qk2LgZhtkaKTW0fpMw8VGLuvV-i6BQPFyPrKKwjjXPTzos7akya6&s=10",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Ca%27%20Bianca%20Barolo%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -429,6 +512,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Nebbiolo",
+          "price_range_kes": {
+            "min": 4800,
+            "max": 7000
           }
         }
       ]
@@ -444,13 +532,18 @@
           "backstory": "Corvina is the backbone grape of both Valpolicella and Amarone — Monte Tondo, based in the Soave hills, bottles it here on its own, showing the variety's cherry-bright fruit without the drying process that turns it into Amarone.",
           "confidence": "confirmed",
           "source_note": "Monte tondo Corvina veneto",
-          "image": "https://shop.bos.wine/cdn/shop/products/MonteTondo_Corvina_1024x1024-2x_1024x1024.jpg?v=1696552261",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Monte%20Tondo%20Corvina%2C%20Veneto%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Vivino",
             "score": 3.6,
             "scale": "out of 5",
             "count": "1265",
             "found": true
+          },
+          "grape": "Corvina",
+          "price_range_kes": {
+            "min": 2000,
+            "max": 3200
           }
         },
         {
@@ -460,13 +553,18 @@
           "backstory": "Monte Tondo built its reputation on Soave, but this Amarone shows the estate's range — dried Corvina and Rondinella grapes fermented into a dense, high-alcohol red with notes of dried fig and chocolate.",
           "confidence": "confirmed",
           "source_note": "amarone Della....",
-          "image": "https://www.alvidoc.it/wp-content/uploads/2019/12/IMG_1316-rotated.jpg",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Monte%20Tondo%20Amarone%20della%20Valpolicella%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Vivino",
             "score": 4.2,
             "scale": "out of 5",
             "count": "160",
             "found": true
+          },
+          "grape": "Corvina, Rondinella (dried-grape blend)",
+          "price_range_kes": {
+            "min": 4500,
+            "max": 6800
           }
         }
       ]
@@ -482,7 +580,7 @@
           "backstory": "Melini is one of the oldest names in Chianti, founded in 1705. This bottling steps outside Chianti into Morellino di Scansano, Tuscany's Sangiovese-based answer from the Maremma coast — generally softer and more fruit-forward than its Chianti cousin.",
           "confidence": "confirmed",
           "source_note": "Morellino Discansano",
-          "image": "https://www.vinicum.com/media/filer_public_thumbnails/filer_public/18/9f/189f874c-8c24-417f-92c3-0d3937377081/melini_morellino.jpg__1170x1560_q85_subsampling-2.jpg",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Melini%20Morellino%20di%20Scansano%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -490,6 +588,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Sangiovese",
+          "price_range_kes": {
+            "min": 2200,
+            "max": 3500
           }
         },
         {
@@ -499,7 +602,7 @@
           "backstory": "Not to be confused with the Abruzzo grape of a similar name, this Montepulciano is a Tuscan hill town, and 'Vino Nobile' — noble wine — is Sangiovese-based, historically prized enough to earn its own DOCG status.",
           "confidence": "confirmed",
           "source_note": "Melini vino nobile di montepulciano toscana",
-          "image": "https://bottleofitaly.com/cdn/shop/files/Chianti-Classico-DOCG-Granaio-Melini-Bottle-of-Italy.jpg?v=1705505398&width=300",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Melini%20Vino%20Nobile%20di%20Montepulciano%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -507,6 +610,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Sangiovese (Prugnolo Gentile clone)",
+          "price_range_kes": {
+            "min": 3200,
+            "max": 4800
           }
         },
         {
@@ -516,13 +624,18 @@
           "backstory": "'Granaio' means granary — a nod to the estate's agricultural roots. This is Melini's Chianti Classico, from the historic heartland zone that gives Chianti its Black Rooster seal of authenticity.",
           "confidence": "confirmed",
           "source_note": "Fattorie Melini Granaio Chianti Classico red wine",
-          "image": "https://http2.mlstatic.com/D_NQ_NP_772245-MLM82176012568_022025-O.webp",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Fattorie%20Melini%20Granaio%20Chianti%20Classico%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Falstaff",
             "score": 91,
             "scale": "out of 100",
             "count": "N/A",
             "found": true
+          },
+          "grape": "Sangiovese",
+          "price_range_kes": {
+            "min": 2800,
+            "max": 4200
           }
         },
         {
@@ -532,7 +645,7 @@
           "backstory": "A specific bottling within the Lemole/Melini family of Chianti Classico wines — the exact story behind the 'Duelame' name wasn't confirmable through research; worth asking the supplier directly.",
           "confidence": "likely",
           "source_note": "Duelame Chianti Classico",
-          "image": "https://albertwines2u.com.my/cdn/shop/files/Lamole_di_Lamole_Duelame_Chianti_Classico_photo-687555.png?v=1751300073",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Melini/Lemole%20Duelame%20Chianti%20Classico%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -540,6 +653,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Sangiovese",
+          "price_range_kes": {
+            "min": 2500,
+            "max": 3800
           }
         }
       ]
@@ -555,7 +673,7 @@
           "backstory": "A straightforward, everyday Prosecco from the Veneto — light, fruity and built for aperitivo hour rather than special-occasion pomp.",
           "confidence": "confirmed",
           "source_note": "Dal bello prosecco",
-          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxs6UJmhkiwntPIjGrPvG_YPYhd8xTXGVaNYrfe2h7SQ&s=10",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Dal%20Bello%20Prosecco%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -563,6 +681,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Glera",
+          "price_range_kes": {
+            "min": 1800,
+            "max": 2800
           }
         },
         {
@@ -572,7 +695,7 @@
           "backstory": "An Italian-grown take on the international grape — softer tannins and more everyday drinkability than its Bordeaux or Napa counterparts.",
           "confidence": "confirmed",
           "source_note": "Dal bello cab sauv",
-          "image": "https://jayswines.com/wp-content/uploads/2025/10/Buy-Dal-Bello-Cabernet-Sauvignon-Asolo-Montello-750ml-online-in-Nairobi-today.png",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Dal%20Bello%20Cabernet%20Sauvignon%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -580,6 +703,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Cabernet Sauvignon",
+          "price_range_kes": {
+            "min": 2000,
+            "max": 3200
           }
         },
         {
@@ -589,7 +717,7 @@
           "backstory": "Classic Veneto Pinot Grigio — pale, crisp, and unfussy, the everyday white that made the grape famous worldwide.",
           "confidence": "confirmed",
           "source_note": "DAL BELLO PINOT GRIGIO",
-          "image": "https://www.vinenzo.ch/media/catalog/product/cache/711bacccf01142c1925f0f40452e4e25/c/h/chardonnay-dal-bello.jpg",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Dal%20Bello%20Pinot%20Grigio%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -597,6 +725,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Pinot Grigio",
+          "price_range_kes": {
+            "min": 1800,
+            "max": 2800
           }
         },
         {
@@ -606,7 +739,7 @@
           "backstory": "A soft, plummy Merlot built for easy pairing — the kind of red that works as well with pizza as it does with roasted meats.",
           "confidence": "confirmed",
           "source_note": "Bal bello merlot",
-          "image": "https://jayswines.com/wp-content/uploads/2025/10/Buy-Dal-Bello-Cabernet-Sauvignon-Asolo-Montello-750ml-online-in-Nairobi-today.png",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Dal%20Bello%20Merlot%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -614,6 +747,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Merlot",
+          "price_range_kes": {
+            "min": 2000,
+            "max": 3200
           }
         },
         {
@@ -623,7 +761,7 @@
           "backstory": "A playfully named sparkling rosé — the 'Spymaster' branding suggests a limited or novelty release rather than a flagship wine, but it carries the same easy-drinking Veneto sparkling style as the rest of the Dal Bello range.",
           "confidence": "likely",
           "source_note": "Dal Bello, Rosa Della vino spymaster brut",
-          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyfcIzC6TqLHPdenPFvA7XteS2QayWY36Z5JIeENLyAU0FOZi0YfukFdw&s=10",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Dal%20Bello%20Rosa%20della%20Vino%20Spymaster%20Brut%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -631,6 +769,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Glera, Pinot Nero blend (sparkling rosé — likely)",
+          "price_range_kes": {
+            "min": 2200,
+            "max": 3500
           }
         }
       ]
@@ -646,7 +789,7 @@
           "backstory": "Marramiero is a respected Abruzzo estate known for pushing quality in a region often associated with bulk production. Their Trebbiano is fresh and citrusy, a world apart from mass-market versions of the grape.",
           "confidence": "confirmed",
           "source_note": "Marramiero Trebbiano white",
-          "image": "https://marramiero.it/wp-content/uploads/2025/11/classici-slider-03.webp",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Marramiero%20Trebbiano%20d%27Abruzzo%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -654,6 +797,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Trebbiano",
+          "price_range_kes": {
+            "min": 1800,
+            "max": 2800
           }
         }
       ]
@@ -669,7 +817,7 @@
           "backstory": "Could not verify this producer or wine name through research. Possibly a misspelling — worth double-checking the label directly.",
           "confidence": "unconfirmed",
           "source_note": "Mistral Rigoloccio",
-          "image": "https://images.vivino.com/labels/U4ZdhsvwQlCd4MpE6e0QAw.jpg",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Mistral%20Rigoloccio%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -677,6 +825,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Unconfirmed",
+          "price_range_kes": {
+            "min": "Not available",
+            "max": "Not available"
           }
         }
       ]
@@ -692,7 +845,7 @@
           "backstory": "Ridolfi is a known Brunello di Montalcino producer, but the specific 'Fiero' bottling and its story couldn't be independently confirmed — likely a secondary or entry-level line under the same estate. Verify against the label before publishing.",
           "confidence": "likely",
           "source_note": "Fiero Ridolfi",
-          "image": "https://winemage.com/wp-content/uploads/2025/12/Ridolfi-Fiero-2019-1.png",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Fiero%20%28Ridolfi%29%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -700,6 +853,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Sangiovese (likely)",
+          "price_range_kes": {
+            "min": 3500,
+            "max": 5200
           }
         }
       ]
@@ -715,7 +873,7 @@
           "backstory": "A classic, no-frills Montepulciano d'Abruzzo — dark fruit, soft tannins, and the kind of everyday drinkability that made the grape one of Italy's most planted reds.",
           "confidence": "confirmed",
           "source_note": "Villa francesca Montepulciano d'Abruzzo",
-          "image": "https://cantinesgarzi.com/wp-content/uploads/2020/01/Villa-Francesca-Montepucliano-dAbruzzo-DOC-1.jpg",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Villa%20Francesca%20Montepulciano%20d%27Abruzzo%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -723,6 +881,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Montepulciano",
+          "price_range_kes": {
+            "min": 1800,
+            "max": 2800
           }
         }
       ]
@@ -738,7 +901,7 @@
           "backstory": "From the Berici Hills near Vicenza, this rosato leans light and floral — a lesser-known corner of the Veneto that rarely gets the spotlight next to Prosecco and Amarone country.",
           "confidence": "confirmed",
           "source_note": "Bericanto - Rosato vicenza Doc",
-          "image": "https://images.vivino.com/thumbs/pYPzK3biTAyAyf_5q6s7KA_pl_375x500.png",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Bericanto%20Rosato%2C%20Vicenza%20DOC%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -746,6 +909,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Merlot/Cabernet-based blend (likely)",
+          "price_range_kes": {
+            "min": 1800,
+            "max": 2800
           }
         },
         {
@@ -755,7 +923,7 @@
           "backstory": "A regional Pinot Grigio from the same Vicenza hills — clean, pale, and built for easy everyday drinking.",
           "confidence": "confirmed",
           "source_note": "Bericanto Pinot Grigio (stock cross-reference)",
-          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSybiq4iCobOSN-spQSuOppvnQy8XysdIFZkKxueSsuQw&s=10",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Bericanto%20Pinot%20Grigio%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -763,6 +931,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Pinot Grigio",
+          "price_range_kes": {
+            "min": 1800,
+            "max": 2800
           }
         }
       ]
@@ -778,7 +951,7 @@
           "backstory": "Labeled as an organic ('biologico') Chianti Classico Riserva — the producer itself couldn't be independently confirmed through research, but the organic Riserva designation suggests a smaller, quality-focused estate. Worth confirming spelling against the bottle.",
           "confidence": "likely",
           "source_note": "Lareale Chianti classico #vino biologico Riserva",
-          "image": "https://albertwines2u.com.my/cdn/shop/files/LamolediLamole_Lareale_ChiantiClassicoRiserva_Magnum-1_500ml.png?v=1782350779",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Lareale%20Chianti%20Classico%20Riserva%20%28Organic%29%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -786,6 +959,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Sangiovese",
+          "price_range_kes": {
+            "min": 3200,
+            "max": 4800
           }
         }
       ]
@@ -801,7 +979,7 @@
           "backstory": "Rosso di Montalcino is often called 'baby Brunello' — same Sangiovese grape and hillside terroir as Brunello di Montalcino, but released younger and at a friendlier price. The Martoccia estate itself wasn't independently confirmed — worth a label check.",
           "confidence": "likely",
           "source_note": "Martoccia Rosso Di Montalccio",
-          "image": "https://www.cru.ru/upload/resize_cache/ram.watermark/879/6b8/d2b/1649619/2026_08_13_11_10_36_462_ARW.webp",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Martoccia%20Rosso%20di%20Montalcino%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -809,6 +987,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Sangiovese",
+          "price_range_kes": {
+            "min": 3500,
+            "max": 5200
           }
         }
       ]
@@ -824,7 +1007,7 @@
           "backstory": "Grillo is one of Sicily's signature white grapes, historically used in Marsala production before finding a second life as a crisp, citrusy dry white. The producer name on the handwritten note ('Tenuta Papitalia') most likely refers to Tenuta Rapitalà, a well-known Sicilian estate — worth confirming against the actual label.",
           "confidence": "likely",
           "source_note": "Tenuta Papitalia sicilia Grillo #Viviri",
-          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgzfiT3jmHj-mIlIezDyLOZg6nBKB7JO2dlSciUOdCdA&s=10",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Grillo%2C%20Sicilia%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -832,6 +1015,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Grillo",
+          "price_range_kes": {
+            "min": 1800,
+            "max": 2800
           }
         }
       ]
@@ -847,7 +1035,7 @@
           "backstory": "Castel Firmian is a label of the Mezzacorona cooperative in Trentino, one of Italy's largest and most technically advanced wine producers. Moscato Giallo brings aromatic, floral sweetness rather than the fully sparkling style most people associate with Moscato.",
           "confidence": "confirmed",
           "source_note": "Castel Firmian Moscato Giallo trentino Mezzacorona",
-          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIaOLvuv-173o_yOk1n4CaJrrJcdCrp1gBSx90FcO7xZHlbi9OpHxXizo&s=10",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Castel%20Firmian%20Moscato%20Giallo%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -855,6 +1043,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Moscato Giallo",
+          "price_range_kes": {
+            "min": 1800,
+            "max": 2800
           }
         }
       ]
@@ -870,7 +1063,7 @@
           "backstory": "Cannonau is Sardinia's answer to Grenache — genetically related, but grown on an island long associated with some of the highest concentrations of centenarians in the world, a fact locals half-jokingly credit to the wine itself.",
           "confidence": "likely",
           "source_note": "Cannonau Di Sardegna Doc Primo Scuro",
-          "image": "https://littlewine.com.tw/Upload/20230208/%E7%A6%81%E6%AD%A2%E9%85%92%E9%A7%95%20%E9%A3%B2%E9%85%92%E9%81%8E%E9%87%8F%E6%9C%89%E5%AE%B3%E5%81%A5%E5%BA%B7%20-%202023-02-08t174711.451.png",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Cannonau%20di%20Sardegna%20DOC%20%22Primo%20Scuro%22%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -878,6 +1071,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Cannonau (Grenache)",
+          "price_range_kes": {
+            "min": 2200,
+            "max": 3500
           }
         }
       ]
@@ -893,7 +1091,7 @@
           "backstory": "Lambrusco's reputation took a beating in the 1970s and 80s from mass-exported sweet versions, but Grasparossa di Castelvetro is the real, deeply colored, food-friendly version locals actually drink — lightly fizzy, gently sweet, and built for cutting through rich Emilian cured meats.",
           "confidence": "confirmed",
           "source_note": "Cantina Settecani lambrusco grasparossa di castelvetro vino frizziness amabile",
-          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQh3gbnkMDwbq4XigxJt8xqxOB7fhgdSBMg3kwnA3GiGx5ayk0E2iE37Yl&s=10",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Lambrusco%20Grasparossa%20di%20Castelvetro%20%28Amabile%2C%20Frizzante%29%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -901,6 +1099,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Lambrusco Grasparossa",
+          "price_range_kes": {
+            "min": 1500,
+            "max": 2500
           }
         }
       ]
@@ -916,7 +1119,7 @@
           "backstory": "Could not independently verify this producer through research. A dry ('Brut') sparkling wine — worth confirming the producer name and region against the actual label.",
           "confidence": "unconfirmed",
           "source_note": "Borgofulvia spumante brut",
-          "image": "https://corkandcask.co.uk/wp-content/uploads/2026/02/IMG_5933-scaled.jpg",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Borgofulvia%20Spumante%20Brut%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -924,6 +1127,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Unconfirmed (likely Glera or Chardonnay base)",
+          "price_range_kes": {
+            "min": "Not available",
+            "max": "Not available"
           }
         }
       ]
@@ -939,7 +1147,7 @@
           "backstory": "Could not independently confirm this specific producer or bottling — 'La Piuma' (the feather) may be an estate name or a specific cuvée. Worth a label check before publishing a full story.",
           "confidence": "unconfirmed",
           "source_note": "Chianti La Piuma",
-          "image": "https://images.tcdn.com.br/img/img_prod/1342453/vinho_tinto_italiano_la_piuma_chianti_750ml_1_20251021002048_62c31e795187.jpeg",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Chianti%20La%20Piuma%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -947,6 +1155,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Sangiovese",
+          "price_range_kes": {
+            "min": 2200,
+            "max": 3500
           }
         }
       ]
@@ -962,7 +1175,7 @@
           "backstory": "The name references the Ides of March, but the exact producer behind this vegan-certified red couldn't be confirmed through research. Vegan certification means no animal-derived products (like traditional egg-white or gelatin fining agents) were used in production. Worth a label check.",
           "confidence": "unconfirmed",
           "source_note": "Idi di marzo vegan (rosso)",
-          "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTc31pPlXL5uzvXGijaj4p_yDFUjUcRZnki_tFuO8H9_bxE0QaNP1uLi6M&s=10",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Idi%20di%20Marzo%20%28Rosso%2C%20Vegan%29%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -970,6 +1183,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Sangiovese-based blend (likely)",
+          "price_range_kes": {
+            "min": 2200,
+            "max": 3500
           }
         }
       ]
@@ -985,7 +1203,7 @@
           "backstory": "Could not independently confirm this exact producer name — may be a smaller Valpolicella estate not well indexed online. The Ripasso method itself is confirmed: a finished Valpolicella re-fermented over Amarone skins for extra depth.",
           "confidence": "likely",
           "source_note": "Valpolicella ripasso centenero",
-          "image": "https://d12mme3izkh884.cloudfront.net/product-media/2NI/511/768/Valpolicella-Ripasso-Centenero-2018.jpg",
+          "image": "https://commons.wikimedia.org/w/index.php?search=Valpolicella%20Ripasso%20Centenero%20wine%20bottle&title=Special:MediaSearch&type=image",
           "rating": {
             "source": "Not rated",
             "score": "Not rated",
@@ -993,6 +1211,11 @@
             "count": "N/A",
             "found": false,
             "reason": "Searched Vivino, Wine-Searcher, Falstaff, Delectable, VertdeVin, Wine Spectator and James Suckling — no individually tracked rating exists for this specific bottling. Common for small-batch, cooperative, or private-label wines."
+          },
+          "grape": "Corvina, Rondinella (Ripasso method)",
+          "price_range_kes": {
+            "min": 3000,
+            "max": 4500
           }
         }
       ]

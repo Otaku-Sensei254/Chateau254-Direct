@@ -1,0 +1,397 @@
+/* ==========================================================================
+   Navigation / App Header with Hamburger Menu
+   ========================================================================== */
+
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: #fff;
+  border-bottom: 1px solid #e9e1dc;
+  padding: 0 20px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.wordmark {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.brand-logo {
+  height: 36px;
+  width: auto;
+  transition: transform 0.2s ease;
+}
+
+.wordmark:hover .brand-logo {
+  transform: scale(1.02);
+}
+
+/* Hamburger Button - Mobile */
+.hamburger-btn {
+  display: none;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: #211d1b;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.hamburger-btn:hover {
+  background: #f5f0e9;
+}
+
+/* Desktop Navigation Menu */
+.nav-menu {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.nav-list {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-list-item {
+  position: relative;
+}
+
+.nav-item,
+.nav-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.nav-item:hover,
+.nav-dropdown-trigger:hover {
+  background: #f5f0e9;
+  color: #2c5f2d;
+}
+
+.nav-item.active {
+  background: #e8f5e9;
+  color: #2c5f2d;
+  font-weight: 600;
+}
+
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 3px;
+  background: #2c5f2d;
+  border-radius: 2px;
+}
+
+.nav-dropdown-trigger {
+  padding-right: 32px;
+}
+
+.chevron {
+  transition: transform 0.2s ease;
+  color: #666;
+}
+
+.chevron.rotated {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 8px;
+  min-width: 200px;
+  background: #fff;
+  border: 1px solid #e9e1dc;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  z-index: 100;
+  animation: dropdownFadeIn 0.2s ease-out;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-list {
+  list-style: none;
+  margin: 0;
+  padding: 8px 0;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.dropdown-item:hover {
+  background: #f5f0e9;
+  color: #2c5f2d;
+}
+
+.dropdown-item svg {
+  flex-shrink: 0;
+  color: #888;
+}
+
+.dropdown-item:hover svg {
+  color: #2c5f2d;
+}
+
+/* User Section */
+.nav-user-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.welcome-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #f5f0e9;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2c5f2d;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.welcome-link:hover {
+  background: #e8f5e9;
+  color: #1e4d1e;
+}
+
+.bag-button {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  background: #2c5f2d;
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.bag-button:hover {
+  background: #1e4d1e;
+  transform: scale(1.02);
+}
+
+.cart-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 18px;
+  height: 18px;
+  background: #e53935;
+  color: #fff;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 2px solid #fff;
+}
+
+/* Mobile Styles */
+@media (max-width: 900px) {
+  .app-header {
+    padding: 0 16px;
+    height: 56px;
+  }
+
+  .brand-logo {
+    height: 32px;
+  }
+
+  .hamburger-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-menu {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #fff;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 20px 20px 40px;
+    overflow-y: auto;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: -8px 0 24px rgba(0, 0, 0, 0.1);
+    max-width: none;
+    margin: 0;
+  }
+
+  .nav-menu.open {
+    transform: translateX(0);
+  }
+
+  .nav-list {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .nav-item,
+  .nav-dropdown-trigger {
+    width: 100%;
+    justify-content: space-between;
+    padding: 16px 20px;
+    font-size: 16px;
+    border-radius: 12px;
+  }
+
+  .nav-item.active::after {
+    display: none;
+  }
+
+  .nav-item.active {
+    background: #e8f5e9;
+  }
+
+  .nav-dropdown-trigger {
+    padding-right: 20px;
+  }
+
+  .dropdown-menu {
+    position: static;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    box-shadow: none;
+    border: 1px solid #e9e1dc;
+    border-radius: 10px;
+    background: #faf8f5;
+    animation: none;
+    width: 100%;
+  }
+
+  .dropdown-list {
+    padding: 4px 0 8px;
+  }
+
+  .dropdown-item {
+    padding: 14px 24px;
+    font-size: 15px;
+  }
+
+  .nav-user-section {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #e9e1dc;
+    width: 100%;
+  }
+
+  .welcome-link {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 20px;
+    font-size: 15px;
+  }
+
+  .bag-button {
+    width: 100%;
+    height: 52px;
+    font-size: 16px;
+    font-weight: 600;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .bag-button::before {
+    content: 'Cart';
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header {
+    padding: 0 12px;
+  }
+
+  .nav-menu {
+    padding: 16px 16px 32px;
+  }
+
+  .nav-item,
+  .nav-dropdown-trigger {
+    padding: 14px 16px;
+    font-size: 15px;
+  }
+
+  .dropdown-item {
+    padding: 12px 20px;
+  }
+
+  .welcome-link {
+    padding: 12px 16px;
+  }
+}
