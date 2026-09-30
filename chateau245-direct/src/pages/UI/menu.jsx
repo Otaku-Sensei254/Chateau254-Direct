@@ -185,7 +185,7 @@ const Menu = ({ api,
       .catch((err) => { console.error('[promo] fetch failed', err); });
     const dismissed = JSON.parse(localStorage.getItem('chateau254_dismissed_promotions') || '[]');
     setDismissedPromos(dismissed);
-  }, []);
+  }, [api]);
 
   const dismissPromotion = (id) => {
     const updated = [...dismissedPromos, id];

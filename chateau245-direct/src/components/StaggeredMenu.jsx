@@ -289,23 +289,6 @@ export const StaggeredMenu = ({
     }
   }, [closeMenu, navigate]);
 
-  const handleDesktopMenuEnter = useCallback(() => {
-    if (desktopTimeoutRef.current) {
-      clearTimeout(desktopTimeoutRef.current);
-      desktopTimeoutRef.current = null;
-    }
-    setDesktopDropdownOpen(true);
-  }, []);
-
-  const handleDesktopMenuLeave = useCallback(() => {
-    if (desktopTimeoutRef.current) {
-      clearTimeout(desktopTimeoutRef.current);
-    }
-    desktopTimeoutRef.current = setTimeout(() => {
-      setDesktopDropdownOpen(false);
-    }, 250);
-  }, []);
-
   const handleDesktopDropdownToggle = useCallback((e) => {
     e.stopPropagation();
     if (desktopTimeoutRef.current) {
