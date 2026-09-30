@@ -3,6 +3,7 @@ import { FiBarChart2, FiCalendar, FiChevronDown, FiEdit2, FiGift, FiGrid, FiLogO
 import Brand from '../../../components/Navigation';
 import AdminFleetMap from '../../../components/AdminFleetMap';
 import { useSocket } from '../../../contexts/SocketContext';
+import { useToast } from '../../../contexts/ToastContext';
 import { AdminWorkspaceSkeleton, LoaderSkeleton } from '../../../components/ui/loaders-skeleton';
 
 const AdminDashboard = ({ user, token, api, onLogout }) => {
@@ -23,6 +24,7 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
 
   const headers = useMemo(() => ({ Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }), [token]);
   const { isConnected, joinRoom, leaveRoom, on, off } = useSocket();
+  const { addToast } = useToast();
 
   useEffect(() => {
     if (!isConnected) return;
@@ -178,6 +180,7 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
         });
         if (!res.ok) throw new Error('Failed to update menu item');
         await fetchMenu(menuFilters);
+        addToast('Menu item updated successfully', 'success');
       } else {
         const res = await fetch(`${api}/menu`, {
           method: 'POST',
@@ -186,10 +189,11 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
         });
         if (!res.ok) throw new Error('Failed to add menu item');
         await fetchMenu(menuFilters);
+        addToast('Menu item added successfully', 'success');
       }
       setEditingItem(null);
     } catch (err) {
-      alert(err.message);
+      addToast(err.message || 'Menu update failed', 'error');
     }
   };
 
@@ -198,8 +202,9 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
       const res = await fetch(`${api}/menu/${itemId}?menu_type=${encodeURIComponent(menuType || 'wine')}`, { method: 'DELETE', headers });
       if (!res.ok) throw new Error('Failed to delete menu item');
       await fetchMenu(menuFilters);
+      addToast('Menu item deleted', 'success');
     } catch (err) {
-      alert(err.message);
+      addToast(err.message || 'Delete failed', 'error');
     }
   };
 
