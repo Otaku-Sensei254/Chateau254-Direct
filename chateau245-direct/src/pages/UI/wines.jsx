@@ -20,6 +20,7 @@ import {
 import italianWinesData from '../../components/data/italian_wines_producer_grouped.json';
 import southAfricanWinesData from '../../components/data/chateau_south_african_wines.json';
 import frenchWinesData from '../../components/data/chateau_french_wines.json';
+import { WineCardSkeleton } from '../../components/ui/loaders-skeleton';
 import './styles/wines.css';
 
 // Stylized realistic Italian Wine Bottle Graphic for wines without direct photos
@@ -404,7 +405,7 @@ const getConfidenceBadgeClass = (confidence) => {
   }
 };
 
-const WinesPage = () => {
+const WinesPage = ({ loading = false }) => {
   const [selectedCollection, setSelectedCollection] = useState('all');
   const [selectedProducer, setSelectedProducer] = useState(null);
   const [selectedRegion, setSelectedRegion] = useState('All');
@@ -683,7 +684,13 @@ const WinesPage = () => {
           </span>
         </h2>
 
-        {filteredWines.length === 0 ? (
+        {loading ? (
+          <div className="wines-grid">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              <WineCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : filteredWines.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '60px 20px', color: '#888' }}>
             <p style={{ fontSize: '18px', marginBottom: '8px', fontWeight: 600 }}>No wines found</p>
             <p>Try adjusting your search query or region filter</p>

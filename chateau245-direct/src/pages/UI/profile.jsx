@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FiArrowLeft, FiAward, FiCalendar, FiLogOut, FiPackage, FiStar, FiUser } from 'react-icons/fi';
-
+import { GiCellarBarrels } from "react-icons/gi";
+import { ProfileOrderSkeleton } from '../../components/ui/loaders-skeleton';
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const statusColor = {
@@ -35,7 +36,7 @@ const bookingStatusLabel = {
   cancelled: 'Cancelled',
 };
 
-const Profile = ({ user, token, onBack, onLogout, onTrack, onBooking }) => {
+const Profile = ({ user, token, onBack, onLogout, onTrack, onBooking, onCellar }) => {
   const [orders, setOrders] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -98,8 +99,10 @@ const Profile = ({ user, token, onBack, onLogout, onTrack, onBooking }) => {
         <div><span>Total spent</span><strong>KES {totalSpent.toLocaleString()}</strong></div>
       </div>
     </div>
-
-    <button className="primary-button" style={{ width: '100%', marginTop: '1.5rem' }} onClick={onBooking}><FiCalendar /> Make a reservation</button>
+    <div className="user-actions">
+    <button className="primary-button" style={{ width: '80%', marginTop: '1.5rem' }} onClick={onBooking}><FiCalendar /> Make a reservation</button>
+      <button className="secondary-button" style={{ width: '70%', marginTop: '1.5rem', gap:'10px', }} onClick={onCellar}><GiCellarBarrels />My Cellar</button>
+    </div>
 
     {bookings.length > 0 && <div className="profile-section">
       <h3><FiCalendar /> Reservations</h3>
@@ -131,24 +134,32 @@ const Profile = ({ user, token, onBack, onLogout, onTrack, onBooking }) => {
 
     <div className="profile-section">
       <h3>Order history</h3>
-      {loading && <div className="profile-loading">Loading orders...</div>}
-      {!loading && orders.length === 0 && <div className="profile-empty"><FiPackage /><p>No orders yet. Start by browsing the menu!</p></div>}
-      {orders.map((order) => <div className={`profile-order ${expandedOrder === order.id ? 'expanded' : ''}`} key={order.id}>
-        <button className="profile-order-header" onClick={() => fetchOrderDetail(order.id)}>
-          <div><span className="profile-order-id">#{order.id.slice(0, 8)}</span><span className="profile-order-date">{new Date(order.created_at).toLocaleDateString('en-KE', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span></div>
-          <div><span className="profile-order-status" style={{ color: statusColor[order.status] }}>{statusLabel[order.status]}</span><strong>KES {Number(order.total_amount).toLocaleString()}</strong></div>
-        </button>
-        {expandedOrder === order.id && orderDetails && orderDetails.id === order.id && <div className="profile-order-detail">
-          <p className="profile-order-address">{order.delivery_address}</p>
-          {orderDetails.items?.length > 0 && <div className="profile-order-items">
-            {orderDetails.items.map((item) => <div className="profile-order-item" key={item.id}>
-              <span>{item.quantity}x {item.item_name}</span>
-              <span>KES {Number(item.unit_price).toLocaleString()}</span>
-            </div>)}
+      {loading ? (
+        <div>
+          {[1, 2, 3].map((n) => (
+            <ProfileOrderSkeleton key={n} />
+          ))}
+        </div>
+      ) : orders.length === 0 ? (
+        <div className="profile-empty"><FiPackage /><p>No orders yet. Start by browsing the menu!</p></div>
+      ) : (
+        orders.map((order) => <div className={`profile-order ${expandedOrder === order.id ? 'expanded' : ''}`} key={order.id}>
+          <button className="profile-order-header" onClick={() => fetchOrderDetail(order.id)}>
+            <div><span className="profile-order-id">#{order.id.slice(0, 8)}</span><span className="profile-order-date">{new Date(order.created_at).toLocaleDateString('en-KE', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span></div>
+            <div><span className="profile-order-status" style={{ color: statusColor[order.status] }}>{statusLabel[order.status]}</span><strong>KES {Number(order.total_amount).toLocaleString()}</strong></div>
+          </button>
+          {expandedOrder === order.id && orderDetails && orderDetails.id === order.id && <div className="profile-order-detail">
+            <p className="profile-order-address">{order.delivery_address}</p>
+            {orderDetails.items?.length > 0 && <div className="profile-order-items">
+              {orderDetails.items.map((item) => <div className="profile-order-item" key={item.id}>
+                <span>{item.quantity}x {item.item_name}</span>
+                <span>KES {Number(item.unit_price).toLocaleString()}</span>
+              </div>)}
+            </div>}
+            {order.status !== 'completed' && order.status !== 'cancelled' && <button className="profile-track-btn" onClick={() => onTrack(order)}>Track order</button>}
           </div>}
-          {order.status !== 'completed' && order.status !== 'cancelled' && <button className="profile-track-btn" onClick={() => onTrack(order)}>Track order</button>}
-        </div>}
-      </div>)}
+        </div>)
+      )}
     </div>
   </main>;
 };

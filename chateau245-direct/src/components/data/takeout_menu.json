@@ -187,7 +187,8 @@
             "min": 400,
             "max": 700
           },
-          "image": "https://commons.wikimedia.org/w/index.php?search=2pc%20Fried%20Chicken%20%26%20Chips%20food&title=Special:MediaSearch&type=image"
+          "image": "https://commons.wikimedia.org/w/index.php?search=2pc%20Fried%20Chicken%20%26%20Chips%20food&title=Special:MediaSearch&type=image",
+          "on_offer": true
         },
         {
           "name": "5pc Fried Chicken Bucket",
@@ -228,7 +229,8 @@
             "min": 350,
             "max": 600
           },
-          "image": "https://commons.wikimedia.org/w/index.php?search=Beef%20Pilau%20food&title=Special:MediaSearch&type=image"
+          "image": "https://commons.wikimedia.org/w/index.php?search=Beef%20Pilau%20food&title=Special:MediaSearch&type=image",
+          "on_offer": true
         },
         {
           "name": "Chicken Biryani",

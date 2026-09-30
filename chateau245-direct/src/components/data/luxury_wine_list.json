@@ -12,7 +12,9 @@
       "sweetness": "Dry (Brut)",
       "fortification": "Unfortified",
       "production_method": "Traditional Method",
-      "quality_tier": "AOC Champagne — Prestige Cuvée"
+      "quality_tier": "AOC Champagne — Prestige Cuvée",
+      "offer": "15% off",
+      "on_offer": true
     }
   },
   {
@@ -60,7 +62,9 @@
       "sweetness": "Dry",
       "fortification": "Unfortified",
       "production_method": "Barrel-Aged Blend",
-      "quality_tier": "AOC Pauillac — Premier Cru Classé (1855 Classification)"
+      "quality_tier": "AOC Pauillac — Premier Cru Classé (1855 Classification)",
+      "offer":"10% off",
+      "on_offer": true
     }
   },
   {
@@ -108,7 +112,9 @@
       "sweetness": "Dry",
       "fortification": "Unfortified",
       "production_method": "Barrel-Aged Blend",
-      "quality_tier": "Napa Valley AVA — Prestige Joint-Venture Wine"
+      "quality_tier": "Napa Valley AVA — Prestige Joint-Venture Wine",
+      "offer": "",
+      "on_offer": false
     }
   },
   {
@@ -124,7 +130,9 @@
       "sweetness": "Dry",
       "fortification": "Unfortified",
       "production_method": "Barrel-Aged Blend",
-      "quality_tier": "DOC Bolgheri Sassicaia — Super Tuscan"
+      "quality_tier": "DOC Bolgheri Sassicaia — Super Tuscan",
+      "offer": "10% off",
+      "on_offer": true
     }
   },
   {

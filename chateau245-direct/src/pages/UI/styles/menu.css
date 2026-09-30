@@ -10,7 +10,11 @@
     font-size: clamp(39px, 5vw, 58px);
     margin-bottom: 0;
 }
+.badges{
+    display: flex;
+    gap:1.5rem;
 
+}
 .order-badge {
     color: #4f7b55;
     font-size: 11px;
@@ -34,17 +38,30 @@
     place-items: center;
 }
 
+.search-wrapper {
+    position: relative;
+    width: 100%;
+    margin-bottom: 16px;
+    z-index: 30;
+}
+
 .search-box {
     background: white;
     border: 1px solid var(--line);
-    border-radius: 5px;
+    border-radius: 30px;
     height: 45px;
     display: flex;
     align-items: center;
-    padding: 0 14px;
+    padding: 0 16px;
     gap: 10px;
     color: #a0958e;
-    margin-bottom: 16px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.search-box:focus-within {
+    border-color: var(--wine);
+    box-shadow: 0 4px 14px rgba(118, 19, 41, 0.12);
 }
 
 .search-box input {
@@ -52,7 +69,547 @@
     outline: none;
     width: 100%;
     background: transparent;
+    font-size: 13px;
+    color: var(--ink);
+}
+
+.search-clear-btn {
+    background: none;
+    border: none;
+    color: #a0958e;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 50%;
+    transition: color 0.2s, background-color 0.2s;
+}
+
+.search-clear-btn:hover {
+    color: var(--ink);
+    background: #f4eee9;
+}
+
+/* ── Search Dropdown Menu ────────────────────────────────────── */
+.search-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(33, 29, 27, 0.14);
+    max-height: 380px;
+    overflow-y: auto;
+    z-index: 50;
+    padding: 8px 0;
+    animation: dropdownFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.search-dropdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #f4eee9;
+}
+
+.search-dropdown-count {
+    color: var(--wine);
+    font-size: 11px;
+}
+
+.search-dropdown-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.search-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    border-bottom: 1px solid #faf7f5;
+    text-align: left;
+    width: 100%;
+    background: none;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    font: inherit;
+    color: inherit;
+}
+
+.search-dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.search-dropdown-item:hover {
+    background: #faf4f0;
+}
+
+.search-dropdown-thumb {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center;
+    background-color: #f7f3ef;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-dropdown-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.search-dropdown-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.search-dropdown-title-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 2px;
+}
+
+.search-dropdown-name {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-dropdown-cat {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--wine);
+    background: #faecee;
+    padding: 1px 6px;
+    border-radius: 4px;
+}
+
+.search-dropdown-desc {
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0 0 2px;
+    line-height: 1.3;
+}
+
+.search-dropdown-price {
+    font-size: 12.5px;
+    font-weight: 800;
+    color: var(--wine);
+}
+
+.search-dropdown-empty {
+    padding: 24px 16px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.search-dropdown-empty p {
+    margin: 0;
+}
+
+/* ── Search Dropdown Skeleton Loader ─────────────────────────── */
+.search-dropdown-skeleton {
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid #faf7f5;
+}
+
+.search-dropdown-skeleton:last-child {
+    border-bottom: none;
+}
+
+/* ── Menu Grid Skeleton Cards ────────────────────────────────── */
+.menu-skeleton-card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-skeleton-image {
+    width: 100%;
+    height: 165px;
+}
+
+.menu-skeleton-body {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+/* ── Offers Carousel Section ─────────────────────────────────── */
+.offers-section {
+    margin: 8px 0 24px 0;
+}
+
+.offers-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    gap: 12px;
+}
+
+.offers-header-left {
+    display: flex;
+    flex-direction: column;
+}
+
+.offer-badge {
+    color: #4f7b55;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 2px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.offers-title {
+    font-size: 19px;
+    font-weight: 800;
+    color: var(--ink);
+    margin: 0;
+    letter-spacing: -0.2px;
+}
+
+.offers-controls {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.offers-nav-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: #ffffff;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.offers-nav-btn:hover {
+    background: var(--cream);
+    border-color: #c9bfb8;
+    color: var(--wine);
+    transform: scale(1.05);
+}
+
+.offers-nav-btn:active {
+    transform: scale(0.95);
+}
+
+/* ── Carousel Track: NO SCROLLBAR ────────────────────────────── */
+.offers-carousel {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    padding: 6px 2px 14px 2px;
+    margin: 0;
+    cursor: grab;
+    user-select: none;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE & Edge */
+}
+
+.offers-carousel::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+    width: 0;
+    height: 0;
+}
+
+.offers-carousel.dragging {
+    cursor: grabbing;
+    scroll-behavior: auto;
+}
+
+/* ── Offer Card ──────────────────────────────────────────────── */
+.offer-card {
+    flex: 0 0 280px;
+    width: 280px;
+    scroll-snap-align: start;
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    position: relative;
+    cursor: pointer;
+}
+
+.offer-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(118, 19, 41, 0.08);
+    border-color: #ebdcd5;
+}
+
+.offer-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+    min-height: 24px;
+}
+
+.offer-deal-pill {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--wine);
+    background: #faecee;
+    padding: 3px 9px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    letter-spacing: 0.2px;
+}
+
+.offer-note {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.offer-note.members {
+    background: #380814;
+    color: #fce8a6;
+    border: 1px solid #761329;
+}
+
+.offer-note.great-value {
+    background: #eef7ee;
+    color: #2e6930;
+    border: 1px solid #cce5cc;
+}
+
+.offer-note.smart-value {
+    background: #eaf3f8;
+    color: #1a5b82;
+    border: 1px solid #c5dfef;
+}
+
+.offer-note.bundled {
+    background: #fff4e5;
+    color: #9c5800;
+    border: 1px solid #fde0b2;
+}
+
+.offer-note.great-price {
+    background: #fdf0f5;
+    color: #9c1c4e;
+    border: 1px solid #fad2e2;
+}
+
+.offer-image-wrap {
+    position: relative;
+    width: 100%;
+    height: 145px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #f8f5f2;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.offer-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.offer-image.contain {
+    object-fit: contain;
+    padding: 6px;
+}
+
+.offer-card:hover .offer-image {
+    transform: scale(1.04);
+}
+
+.offer-rating-badge {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    background: rgba(33, 29, 27, 0.88);
+    backdrop-filter: blur(4px);
+    color: #ffc93c;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.offer-rating-badge span {
+    color: #ffffff;
+    font-weight: 400;
+    font-size: 10px;
+    opacity: 0.9;
+}
+
+.offer-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.offer-title {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 4px;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.offer-desc {
+    font-size: 11.5px;
+    color: var(--muted);
+    margin: 0 0 10px;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 31px;
+}
+
+.offer-pricing {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 12px;
+    margin-top: auto;
+}
+
+.offer-price {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--wine);
+}
+
+.offer-original-price {
     font-size: 12px;
+    color: #a49b96;
+    text-decoration: line-through;
+}
+
+.offer-action-btn {
+    width: 100%;
+    padding: 9px 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.offer-action-btn.wine-btn {
+    background: var(--wine);
+    color: #ffffff;
+}
+
+.offer-action-btn.wine-btn:hover {
+    background: var(--wine-dark);
+    box-shadow: 0 4px 12px rgba(118, 19, 41, 0.25);
+}
+
+.offer-action-btn.meal-btn {
+    background: #2b6a38;
+    color: #ffffff;
+}
+
+.offer-action-btn.meal-btn:hover {
+    background: #1f4f29;
+    box-shadow: 0 4px 12px rgba(43, 106, 56, 0.25);
+}
+
+.offer-action-btn.reservation-btn {
+    background: #211d1b;
+    color: #ffffff;
+}
+
+.offer-action-btn.reservation-btn:hover {
+    background: #3a332f;
+    box-shadow: 0 4px 12px rgba(33, 29, 27, 0.25);
 }
 
 /* ── Mode Badge ─────────────────────────────────────────────── */
@@ -240,6 +797,34 @@
     letter-spacing: .6px;
 }
 
+.menu-card-offer-badge {
+    position: absolute;
+    top: 11px;
+    right: 11px;
+    border-radius: 4px;
+    background: linear-gradient(135deg, #8a152e, #5f0c1e);
+    color: #ffffff;
+    padding: 4px 8px;
+    font: 700 9px sans-serif;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 2px 8px rgba(118, 19, 41, 0.4);
+    z-index: 2;
+}
+
+.menu-card.is-on-offer {
+    border-color: #eed6dc;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.menu-card.is-on-offer:hover {
+    border-color: #cb8493;
+    box-shadow: 0 4px 16px rgba(118, 19, 41, 0.08);
+}
+
 .menu-card-body {
     display: flex;
     gap: 10px;
@@ -259,6 +844,40 @@
     line-height: 1.45;
     min-height: 29px;
     margin-bottom: 10px;
+}
+
+.menu-card-price-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.menu-card-offer-price {
+    color: #c62828;
+    font-size: 13px;
+}
+
+.menu-card-original-price {
+    color: #a09a95;
+    text-decoration: line-through;
+    font-size: 11px;
+}
+
+.menu-card-offer-pill {
+    background: #faecee;
+    color: var(--wine);
+    border: 1px solid #f0ccd3;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
 }
 
 .menu-card strong {

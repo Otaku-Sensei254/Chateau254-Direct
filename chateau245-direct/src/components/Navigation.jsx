@@ -1,11 +1,10 @@
 import React from 'react';
 import StaggeredMenu from './StaggeredMenu';
-import Logo from "./images/chateauLogo2.png";
+// import Logo from "./images/chateauLogo2.png";
 
 export const AppHeader = ({ cartCount, userName = '', onProfile, onCart, onHome, onBack }) => {
   return (
     <StaggeredMenu
-      logoUrl={Logo}
       cartCount={cartCount}
       userName={userName}
       onProfile={onProfile}
@@ -27,7 +26,7 @@ export const AppHeader = ({ cartCount, userName = '', onProfile, onCart, onHome,
 
 export const Brand = () => (
   <div className="brand">
-    <img src={Logo} alt="chateau-logo" className="brand-logo" />
+    <span style={{color: "black"}}>Chateau</span><span style={{color: "gold"}}>254</span>
   </div>
 );
 

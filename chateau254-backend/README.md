@@ -15,6 +15,19 @@ npm run db:schema
 npm run db:seed
 ```
 
+For menu image uploads, configure the following Railway variables (or local `.env` values):
+
+```env
+R2_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com
+R2_BUCKET_NAME=chateau254
+R2_PUBLIC_URL=https://<public-r2-domain>
+R2_ACCESS_KEY_ID=<r2-access-key-id>
+R2_SECRET_ACCESS_KEY=<r2-secret-access-key>
+R2_MAX_FILE_SIZE=5242880
+```
+
+The upload endpoint is admin-only: `POST /api/menu/upload` with a multipart field named `image`. It accepts JPEG, PNG, and WebP files up to 5 MB.
+
 4. Start the development server:
 
 ```bash

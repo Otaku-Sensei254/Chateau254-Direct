@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { FiBarChart2, FiCalendar, FiChevronDown, FiEdit2, FiGift, FiGrid, FiLogOut, FiMenu, FiPackage, FiPlus, FiSave, FiSettings, FiShoppingBag, FiTable, FiTrash2, FiTruck, FiUsers, FiX, FiRefreshCw, FiMap } from 'react-icons/fi';
-import { Brand } from '../shared';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FiBarChart2, FiCalendar, FiChevronDown, FiEdit2, FiGift, FiGrid, FiLogOut, FiMenu, FiPackage, FiPlus, FiSave, FiSearch, FiSettings, FiShoppingBag, FiTable, FiTrash2, FiTruck, FiUpload, FiUsers, FiX, FiMap } from 'react-icons/fi';
+import Brand from '../../../components/Navigation';
 import AdminFleetMap from '../../../components/AdminFleetMap';
 import { useSocket } from '../../../contexts/SocketContext';
+import { AdminWorkspaceSkeleton, LoaderSkeleton } from '../../../components/ui/loaders-skeleton';
 
 const AdminDashboard = ({ user, token, api, onLogout }) => {
   const [activePage, setActivePage] = useState('Dashboard');
@@ -47,13 +48,6 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
     setOrders(data.orders || []);
   }, [api, headers]);
 
-  const fetchMenu = useCallback(async () => {
-    const res = await fetch(`${api}/menu?all=true`, { headers });
-    if (!res.ok) throw new Error('Failed to load menu');
-    const data = await res.json();
-    setMenu(data.items || []);
-  }, [api, headers]);
-
   const fetchCustomers = useCallback(async () => {
     const res = await fetch(`${api}/customers`, { headers });
     if (!res.ok) throw new Error('Failed to load customers');
@@ -81,6 +75,19 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
     const data = await res.json();
     setTables(data.tables || []);
   }, [api, headers]);
+
+  const [menuFilters, setMenuFilters] = useState({ search: '', category: 'All' });
+
+  const fetchMenu = useCallback(async (filters = menuFilters) => {
+    const params = new URLSearchParams();
+    params.set('all', 'true');
+    if (filters.search) params.set('search', filters.search);
+    if (filters.category && filters.category !== 'All') params.set('category', filters.category);
+    const res = await fetch(`${api}/menu?${params.toString()}`, { headers });
+    if (!res.ok) throw new Error('Failed to load menu');
+    const data = await res.json();
+    setMenu(data.items || []);
+  }, [api, headers, menuFilters]);
 
   const loadAll = useCallback(async () => {
     setLoading(true);
@@ -123,17 +130,48 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
   const saveMenuItem = async (event) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    const body = { name: form.get('name'), category: form.get('category'), price: Number(form.get('price')), availability: true };
+    const menuType = form.get('menu_type') || (form.get('category') === 'Wine' ? 'wine' : 'dine_in');
+    let imageUrl = form.get('image') || '';
+    const imageFile = form.get('image_file');
+
+    const body = {
+      name: form.get('name'),
+      category: form.get('category'),
+      subcategory: form.get('subcategory') || null,
+      price: Number(form.get('price')),
+      description: form.get('description') || '',
+      image_url: imageUrl,
+      menu_type: menuType,
+      is_available: true,
+      on_offer: form.get('on_offer') === 'on',
+      offer: form.get('offer') || '',
+      wine_type: form.get('wine_type') || null,
+      grape: form.get('grape') || null,
+      region: form.get('region') || null,
+    };
     try {
+      if (imageFile?.size) {
+        const uploadBody = new FormData();
+        uploadBody.append('image', imageFile);
+        const uploadRes = await fetch(`${api}/menu/upload`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` },
+          body: uploadBody,
+        });
+        const uploadData = await uploadRes.json().catch(() => ({}));
+        if (!uploadRes.ok) throw new Error(uploadData.error || 'Failed to upload menu image');
+        imageUrl = uploadData.imageUrl;
+        body.image_url = imageUrl;
+      }
+
       if (editingItem?.id) {
-        const res = await fetch(`${api}/menu/${editingItem.id}`, {
+        const res = await fetch(`${api}/menu/${editingItem.id}?menu_type=${encodeURIComponent(editingItem.menuType || menuType)}`, {
           method: 'PATCH',
           headers,
           body: JSON.stringify(body),
         });
         if (!res.ok) throw new Error('Failed to update menu item');
-        const data = await res.json();
-        setMenu((prev) => prev.map((item) => item.id === editingItem.id ? data.item : item));
+        await fetchMenu(menuFilters);
       } else {
         const res = await fetch(`${api}/menu`, {
           method: 'POST',
@@ -141,8 +179,7 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
           body: JSON.stringify(body),
         });
         if (!res.ok) throw new Error('Failed to add menu item');
-        const data = await res.json();
-        setMenu((prev) => [...prev, data.item]);
+        await fetchMenu(menuFilters);
       }
       setEditingItem(null);
     } catch (err) {
@@ -150,11 +187,11 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
     }
   };
 
-  const deleteMenuItem = async (itemId) => {
+  const deleteMenuItem = async (itemId, menuType) => {
     try {
-      const res = await fetch(`${api}/menu/${itemId}`, { method: 'DELETE', headers });
+      const res = await fetch(`${api}/menu/${itemId}?menu_type=${encodeURIComponent(menuType || 'wine')}`, { method: 'DELETE', headers });
       if (!res.ok) throw new Error('Failed to delete menu item');
-      setMenu((prev) => prev.filter((item) => item.id !== itemId));
+      await fetchMenu(menuFilters);
     } catch (err) {
       alert(err.message);
     }
@@ -282,7 +319,33 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
     return new Date(dateStr).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
   };
 
-  if (loading) return <main className="admin-page"><section className="admin-workspace"><div style={{ textAlign: 'center', padding: '4rem' }}><FiRefreshCw className="spin" size={32} /><p>Loading admin dashboard...</p></div></section></main>;
+  if (loading) {
+    return (
+      <main className="admin-page">
+        <aside className="admin-sidebar" style={{ minHeight: '100vh' }}>
+          <div className="admin-sidebar-top"><Brand /></div>
+          <nav className="admin-nav" style={{ padding: '20px 0' }}>
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} style={{ padding: '12px 16px', display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <LoaderSkeleton width={20} height={20} borderRadius={4} />
+                <LoaderSkeleton width={100} height={16} borderRadius={4} />
+              </div>
+            ))}
+          </nav>
+        </aside>
+        <section className="admin-workspace">
+          <header className="admin-header" style={{ marginBottom: '24px' }}>
+            <div>
+              <LoaderSkeleton width={220} height={28} borderRadius={6} />
+              <LoaderSkeleton width={160} height={14} borderRadius={4} style={{ marginTop: 8 }} />
+            </div>
+            <LoaderSkeleton width={110} height={36} borderRadius={8} />
+          </header>
+          <AdminWorkspaceSkeleton />
+        </section>
+      </main>
+    );
+  }
 
   if (error) return <main className="admin-page"><section className="admin-workspace"><div style={{ textAlign: 'center', padding: '4rem' }}><p>{error}</p><button onClick={loadAll}>Retry</button></div></section></main>;
 
@@ -313,7 +376,7 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
       {activePage === 'Orders' && <OrdersContent orders={orders} onUpdateStatus={updateOrderStatus} updatingOrder={updatingOrder} riders={riders} formatCurrency={formatCurrency} formatTime={formatTime} />}
       {activePage === 'Reservations' && <ReservationsContent bookings={bookings} tables={tables} onAssignTable={assignTableToBooking} onUnassignTable={unassignTableFromBooking} formatTime={formatTime} />}
       {activePage === 'Tables' && <TablesContent tables={tables} setEditingTable={setEditingTable} onSave={saveTable} onDelete={deleteTable} onUpdateStatus={updateTableStatus} />}
-      {activePage === 'Menu' && <MenuContent menu={menu} setEditingItem={setEditingItem} onDelete={deleteMenuItem} />}
+      {activePage === 'Menu' && <MenuContent menu={menu} setEditingItem={setEditingItem} onDelete={deleteMenuItem} fetchMenu={fetchMenu} menuFilters={menuFilters} setMenuFilters={setMenuFilters} />}
       {activePage === 'Customers' && <CustomersContent customers={customers} />}
       {activePage === 'Riders' && <RidersContent riders={riders} onAdd={() => setRiderEditorOpen(true)} onRemove={removeRider} />}
       {activePage === 'Fleet Map' && <FleetMapContent token={token} api={api} />}
@@ -370,7 +433,58 @@ const OrdersContent = ({ orders, onUpdateStatus, updatingOrder, riders, formatCu
 
 const OrderTable = ({ orders, formatCurrency, formatTime, compact }) => <div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>Order</th><th>Customer</th><th>Amount</th><th>Address</th><th>Time</th></tr></thead><tbody>{orders.map((order) => <tr key={order.id}><td>#{order.id.slice(0, 8)}</td><td>{order.customer_name || 'Unknown'}</td><td>{formatCurrency(order.total_amount)}</td><td>{order.delivery_address || '—'}</td><td>{formatTime(order.created_at)}</td></tr>)}{!orders.length && <tr><td colSpan={5} style={{ textAlign: 'center', padding: '2rem', color: '#a0958e' }}>No orders yet</td></tr>}</tbody></table></div>;
 
-const MenuContent = ({ menu, setEditingItem, onDelete }) => <><div className="admin-content-heading"><div><p className="eyebrow">Catalog management</p><h2>Menu items</h2></div><button className="admin-primary" onClick={() => setEditingItem(true)}><FiPlus /> Add menu item</button></div><div className="admin-menu-grid">{menu.map((item) => <article className="admin-menu-row" key={item.id}><div className="admin-menu-icon"><FiPackage /></div><div><strong>{item.name}</strong><span>{item.category}</span></div><b>KES {Number(item.price).toLocaleString()}</b><em className={item.availability !== false ? 'available' : 'unavailable'}>{item.availability !== false ? 'Available' : 'Unavailable'}</em><button onClick={() => setEditingItem(item)} aria-label={`Edit ${item.name}`}><FiEdit2 /></button><button onClick={() => { if (window.confirm(`Delete "${item.name}"?`)) onDelete(item.id); }} aria-label={`Delete ${item.name}`}><FiTrash2 /></button></article>)}</div></>;
+const MenuContent = ({ menu, setEditingItem, onDelete, fetchMenu, menuFilters, setMenuFilters }) => {
+  useEffect(() => {
+    fetchMenu(menuFilters);
+  }, [menuFilters, fetchMenu]);
+
+  const categories = useMemo(() => {
+    const cats = new Set(menu.map((item) => item.category).filter(Boolean));
+    return ['All', ...Array.from(cats).sort()];
+  }, [menu]);
+
+  return <><div className="admin-content-heading"><div><p className="eyebrow">Catalog management</p><h2>Menu items</h2></div><button className="admin-primary" onClick={() => { setEditingItem(true); }}><FiPlus /> Add menu item</button></div>
+    <div className="admin-menu-toolbar">
+      <div className="admin-category-tabs">{categories.map((cat) => <button key={cat} className={`admin-category-tab ${menuFilters.category === cat ? 'active' : ''}`} onClick={() => setMenuFilters((prev) => ({ ...prev, category: cat }))}>{cat === 'All' ? 'All' : cat}</button>)}</div>
+      <div className="admin-search-wrap">
+        <FiSearch className="admin-search-icon" />
+        <input className="admin-search-input" type="text" placeholder="Search menu by name, category or description..." value={menuFilters.search} onChange={(e) => setMenuFilters((prev) => ({ ...prev, search: e.target.value }))} />
+        {menuFilters.search && <button className="admin-search-clear" onClick={() => setMenuFilters((prev) => ({ ...prev, search: '' }))} aria-label="Clear search"><FiX /></button>}
+      </div>
+    </div>
+    <div className="admin-menu-categories"><section key={menuFilters.category || 'all'} className="admin-menu-category">
+      <h3 className="admin-menu-category-title">{menuFilters.category === 'All' ? 'All items' : menuFilters.category} <span className="admin-menu-category-count">{menu.length}</span></h3>
+      <div className="admin-menu-grid">
+        {menu.sort((a, b) => (a.order_index || 0) - (b.order_index || 0) || a.id.localeCompare(b.id)).map((item) => <article className="admin-menu-card" key={item.id}>
+          {item.image && <div className="admin-menu-card-image"><img src={item.image} alt={item.name} loading="lazy" onError={(e) => { e.target.style.display = 'none'; }} /></div>}
+          <div className="admin-menu-card-body">
+            <div className="admin-menu-card-top">
+              <div className="admin-menu-card-icon"><FiPackage /></div>
+              <div className="admin-menu-card-info">
+                <strong className="admin-menu-card-name">{item.name}</strong>
+                <span className="admin-menu-card-category">{item.category}{item.subcategory && item.subcategory !== item.category ? ` · ${item.subcategory}` : ''}</span>
+              </div>
+              <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                {item.on_offer && <span className="admin-menu-card-offer">{item.offer || 'On offer'}</span>}
+                <span className={`admin-menu-card-availability ${item.availability !== false ? 'available' : 'unavailable'}`}>{item.availability !== false ? 'Available' : 'Unavailable'}</span>
+              </div>
+            </div>
+            {item.description && <p className="admin-menu-card-description">{item.description}</p>}
+            {(item.wineType || item.region || item.grape) && <div className="admin-menu-card-wine-meta">{(item.wineType || item.region) && <span>{[item.wineType, item.region].filter(Boolean).join(' · ')}</span>}{item.grape && <span>Grape: {item.grape}</span>}</div>}
+            <div className="admin-menu-card-footer">
+              <strong className="admin-menu-card-price">KES {Number(item.price).toLocaleString()}</strong>
+              <div className="admin-menu-card-actions">
+                <button onClick={() => setEditingItem(item)} aria-label={`Edit ${item.name}`} title="Edit"><FiEdit2 /></button>
+                <button onClick={() => { if (window.confirm(`Delete "${item.name}"?`)) onDelete(item.id, item.menuType); }} aria-label={`Delete ${item.name}`} title="Delete"><FiTrash2 /></button>
+              </div>
+            </div>
+          </div>
+        </article>)}
+      </div>
+    </section>}
+    {!menu.length && <div className="admin-placeholder"><div className="admin-placeholder-icon"><FiSearch /></div><h2>No matches</h2><p>Try a different search term or category.</p></div>}
+  </div></>;
+};
 
 const CustomersContent = ({ customers }) => <><div className="admin-content-heading"><div><p className="eyebrow">Loyalty and accounts</p><h2>Customers</h2></div></div><div className="customer-summary"><span><strong>{customers.length}</strong> registered customers</span><span><strong>{customers.filter((c) => c.loyalty_points > 0).length}</strong> with loyalty points</span><span><strong>{customers.reduce((sum, c) => sum + (c.loyalty_points || 0), 0).toLocaleString()}</strong> total points</span></div><div className="admin-table-wrap"><table className="admin-table customer-table"><thead><tr><th>Customer</th><th>Email</th><th>Phone</th><th>Loyalty points</th><th>Joined</th></tr></thead><tbody>{customers.map((customer) => <tr key={customer.id || customer.email}><td><strong>{customer.full_name}</strong></td><td>{customer.email}</td><td>{customer.phone || '—'}</td><td>{customer.loyalty_points || 0} pts</td><td>{new Date(customer.created_at).toLocaleDateString()}</td></tr>)}{!customers.length && <tr><td colSpan={5} style={{ textAlign: 'center', padding: '2rem', color: '#a0958e' }}>No customers yet</td></tr>}</tbody></table></div></>;
 
@@ -384,7 +498,74 @@ const FleetMapContent = ({ token, api }) => (
 
 const PlaceholderContent = ({ title }) => <div className="admin-placeholder"><div className="admin-placeholder-icon"><FiSettings /></div><h2>{title} workspace</h2><p>This section is ready for your {title.toLowerCase()} tools and data.</p></div>;
 
-const MenuEditor = ({ item, onSave, onClose }) => <div className="admin-modal-backdrop"><form className="admin-modal" onSubmit={onSave}><button type="button" className="admin-modal-close" onClick={onClose}><FiX /></button><p className="eyebrow">Catalog management</p><h2>{item ? 'Edit menu item' : 'Add menu item'}</h2><label>Item name<input name="name" defaultValue={item?.name || ''} required /></label><label>Category<select name="category" defaultValue={item?.category || 'Meals'}><option>Meals</option><option>Wine</option><option>Drinks</option><option>Desserts</option></select></label><label>Price (KES)<input name="price" type="number" min="0" defaultValue={item?.price || ''} required /></label><button className="admin-primary" type="submit"><FiSave /> Save item</button></form></div>;
+const MenuEditor = ({ item, onSave, onClose }) => {
+  const fileRef = useRef(null);
+  const [preview, setPreview] = useState(item?.image || '');
+  const [fileName, setFileName] = useState('');
+  const [isConverting, setIsConverting] = useState(false);
+  const menuType = item?.menuType || (item?.category === 'Wine' ? 'wine' : 'dine_in');
+
+  const [selectedCategory, setSelectedCategory] = useState(item?.category || 'Meals');
+  const [selectedSubcategory, setSelectedSubcategory] = useState(item?.subcategory || '');
+
+  const MEAL_SUBCATEGORIES = ['Appetizers', 'Soups', 'Salads', 'Mains', 'Pasta', 'Desserts', 'Beverages', 'Fast Food', 'Platters', 'Combos'];
+  const WINE_SUBCATEGORIES = ['Red', 'White', 'Rosé', 'Sparkling', 'Orange', 'Dessert'];
+  const DRINK_SUBCATEGORIES = ['Hot', 'Cold', 'Alcoholic', 'Non-alcoholic'];
+  const DESSERT_SUBCATEGORIES = ['Cakes', 'Ice Cream', 'Pastries', 'Other'];
+
+  const subcategoryOptions = selectedCategory === 'Wine' ? WINE_SUBCATEGORIES : selectedCategory === 'Drinks' ? DRINK_SUBCATEGORIES : selectedCategory === 'Desserts' ? DESSERT_SUBCATEGORIES : MEAL_SUBCATEGORIES;
+  const showWineFields = selectedCategory === 'Wine';
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (preview && preview.startsWith('blob:')) URL.revokeObjectURL(preview);
+    const url = URL.createObjectURL(file);
+    setPreview(url);
+    setFileName(file.name);
+    setIsConverting(false);
+  };
+
+  const clearImage = () => {
+    if (preview && preview.startsWith('blob:')) URL.revokeObjectURL(preview);
+    setPreview('');
+    setFileName('');
+    const hidden = document.getElementById('menu-image-input');
+    if (hidden) hidden.value = '';
+    if (fileRef.current) fileRef.current.value = '';
+  };
+
+  return <div className="admin-modal-backdrop"><form className="admin-modal" onSubmit={onSave}><button type="button" className="admin-modal-close" onClick={onClose}><FiX /></button><p className="eyebrow">Catalog management</p><h2>{item ? 'Edit menu item' : 'Add menu item'}</h2>
+    <div className="admin-modal-form">
+      <input type="hidden" name="menu_type" defaultValue={menuType} />
+      <label>Item name<input name="name" defaultValue={item?.name || ''} required /></label>
+      <label>Category<select name="category" defaultValue={selectedCategory} onChange={(e) => { setSelectedCategory(e.target.value); setSelectedSubcategory(''); }}><option>Meals</option><option>Wine</option><option>Drinks</option><option>Desserts</option></select></label>
+      <label>Subcategory<select name="subcategory" defaultValue={selectedSubcategory} onChange={(e) => setSelectedSubcategory(e.target.value)}><option value="">-- select subcategory --</option>{subcategoryOptions.map((opt) => <option key={opt} value={opt}>{opt}</option>)}</select></label>
+      <label>Price (KES)<input name="price" type="number" min="0" defaultValue={item?.price || ''} required /></label>
+      <label>Description<textarea name="description" rows="2" defaultValue={item?.description || ''} placeholder="Short description shown on menu cards..." /></label>
+      {showWineFields && <><label>Wine type<select name="wine_type" defaultValue={item?.wineType || item?.wine_type || ''}><option value="">-- select type --</option><option>Red</option><option>White</option><option>Rosé</option><option>Sparkling</option><option>Orange</option><option>Dessert</option></select></label>
+      <label>Grape<input name="grape" defaultValue={item?.grape || ''} placeholder="e.g. Cabernet Sauvignon, Chardonnay..." /></label>
+      <label>Region<input name="region" defaultValue={item?.region || ''} placeholder="e.g. Tuscany, Stellenbosch, Bordeaux..." /></label></>}
+      <label className="admin-toggle-label">
+        <input type="checkbox" name="on_offer" defaultChecked={Boolean(item?.on_offer)} />
+        On offer
+      </label>
+      <label>Offer text<input name="offer" defaultValue={item?.offer || ''} placeholder="e.g. 10% off, Free delivery..." /></label>
+      <label>
+        Image
+        <input id="menu-image-input" name="image" type="hidden" defaultValue={item?.image || ''} />
+        <div className="admin-upload-row">
+          <button type="button" className="admin-upload-button" onClick={() => fileRef.current?.click()} disabled={isConverting}>
+            <FiUpload /> {isConverting ? 'Processing...' : fileName || 'Choose image'}
+          </button>
+          {preview && <button type="button" className="admin-upload-clear" onClick={clearImage} disabled={isConverting}>Remove</button>}
+        </div>
+      <input ref={fileRef} name="image_file" type="file" accept="image/jpeg,image/png,image/webp" onChange={handleFileChange} disabled={isConverting} style={{ display: 'none' }} />
+        {preview && <img className="admin-modal-image-preview" src={preview} alt="Preview" onError={(e) => { e.target.style.display = 'none'; }} />}
+      </label>
+    </div>
+    <button className="admin-primary" type="submit" disabled={isConverting}><FiSave /> Save item</button></form></div>;
+};
 
 const RiderEditor = ({ onSave, onClose }) => <div className="admin-modal-backdrop"><form className="admin-modal" onSubmit={onSave}><button type="button" className="admin-modal-close" onClick={onClose}><FiX /></button><p className="eyebrow">Delivery team</p><h2>Add rider</h2><label>Full name<input name="name" placeholder="Peter Banda" required /></label><label>Phone number<input name="phone" type="tel" placeholder="0712 987 654" required /></label><button className="admin-primary" type="submit"><FiSave /> Add rider</button></form></div>;
 

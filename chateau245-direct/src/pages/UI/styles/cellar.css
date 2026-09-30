@@ -1,0 +1,725 @@
+/* ═══════════════════════════════════════════════════════════
+   cellar.css — My Cellar page styles
+   Dark luxury aesthetic matching the design reference
+   Uses system palette: --wine #761329, --ink #211d1b, --cream #f7f3ef
+═══════════════════════════════════════════════════════════ */
+
+/* ── Page wrapper — full width, dark background ── */
+.cellar-page {
+    margin: 4rem auto;
+    min-height: 100vh;
+    background: #0f0d0c;
+    color: #e8e0d8;
+    font-family: inherit;
+    
+    /* space for mobile summary bar */
+}
+
+/* ════════════════════════════════════════════════
+   HERO BANNER
+════════════════════════════════════════════════ */
+.cellar-hero {
+    position: relative;
+    width: 100%;
+    height: clamp(240px, 30vw, 320px);
+    background-size: cover;
+    background-position: center top;
+    overflow: hidden;
+}
+
+.cellar-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right,
+            rgba(10, 8, 7, 0.92) 0%,
+            rgba(10, 8, 7, 0.7) 45%,
+            rgba(10, 8, 7, 0.1) 100%);
+}
+
+.cellar-hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 28px clamp(24px, 5vw, 60px) 36px;
+    max-width: 540px;
+}
+
+.cellar-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #c9aa7c;
+    background: none;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 12px;
+    padding: 0;
+    letter-spacing: 0.2px;
+    transition: color 0.2s;
+}
+
+.cellar-back-btn:hover {
+    color: #e8d4a0;
+}
+
+.cellar-hero-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(34px, 5vw, 52px);
+    font-weight: 400;
+    color: #e8d4a0;
+    margin: 0 0 4px;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+}
+
+.cellar-hero-title span {
+    font-style: italic;
+}
+
+.cellar-hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    color: #a89070;
+    text-transform: uppercase;
+    margin: 0 0 12px;
+    font-weight: 500;
+}
+
+.cellar-hero-divider {
+    display: block;
+    width: 36px;
+    height: 2px;
+    background: #c9aa7c;
+    margin-bottom: 14px;
+}
+
+.cellar-hero-desc {
+    font-size: 13px;
+    color: #b0a090;
+    line-height: 1.6;
+    margin: 0;
+    max-width: 380px;
+}
+
+/* ════════════════════════════════════════════════
+   BODY LAYOUT — main grid + sidebar
+════════════════════════════════════════════════ */
+.cellar-body {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 28px;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 28px 24px 0;
+}
+
+/* ── FILTER TABS ── */
+.cellar-filter-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.cellar-filter-btn {
+    padding: 8px 22px;
+    border-radius: 30px;
+    border: 1px solid #2e2925;
+    background: #1a1613;
+    color: #a8998c;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.cellar-filter-btn:hover {
+    border-color: #c9aa7c;
+    color: #e8d4a0;
+}
+
+.cellar-filter-btn.active {
+    background: #3a3228;
+    border-color: #c9aa7c;
+    color: #e8d4a0;
+}
+
+/* ── SEARCH ── */
+.cellar-search {
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.cellar-search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #7a6e68;
+    font-size: 16px;
+    pointer-events: none;
+}
+
+.cellar-search-input {
+    width: 100%;
+    background: #1a1613;
+    border: 1px solid #2e2925;
+    border-radius: 30px;
+    padding: 12px 16px 12px 44px;
+    color: #e8e0d8;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.cellar-search-input::placeholder {
+    color: #5c5149;
+}
+
+.cellar-search-input:focus {
+    border-color: #c9aa7c;
+}
+
+/* ════════════════════════════════════════════════
+   WINE CARDS GRID
+════════════════════════════════════════════════ */
+.cellar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 18px;
+}
+
+.cellar-card {
+    background: #181410;
+    border: 1px solid #2a2420;
+    border-radius: 14px;
+    overflow: hidden;
+    transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    cursor: pointer;
+}
+
+.cellar-card:hover {
+    transform: translateY(-3px);
+    border-color: #4a3e36;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* Image section */
+.cellar-card-image-wrap {
+    position: relative;
+    height: 195px;
+    background: #110e0c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.cellar-card-img {
+    height: 100%;
+    width: 80%;
+    object-fit: contain;
+    object-position: center;
+    transition: transform 0.3s ease;
+}
+
+.cellar-card:hover .cellar-card-img {
+    transform: scale(1.04);
+}
+
+/* Colour badge */
+.cellar-badge {
+    position: absolute;
+    bottom: 12px;
+    left: 14px;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 11px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+    text-transform: capitalize;
+}
+
+.cellar-badge--red {
+    background: #761329;
+    color: #ffffff;
+}
+
+.cellar-badge--white {
+    background: #3a4c2f;
+    color: #c8e6b2;
+}
+
+.cellar-badge--rose {
+    background: #7c2640;
+    color: #ffd6e3;
+}
+
+.cellar-badge--sparkling {
+    background: #2a3d4f;
+    color: #b8d8e8;
+}
+
+/* 3-dot context menu */
+.cellar-card-menu-wrap {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.cellar-card-menu-btn {
+    background: none;
+    border: none;
+    color: #7a6e68;
+    font-size: 18px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+    cursor: pointer;
+}
+
+.cellar-card-menu-btn:hover {
+    color: #e8d4a0;
+}
+
+.cellar-dropdown {
+    position: absolute;
+    top: 28px;
+    right: 0;
+    background: #201c19;
+    border: 1px solid #3a3228;
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 20;
+    min-width: 152px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.cellar-dropdown button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 14px;
+    background: none;
+    border: none;
+    color: #c0b4aa;
+    font-size: 12px;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.cellar-dropdown button:hover {
+    background: #2e2925;
+    color: #e8d4a0;
+}
+
+.cellar-dropdown button.danger:hover {
+    background: #2e1215;
+    color: #f08090;
+}
+
+/* Card info section */
+.cellar-card-info {
+    padding: 14px 14px 16px;
+    border-top: 1px solid #201c19;
+}
+
+.cellar-card-name {
+    font-family: Georgia, serif;
+    font-size: 17px;
+    font-weight: 400;
+    color: #e8e0d8;
+    margin: 0 0 2px;
+    line-height: 1.2;
+}
+
+.cellar-card-subname {
+    font-size: 11.5px;
+    color: #7a6e68;
+    margin: 0 0 9px;
+}
+
+.cellar-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    color: #9a8e88;
+    margin-bottom: 10px;
+}
+
+.cellar-card-meta-region {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.cellar-card-divider {
+    color: #3a3228;
+}
+
+.cellar-card-vintage {
+    color: #9a8e88;
+}
+
+.cellar-card-rule {
+    display: block;
+    width: 28px;
+    height: 1px;
+    background: #c9aa7c;
+    margin-bottom: 10px;
+    opacity: 0.6;
+}
+
+.cellar-card-added {
+    font-size: 11px;
+    color: #5c5149;
+    margin: 0;
+}
+
+/* Empty state */
+.cellar-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: #5c5149;
+}
+
+.cellar-empty svg {
+    font-size: 48px;
+    color: #c9aa7c;
+    opacity: 0.4;
+    margin-bottom: 14px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cellar-empty p {
+    font-size: 14px;
+    margin-bottom: 16px;
+    color: #7a6e68;
+}
+
+.cellar-empty button {
+    background: none;
+    border: 1px solid #3a3228;
+    color: #c9aa7c;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.cellar-empty button:hover {
+    background: #3a3228;
+    color: #e8d4a0;
+}
+
+/* ════════════════════════════════════════════════
+   SIDEBAR
+════════════════════════════════════════════════ */
+.cellar-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.cellar-sidebar-heading {
+    font-family: Georgia, serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #c9aa7c;
+    margin: 0 0 18px;
+    letter-spacing: -0.2px;
+}
+
+/* Summary card */
+.cellar-summary-card {
+    background: #181410;
+    border: 1px solid #2a2420;
+    border-radius: 14px;
+    padding: 22px 20px;
+}
+
+.cellar-summary-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.cellar-stat {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.cellar-stat-icon {
+    font-size: 22px;
+    color: #c9aa7c;
+    flex-shrink: 0;
+    opacity: 0.8;
+}
+
+.cellar-stat-icon.red {
+    color: #c05070;
+}
+
+.cellar-stat-icon.white {
+    color: #a8c888;
+}
+
+.cellar-stat-icon.rose {
+    color: #d890a0;
+}
+
+.cellar-stat div {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.cellar-stat strong {
+    font-size: 22px;
+    font-weight: 700;
+    color: #e8e0d8;
+    line-height: 1;
+}
+
+.cellar-stat span {
+    font-size: 11px;
+    color: #7a6e68;
+    letter-spacing: 0.2px;
+}
+
+/* Divider between summary sections */
+.cellar-sidebar-divider {
+    border: none;
+    border-top: 1px solid #2a2420;
+    margin: 4px 0;
+}
+
+/* Next pour */
+.cellar-next-pour {
+    background: #181410;
+    border: 1px solid #2a2420;
+    border-radius: 14px;
+    padding: 22px 20px;
+}
+
+.cellar-next-pour-card {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.cellar-next-pour-img {
+    width: 64px;
+    height: 82px;
+    object-fit: contain;
+    background: #110e0c;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.cellar-next-pour-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.cellar-next-pour-info strong {
+    font-size: 14px;
+    color: #e8e0d8;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.cellar-next-pour-info span {
+    font-size: 11.5px;
+    color: #7a6e68;
+}
+
+.cellar-next-pour-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 16px;
+    background: #2e2925;
+    border: 1px solid #3a3228;
+    border-radius: 8px;
+    color: #e8d4a0;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.cellar-next-pour-btn:hover {
+    background: #3a3228;
+    border-color: #c9aa7c;
+}
+
+/* Quote card */
+.cellar-quote-card {
+    background: #181410;
+    border: 1px solid #2a2420;
+    border-radius: 14px;
+    padding: 22px 20px;
+    text-align: center;
+}
+
+.cellar-quote {
+    font-family: Georgia, serif;
+    font-size: 14px;
+    font-style: italic;
+    color: #a89070;
+    line-height: 1.65;
+    margin: 0 0 16px;
+}
+
+.cellar-quote-rule {
+    display: block;
+    width: 36px;
+    height: 2px;
+    background: #c9aa7c;
+    margin: 0 auto 16px;
+    opacity: 0.5;
+}
+
+.cellar-estate-icon {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    color: #c9aa7c;
+    opacity: 0.25;
+    font-size: 20px;
+}
+
+/* ════════════════════════════════════════════════
+   MOBILE STICKY SUMMARY BAR
+════════════════════════════════════════════════ */
+.cellar-mobile-summary {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #181410;
+    border-top: 1px solid #2a2420;
+    padding: 12px 20px;
+    z-index: 50;
+}
+
+.cellar-mobile-summary-inner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.cellar-mobile-summary-icon {
+    color: #c9aa7c;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.cellar-mobile-summary-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #c9aa7c;
+    white-space: nowrap;
+}
+
+.cellar-mobile-stats {
+    display: flex;
+    gap: 16px;
+    margin-left: auto;
+}
+
+.cellar-mobile-stats span {
+    font-size: 11px;
+    color: #9a8e88;
+    display: flex;
+    gap: 4px;
+}
+
+.cellar-mobile-stats strong {
+    color: #e8e0d8;
+    font-weight: 700;
+}
+
+/* ════════════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════════════ */
+@media (max-width: 860px) {
+    .cellar-body {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .cellar-sidebar {
+        order: -1;
+        /* sidebar hidden on mobile — show summary bar instead */
+        display: none;
+    }
+
+    .cellar-mobile-summary {
+        display: block;
+    }
+
+    .cellar-page {
+        padding-bottom: 80px;
+    }
+}
+
+@media (max-width: 600px) {
+    .cellar-hero {
+        height: clamp(260px, 55vw, 320px);
+    }
+
+    .cellar-hero-content {
+        padding: 22px 18px 28px;
+    }
+
+    .cellar-body {
+        padding: 18px 14px 0;
+    }
+
+    .cellar-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .cellar-filter-row {
+        gap: 8px;
+    }
+
+    .cellar-filter-btn {
+        padding: 7px 14px;
+        font-size: 12px;
+    }
+
+    .cellar-card-image-wrap {
+        height: 160px;
+    }
+
+    .cellar-card-name {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 380px) {
+    .cellar-grid {
+        grid-template-columns: 1fr;
+    }
+}

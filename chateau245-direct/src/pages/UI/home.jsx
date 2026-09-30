@@ -4,7 +4,7 @@ import {
   FiMapPin,
   FiUser,
 } from "react-icons/fi";
-import { Brand } from "./shared";
+import Brand from '../../components/Navigation';
 import { RiWhatsappFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { RiEBike2Fill } from "react-icons/ri";

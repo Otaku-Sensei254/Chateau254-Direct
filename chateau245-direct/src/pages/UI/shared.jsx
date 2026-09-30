@@ -1,18 +1,9 @@
 import React from 'react';
 import {FiShoppingBag } from 'react-icons/fi';
-import Logo from "../../components/images/chateauLogo2.png"
-import { Link } from 'react-router-dom';
+// import Logo from "../../components/images/chateauLogo2.png"
+// import { Link } from 'react-router-dom';
 import InstallButton from '../../components/InstallButton';
-export const Brand = () => {
-  return (
-    <div className="brand">
-      <Link to="/">
-      <img src= {Logo} alt="chateau-logo" className="brand-logo"/>
-      
-      </Link>
-    </div>
-  );
-};
+import Brand from '../../components/Navigation';
 
 export const Summary = ({ subtotal, delivery }) => {
   return (

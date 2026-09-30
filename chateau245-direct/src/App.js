@@ -1,13 +1,9 @@
 import './App.css';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
-import fullMenu from './components/data/chateau254_full_menu.json';
-import wines from './components/data/luxury_wine_list.json';
-import takeoutMenuData from './components/data/takeout_menu.json';
-import takeoutWinesData from './components/data/takeout_wine_list.json';
-import takeawayComboData from './components/data/chateau_takeaway_menu.json';
-import eventMenuData from './components/data/event_menu.json';
-import eventWinesData from './components/data/event_wine_list.json';
+import italianWinesData from './components/data/italian_wines_producer_grouped.json';
+import southAfricanWinesData from './components/data/chateau_south_african_wines.json';
+import frenchWinesData from './components/data/chateau_french_wines.json';
 import { SocketProvider } from './contexts/SocketContext';
 import { useToast } from './contexts/ToastContext';
 import Home from './pages/UI/home';
@@ -26,109 +22,40 @@ import RiderDashboard from './pages/rider/rider_dash';
 import Booking from './pages/UI/booking';
 import FullMenu from './pages/UI/full_menu';
 import WinesPage from './pages/UI/wines';
+import Cellar from './pages/UI/cellar';
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-const normalizedWines = wines.map((wine, index) => ({
-  id: `luxury-wine-${index}`,
-  name: wine.name,
-  description: wine.notes || `${wine.type} from ${wine.region}`,
-  price: 6500 + index * 750,
-  category: 'Wine',
-  image: wine.image,
-  type: wine.type,
-  region: wine.region,
-  grape: wine.grape,
-  notes: wine.notes,
-  classification: wine.classification || null,
-}));
-
-const normalizeGroupedMenu = (groups, prefix) =>
-  (groups || []).flatMap(({ category, items }) =>
-    (items || []).map((item, i) => ({
-      id: `${prefix}-${category.replace(/\W+/g, '-').toLowerCase()}-${i}`,
-      name: item.name,
-      description: item.description,
-      price: Math.round(((item.price_range_kes?.min || 0) + (item.price_range_kes?.max || 0)) / 2),
-      priceRange: item.price_range_kes,
-      category,
-      image: item.image || '',
-      unit: item.unit || null,
-    }))
-  );
-
-const normalizeWineList = (wineArr, prefix) =>
-  (wineArr || []).map((wine, index) => ({
-    id: `${prefix}-wine-${index}`,
-    name: wine.name,
-    description: wine.notes || `${wine.type} from ${wine.region}`,
-    price: Math.round(((wine.price_range_kes?.min || 0) + (wine.price_range_kes?.max || 0)) / 2),
-    priceRange: wine.price_range_kes,
-    category: 'Wine',
-    image: wine.image || '',
-    type: wine.type,
-    region: wine.region,
-    grape: wine.grape,
-    notes: wine.notes,
-    classification: wine.classification || null,
-    eventFit: wine.event_fit || null,
-  }));
-
-const normalizeTakeawayCombos = (data, prefix) => {
-  const combos = data?.takeaway_combo_menu?.categories || [];
-  return combos.flatMap(({ category, items }) =>
-    (items || []).map((item, i) => ({
-      id: `${prefix}-${category.replace(/\W+/g, '-').toLowerCase()}-${i}`,
-      name: item.name,
-      description: item.description,
-      price: item.pricing?.paired_price_with_wine_kes || Math.round(((item.pricing?.meal_only_kes || 0) + (item.pricing?.wine_only_kes || 0)) / 2),
-      priceRange: item.pricing ? { min: item.pricing.meal_only_kes, max: item.pricing.paired_price_with_wine_kes } : null,
-      category,
-      image: item.image || '',
-      unit: null,
-      winePairing: item.wine_pairing,
-      pricing: item.pricing,
-      components: item.components,
-      youSave: item.pricing?.you_save_kes,
-      youSavePercent: item.pricing?.you_save_percent,
+const flattenRegionalWines = (data, prefix) => {
+  return (data.producers || []).flatMap((producer, pIdx) =>
+    (producer.wines || []).map((wine, wIdx) => ({
+      id: `${prefix}-wine-${pIdx}-${wIdx}`,
+      name: wine.name,
+      description: wine.backstory || `${wine.color} from ${data.region}`,
+      price: Math.round(((wine.price_range_kes?.min || 0) + (wine.price_range_kes?.max || 0)) / 2),
+      priceRange: wine.price_range_kes,
+      category: 'Wine',
+      image: wine.image || '',
+      type: wine.color,
+      region: data.region,
+      grape: wine.grape,
+      notes: wine.backstory,
+      classification: wine.category_filter || null,
+      on_offer: Boolean(wine.on_offer || wine.on_Offer || wine.classification?.on_offer || wine.classification?.on_Offer),
+      offer: wine.offer || wine.classification?.offer || null,
+      producer: producer.producer,
+      producerRegion: producer.producer_region,
+      confidence: wine.confidence,
+      source_note: wine.source_note,
+      rating: wine.rating || null,
     }))
   );
 };
 
-const normalizeFullMenu = (data) => {
-  const categories = data?.categories || [];
-  return categories.flatMap(({ category, items }) =>
-    (items || []).map((item, i) => ({
-      id: `full-${category.replace(/\W+/g, '-').toLowerCase()}-${i}`,
-      name: item.name,
-      description: item.description || '',
-      price: item.price || 0,
-      category,
-      image: item.image || '',
-      tag: item.tag || null,
-      portion: item.portion || null,
-      serves: item.serves || null,
-      quantity: item.quantity || null,
-      vegetarian: item.vegetarian || false,
-      note: item.note || null,
-      pricing_options: item.pricing_options || null,
-      sides: item.sides || null,
-      sides_note: item.sides_note || null,
-    }))
-  );
-};
-
-const CATALOGS = {
-  dining: [...normalizeFullMenu(fullMenu), ...normalizedWines],
-  takeout: [
-    ...normalizeGroupedMenu(takeoutMenuData.takeout_menu, 'takeout'),
-    ...normalizeWineList(takeoutWinesData.takeout_orderout_wine_list, 'takeout'),
-    ...normalizeTakeawayCombos(takeawayComboData, 'takeout'),
-  ],
-  events: [
-    ...normalizeGroupedMenu(eventMenuData.event_menu, 'events'),
-    ...normalizeWineList(eventWinesData.event_wine_list, 'events'),
-  ],
-};
+const allRegionalWines = [
+  ...flattenRegionalWines(italianWinesData, 'italian'),
+  ...flattenRegionalWines(southAfricanWinesData, 'south-african'),
+  ...flattenRegionalWines(frenchWinesData, 'french'),
+];
 
 const loadCart = () => {
   try { return JSON.parse(localStorage.getItem('chateau254_cart')) || []; }
@@ -166,10 +93,10 @@ const ProfileRoute = ({ user, children }) => {
   return children;
 };
 
-const ItemRoute = ({ addToCart, onWineFactSelect, onWinePairingSelect }) => {
+const ItemRoute = ({ addToCart, onWineFactSelect, onWinePairingSelect, catalogs }) => {
   const { itemId } = useParams();
   const navigate = useNavigate();
-  const item = Object.values(CATALOGS).flat().find((catalogItem) => catalogItem.id === itemId);
+  const item = Object.values(catalogs || {}).flat().find((catalogItem) => catalogItem.id === itemId);
   return <ViewItem item={item} addToCart={addToCart} onBack={() => navigate('/menu')} onCart={() => navigate('/cart')} onWineFactSelect={onWineFactSelect} onWinePairingSelect={onWinePairingSelect} />;
 };
 
@@ -181,7 +108,7 @@ const App = () => {
       if (m === 'dinein' || m === 'dining') return 'dining';
       if (m === 'takeout') return 'takeout';
       if (m === 'events') return 'events';
-    } catch {}
+    } catch { }
     return 'dining';
   });
   const [filter, setFilter] = useState('All');
@@ -194,12 +121,32 @@ const App = () => {
   const [lastOrderId, setLastOrderId] = useState(loadLastOrder);
   const [session, setSession] = useState(storedSession);
   const [dineInSelections, setDineInSelections] = useState([]);
+  const [menuItems, setMenuItems] = useState([]);
+  const [menuLoading, setMenuLoading] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
   const { addToast } = useToast();
   const isProgrammaticNav = useRef(false);
 
-  const activeCatalog = CATALOGS[mode] || CATALOGS.dining;
+  useEffect(() => {
+    fetch(`${API_URL}/menu?all=true`)
+      .then((res) => res.ok ? res.json() : Promise.reject())
+      .then((data) => { setMenuItems(data.items || []); setMenuLoading(false); })
+      .catch(() => { setMenuLoading(false); });
+  }, []);
+
+  const dineInItems = useMemo(() => menuItems.filter((i) => i.menuType === 'dine_in'), [menuItems]);
+  const takeoutItems = useMemo(() => menuItems.filter((i) => i.menuType === 'takeout'), [menuItems]);
+  const eventItems = useMemo(() => takeoutItems.filter((i) => ['Appetizers', 'Mains', 'Desserts', 'Beverages', 'Salads', 'Platters', 'Combos'].includes(i.subcategory)), [takeoutItems]);
+  const dbWines = useMemo(() => menuItems.filter((i) => i.menuType === 'wine'), [menuItems]);
+
+  const catalogs = useMemo(() => ({
+    dining: [...dineInItems, ...allRegionalWines],
+    takeout: [...takeoutItems, ...allRegionalWines],
+    events: [...eventItems, ...allRegionalWines],
+  }), [dineInItems, takeoutItems, eventItems]);
+
+  const activeCatalog = catalogs[mode] || catalogs.dining;
   const activeCategories = useMemo(() => {
     const cats = [...new Set(activeCatalog.map((i) => i.category))];
     return ['All', ...cats];
@@ -291,7 +238,7 @@ const App = () => {
     const modeParam = params.get('mode');
     if (modeParam) {
       const normalized = (modeParam === 'dinein' || modeParam === 'dining') ? 'dining' : modeParam;
-      if (normalized !== mode && CATALOGS[normalized]) {
+        if (normalized !== mode && catalogs[normalized]) {
         setMode(normalized);
         setFilter('All');
         setQuery('');
@@ -358,11 +305,11 @@ const App = () => {
     fetch(`${API_URL}/orders/${lastOrderId}`, { headers: { Authorization: `Bearer ${session.token}` } })
       .then((res) => res.ok ? res.json() : null)
       .then((data) => { if (data?.order) setOrder({ id: data.order.id, number: data.order.id.slice(0, 8), total: Number(data.order.total_amount) }); })
-      .catch(() => {});
+      .catch(() => { });
   }, [lastOrderId, order?.id, session?.token]);
 
   return <SocketProvider token={session?.token}>
-      <div className="app-shell">
+    <div className="app-shell">
       {location.pathname !== '/' && location.pathname !== '/auth' && !location.pathname.startsWith('/admin') && !location.pathname.startsWith('/rider') && <AppHeader cartCount={cartCount} userName={session?.user?.full_name} onBack={handleBack} onCart={() => navigate('/cart')} onHome={() => navigate('/menu')} onProfile={() => navigate('/profile')} />}
       <Routes>
         <Route path="/" element={<GuestRoute user={session?.user}><Home onTakeout={() => { switchMode('takeout'); navigate('/menu'); }} onDining={() => { switchMode('dining'); navigate('/menu'); }} onEvents={() => navigate('/events')} onAuth={() => navigate('/auth')} /></GuestRoute>} />
@@ -386,13 +333,15 @@ const App = () => {
           setWineClassFilter(null);
           setWinePairingFilter(pairingName);
           navigate('/menu');
-        }} />} />
-        <Route path="/cart" element={<Cart cart={cart} user={session?.user} subtotal={subtotal} delivery={delivery} changeQuantity={changeQuantity} onCheckout={() => navigate('/checkout')} onMenu={() => navigate('/menu')} onBack={handleBack}/>} />
+        }} catalogs={catalogs} />} />
+        <Route path="/cart" element={<Cart cart={cart} user={session?.user} subtotal={subtotal} delivery={delivery} changeQuantity={changeQuantity} onCheckout={() => navigate('/checkout')} onMenu={() => navigate('/menu')} onBack={handleBack} />} />
         <Route path="/checkout" element={<Checkout subtotal={subtotal} delivery={delivery} placeOrder={placeOrder} />} />
+        <Route path="/my-cellar" element={<Cellar user={session?.user} onMenu={() => navigate('/menu')} onBack={handleBack} />} />
+
         <Route path="/confirmation" element={<Confirmation order={order} onTrack={() => navigate('/track')} onMenu={() => navigate('/menu')} />} />
         <Route path="/track" element={<Tracking order={order} token={session?.token} api={API_URL} onMenu={() => navigate('/menu')} />} />
         <Route path="/tracking" element={<Navigate to="/track" replace />} />
-        <Route path="/profile" element={<ProfileRoute user={session?.user}><Profile user={session?.user} token={session?.token} onBack={handleBack} onLogout={handleLogout} onTrack={(o) => { setOrder({ id: o.id, number: o.id.slice(0, 8), total: Number(o.total_amount) }); navigate('/track'); }} onBooking={() => navigate('/booking')} /></ProfileRoute>} />
+        <Route path="/profile" element={<ProfileRoute user={session?.user}><Profile user={session?.user} token={session?.token} onBack={handleBack} onLogout={handleLogout} onTrack={(o) => { setOrder({ id: o.id, number: o.id.slice(0, 8), total: Number(o.total_amount) }); navigate('/track'); }} onBooking={() => navigate('/booking')} onCellar={() => navigate('/my-cellar')} /></ProfileRoute>} />
         <Route path="/wines" element={<WinesPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

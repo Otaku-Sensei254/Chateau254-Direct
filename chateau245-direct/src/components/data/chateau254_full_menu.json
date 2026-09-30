@@ -165,21 +165,24 @@
           "portion": "250g",
           "price": 3300,
           "description": "Juicy chicken supreme stuffed with sweet apple and bold blue cheese, a striking balance of rich and refreshing flavours.",
-          "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=80"
+          "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=80",
+          "on_offer": true,
+          "offer": "10% off"
         },
         {
           "name": "28-Day Aged T-Bone Steak",
           "portion": "300g",
           "price": 3200,
           "description": "Dry-aged for 28 days to concentrate flavour and tenderness, char-grilled to your liking for a robust, satisfying steak experience.",
-          "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80"
+          "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80",
+          "on_offer": true
         },
         {
           "name": "28-Day Aged Sirloin Steak",
           "portion": "300g",
           "price": 3400,
           "description": "A well-marbled sirloin, dry-aged for 28 days and fired to perfection for deep, savoury flavour in every cut.",
-          "image": "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=900&q=80"
+          "image": "https://karoobraai.com/wp-content/uploads/2024/05/Sirloin-Steak-1.jpg"
         },
         {
           "name": "28-Day Aged Ribeye Steak",
@@ -200,7 +203,7 @@
           "price": 6500,
           "tag": "Special Edition",
           "description": "Our showstopper cut — a majestic 28-day aged tomahawk, fire-grilled to order for the ultimate carnivore's centrepiece.",
-          "image": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=900&q=80"
+          "image": "https://eversfieldorganic.co.uk/cdn/shop/files/eversfield-organic-beef-organic-28-day-aged-tomahawk-steak-1246008832.png?v=1782393373&width=1600"
         }
       ],
       "sides": [
@@ -269,7 +272,8 @@
           "name": "Stuffed Chicken Alla Mediterranea",
           "price": 2300,
           "description": "Stuffed with a medley of green olives, gooey mozzarella, tangy sundried tomatoes, aromatic rosemary and thyme, garnished with white wine sauce.",
-          "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=80"
+          "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=80",
+          "on_offer": true
         },
         {
           "name": "Milk-Fed Molo Lamb Cutlets",
@@ -303,7 +307,8 @@
           "name": "Grilled Snapper with Creamy Lemon Sauce",
           "price": 2600,
           "description": "Line-caught snapper charred over high heat to a crisp golden skin, served with a silky lemon sauce and seasonal baby vegetables.",
-          "image": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=900&q=80"
+          "image": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=900&q=80",
+          "on_offer": true
         },
         {
           "name": "Garlic Butter Ribeye",
@@ -347,30 +352,7 @@
         "Grilled garden vegetables"
       ]
     },
-    {
-      "category": "Local Favorites",
-      "slug": "local-favorites",
-      "items": [
-        {
-          "name": "Aromatic Whole Lake Tilapia, Garlic & Ginger",
-          "price": 1200,
-          "description": "Fresh whole tilapia marinated with aromatic herbs, soy, lemon and a blend of spices. Grilled to perfection and served with a side.",
-          "image": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=900&q=80"
-        }
-      ],
-      "sides": [
-        "Steamed rice",
-        "Hand cut chips",
-        "Garlic potatoes",
-        "Mashed potatoes",
-        "Sauteed potato wedges",
-        "Roasted potatoes",
-        "Butternut chapati",
-        "Brown ugali",
-        "White ugali",
-        "Grilled garden vegetables"
-      ]
-    },
+
     {
       "category": "Chateau Lunchbox",
       "slug": "chateau-lunchbox",
@@ -487,18 +469,22 @@
       "slug": "platters-and-boards",
       "items": [
         {
-          "name": "Mezzo Board",
+          "name": "Mezze Board",
           "serves": "4 Pax",
           "price": 4500,
           "description": "An array of crisp greens, roasted and stuffed vegetables, citrusy and herby salads, delicate dressings and edible blooms. Served with bread or roasted potatoes.",
-          "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80"
+          "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80",
+          "offer":"10% off",
+          "on_offer": true
         },
         {
           "name": "Nairobi Style Board",
           "serves": "4 Pax",
           "price": 4500,
           "description": "Includes Oriental BBQ chicken wings, lamb sausages, beef skewers, Maryland chicken drumsticks and cheese balls, served with vegetables and Kenyan salsa, fried onions and chillies.",
-          "image": "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=900&q=80"
+          "image": "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=900&q=80",
+          "offer":"10% off",
+          "on_offer": true
         },
         {
           "name": "Artisanal Cheese Board",

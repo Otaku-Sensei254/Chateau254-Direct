@@ -1,6 +1,19 @@
 import { useState } from 'react';
 import { FiArrowLeft, FiPlus, FiShoppingBag, FiTag, FiCheckCircle, FiClipboard, FiRadio, FiExternalLink } from 'react-icons/fi';
 import { PiWineFill } from "react-icons/pi";
+import { ViewItemSkeleton } from '../../components/ui/loaders-skeleton';
+
+const parseOfferPercent = (offerText = "") => {
+  const match = String(offerText).match(/(\d+(?:\.\d+)?)\s*%/);
+  return match ? parseFloat(match[1]) : null;
+};
+
+const calculateOfferPrice = (price, offerText = "") => {
+  const percent = parseOfferPercent(offerText);
+  if (!percent) return null;
+  const discounted = price * (1 - percent / 100);
+  return Math.round(discounted);
+};
 const DetailFacts = ({ item, onWineFactSelect }) => {
   if (item.category !== 'Wine') return null;
 
@@ -115,11 +128,25 @@ const PricingOptions = ({ pricing, price, selectedOption, onSelectOption }) => {
   );
 };
 
-const ViewItem = ({ item, addToCart, onBack, onCart, onWineFactSelect, onWinePairingSelect }) => {
+const ViewItem = ({ item, addToCart, onBack, onCart, onWineFactSelect, onWinePairingSelect, loading = false }) => {
   const [selectedPricing, setSelectedPricing] = useState('paired');
   const [selectedPrice, setSelectedPrice] = useState(item?.price || 0);
 
+  if (loading) {
+    return (
+      <main className="content-page view-item-page">
+        <ViewItemSkeleton />
+      </main>
+    );
+  }
+
   if (!item) return <main className="content-page empty-state"><p>We could not find that item.</p><button className="primary-button" onClick={onBack}>Back to menu</button></main>;
+
+  const isOnOffer = Boolean(
+    item.on_offer || item.on_Offer || item.classification?.on_offer || item.classification?.on_Offer
+  );
+  const offerText = item.offer || item.classification?.offer || "Special Offer";
+  const offerPrice = isOnOffer ? calculateOfferPrice(item.price, offerText) : null;
 
   const handlePricingSelect = (key, price) => {
     setSelectedPricing(key);
@@ -129,11 +156,32 @@ const ViewItem = ({ item, addToCart, onBack, onCart, onWineFactSelect, onWinePai
   return <main className="content-page item-detail-page">
     <button className="detail-back" onClick={onBack}><FiArrowLeft /> Back to menu</button>
     <div className="item-detail">
-      <div className="detail-image" style={{ backgroundImage: `url(${item.image})` }}><span className="category-tag">{item.category}</span></div>
+      <div className="detail-image" style={{ backgroundImage: `url(${item.image})` }}>
+        <span className="category-tag">{item.category}</span>
+        {Boolean(item.on_offer || item.on_Offer || item.classification?.on_offer || item.classification?.on_Offer) && (
+          <span className="menu-card-offer-badge">
+            <FiTag /> {item.offer || item.classification?.offer || "On Offer"}
+          </span>
+        )}
+      </div>
       <div className="detail-copy">
         <p className="eyebrow">Château254 selection</p>
         <h1>{item.name}</h1>
-        <strong className="detail-price">KES {selectedPrice.toLocaleString()}</strong>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '8px' }}>
+          {offerPrice ? (
+            <>
+              <strong className="detail-price">KES {offerPrice.toLocaleString()}</strong>
+              <span className="menu-card-original-price">KES {item.price.toLocaleString()}</span>
+            </>
+          ) : (
+            <strong className="detail-price">KES {item.price.toLocaleString()}</strong>
+          )}
+          {isOnOffer && (
+            <span className="menu-card-offer-pill">
+              {offerText}
+            </span>
+          )}
+        </div>
         <p className="detail-description">{item.description}</p>
         {item.notes && <div className="tasting-notes"><span>Tasting notes</span><p>{item.notes}</p></div>}
 

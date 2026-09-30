@@ -1,5 +1,22 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
+DROP TABLE IF EXISTS order_items CASCADE;
+DROP TABLE IF EXISTS bookings CASCADE;
+DROP TABLE IF EXISTS tables CASCADE;
+DROP TABLE IF EXISTS rider_locations CASCADE;
+DROP TABLE IF EXISTS customer_locations CASCADE;
+DROP TABLE IF EXISTS takeout_menu CASCADE;
+DROP TABLE IF EXISTS dine_in_menu CASCADE;
+DROP TABLE IF EXISTS wines CASCADE;
+DROP TABLE IF EXISTS riders CASCADE;
+DROP TABLE IF EXISTS orders CASCADE;
+DROP TABLE IF EXISTS role_permissions CASCADE;
+DROP TABLE IF EXISTS permissions CASCADE;
+DROP TABLE IF EXISTS user_roles CASCADE;
+DROP TABLE IF EXISTS roles CASCADE;
+DROP TABLE IF EXISTS chateau_users CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+
 DO $$
 BEGIN
   IF to_regclass('public.users') IS NOT NULL AND to_regclass('public.chateau_users') IS NULL THEN
@@ -8,8 +25,10 @@ BEGIN
 END $$;
 
 CREATE TABLE IF NOT EXISTS chateau_users (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(), full_name VARCHAR(120) NOT NULL,
-  email VARCHAR(255) UNIQUE NOT NULL, password_hash TEXT,
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  full_name VARCHAR(120) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password_hash TEXT,
   loyalty_points INTEGER NOT NULL DEFAULT 0 CHECK (loyalty_points >= 0),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -32,12 +51,16 @@ CREATE TABLE IF NOT EXISTS users (
 ALTER TABLE users ADD COLUMN IF NOT EXISTS phone VARCHAR(30);
 
 CREATE TABLE IF NOT EXISTS roles (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(), name VARCHAR(40) UNIQUE NOT NULL,
-  description TEXT NOT NULL DEFAULT '', created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(40) UNIQUE NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 CREATE TABLE IF NOT EXISTS permissions (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(), name VARCHAR(80) UNIQUE NOT NULL,
-  description TEXT NOT NULL DEFAULT '', created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(80) UNIQUE NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 CREATE TABLE IF NOT EXISTS role_permissions (
   role_id UUID NOT NULL REFERENCES roles(id) ON DELETE CASCADE,
@@ -50,16 +73,77 @@ CREATE TABLE IF NOT EXISTS user_roles (
   PRIMARY KEY (user_id, role_id)
 );
 
-CREATE TABLE IF NOT EXISTS menu_items (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(), name VARCHAR(160) NOT NULL UNIQUE,
-  description TEXT NOT NULL DEFAULT '', price NUMERIC(12, 2) NOT NULL CHECK (price >= 0),
-  category VARCHAR(40) NOT NULL, image_url TEXT, is_available BOOLEAN NOT NULL DEFAULT TRUE,
-  wine_type VARCHAR(80), region VARCHAR(160), grape VARCHAR(160), tasting_notes TEXT,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+CREATE TABLE IF NOT EXISTS wines (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(160) NOT NULL UNIQUE,
+  description TEXT NOT NULL DEFAULT '',
+  price NUMERIC(12, 2) NOT NULL CHECK (price >= 0),
+  category VARCHAR(40) NOT NULL DEFAULT 'Wine',
+  subcategory VARCHAR(80),
+  image_url TEXT,
+  is_available BOOLEAN NOT NULL DEFAULT TRUE,
+  on_offer BOOLEAN NOT NULL DEFAULT FALSE,
+  offer TEXT,
+  wine_type VARCHAR(80),
+  region VARCHAR(160),
+  grape VARCHAR(160),
+  tasting_notes TEXT,
+  order_index INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS wine_type VARCHAR(80);
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS region VARCHAR(160);
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS grape VARCHAR(160);
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS tasting_notes TEXT;
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS on_offer BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS offer TEXT;
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS subcategory VARCHAR(80);
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS order_index INTEGER NOT NULL DEFAULT 0;
+CREATE INDEX IF NOT EXISTS wines_category_idx ON wines(category);
+CREATE INDEX IF NOT EXISTS wines_order_idx ON wines(order_index);
+
+CREATE TABLE IF NOT EXISTS dine_in_menu (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(160) NOT NULL UNIQUE,
+  description TEXT NOT NULL DEFAULT '',
+  price NUMERIC(12, 2) NOT NULL CHECK (price >= 0),
+  category VARCHAR(40) NOT NULL DEFAULT 'Meals',
+  subcategory VARCHAR(80),
+  image_url TEXT,
+  is_available BOOLEAN NOT NULL DEFAULT TRUE,
+  on_offer BOOLEAN NOT NULL DEFAULT FALSE,
+  offer TEXT,
+  order_index INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS dine_in_menu_category_idx ON dine_in_menu(category);
+CREATE INDEX IF NOT EXISTS dine_in_menu_order_idx ON dine_in_menu(order_index);
+
+CREATE TABLE IF NOT EXISTS takeout_menu (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(160) NOT NULL UNIQUE,
+  description TEXT NOT NULL DEFAULT '',
+  price NUMERIC(12, 2) NOT NULL CHECK (price >= 0),
+  category VARCHAR(40) NOT NULL DEFAULT 'Meals',
+  subcategory VARCHAR(80),
+  image_url TEXT,
+  is_available BOOLEAN NOT NULL DEFAULT TRUE,
+  on_offer BOOLEAN NOT NULL DEFAULT FALSE,
+  offer TEXT,
+  order_index INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS takeout_menu_category_idx ON takeout_menu(category);
+CREATE INDEX IF NOT EXISTS takeout_menu_order_idx ON takeout_menu(order_index);
+
 CREATE TABLE IF NOT EXISTS riders (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(), user_id UUID UNIQUE REFERENCES chateau_users(id) ON DELETE CASCADE,
-  full_name VARCHAR(120) NOT NULL, phone VARCHAR(30) NOT NULL UNIQUE,
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID UNIQUE REFERENCES chateau_users(id) ON DELETE CASCADE,
+  full_name VARCHAR(120) NOT NULL,
+  phone VARCHAR(30) NOT NULL UNIQUE,
   status VARCHAR(20) NOT NULL DEFAULT 'offline' CHECK (status IN ('online', 'offline', 'on_break')),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -70,8 +154,10 @@ CREATE TABLE IF NOT EXISTS orders (
   user_id UUID NOT NULL REFERENCES users(id),
   rider_id UUID REFERENCES riders(id) ON DELETE SET NULL,
   status VARCHAR(30) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'preparing', 'out_for_delivery', 'completed', 'cancelled')),
-  delivery_address TEXT NOT NULL, total_amount NUMERIC(12, 2) NOT NULL CHECK (total_amount >= 0),
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  delivery_address TEXT NOT NULL,
+  total_amount NUMERIC(12, 2) NOT NULL CHECK (total_amount >= 0),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 DO $$ DECLARE
@@ -95,8 +181,10 @@ DO $$ BEGIN
 END $$;
 
 CREATE TABLE IF NOT EXISTS order_items (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(), order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
-  menu_item_id UUID NOT NULL REFERENCES menu_items(id), quantity INTEGER NOT NULL CHECK (quantity > 0),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+  menu_item_id UUID,
+  quantity INTEGER NOT NULL CHECK (quantity > 0),
   unit_price NUMERIC(12, 2) NOT NULL CHECK (unit_price >= 0)
 );
 
@@ -117,17 +205,6 @@ CREATE TABLE IF NOT EXISTS customer_locations (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 CREATE INDEX IF NOT EXISTS idx_customer_locations_user_id ON customer_locations(user_id);
-
-ALTER TABLE menu_items ADD COLUMN IF NOT EXISTS wine_type VARCHAR(80);
-ALTER TABLE menu_items ADD COLUMN IF NOT EXISTS region VARCHAR(160);
-ALTER TABLE menu_items ADD COLUMN IF NOT EXISTS grape VARCHAR(160);
-ALTER TABLE menu_items ADD COLUMN IF NOT EXISTS tasting_notes TEXT;
-
-DO $$ BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'menu_items_name_key') THEN
-    ALTER TABLE menu_items ADD CONSTRAINT menu_items_name_key UNIQUE (name);
-  END IF;
-END $$;
 
 CREATE TABLE IF NOT EXISTS tables (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -155,7 +232,6 @@ CREATE TABLE IF NOT EXISTS bookings (
 CREATE INDEX IF NOT EXISTS orders_status_idx ON orders(status);
 CREATE INDEX IF NOT EXISTS orders_user_id_idx ON orders(user_id);
 CREATE INDEX IF NOT EXISTS orders_rider_id_idx ON orders(rider_id);
-CREATE INDEX IF NOT EXISTS menu_items_category_idx ON menu_items(category);
 CREATE INDEX IF NOT EXISTS user_roles_role_id_idx ON user_roles(role_id);
 CREATE INDEX IF NOT EXISTS users_email_idx ON users(email);
 CREATE INDEX IF NOT EXISTS bookings_status_idx ON bookings(status);

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FiBookOpen, FiCalendar } from 'react-icons/fi';
 import fullMenuData from '../../components/data/chateau254_full_menu.json';
+import { MenuCardSkeleton, LoaderSkeleton } from '../../components/ui/loaders-skeleton';
 
 const normalizeFullMenu = (data) => {
   const categories = data?.categories || [];
@@ -25,9 +26,16 @@ const normalizeFullMenu = (data) => {
   );
 };
 
-const FullMenu = ({ onMakeOrder, onReserveTable }) => {
+const FullMenu = ({ onMakeOrder, onReserveTable, loading: propLoading }) => {
+  const [loading, setLoading] = useState(propLoading ?? false);
   const menuItems = normalizeFullMenu(fullMenuData);
   const categories = [...new Set(menuItems.map((item) => item.category))];
+
+  useEffect(() => {
+    if (propLoading !== undefined) {
+      setLoading(propLoading);
+    }
+  }, [propLoading]);
 
   return (
     <main className="content-page full-menu-page">
@@ -46,31 +54,44 @@ const FullMenu = ({ onMakeOrder, onReserveTable }) => {
         </div>
       </div>
 
-      {categories.map((category) => {
-        const categoryItems = menuItems.filter((item) => item.category === category);
-        return (
-          <section key={category} className="menu-category-section">
-            <h2>{category}</h2>
+      {loading ? (
+        <div>
+          <div style={{ marginBottom: '24px' }}>
+            <LoaderSkeleton width={180} height={24} borderRadius={4} style={{ marginBottom: '16px' }} />
             <div className="menu-grid">
-              {categoryItems.map((item) => (
-                <article className="menu-card" key={item.id}>
-                  <div className="food-image" style={{ backgroundImage: `url(${item.image})` }}>
-                    <span className="category-tag">{item.category}</span>
-                  </div>
-                  <div className="menu-card-body">
-                    <div>
-                      <h3>{item.name}</h3>
-                      <p>{item.description}</p>
-                      <strong>KES {item.price.toLocaleString()}</strong>
-                      {item.portion && <span className="portion">({item.portion})</span>}
-                    </div>
-                  </div>
-                </article>
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <MenuCardSkeleton key={i} />
               ))}
             </div>
-          </section>
-        );
-      })}
+          </div>
+        </div>
+      ) : (
+        categories.map((category) => {
+          const categoryItems = menuItems.filter((item) => item.category === category);
+          return (
+            <section key={category} className="menu-category-section">
+              <h2>{category}</h2>
+              <div className="menu-grid">
+                {categoryItems.map((item) => (
+                  <article className="menu-card" key={item.id}>
+                    <div className="food-image" style={{ backgroundImage: `url(${item.image})` }}>
+                      <span className="category-tag">{item.category}</span>
+                    </div>
+                    <div className="menu-card-body">
+                      <div>
+                        <h3>{item.name}</h3>
+                        <p>{item.description}</p>
+                        <strong>KES {item.price.toLocaleString()}</strong>
+                        {item.portion && <span className="portion">({item.portion})</span>}
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
+          );
+        })
+      )}
     </main>
   );
 };

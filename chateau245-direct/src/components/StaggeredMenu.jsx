@@ -411,17 +411,8 @@ export const StaggeredMenu = ({
       </div>
 
       <header className="staggered-menu-header" aria-label="Main navigation header">
-        <div
-          className="sm-logo"
-          aria-label="Logo"
-          onClick={onHome || (() => navigate('/menu'))}
-        >
-          <img
-            src={logoUrl || '/src/assets/logos/reactbits-gh-white.svg'}
-            alt="Chateau 254 Logo"
-            className="sm-logo-img"
-            draggable={false}
-          />
+        <div className="brand">
+          <span style={{ color: "black" }}>Chateau</span><span style={{ color: "gold" }}>254</span>
         </div>
 
         {/* Desktop inline navigation */}
@@ -512,8 +503,8 @@ export const StaggeredMenu = ({
       </header>
 
       <aside id="staggered-menu-panel" ref={panelRef} className="staggered-menu-panel" aria-hidden={!open}>
-        <div className="user-info-nav" style={{display: "flex", justifyContent: "space-between"}}>
-        <p> Hi, {firstName}</p>
+        <div className="user-info-nav" style={{ display: "flex", justifyContent: "space-between" }}>
+          <p> Hi, {firstName}</p>
         </div>
         <div className="sm-panel-inner">
           <ul className="sm-panel-list" data-numbering={displayItemNumbering || undefined}>

@@ -27,19 +27,47 @@ const testConnection = async (testPool) => {
 const initializePool = async () => {
   const neonUrl = env.databaseUrl;
   const localUrl = env.localDatabaseUrl;
+  const mode = (process.env.DB_MODE || '').toLowerCase();
+
+  if (mode === 'neon') {
+    if (!isNeonUrl(neonUrl)) throw new Error('DB_MODE=neon but DATABASE_URL is not a Neon URL');
+    console.log('[DB] DB_MODE=neon, connecting to Neon...');
+    pool = createPool(neonUrl, true);
+    currentDbUrl = neonUrl;
+    isUsingLocal = false;
+    const ok = await testConnection(pool);
+    if (!ok) {
+      await pool.end().catch(() => {});
+      throw new Error('Failed to connect to Neon');
+    }
+    console.log('[DB] Connected to Neon (cloud)');
+    return;
+  }
+
+  if (mode === 'local') {
+    console.log('[DB] DB_MODE=local, connecting to local PostgreSQL...');
+    pool = createPool(localUrl, false);
+    currentDbUrl = localUrl;
+    isUsingLocal = true;
+    const ok = await testConnection(pool);
+    if (!ok) {
+      await pool.end().catch(() => {});
+      throw new Error('Failed to connect to local PostgreSQL');
+    }
+    console.log('[DB] Connected to local PostgreSQL');
+    return;
+  }
 
   if (isNeonUrl(neonUrl)) {
     console.log('[DB] Attempting Neon connection...');
     pool = createPool(neonUrl, true);
     currentDbUrl = neonUrl;
     isUsingLocal = false;
-
     const ok = await testConnection(pool);
     if (ok) {
       console.log('[DB] Connected to Neon (cloud)');
       return;
     }
-
     console.warn('[DB] Neon unavailable, falling back to local PostgreSQL...');
     await pool.end().catch(() => {});
   }
@@ -48,7 +76,6 @@ const initializePool = async () => {
   pool = createPool(localUrl, false);
   currentDbUrl = localUrl;
   isUsingLocal = true;
-
   const ok = await testConnection(pool);
   if (!ok) {
     throw new Error('Failed to connect to both Neon and local PostgreSQL');
@@ -73,4 +100,11 @@ const getConnectionInfo = () => ({
   isLocal: isUsingLocal,
 });
 
-module.exports = { pool, query, checkDatabase, closeDatabase, initializePool, getConnectionInfo };
+module.exports = {
+  get pool() { return pool; },
+  query,
+  checkDatabase,
+  closeDatabase,
+  initializePool,
+  getConnectionInfo,
+};
