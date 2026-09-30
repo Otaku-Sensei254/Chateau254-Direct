@@ -122,7 +122,6 @@ const App = () => {
   const [session, setSession] = useState(storedSession);
   const [dineInSelections, setDineInSelections] = useState([]);
   const [menuItems, setMenuItems] = useState([]);
-  const [menuLoading, setMenuLoading] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
   const { addToast } = useToast();
@@ -131,14 +130,13 @@ const App = () => {
   useEffect(() => {
     fetch(`${API_URL}/menu?all=true`)
       .then((res) => res.ok ? res.json() : Promise.reject())
-      .then((data) => { setMenuItems(data.items || []); setMenuLoading(false); })
-      .catch(() => { setMenuLoading(false); });
+      .then((data) => { setMenuItems(data.items || []); })
+      .catch(() => { });
   }, []);
 
   const dineInItems = useMemo(() => menuItems.filter((i) => i.menuType === 'dine_in'), [menuItems]);
   const takeoutItems = useMemo(() => menuItems.filter((i) => i.menuType === 'takeout'), [menuItems]);
   const eventItems = useMemo(() => takeoutItems.filter((i) => ['Appetizers', 'Mains', 'Desserts', 'Beverages', 'Salads', 'Platters', 'Combos'].includes(i.subcategory)), [takeoutItems]);
-  const dbWines = useMemo(() => menuItems.filter((i) => i.menuType === 'wine'), [menuItems]);
 
   const catalogs = useMemo(() => ({
     dining: [...dineInItems, ...allRegionalWines],
@@ -148,12 +146,18 @@ const App = () => {
 
   const activeCatalog = catalogs[mode] || catalogs.dining;
   const activeCategories = useMemo(() => {
-    const cats = [...new Set(activeCatalog.map((i) => i.category))];
-    return ['All', ...cats];
+    const cats = new Set(activeCatalog.map((i) => i.category));
+    const subs = new Set(activeCatalog.map((i) => i.subcategory).filter(Boolean));
+    const combined = ['All', ...Array.from(cats), ...Array.from(subs)];
+    return combined;
   }, [activeCatalog]);
 
   const visibleItems = useMemo(() => {
-    const baseMatches = activeCatalog.filter((item) => (filter === 'All' || item.category === filter) && item.name.toLowerCase().includes(query.toLowerCase()));
+    const baseMatches = activeCatalog.filter((item) => {
+      const matchesCategory = filter === 'All' || item.category === filter || item.subcategory === filter;
+      const matchesQuery = item.name.toLowerCase().includes(query.toLowerCase());
+      return matchesCategory && matchesQuery;
+    });
     let results = wineFilter ? baseMatches.filter((item) => item.category === 'Wine' && item[wineFilter.field] === wineFilter.value) : baseMatches;
     if (wineClassFilter) {
       results = results.filter((item) => item.category === 'Wine' && item.classification?.[wineClassFilter.field] === wineClassFilter.value);
@@ -246,7 +250,7 @@ const App = () => {
         setWineClassFilter(null);
       }
     }
-  }, [location.search, mode]);
+  }, [location.search, mode, catalogs]);
 
   const switchMode = (newMode) => {
     const normalized = (newMode === 'dinein' || newMode === 'dining') ? 'dining' : newMode;

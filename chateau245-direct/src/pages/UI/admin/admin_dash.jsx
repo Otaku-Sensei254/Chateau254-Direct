@@ -507,6 +507,8 @@ const MenuEditor = ({ item, onSave, onClose }) => {
 
   const [selectedCategory, setSelectedCategory] = useState(item?.category || 'Meals');
   const [selectedSubcategory, setSelectedSubcategory] = useState(item?.subcategory || '');
+  const [onOffer, setOnOffer] = useState(Boolean(item?.on_offer));
+  const [offerText, setOfferText] = useState(item?.offer || '');
 
   const MEAL_SUBCATEGORIES = ['Appetizers', 'Soups', 'Salads', 'Mains', 'Pasta', 'Desserts', 'Beverages', 'Fast Food', 'Platters', 'Combos'];
   const WINE_SUBCATEGORIES = ['Red', 'White', 'Rosé', 'Sparkling', 'Orange', 'Dessert'];
@@ -523,7 +525,18 @@ const MenuEditor = ({ item, onSave, onClose }) => {
     const url = URL.createObjectURL(file);
     setPreview(url);
     setFileName(file.name);
-    setIsConverting(false);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result;
+      const hidden = document.getElementById('menu-image-input');
+      if (hidden) hidden.value = base64;
+      setIsConverting(false);
+    };
+    reader.onerror = () => {
+      setIsConverting(false);
+      alert('Failed to read image file');
+    };
+    reader.readAsDataURL(file);
   };
 
   const clearImage = () => {
@@ -547,10 +560,10 @@ const MenuEditor = ({ item, onSave, onClose }) => {
       <label>Grape<input name="grape" defaultValue={item?.grape || ''} placeholder="e.g. Cabernet Sauvignon, Chardonnay..." /></label>
       <label>Region<input name="region" defaultValue={item?.region || ''} placeholder="e.g. Tuscany, Stellenbosch, Bordeaux..." /></label></>}
       <label className="admin-toggle-label">
-        <input type="checkbox" name="on_offer" defaultChecked={Boolean(item?.on_offer)} />
+        <input type="checkbox" name="on_offer" checked={onOffer} onChange={(e) => setOnOffer(e.target.checked)} />
         On offer
       </label>
-      <label>Offer text<input name="offer" defaultValue={item?.offer || ''} placeholder="e.g. 10% off, Free delivery..." /></label>
+      <label>Offer text<input name="offer" value={offerText} onChange={(e) => setOfferText(e.target.value)} placeholder="e.g. 10% off, Free delivery..." /></label>
       <label>
         Image
         <input id="menu-image-input" name="image" type="hidden" defaultValue={item?.image || ''} />
@@ -560,7 +573,7 @@ const MenuEditor = ({ item, onSave, onClose }) => {
           </button>
           {preview && <button type="button" className="admin-upload-clear" onClick={clearImage} disabled={isConverting}>Remove</button>}
         </div>
-      <input ref={fileRef} name="image_file" type="file" accept="image/jpeg,image/png,image/webp" onChange={handleFileChange} disabled={isConverting} style={{ display: 'none' }} />
+        <input ref={fileRef} name="image_file" type="file" accept="image/jpeg,image/png,image/webp" onChange={handleFileChange} disabled={isConverting} style={{ display: 'none' }} />
         {preview && <img className="admin-modal-image-preview" src={preview} alt="Preview" onError={(e) => { e.target.style.display = 'none'; }} />}
       </label>
     </div>
