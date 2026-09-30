@@ -41,15 +41,17 @@ const upsertUser = async (client, account, role) => {
 const seedDineIn = async (client) => {
   const FOOD_SUBCATEGORY_MAP = {
     'Appetizers': 'Appetizers', 'Soups': 'Soups', 'Salads': 'Salads',
-    'Signature Mains': 'Mains', 'Farinaceous Delicacies': 'Pasta',
-    'Chateau Classics': 'Mains', 'Chateau Lunchbox': 'Mains',
-    'Light Fair': 'Mains', 'Platters & Boards': 'Platters',
+    'Signature Mains': 'Mains', 'Farinaceous Delicacies': 'Farinaceous Delicacies',
+    'Chateau Classics': 'Chateau Classics',
+    'Light Fair': 'Bar Bites & Sandwiches', 'Platters & Boards': 'Platters & Boards',
   };
   const categories = dineInMenu?.categories || [];
   let orderIdx = 0;
-  for (const category of categories) {
-    const subcategory = FOOD_SUBCATEGORY_MAP[category.category] || category.category;
-    for (const item of (category.items || [])) {
+  for (const entry of categories) {
+    const subCategory = entry['sub-category'] || entry.category || '';
+    if (subCategory === 'Chateau Lunchbox') continue;
+    const subcategory = FOOD_SUBCATEGORY_MAP[subCategory] || subCategory;
+    for (const item of (entry.items || [])) {
       await client.query(
         `INSERT INTO dine_in_menu (name, description, price, category, subcategory, image_url, on_offer, offer, order_index)
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
@@ -57,6 +59,51 @@ const seedDineIn = async (client) => {
         [item.name, item.description || '', item.price || 0, 'Meals', subcategory, item.image || null, Boolean(item.on_offer), item.offer || null, orderIdx++],
       );
     }
+  }
+
+  const newBarBitesItems = [
+    { name: 'CHAR -GRILLED CHICKEN ROYALE/SANDWICH', description: 'Chargrilled supreme of chicken, crowned with cheddar and delicate crispy onions, accompanied by butter-glazed wild mushrooms and confit cherry tomatoes. Served with golden matchstick pommes frites and a vibrant herbaceous sauce verte.', price: 0 },
+    { name: 'BUTTER - CHARRED TENDERLOIN BRIOCHE', description: 'Prime beef tenderloin, butter-charred, with crisp red onions and cherry tomatoes, finished with a silky feta cream drizzle. Matchsticks fries.', price: 0 },
+    { name: 'CURATED CHARCUTERIE BRIOCHE.', description: 'Curated Ham & Salami. Silken ham, artisanal salami, aged cheese and delicate greens, layered in golden artisan bread, served with crisp matchstick fries. Open Sandwich.', price: 0 },
+  ];
+  for (const item of newBarBitesItems) {
+    await client.query(
+      `INSERT INTO dine_in_menu (name, description, price, category, subcategory, image_url, on_offer, offer, order_index)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+       ON CONFLICT (name) DO UPDATE SET description = EXCLUDED.description, price = EXCLUDED.price, image_url = EXCLUDED.image_url, on_offer = EXCLUDED.on_offer, offer = EXCLUDED.offer, subcategory = EXCLUDED.subcategory, order_index = EXCLUDED.order_index, updated_at = NOW()`,
+      [item.name, item.description || '', item.price || 0, 'Meals', 'Bar Bites & Sandwiches', null, false, null, orderIdx++],
+    );
+  }
+};
+
+const seedLunchbox = async (client) => {
+  const categories = dineInMenu?.categories || [];
+  let orderIdx = 0;
+  for (const entry of categories) {
+    const subCategory = entry['sub-category'] || entry.category || '';
+    if (subCategory !== 'Chateau Lunchbox') continue;
+    for (const item of (entry.items || [])) {
+      await client.query(
+        `INSERT INTO lunchbox_menu (name, description, price, category, subcategory, image_url, on_offer, offer, order_index)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+         ON CONFLICT (name) DO UPDATE SET price = EXCLUDED.price, image_url = EXCLUDED.image_url, on_offer = EXCLUDED.on_offer, offer = EXCLUDED.offer, description = EXCLUDED.description, subcategory = EXCLUDED.subcategory, order_index = EXCLUDED.order_index, updated_at = NOW()`,
+        [item.name, item.description || '', item.price || 0, 'Meals', 'Chateau Lunchbox', item.image || null, Boolean(item.on_offer), item.offer || null, orderIdx++],
+      );
+    }
+  }
+
+  const newLunchboxItems = [
+    { name: 'PRIME BEEF TENDERLOIN, SIGNATURE TERIYAKI GLAZE (/300GMS)', price: 1500, description: '' },
+    { name: 'LUXURY BEEF BOURGUIGNON 130GMS.', price: 600, description: '' },
+    { name: 'GISHIRI BEEF, NAIROBI STYLE', price: 600, description: 'Tender beef, slow-cooked in rich, soulful spices, paired with velvety White or Brown ugali, garden-fresh sukuma wiki, and bright kachumbari—a timeless Kenyan feast, beautifully refined.' },
+  ];
+  for (const item of newLunchboxItems) {
+    await client.query(
+      `INSERT INTO lunchbox_menu (name, description, price, category, subcategory, image_url, on_offer, offer, order_index)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+       ON CONFLICT (name) DO UPDATE SET price = EXCLUDED.price, description = EXCLUDED.description, image_url = EXCLUDED.image_url, on_offer = EXCLUDED.on_offer, offer = EXCLUDED.offer, subcategory = EXCLUDED.subcategory, order_index = EXCLUDED.order_index, updated_at = NOW()`,
+      [item.name, item.description || '', item.price, 'Meals', 'Chateau Lunchbox', null, false, null, orderIdx++],
+    );
   }
 };
 
@@ -170,6 +217,7 @@ const seed = async () => {
     await client.query('TRUNCATE TABLE customer_locations CASCADE');
     await client.query('TRUNCATE TABLE takeout_menu CASCADE');
     await client.query('TRUNCATE TABLE dine_in_menu CASCADE');
+    await client.query('TRUNCATE TABLE lunchbox_menu CASCADE');
     await client.query('TRUNCATE TABLE wines CASCADE');
     await client.query('TRUNCATE TABLE riders CASCADE');
 
@@ -205,6 +253,7 @@ const seed = async () => {
     }
 
     await seedDineIn(client);
+    await seedLunchbox(client);
     await seedTakeout(client);
     await seedWines(client, italianWines);
     await seedWines(client, southAfricanWines);

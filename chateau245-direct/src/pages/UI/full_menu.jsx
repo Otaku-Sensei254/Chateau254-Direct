@@ -5,13 +5,15 @@ import { MenuCardSkeleton, LoaderSkeleton } from '../../components/ui/loaders-sk
 
 const normalizeFullMenu = (data) => {
   const categories = data?.categories || [];
-  return categories.flatMap(({ category, items }) =>
-    (items || []).map((item, i) => ({
-      id: `full-${category.replace(/\W+/g, '-').toLowerCase()}-${i}`,
+  return categories.flatMap((entry) => {
+    const subCategory = entry['sub-category'] || entry.category || '';
+    const items = entry.items || [];
+    return items.map((item, i) => ({
+      id: `full-${String(subCategory || '').replace(/\W+/g, '-').toLowerCase()}-${i}`,
       name: item.name,
       description: item.description || '',
       price: item.price || 0,
-      category,
+      category: subCategory || '',
       image: item.image || '',
       tag: item.tag || null,
       portion: item.portion || null,
@@ -22,8 +24,8 @@ const normalizeFullMenu = (data) => {
       pricing_options: item.pricing_options || null,
       sides: item.sides || null,
       sides_note: item.sides_note || null,
-    }))
-  );
+    }));
+  });
 };
 
 const FullMenu = ({ onMakeOrder, onReserveTable, loading: propLoading }) => {

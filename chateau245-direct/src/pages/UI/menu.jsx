@@ -55,6 +55,7 @@ const MODE_LABELS = {
   dining: '🍽️ Dine In Menu',
   dinein: '🍽️ Dine In Menu',
   takeout: '🛍️ Take Out Menu',
+  lunchbox: '🍱 Chateau Lunchbox',
   events: '🎉 Event Catering & Beverage Menu',
 };
 

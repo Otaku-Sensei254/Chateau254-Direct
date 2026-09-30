@@ -139,6 +139,24 @@ CREATE TABLE IF NOT EXISTS takeout_menu (
 CREATE INDEX IF NOT EXISTS takeout_menu_category_idx ON takeout_menu(category);
 CREATE INDEX IF NOT EXISTS takeout_menu_order_idx ON takeout_menu(order_index);
 
+CREATE TABLE IF NOT EXISTS lunchbox_menu (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(160) NOT NULL UNIQUE,
+  description TEXT NOT NULL DEFAULT '',
+  price NUMERIC(12, 2) NOT NULL CHECK (price >= 0),
+  category VARCHAR(40) NOT NULL DEFAULT 'Meals',
+  subcategory VARCHAR(80),
+  image_url TEXT,
+  is_available BOOLEAN NOT NULL DEFAULT TRUE,
+  on_offer BOOLEAN NOT NULL DEFAULT FALSE,
+  offer TEXT,
+  order_index INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS lunchbox_menu_category_idx ON lunchbox_menu(category);
+CREATE INDEX IF NOT EXISTS lunchbox_menu_order_idx ON lunchbox_menu(order_index);
+
 CREATE TABLE IF NOT EXISTS riders (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID UNIQUE REFERENCES chateau_users(id) ON DELETE CASCADE,

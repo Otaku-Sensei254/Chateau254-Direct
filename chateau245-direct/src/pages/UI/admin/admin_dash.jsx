@@ -76,18 +76,24 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
     setTables(data.tables || []);
   }, [api, headers]);
 
-  const [menuFilters, setMenuFilters] = useState({ search: '', category: 'All' });
+  const [menuFilters, setMenuFilters] = useState({ search: '', category: 'All', menuType: 'All', subcategory: 'All' });
+  const [allCategories, setAllCategories] = useState([]);
+  const [allSubcategories, setAllSubcategories] = useState([]);
 
-  const fetchMenu = useCallback(async (filters = menuFilters) => {
+  const fetchMenu = useCallback(async (filters) => {
     const params = new URLSearchParams();
     params.set('all', 'true');
-    if (filters.search) params.set('search', filters.search);
-    if (filters.category && filters.category !== 'All') params.set('category', filters.category);
+    if (filters?.search) params.set('search', filters.search);
+    if (filters?.category && filters.category !== 'All') params.set('category', filters.category);
+    if (filters?.subcategory && filters.subcategory !== 'All') params.set('subcategory', filters.subcategory);
+    if (filters?.menuType && filters.menuType !== 'All') params.set('menu_type', filters.menuType);
     const res = await fetch(`${api}/menu?${params.toString()}`, { headers });
     if (!res.ok) throw new Error('Failed to load menu');
     const data = await res.json();
     setMenu(data.items || []);
-  }, [api, headers, menuFilters]);
+    if (data.categories) setAllCategories(data.categories);
+    if (data.subcategories) setAllSubcategories(data.subcategories);
+  }, [api, headers]);
 
   const loadAll = useCallback(async () => {
     setLoading(true);
@@ -376,7 +382,7 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
       {activePage === 'Orders' && <OrdersContent orders={orders} onUpdateStatus={updateOrderStatus} updatingOrder={updatingOrder} riders={riders} formatCurrency={formatCurrency} formatTime={formatTime} />}
       {activePage === 'Reservations' && <ReservationsContent bookings={bookings} tables={tables} onAssignTable={assignTableToBooking} onUnassignTable={unassignTableFromBooking} formatTime={formatTime} />}
       {activePage === 'Tables' && <TablesContent tables={tables} setEditingTable={setEditingTable} onSave={saveTable} onDelete={deleteTable} onUpdateStatus={updateTableStatus} />}
-      {activePage === 'Menu' && <MenuContent menu={menu} setEditingItem={setEditingItem} onDelete={deleteMenuItem} fetchMenu={fetchMenu} menuFilters={menuFilters} setMenuFilters={setMenuFilters} />}
+      {activePage === 'Menu' && <MenuContent menu={menu} setEditingItem={setEditingItem} onDelete={deleteMenuItem} fetchMenu={fetchMenu} menuFilters={menuFilters} setMenuFilters={setMenuFilters} allCategories={allCategories} allSubcategories={allSubcategories} />}
       {activePage === 'Customers' && <CustomersContent customers={customers} />}
       {activePage === 'Riders' && <RidersContent riders={riders} onAdd={() => setRiderEditorOpen(true)} onRemove={removeRider} />}
       {activePage === 'Fleet Map' && <FleetMapContent token={token} api={api} />}
@@ -433,57 +439,129 @@ const OrdersContent = ({ orders, onUpdateStatus, updatingOrder, riders, formatCu
 
 const OrderTable = ({ orders, formatCurrency, formatTime, compact }) => <div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>Order</th><th>Customer</th><th>Amount</th><th>Address</th><th>Time</th></tr></thead><tbody>{orders.map((order) => <tr key={order.id}><td>#{order.id.slice(0, 8)}</td><td>{order.customer_name || 'Unknown'}</td><td>{formatCurrency(order.total_amount)}</td><td>{order.delivery_address || '—'}</td><td>{formatTime(order.created_at)}</td></tr>)}{!orders.length && <tr><td colSpan={5} style={{ textAlign: 'center', padding: '2rem', color: '#a0958e' }}>No orders yet</td></tr>}</tbody></table></div>;
 
-const MenuContent = ({ menu, setEditingItem, onDelete, fetchMenu, menuFilters, setMenuFilters }) => {
+const MenuContent = ({ menu, setEditingItem, onDelete, fetchMenu, menuFilters, setMenuFilters, allCategories = [], allSubcategories = [] }) => {
   useEffect(() => {
     fetchMenu(menuFilters);
   }, [menuFilters, fetchMenu]);
 
-  const categories = useMemo(() => {
-    const cats = new Set(menu.map((item) => item.category).filter(Boolean));
-    return ['All', ...Array.from(cats).sort()];
-  }, [menu]);
+  const menuTypes = [
+    { label: 'All', value: 'All' },
+    { label: 'Dine-In', value: 'dine_in' },
+    { label: 'Take-Out', value: 'takeout' },
+    { label: 'Lunchbox', value: 'lunchbox' },
+    { label: 'Wines', value: 'wine' },
+  ];
+
+  const categories = useMemo(() => ['All', ...allCategories], [allCategories]);
+  const subcategories = useMemo(() => ['All', ...allSubcategories], [allSubcategories]);
+
+  const setMenuTypeFilter = (menuType) => {
+    setMenuFilters((prev) => ({ ...prev, menuType, category: 'All', subcategory: 'All' }));
+  };
+  const setCategoryFilter = (category) => {
+    setMenuFilters((prev) => ({ ...prev, category }));
+  };
+  const setSubcategoryFilter = (subcategory) => {
+    setMenuFilters((prev) => ({ ...prev, subcategory }));
+  };
+  const setMenuSearch = (search) => {
+    setMenuFilters((prev) => ({ ...prev, search }));
+  };
 
   return <><div className="admin-content-heading"><div><p className="eyebrow">Catalog management</p><h2>Menu items</h2></div><button className="admin-primary" onClick={() => { setEditingItem(true); }}><FiPlus /> Add menu item</button></div>
     <div className="admin-menu-toolbar">
-      <div className="admin-category-tabs">{categories.map((cat) => <button key={cat} className={`admin-category-tab ${menuFilters.category === cat ? 'active' : ''}`} onClick={() => setMenuFilters((prev) => ({ ...prev, category: cat }))}>{cat === 'All' ? 'All' : cat}</button>)}</div>
+      <div className="admin-category-tabs">
+        {menuTypes.map((mt) => (
+          <button key={mt.value} className={`admin-category-tab ${menuFilters.menuType === mt.value ? 'active' : ''}`} onClick={() => setMenuTypeFilter(mt.value)}>
+            {mt.label}
+          </button>
+        ))}
+      </div>
+      <div className="admin-category-tabs">
+        {categories.map((cat) => <button key={cat} className={`admin-category-tab ${menuFilters.category === cat ? 'active' : ''}`} onClick={() => setCategoryFilter(cat)}>{cat === 'All' ? 'All categories' : cat}</button>)}
+      </div>
+      <div className="admin-category-tabs">
+        {subcategories.map((sub) => <button key={sub} className={`admin-category-tab ${menuFilters.subcategory === sub ? 'active' : ''}`} onClick={() => setSubcategoryFilter(sub)}>{sub === 'All' ? 'All subcategories' : sub}</button>)}
+      </div>
       <div className="admin-search-wrap">
         <FiSearch className="admin-search-icon" />
-        <input className="admin-search-input" type="text" placeholder="Search menu by name, category or description..." value={menuFilters.search} onChange={(e) => setMenuFilters((prev) => ({ ...prev, search: e.target.value }))} />
-        {menuFilters.search && <button className="admin-search-clear" onClick={() => setMenuFilters((prev) => ({ ...prev, search: '' }))} aria-label="Clear search"><FiX /></button>}
+        <input className="admin-search-input" type="text" placeholder="Search menu by name, category or description..." value={menuFilters.search} onChange={(e) => setMenuSearch(e.target.value)} />
+        {menuFilters.search && <button className="admin-search-clear" onClick={() => setMenuSearch('')} aria-label="Clear search"><FiX /></button>}
       </div>
     </div>
-    <div className="admin-menu-categories"><section key={menuFilters.category || 'all'} className="admin-menu-category">
-      <h3 className="admin-menu-category-title">{menuFilters.category === 'All' ? 'All items' : menuFilters.category} <span className="admin-menu-category-count">{menu.length}</span></h3>
-      <div className="admin-menu-grid">
-        {menu.sort((a, b) => (a.order_index || 0) - (b.order_index || 0) || a.id.localeCompare(b.id)).map((item) => <article className="admin-menu-card" key={item.id}>
-          {item.image && <div className="admin-menu-card-image"><img src={item.image} alt={item.name} loading="lazy" onError={(e) => { e.target.style.display = 'none'; }} /></div>}
-          <div className="admin-menu-card-body">
-            <div className="admin-menu-card-top">
-              <div className="admin-menu-card-icon"><FiPackage /></div>
-              <div className="admin-menu-card-info">
-                <strong className="admin-menu-card-name">{item.name}</strong>
-                <span className="admin-menu-card-category">{item.category}{item.subcategory && item.subcategory !== item.category ? ` · ${item.subcategory}` : ''}</span>
+    <div className="admin-menu-categories">
+      {menuFilters.subcategory !== 'All' ? (
+        <section key={`${menuFilters.menuType}-${menuFilters.category}-${menuFilters.subcategory}`} className="admin-menu-category">
+          <h3 className="admin-menu-category-title">{menuFilters.subcategory} <span className="admin-menu-category-count">{menu.length}</span></h3>
+          <div className="admin-menu-grid">
+            {menu.sort((a, b) => (a.order_index || 0) - (b.order_index || 0) || a.id.localeCompare(b.id)).map((item) => <article className="admin-menu-card" key={item.id}>
+              {item.image && <div className="admin-menu-card-image"><img src={item.image} alt={item.name} loading="lazy" onError={(e) => { e.target.style.display = 'none'; }} /></div>}
+              <div className="admin-menu-card-body">
+                <div className="admin-menu-card-top">
+                  <div className="admin-menu-card-icon"><FiPackage /></div>
+                  <div className="admin-menu-card-info">
+                    <strong className="admin-menu-card-name">{item.name}</strong>
+                    <span className="admin-menu-card-category">{item.category}{item.subcategory && item.subcategory !== item.category ? ` · ${item.subcategory}` : ''}</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                    {item.on_offer && <span className="admin-menu-card-offer">{item.offer || 'On offer'}</span>}
+                    <span className={`admin-menu-card-availability ${item.availability !== false ? 'available' : 'unavailable'}`}>{item.availability !== false ? 'Available' : 'Unavailable'}</span>
+                  </div>
+                </div>
+                {item.description && <p className="admin-menu-card-description">{item.description}</p>}
+                {(item.wineType || item.region || item.grape) && <div className="admin-menu-card-wine-meta">{(item.wineType || item.region) && <span>{[item.wineType, item.region].filter(Boolean).join(' · ')}</span>}{item.grape && <span>Grape: {item.grape}</span>}</div>}
+                <div className="admin-menu-card-footer">
+                  <strong className="admin-menu-card-price">KES {Number(item.price).toLocaleString()}</strong>
+                  <div className="admin-menu-card-actions">
+                    <button onClick={() => setEditingItem(item)} aria-label={`Edit ${item.name}`} title="Edit"><FiEdit2 /></button>
+                    <button onClick={() => { if (window.confirm(`Delete "${item.name}"?`)) onDelete(item.id, item.menuType); }} aria-label={`Delete ${item.name}`} title="Delete"><FiTrash2 /></button>
+                  </div>
+                </div>
               </div>
-              <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                {item.on_offer && <span className="admin-menu-card-offer">{item.offer || 'On offer'}</span>}
-                <span className={`admin-menu-card-availability ${item.availability !== false ? 'available' : 'unavailable'}`}>{item.availability !== false ? 'Available' : 'Unavailable'}</span>
-              </div>
-            </div>
-            {item.description && <p className="admin-menu-card-description">{item.description}</p>}
-            {(item.wineType || item.region || item.grape) && <div className="admin-menu-card-wine-meta">{(item.wineType || item.region) && <span>{[item.wineType, item.region].filter(Boolean).join(' · ')}</span>}{item.grape && <span>Grape: {item.grape}</span>}</div>}
-            <div className="admin-menu-card-footer">
-              <strong className="admin-menu-card-price">KES {Number(item.price).toLocaleString()}</strong>
-              <div className="admin-menu-card-actions">
-                <button onClick={() => setEditingItem(item)} aria-label={`Edit ${item.name}`} title="Edit"><FiEdit2 /></button>
-                <button onClick={() => { if (window.confirm(`Delete "${item.name}"?`)) onDelete(item.id, item.menuType); }} aria-label={`Delete ${item.name}`} title="Delete"><FiTrash2 /></button>
-              </div>
-            </div>
+            </article>)}
           </div>
-        </article>)}
-      </div>
-    </section>}
-    {!menu.length && <div className="admin-placeholder"><div className="admin-placeholder-icon"><FiSearch /></div><h2>No matches</h2><p>Try a different search term or category.</p></div>}
-  </div></>;
+        </section>
+      ) : (
+        Object.entries(menu.reduce((acc, item) => {
+          const sub = item.subcategory || 'Other';
+          acc[sub] = acc[sub] || [];
+          acc[sub].push(item);
+          return acc;
+        }, {})).sort(([a], [b]) => a.localeCompare(b)).map(([subcategory, items]) => (
+          <section key={`${menuFilters.menuType}-${menuFilters.category}-${subcategory}`} className="admin-menu-category">
+            <h3 className="admin-menu-category-title">{subcategory} <span className="admin-menu-category-count">{items.length}</span></h3>
+            <div className="admin-menu-grid">
+              {items.sort((a, b) => (a.order_index || 0) - (b.order_index || 0) || a.id.localeCompare(b.id)).map((item) => <article className="admin-menu-card" key={item.id}>
+                {item.image && <div className="admin-menu-card-image"><img src={item.image} alt={item.name} loading="lazy" onError={(e) => { e.target.style.display = 'none'; }} /></div>}
+                <div className="admin-menu-card-body">
+                  <div className="admin-menu-card-top">
+                    <div className="admin-menu-card-icon"><FiPackage /></div>
+                    <div className="admin-menu-card-info">
+                      <strong className="admin-menu-card-name">{item.name}</strong>
+                      <span className="admin-menu-card-category">{item.category}{item.subcategory && item.subcategory !== item.category ? ` · ${item.subcategory}` : ''}</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                      {item.on_offer && <span className="admin-menu-card-offer">{item.offer || 'On offer'}</span>}
+                      <span className={`admin-menu-card-availability ${item.availability !== false ? 'available' : 'unavailable'}`}>{item.availability !== false ? 'Available' : 'Unavailable'}</span>
+                    </div>
+                  </div>
+                  {item.description && <p className="admin-menu-card-description">{item.description}</p>}
+                  {(item.wineType || item.region || item.grape) && <div className="admin-menu-card-wine-meta">{(item.wineType || item.region) && <span>{[item.wineType, item.region].filter(Boolean).join(' · ')}</span>}{item.grape && <span>Grape: {item.grape}</span>}</div>}
+                  <div className="admin-menu-card-footer">
+                    <strong className="admin-menu-card-price">KES {Number(item.price).toLocaleString()}</strong>
+                    <div className="admin-menu-card-actions">
+                      <button onClick={() => setEditingItem(item)} aria-label={`Edit ${item.name}`} title="Edit"><FiEdit2 /></button>
+                      <button onClick={() => { if (window.confirm(`Delete "${item.name}"?`)) onDelete(item.id, item.menuType); }} aria-label={`Delete ${item.name}`} title="Delete"><FiTrash2 /></button>
+                    </div>
+                  </div>
+                </div>
+              </article>)}
+            </div>
+          </section>
+        ))
+      )}
+    </div>
+  </>;
 };
 
 const CustomersContent = ({ customers }) => <><div className="admin-content-heading"><div><p className="eyebrow">Loyalty and accounts</p><h2>Customers</h2></div></div><div className="customer-summary"><span><strong>{customers.length}</strong> registered customers</span><span><strong>{customers.filter((c) => c.loyalty_points > 0).length}</strong> with loyalty points</span><span><strong>{customers.reduce((sum, c) => sum + (c.loyalty_points || 0), 0).toLocaleString()}</strong> total points</span></div><div className="admin-table-wrap"><table className="admin-table customer-table"><thead><tr><th>Customer</th><th>Email</th><th>Phone</th><th>Loyalty points</th><th>Joined</th></tr></thead><tbody>{customers.map((customer) => <tr key={customer.id || customer.email}><td><strong>{customer.full_name}</strong></td><td>{customer.email}</td><td>{customer.phone || '—'}</td><td>{customer.loyalty_points || 0} pts</td><td>{new Date(customer.created_at).toLocaleDateString()}</td></tr>)}{!customers.length && <tr><td colSpan={5} style={{ textAlign: 'center', padding: '2rem', color: '#a0958e' }}>No customers yet</td></tr>}</tbody></table></div></>;
@@ -504,13 +582,14 @@ const MenuEditor = ({ item, onSave, onClose }) => {
   const [fileName, setFileName] = useState('');
   const [isConverting, setIsConverting] = useState(false);
   const menuType = item?.menuType || (item?.category === 'Wine' ? 'wine' : 'dine_in');
+  const [selectedMenuType, setSelectedMenuType] = useState(menuType);
 
   const [selectedCategory, setSelectedCategory] = useState(item?.category || 'Meals');
   const [selectedSubcategory, setSelectedSubcategory] = useState(item?.subcategory || '');
   const [onOffer, setOnOffer] = useState(Boolean(item?.on_offer));
   const [offerText, setOfferText] = useState(item?.offer || '');
 
-  const MEAL_SUBCATEGORIES = ['Appetizers', 'Soups', 'Salads', 'Mains', 'Pasta', 'Desserts', 'Beverages', 'Fast Food', 'Platters', 'Combos'];
+  const MEAL_SUBCATEGORIES = ['Appetizers', 'Soups', 'Salads', 'Mains', 'Farinaceous Delicacies', 'Chateau Classics', 'Chateau Lunchbox', 'Bar Bites & Sandwiches', 'Platters & Boards', 'Desserts', 'Beverages', 'Fast Food', 'Combos'];
   const WINE_SUBCATEGORIES = ['Red', 'White', 'Rosé', 'Sparkling', 'Orange', 'Dessert'];
   const DRINK_SUBCATEGORIES = ['Hot', 'Cold', 'Alcoholic', 'Non-alcoholic'];
   const DESSERT_SUBCATEGORIES = ['Cakes', 'Ice Cream', 'Pastries', 'Other'];
@@ -550,9 +629,9 @@ const MenuEditor = ({ item, onSave, onClose }) => {
 
   return <div className="admin-modal-backdrop"><form className="admin-modal" onSubmit={onSave}><button type="button" className="admin-modal-close" onClick={onClose}><FiX /></button><p className="eyebrow">Catalog management</p><h2>{item ? 'Edit menu item' : 'Add menu item'}</h2>
     <div className="admin-modal-form">
-      <input type="hidden" name="menu_type" defaultValue={menuType} />
+      {selectedCategory === 'Wine' ? (<input type="hidden" name="menu_type" value="wine" />) : (<label>Menu type<select name="menu_type" defaultValue={selectedMenuType} onChange={(e) => setSelectedMenuType(e.target.value)}><option value="dine_in">Dine-In</option><option value="takeout">Take-Out</option><option value="lunchbox">Lunchbox</option></select></label>)}
       <label>Item name<input name="name" defaultValue={item?.name || ''} required /></label>
-      <label>Category<select name="category" defaultValue={selectedCategory} onChange={(e) => { setSelectedCategory(e.target.value); setSelectedSubcategory(''); }}><option>Meals</option><option>Wine</option><option>Drinks</option><option>Desserts</option></select></label>
+      <label>Category<select name="category" defaultValue={selectedCategory} onChange={(e) => { setSelectedCategory(e.target.value); setSelectedSubcategory(''); if (e.target.value === 'Wine') setSelectedMenuType('wine'); else setSelectedMenuType((prev) => prev || 'dine_in'); }}><option>Meals</option><option>Wine</option><option>Drinks</option><option>Desserts</option></select></label>
       <label>Subcategory<select name="subcategory" defaultValue={selectedSubcategory} onChange={(e) => setSelectedSubcategory(e.target.value)}><option value="">-- select subcategory --</option>{subcategoryOptions.map((opt) => <option key={opt} value={opt}>{opt}</option>)}</select></label>
       <label>Price (KES)<input name="price" type="number" min="0" defaultValue={item?.price || ''} required /></label>
       <label>Description<textarea name="description" rows="2" defaultValue={item?.description || ''} placeholder="Short description shown on menu cards..." /></label>

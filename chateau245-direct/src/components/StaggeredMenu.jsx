@@ -15,9 +15,9 @@ const defaultMenuItems = [
     isDropdown: true,
     dropdownItems: [
       { label: 'Wines', link: '/wines' },
-      { label: 'Breakfast', link: '/menu?mode=breakfast' },
       { label: 'Dine-In', link: '/menu?mode=dining' },
       { label: 'Take-Out', link: '/menu?mode=takeout' },
+      { label: 'LunchBox', link: '/menu?mode=lunchbox' },
     ]
   },
   { label: 'Events', ariaLabel: 'Events', link: '/events' },

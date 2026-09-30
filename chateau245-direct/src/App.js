@@ -107,6 +107,7 @@ const App = () => {
       const m = params.get('mode');
       if (m === 'dinein' || m === 'dining') return 'dining';
       if (m === 'takeout') return 'takeout';
+      if (m === 'lunchbox') return 'lunchbox';
       if (m === 'events') return 'events';
     } catch { }
     return 'dining';
@@ -136,17 +137,19 @@ const App = () => {
 
   const dineInItems = useMemo(() => menuItems.filter((i) => i.menuType === 'dine_in'), [menuItems]);
   const takeoutItems = useMemo(() => menuItems.filter((i) => i.menuType === 'takeout'), [menuItems]);
+  const lunchboxItems = useMemo(() => menuItems.filter((i) => i.menuType === 'lunchbox'), [menuItems]);
   const eventItems = useMemo(() => takeoutItems.filter((i) => ['Appetizers', 'Mains', 'Desserts', 'Beverages', 'Salads', 'Platters', 'Combos'].includes(i.subcategory)), [takeoutItems]);
 
   const catalogs = useMemo(() => ({
     dining: [...dineInItems, ...allRegionalWines],
     takeout: [...takeoutItems, ...allRegionalWines],
+    lunchbox: [...lunchboxItems],
     events: [...eventItems, ...allRegionalWines],
-  }), [dineInItems, takeoutItems, eventItems]);
+  }), [dineInItems, takeoutItems, lunchboxItems, eventItems]);
 
   const activeCatalog = catalogs[mode] || catalogs.dining;
   const activeCategories = useMemo(() => {
-    const cats = new Set(activeCatalog.map((i) => i.category));
+    const cats = new Set(activeCatalog.map((i) => i.category).filter((c) => c !== 'Wine'));
     const subs = new Set(activeCatalog.map((i) => i.subcategory).filter(Boolean));
     const combined = ['All', ...Array.from(cats), ...Array.from(subs)];
     return combined;

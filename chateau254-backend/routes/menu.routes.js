@@ -12,12 +12,14 @@ const MENU_TABLES = {
   wine: 'wines',
   dine_in: 'dine_in_menu',
   takeout: 'takeout_menu',
+  lunchbox: 'lunchbox_menu',
 };
 
 const resolveTable = (menuType) => {
   const key = (menuType || '').toLowerCase();
   if (key === 'dine_in' || key === 'dine-in') return MENU_TABLES.dine_in;
   if (key === 'takeout' || key === 'take-out') return MENU_TABLES.takeout;
+  if (key === 'lunchbox' || key === 'lunch-box') return MENU_TABLES.lunchbox;
   return MENU_TABLES.wine;
 };
 
@@ -85,11 +87,22 @@ router.get('/', asyncHandler(async (req, res) => {
 
   const whereClause = where.length ? ` WHERE ${where.join(' AND ')}` : '';
 
-  const wines = menuTypeFilter && menuTypeFilter !== 'wine' ? [] : await query(`SELECT ${WINE_COLUMNS} FROM wines${whereClause} ORDER BY order_index, name`, params);
-  const dineIn = menuTypeFilter && menuTypeFilter !== 'dine_in' && menuTypeFilter !== 'dine-in' ? [] : await query(`SELECT ${FOOD_COLUMNS}, 'dine_in' AS "menuType" FROM dine_in_menu${whereClause} ORDER BY order_index, name`, params);
-  const takeout = menuTypeFilter && menuTypeFilter !== 'takeout' && menuTypeFilter !== 'take-out' ? [] : await query(`SELECT ${FOOD_COLUMNS}, 'takeout' AS "menuType" FROM takeout_menu${whereClause} ORDER BY order_index, name`, params);
+  const wines = menuTypeFilter && menuTypeFilter !== 'wine' ? { rows: [] } : await query(`SELECT ${WINE_COLUMNS} FROM wines${whereClause} ORDER BY order_index, name`, params);
+  const dineIn = menuTypeFilter && menuTypeFilter !== 'dine_in' && menuTypeFilter !== 'dine-in' ? { rows: [] } : await query(`SELECT ${FOOD_COLUMNS}, 'dine_in' AS "menuType" FROM dine_in_menu${whereClause} ORDER BY order_index, name`, params);
+  const takeout = menuTypeFilter && menuTypeFilter !== 'takeout' && menuTypeFilter !== 'take-out' ? { rows: [] } : await query(`SELECT ${FOOD_COLUMNS}, 'takeout' AS "menuType" FROM takeout_menu${whereClause} ORDER BY order_index, name`, params);
+  const lunchbox = menuTypeFilter && menuTypeFilter !== 'lunchbox' && menuTypeFilter !== 'lunch-box' ? { rows: [] } : await query(`SELECT ${FOOD_COLUMNS}, 'lunchbox' AS "menuType" FROM lunchbox_menu${whereClause} ORDER BY order_index, name`, params);
 
-  res.json({ items: [...wines.rows, ...dineIn.rows, ...takeout.rows] });
+  const items = [...wines.rows, ...dineIn.rows, ...takeout.rows, ...lunchbox.rows];
+
+  let categories = [];
+  let subcategories = [];
+  if (showAll) {
+    const unfilteredWines = await query(`SELECT DISTINCT category, subcategory FROM wines UNION SELECT DISTINCT category, subcategory FROM dine_in_menu UNION SELECT DISTINCT category, subcategory FROM takeout_menu UNION SELECT DISTINCT category, subcategory FROM lunchbox_menu`);
+    categories = [...new Set(unfilteredWines.rows.map((r) => r.category).filter(Boolean))].sort();
+    subcategories = [...new Set(unfilteredWines.rows.map((r) => r.subcategory).filter(Boolean))].sort();
+  }
+
+  res.json({ items, categories, subcategories });
 }));
 
 router.post('/', authenticate, requireRole('admin'), asyncHandler(async (req, res) => {

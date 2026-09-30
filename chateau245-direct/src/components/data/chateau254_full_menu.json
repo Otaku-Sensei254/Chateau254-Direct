@@ -5,13 +5,13 @@
   "notes": {
     "pending_from_client": [
       "Appetizer item 6 (Tomatoes with Olive Oil, Balsamic & Honey) has no price — marked Limited Edition (LE), price pending confirmation.",
-      "Signature Mains sides list is a placeholder carried over from Chateau Classics/Local Favorites — Agnes will confirm the actual sides for this category.",
-      "A few items in Chateau Classics and Light Fair had missing or placeholder descriptions in the source data — reasonable filler descriptions were added and are flagged with 'placeholder_description': true for easy find-and-replace later."
+      "Signature Mains sides list is a placeholder carried over from Chateau Classics/Local Favorites — Agnes will confirm the actual sides for this sub-category.",
+      "A few items in Chateau Classics and Bar bites & Sandwiches had missing or placeholder descriptions in the source data — reasonable filler descriptions were added and are flagged with 'placeholder_description': true for easy find-and-replace later."
     ]
   },
   "categories": [
     {
-      "category": "Appetizers",
+      "sub-category": "Appetizers",
       "slug": "appetizers",
       "items": [
         {
@@ -60,7 +60,7 @@
       ]
     },
     {
-      "category": "Soups",
+      "sub-category": "Soups",
       "slug": "soups",
       "items": [
         {
@@ -115,7 +115,7 @@
       ]
     },
     {
-      "category": "Salads",
+      "sub-category": "Salads",
       "slug": "salads",
       "items": [
         {
@@ -157,7 +157,7 @@
       ]
     },
     {
-      "category": "Signature Mains",
+      "sub-category": "Signature Mains",
       "slug": "signature-mains",
       "items": [
         {
@@ -218,10 +218,10 @@
         "White ugali",
         "Grilled garden vegetables"
       ],
-      "sides_note": "Placeholder — carried over from Chateau Classics/Local Favorites, pending Agnes's confirmed list for this category"
+      "sides_note": "Placeholder — carried over from Chateau Classics/Local Favorites, pending Agnes's confirmed list for this sub-category"
     },
     {
-      "category": "Farinaceous Delicacies",
+      "sub-category": "Farinaceous Delicacies",
       "slug": "farinaceous-delicacies",
       "items": [
         {
@@ -265,7 +265,7 @@
       ]
     },
     {
-      "category": "Chateau Classics",
+      "sub-category": "Chateau Classics",
       "slug": "chateau-classics",
       "items": [
         {
@@ -354,7 +354,7 @@
     },
 
     {
-      "category": "Chateau Lunchbox",
+      "sub-category": "Chateau Lunchbox",
       "slug": "chateau-lunchbox",
       "available": "12 PM - 3 PM",
       "items": [
@@ -395,7 +395,7 @@
       ]
     },
     {
-      "category": "Light Fair",
+      "sub-category": "Bar Bites & Sandwiches",
       "slug": "bar-bites",
       "items": [
         {
@@ -465,7 +465,7 @@
       ]
     },
     {
-      "category": "Platters & Boards",
+      "sub-category": "Platters & Boards",
       "slug": "platters-and-boards",
       "items": [
         {
