@@ -3,6 +3,7 @@ import {
   FiClock,
   FiMapPin,
   FiUser,
+  FiX,
 } from "react-icons/fi";
 import Brand from '../../components/Navigation';
 import { RiWhatsappFill } from "react-icons/ri";
@@ -26,10 +27,39 @@ const getGreeting = () => {
   return "Good night";
 };
 
-const Home = ({ onTakeout, onDining, onEvents, onAuth }) => {
+const Home = ({ api, onTakeout, onDining, onEvents, onAuth }) => {
   const [currentPhrase, setCurrentPhrase] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const [promotions, setPromotions] = useState([]);
+  const [dismissedPromos, setDismissedPromos] = useState([]);
+
+  useEffect(() => {
+    console.log('[promo] useEffect running');
+    fetch(`${api}/promotions`)
+      .then((res) => { console.log('[promo] fetch status', res.status); return res.json(); })
+      .then((data) => { console.log('[promo] fetched', data.promotions?.length || 0); setPromotions(data.promotions || []); })
+      .catch((err) => { console.error('[promo] fetch failed', err); });
+    const dismissed = JSON.parse(localStorage.getItem('chateau254_dismissed_promotions') || '[]');
+    setDismissedPromos(dismissed);
+  }, []);
+
+  const dismissPromotion = (id) => {
+    const updated = [...dismissedPromos, id];
+    setDismissedPromos(updated);
+    localStorage.setItem('chateau254_dismissed_promotions', JSON.stringify(updated));
+  };
+
+  // For testing: run clearDismissedPromos() in console to reset dismissed promos
+  if (typeof window !== 'undefined') {
+    window.clearDismissedPromos = () => {
+      localStorage.removeItem('chateau254_dismissed_promotions');
+      setDismissedPromos([]);
+    };
+  }
+
+  const activePromo = promotions.find((p) => !dismissedPromos.includes(p.id) && p.is_active);
+  console.log("[promo] promotions", promotions, "dismissed", dismissedPromos, "activePromo", activePromo);
 
   useEffect(() => {
     const phrase = typewriterPhrases[currentPhrase];
@@ -68,6 +98,43 @@ const Home = ({ onTakeout, onDining, onEvents, onAuth }) => {
           <FiUser />
         </button>
       </nav>
+      {activePromo && (
+        <div
+          className="promo-banner promo-modal"
+          role="status"
+          aria-live="polite"
+          onClick={(event) => { if (event.target === event.currentTarget) dismissPromotion(activePromo.id); }}
+        >
+          <div className="promo-modal-card">
+            {activePromo.image_url && (
+              <div className="promo-media">
+                <img src={activePromo.image_url} alt={activePromo.title || 'Promotion'} />
+              </div>
+            )}
+            <div className="promo-modal-shade" aria-hidden="true" />
+            <div className="promo-content">
+              <div className="promo-copy">
+                <span className="promo-kicker">Château feature</span>
+                {activePromo.title && <h3>{activePromo.title}</h3>}
+                <p>{activePromo.message}</p>
+              </div>
+            </div>
+            <button className="promo-close" onClick={() => dismissPromotion(activePromo.id)} aria-label="Close promotion"><FiX /></button>
+          </div>
+        </div>
+      )}
+      {/* {!activePromo && promotions.length === 0 && (
+        <div className="promo-banner promo-banner-placeholder">
+          <div className="promo-accent" aria-hidden="true" />
+          <div className="promo-content">
+            <div className="promo-copy">
+              <span className="promo-kicker">Coming soon</span>
+              <h3>Something special is on the way</h3>
+              <p>We have exciting experiences coming your way. Stay tuned!</p>
+            </div>
+          </div>
+        </div>
+      )} */}
       <section className="hero-section">
         <div className="hero-left">
           <p className="eyebrow">Nairobi's finest dining room</p>

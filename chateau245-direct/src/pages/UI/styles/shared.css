@@ -230,7 +230,7 @@ h1 em {
 }
 
 .content-page {
-    max-width: 1020px;
+    max-width: 1300px;
     margin:5rem auto;
     padding: 35px 25px 65px;
     min-height: calc(100vh - 74px);
@@ -349,5 +349,14 @@ h1 em {
 @media (max-width: 540px) {
     .content-page {
         padding: 28px 18px 60px;
+    }
+}
+
+@media (max-width: 900px) {
+    .app-shell.has-app-header {
+        padding-top: 60px;
+    }
+    .content-page{
+        margin: 0rem auto;
     }
 }

@@ -3,10 +3,19 @@ const { S3Client, PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/cl
 const env = require('./env');
 
 const ALLOWED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
+const FEED_ALLOWED_MEDIA_TYPES = new Set([
+  ...ALLOWED_IMAGE_TYPES,
+  'video/mp4',
+  'video/webm',
+  'video/quicktime',
+]);
 const EXTENSIONS = {
   'image/jpeg': 'jpg',
   'image/png': 'png',
   'image/webp': 'webp',
+  'video/mp4': 'mp4',
+  'video/webm': 'webm',
+  'video/quicktime': 'mov',
 };
 
 const r2Configured = Boolean(
@@ -39,11 +48,11 @@ const ensureConfigured = () => {
   if (!r2Client) throw storageError('Image storage is not configured');
 };
 
-const uploadMenuImage = async (file) => {
+const uploadObject = async (file, prefix) => {
   ensureConfigured();
 
   const extension = EXTENSIONS[file.mimetype];
-  const key = `menu-items/${crypto.randomUUID()}.${extension}`;
+  const key = `${prefix}/${crypto.randomUUID()}.${extension}`;
 
   await r2Client.send(new PutObjectCommand({
     Bucket: env.r2BucketName,
@@ -56,6 +65,17 @@ const uploadMenuImage = async (file) => {
   return {
     key,
     imageUrl: `${env.r2PublicUrl.replace(/\/$/, '')}/${key}`,
+  };
+};
+
+const uploadMenuImage = (file) => uploadObject(file, 'menu-items');
+
+const uploadFeedMedia = async (file) => {
+  const uploaded = await uploadObject(file, 'feed');
+  return {
+    ...uploaded,
+    mediaType: file.mimetype.startsWith('video/') ? 'video' : 'image',
+    mediaMimeType: file.mimetype,
   };
 };
 
@@ -73,7 +93,7 @@ const keyFromPublicUrl = (imageUrl) => {
       ? key.slice(basePath.length + 1)
       : key;
 
-    return relativeKey.startsWith('menu-items/') ? relativeKey : null;
+    return relativeKey.startsWith('menu-items/') || relativeKey.startsWith('feed/') ? relativeKey : null;
   } catch {
     return null;
   }
@@ -89,8 +109,13 @@ const deleteMenuImage = async (imageUrl) => {
   }));
 };
 
+const deleteStoredMedia = deleteMenuImage;
+
 module.exports = {
   ALLOWED_IMAGE_TYPES,
+  FEED_ALLOWED_MEDIA_TYPES,
   uploadMenuImage,
+  uploadFeedMedia,
   deleteMenuImage,
+  deleteStoredMedia,
 };

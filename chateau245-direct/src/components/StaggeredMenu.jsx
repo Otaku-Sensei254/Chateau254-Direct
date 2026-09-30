@@ -21,7 +21,7 @@ const defaultMenuItems = [
     ]
   },
   { label: 'Events', ariaLabel: 'Events', link: '/events' },
-  { label: 'Blog', ariaLabel: 'Blog', link: '/blog' },
+  { label: 'Feed', ariaLabel: 'Feed', link: '/feed' },
   { label: 'Reserve', ariaLabel: 'Reserve', link: '/booking' },
 ];
 
@@ -63,6 +63,7 @@ export const StaggeredMenu = ({
   const [desktopDropdownOpen, setDesktopDropdownOpen] = useState(false);
   const desktopTimeoutRef = useRef(null);
   const desktopDropdownRef = useRef(null);
+  const mobileDropdownRef = useRef(null);
   const openRef = useRef(false);
   const panelRef = useRef(null);
   const preLayersRef = useRef(null);
@@ -330,6 +331,26 @@ export const StaggeredMenu = ({
   }, [desktopDropdownOpen]);
 
   React.useEffect(() => {
+    if (!dropdownOpen) return;
+
+    const handleOutsideClick = (e) => {
+      if (
+        mobileDropdownRef.current &&
+        !mobileDropdownRef.current.contains(e.target)
+      ) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutsideClick);
+    document.addEventListener('touchstart', handleOutsideClick, { passive: true });
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener('touchstart', handleOutsideClick);
+    };
+  }, [dropdownOpen]);
+
+  React.useEffect(() => {
     setDesktopDropdownOpen(false);
   }, [location.pathname]);
 
@@ -425,8 +446,6 @@ export const StaggeredMenu = ({
                     key={idx}
                     ref={desktopDropdownRef}
                     className="sm-desktop-item sm-desktop-dropdown-wrap"
-                    onMouseEnter={handleDesktopMenuEnter}
-                    onMouseLeave={handleDesktopMenuLeave}
                   >
                     <button
                       type="button"
@@ -441,8 +460,6 @@ export const StaggeredMenu = ({
                       <div
                         className="sm-desktop-dropdown-menu"
                         role="menu"
-                        onMouseEnter={handleDesktopMenuEnter}
-                        onMouseLeave={handleDesktopMenuLeave}
                       >
                         {it.dropdownItems.map((sub, sIdx) => (
                           <button
@@ -512,7 +529,7 @@ export const StaggeredMenu = ({
               items.map((it, idx) => (
                 <li className="sm-panel-itemWrap" key={it.label + idx}>
                   {it.isDropdown ? (
-                    <div className="sm-dropdown">
+                    <div className="sm-dropdown" ref={mobileDropdownRef}>
                       <button
                         className="sm-panel-item dropdown-trigger"
                         aria-label={it.ariaLabel}

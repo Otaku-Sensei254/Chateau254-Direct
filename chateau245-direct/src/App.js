@@ -23,6 +23,8 @@ import Booking from './pages/UI/booking';
 import FullMenu from './pages/UI/full_menu';
 import WinesPage from './pages/UI/wines';
 import Cellar from './pages/UI/cellar';
+import Feed from './pages/UI/feed';
+import NotFound from './pages/UI/not_found';
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const flattenRegionalWines = (data, prefix) => {
@@ -315,17 +317,19 @@ const App = () => {
       .catch(() => { });
   }, [lastOrderId, order?.id, session?.token]);
 
+  const showAppHeader = location.pathname !== '/' && location.pathname !== '/auth' && !location.pathname.startsWith('/admin') && !location.pathname.startsWith('/rider');
+
   return <SocketProvider token={session?.token}>
-    <div className="app-shell">
-      {location.pathname !== '/' && location.pathname !== '/auth' && !location.pathname.startsWith('/admin') && !location.pathname.startsWith('/rider') && <AppHeader cartCount={cartCount} userName={session?.user?.full_name} onBack={handleBack} onCart={() => navigate('/cart')} onHome={() => navigate('/menu')} onProfile={() => navigate('/profile')} />}
+    <div className={`app-shell${showAppHeader ? ' has-app-header' : ''}`}>
+      {showAppHeader && <AppHeader cartCount={cartCount} userName={session?.user?.full_name} onBack={handleBack} onCart={() => navigate('/cart')} onHome={() => navigate('/menu')} onProfile={() => navigate('/profile')} api={API_URL} />}
       <Routes>
-        <Route path="/" element={<GuestRoute user={session?.user}><Home onTakeout={() => { switchMode('takeout'); navigate('/menu'); }} onDining={() => { switchMode('dining'); navigate('/menu'); }} onEvents={() => navigate('/events')} onAuth={() => navigate('/auth')} /></GuestRoute>} />
+        <Route path="/" element={<GuestRoute user={session?.user}><Home api={API_URL} onTakeout={() => { switchMode('takeout'); navigate('/menu'); }} onDining={() => { switchMode('dining'); navigate('/menu'); }} onEvents={() => navigate('/events')} onAuth={() => navigate('/auth')} /></GuestRoute>} />
         <Route path="/events" element={<EventsPage user={session?.user} onExploreCatering={() => { switchMode('events'); navigate('/menu'); }} />} />
         <Route path="/auth" element={<Auth onSuccess={handleAuthSuccess} onBack={() => navigate('/')} />} />
         <Route path="/admin/*" element={<ProtectedRoute user={session?.user} roles={['admin']}><AdminDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
         <Route path="/rider" element={<ProtectedRoute user={session?.user} roles={['rider']}><RiderDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
         <Route path="/booking" element={<ProtectedRoute user={session?.user}><Booking user={session?.user} token={session?.token} selectedItems={dineInSelections} onClearSelections={() => setDineInSelections([])} /></ProtectedRoute>} />
-        <Route path="/menu" element={<Menu items={visibleItems} user={session?.user} categories={activeCategories} filter={filter} setFilter={(cat) => { setFilter(cat); if (cat !== 'Wine') setWineClassFilter(null); }} query={query} setQuery={setQuery} addToCart={addToCart} cartCount={cartCount} onCart={() => navigate('/cart')} onViewItem={(item) => navigate(`/item/${item.id}`)} onBooking={() => navigate('/booking')} wineFilter={wineFilter} onClearWineFilter={() => { setWineFilter(null); setWinePairingFilter(null); }} wineClassFilter={wineClassFilter} setWineClassFilter={setWineClassFilter} mode={mode} winePairingFilter={winePairingFilter} onClearWinePairingFilter={() => setWinePairingFilter(null)} onModeChange={switchMode} onBack={handleBack} dineInSelections={dineInSelections} addDineInItem={addDineInItem} />} />
+        <Route path="/menu" element={<Menu api={API_URL} items={visibleItems} user={session?.user} categories={activeCategories} filter={filter} setFilter={(cat) => { setFilter(cat); if (cat !== 'Wine') setWineClassFilter(null); }} query={query} setQuery={setQuery} addToCart={addToCart} cartCount={cartCount} onCart={() => navigate('/cart')} onViewItem={(item) => navigate(`/item/${item.id}`)} onBooking={() => navigate('/booking')} wineFilter={wineFilter} onClearWineFilter={() => { setWineFilter(null); setWinePairingFilter(null); }} wineClassFilter={wineClassFilter} setWineClassFilter={setWineClassFilter} mode={mode} winePairingFilter={winePairingFilter} onClearWinePairingFilter={() => setWinePairingFilter(null)} onModeChange={switchMode} onBack={handleBack} dineInSelections={dineInSelections} addDineInItem={addDineInItem} />} />
         <Route path="/full-menu" element={<FullMenu onMakeOrder={() => { switchMode('takeout'); navigate('/menu'); }} onReserveTable={() => navigate('/booking')} />} />
         <Route path="/item/:itemId" element={<ItemRoute addToCart={addToCart} onWineFactSelect={(field, value) => {
           setFilter('Wine');
@@ -350,7 +354,10 @@ const App = () => {
         <Route path="/tracking" element={<Navigate to="/track" replace />} />
         <Route path="/profile" element={<ProfileRoute user={session?.user}><Profile user={session?.user} token={session?.token} onBack={handleBack} onLogout={handleLogout} onTrack={(o) => { setOrder({ id: o.id, number: o.id.slice(0, 8), total: Number(o.total_amount) }); navigate('/track'); }} onBooking={() => navigate('/booking')} onCellar={() => navigate('/my-cellar')} /></ProfileRoute>} />
         <Route path="/wines" element={<WinesPage />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/feed" element={<Feed />} />
+        <Route path="/feed" element={<Navigate to="/feed" replace />} />
+        <Route path="/404" element={<NotFound onHome={() => navigate('/menu')} onBack={handleBack} />} />
+        <Route path="*" element={<NotFound onHome={() => navigate('/menu')} onBack={handleBack} />} />
       </Routes>
     </div>
   </SocketProvider>;

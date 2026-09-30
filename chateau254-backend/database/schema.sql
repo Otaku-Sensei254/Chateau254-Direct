@@ -157,6 +157,37 @@ CREATE TABLE IF NOT EXISTS lunchbox_menu (
 CREATE INDEX IF NOT EXISTS lunchbox_menu_category_idx ON lunchbox_menu(category);
 CREATE INDEX IF NOT EXISTS lunchbox_menu_order_idx ON lunchbox_menu(order_index);
 
+CREATE TABLE IF NOT EXISTS feed_posts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title VARCHAR(180) NOT NULL DEFAULT '',
+  caption TEXT NOT NULL DEFAULT '',
+  media_url TEXT NOT NULL,
+  media_type VARCHAR(20) NOT NULL CHECK (media_type IN ('image', 'video')),
+  thumbnail_url TEXT,
+  author_name VARCHAR(120) NOT NULL DEFAULT 'Château254 Team',
+  is_published BOOLEAN NOT NULL DEFAULT TRUE,
+  published_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS feed_posts_published_idx ON feed_posts(is_published, published_at DESC);
+CREATE TABLE IF NOT EXISTS promotions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title VARCHAR(180) NOT NULL DEFAULT '',
+  message TEXT NOT NULL DEFAULT '',
+  image_url TEXT,
+  link_url TEXT,
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  priority INTEGER NOT NULL DEFAULT 0,
+  starts_at TIMESTAMPTZ,
+  ends_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS promotions_active_idx ON promotions(is_active, priority DESC);
+
+
+
 CREATE TABLE IF NOT EXISTS riders (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID UNIQUE REFERENCES chateau_users(id) ON DELETE CASCADE,

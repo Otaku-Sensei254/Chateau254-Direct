@@ -14,6 +14,8 @@ const customersRoutes = require('./routes/customers.routes');
 const ridersRoutes = require('./routes/riders.routes');
 const bookingsRoutes = require('./routes/bookings.routes');
 const tablesRoutes = require('./routes/tables.routes');
+const feedRoutes = require('./routes/feed.routes');
+const promotionsRoutes = require('./routes/promotions.routes');
 const { notFound, errorHandler } = require('./middleware/error.middleware');
 
 const app = express();
@@ -31,7 +33,7 @@ const io = new Server(httpServer, {
 
 app.use(helmet());
 app.use(cors({ origin: env.frontendUrl, credentials: true }));
-app.use(express.json({ limit: '1mb' }));
+app.use(express.json({ limit: '10mb' }));
 app.use(morgan(env.nodeEnv === 'production' ? 'combined' : 'dev'));
 
 app.get('/', (req, res) => {
@@ -45,6 +47,8 @@ app.use('/api/customers', customersRoutes);
 app.use('/api/riders', ridersRoutes);
 app.use('/api/bookings', bookingsRoutes);
 app.use('/api/tables', tablesRoutes);
+app.use('/api/feed', feedRoutes);
+app.use('/api/promotions', promotionsRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
@@ -80,6 +84,7 @@ app.set('io', io);
 const startServer = async () => {
   try {
     await initializePool();
+    await feedRoutes.ensureFeedTable();
     server = httpServer.listen(env.port, () => {
       console.log(`Château254 API listening on port ${env.port}`);
     });

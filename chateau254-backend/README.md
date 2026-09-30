@@ -46,6 +46,10 @@ The development seed creates the admin account `admin@chateau254.com` with passw
 - `POST /api/auth/signin`
 - `GET|POST /api/menu`
 - `PATCH|DELETE /api/menu/:id`
+- `GET /api/feed`
+- `POST /api/feed/upload` (admin)
+- `POST /api/feed` (admin)
+- `DELETE /api/feed/:id` (admin)
 - `GET|POST /api/orders`
 - `PATCH /api/orders/:id/status`
 - `GET /api/customers`

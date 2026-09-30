@@ -1,7 +1,8 @@
 .home-page {
     min-height: 100vh;
     position: relative;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: visible;
     color: white;
     background: linear-gradient(90deg, rgba(13, 9, 7, .84), rgba(13, 9, 7, .3)), url('https://images.unsplash.com/photo-1641830879467-e22004141bcb?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHdpbmUlMjB0b2FzdHxlbnwwfHwwfHx8MA%3D%3D') center/cover;
     display: flex;
@@ -56,7 +57,11 @@
     50% { opacity: 0; }
 }
 
-.home-nav,
+.home-nav {
+    position: relative;
+    z-index: 10;
+}
+
 .home-foot,
 .hero-section {
     position: relative;
@@ -324,4 +329,253 @@
         bottom: 10px;
         right: 0;
     }
+}
+@keyframes promo-pulse{0%,100%{box-shadow:0 4px 12px rgba(0,0,0,0.08)}50%{box-shadow:0 8px 24px rgba(122,59,0,0.18)}}.promo-banner{position:relative;background:linear-gradient(135deg,#fff8f0 0%,#ffe8cc 100%);color:#3b2a1a;border-bottom:2px solid #f3d7a9;padding:18px 20px;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;box-shadow:0 4px 12px rgba(0,0,0,0.08);min-height:56px}.promo-banner .promo-content{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;max-width:1200px}.promo-banner h3{margin:0;font-size:1.15rem;color:#7a3b00;font-weight:700}.promo-banner p{margin:0;color:#5c3a1e;max-width:800px}.promo-banner img{max-height:120px;max-width:220px;width:auto;height:auto;border-radius:12px;border:2px solid #e5c69a;box-shadow:0 4px 12px rgba(0,0,0,0.1);object-fit:contain}.promo-banner .promo-close{background:transparent;border:none;color:#7a3b00;font-size:1.5rem;cursor:pointer;position:absolute;right:14px;top:50%;transform:translateY(-50%);font-weight:700;padding:4px 10px;border-radius:50%;line-height:1}.promo-banner .promo-close:hover{background:rgba(122,59,0,0.15)}.promo-banner-placeholder{background:linear-gradient(135deg,#fff3e0 0%,#ffe0b2 100%);border-bottom:2px dashed #ffcc80}.promo-banner-placeholder h3{margin:0;font-size:1.1rem;color:#bf360c}.promo-banner-placeholder p{margin:0;color:#5c3a1e}
+
+/* Campaign banner refresh */
+.promo-banner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: promo-rise .55s cubic-bezier(.22, 1, .36, 1) both;
+    background: rgba(5, 12, 8, .78);
+    backdrop-filter: blur(10px) saturate(80%);
+    -webkit-backdrop-filter: blur(10px) saturate(80%);
+    border: 1px solid rgba(226, 194, 123, .42);
+    border-radius: 18px;
+    box-shadow: 0 18px 42px rgba(0, 0, 0, .22), inset 0 1px 0 rgba(255, 255, 255, .12);
+    color: #fffaf1;
+    justify-content: center;
+    margin: 1.25rem auto 0;
+    max-width: 1160px;
+    min-height: 148px;
+    overflow: hidden;
+    padding: 0;
+    position: fixed;
+    width: 90vw;
+    max-width: 1160px;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+}
+
+.promo-accent {
+    background: linear-gradient(180deg, #e2c27b, #aa7b35);
+    flex: 0 0 5px;
+    width: 5px;
+}
+
+.promo-banner .promo-content {
+    align-items: flex-end;
+    display: flex;
+    flex: 1;
+    gap: 1.5rem;
+    justify-content: space-between;
+    max-width: none;
+    min-width: 0;
+    padding: clamp(2rem, 5vw, 4.5rem);
+    position: relative;
+    z-index: 2;
+}
+
+.promo-copy { min-width: 0; }
+.promo-kicker {
+    color: #e5c985;
+    display: block;
+    font-size: .66rem;
+    font-weight: 800;
+    letter-spacing: .18em;
+    margin-bottom: .4rem;
+    text-transform: uppercase;
+}
+
+.promo-banner h3 {
+    color: #fffaf1;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.15rem, 2.2vw, 1.65rem);
+    font-weight: 600;
+    line-height: 1.15;
+    margin: 0 0 .35rem;
+}
+
+.promo-banner p {
+    color: rgba(255, 250, 241, .76);
+    font-size: .9rem;
+    line-height: 1.5;
+    margin: 0;
+    max-width: 680px;
+}
+
+.promo-media {
+    align-items: center;
+    background: rgba(255, 255, 255, .13);
+    border: 1px solid rgba(255, 255, 255, .24);
+    border-radius: 14px;
+    display: flex;
+    flex: 0 0 228px;
+    height: 116px;
+    justify-content: center;
+    overflow: hidden;
+    padding: 5px;
+}
+
+.promo-banner .promo-media img {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    height: 100%;
+    max-height: none;
+    max-width: none;
+    object-fit: contain;
+    width: 100%;
+}
+
+.promo-banner .promo-close {
+    background: rgba(8, 20, 12, .55);
+    border: 1px solid rgba(255, 255, 255, .35);
+    border-radius: 50%;
+    color: #fff;
+    display: flex;
+    font-size: 1rem;
+    height: 32px;
+    justify-content: center;
+    line-height: 1;
+    padding: 0;
+    right: 1.25rem;
+    top: 1.25rem;
+    transform: none;
+    transition: background .2s ease, color .2s ease, transform .2s ease;
+    width: 32px;
+    z-index: 3;
+}
+
+.promo-banner .promo-close:hover {
+    background: rgba(255, 255, 255, .2);
+    border-color: rgba(255, 255, 255, .5);
+    color: #fff;
+    transform: rotate(90deg);
+}
+
+.promo-banner-placeholder {
+    background: linear-gradient(110deg, rgba(38, 55, 37, .88), rgba(80, 70, 38, .8));
+    border: 1px dashed rgba(226, 194, 123, .55);
+}
+
+@keyframes promo-rise {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+    .promo-banner { margin-top: 1rem; min-height: 0; }
+    .promo-banner .promo-content { align-items: flex-start; gap: 1rem; padding: 1rem 3.5rem 1rem 1rem; }
+    .promo-media { flex-basis: 132px; height: 88px; }
+    .promo-banner p { font-size: .82rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .promo-banner { animation: none; }
+    .promo-banner .promo-close { transition: none; }
+}
+
+/* Active promotions open as image-led modal campaigns. */
+.promo-modal {
+    align-items: center;
+    background: rgba(5, 12, 8, .78);
+    backdrop-filter: blur(10px) saturate(80%);
+    -webkit-backdrop-filter: blur(10px) saturate(80%);
+    border: 0;
+    border-radius: 0;
+    display: flex;
+    inset: 0;
+    justify-content: center;
+    margin: 0;
+    max-width: none;
+    min-height: 0;
+    padding: clamp(1rem, 4vw, 3rem);
+    position: fixed;
+    width: 100%;
+    z-index: 2000;
+}
+
+.promo-modal-card {
+    background: #17291d;
+    border: 1px solid rgba(230, 199, 126, .55);
+    border-radius: 24px;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, .5), 0 0 0 1px rgba(255, 255, 255, .08) inset;
+    min-height: min(680px, calc(100vh - 5rem));
+    max-width: 980px;
+    overflow: hidden;
+    flex-direction: column;
+    position: relative;
+    width: min(980px, 100%);
+}
+
+.promo-modal .promo-media {
+    background: #17291d;
+    border: 0;
+    border-radius: 0;
+    bottom: 0;
+    height: auto;
+    inset: 0;
+    padding: 0;
+    position: absolute;
+    width: auto;
+    z-index: 0;
+}
+
+.promo-modal .promo-media img {
+    background: #17291d;
+    height: 100%;
+    max-height: none;
+    max-width: none;
+    object-fit: contain;
+    object-position: center;
+    width: 100%;
+}
+
+.promo-modal-shade {
+    background: linear-gradient(180deg, rgba(7, 17, 10, .08) 12%, rgba(7, 17, 10, .12) 34%, rgba(7, 17, 10, .9) 100%);
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+    z-index: 1;
+}
+
+.promo-modal .promo-content {
+    align-items: flex-end;
+    display: flex;
+    min-height: min(680px, calc(100vh - 5rem));
+    padding: clamp(2rem, 5vw, 4.5rem);
+    position: relative;
+    z-index: 2;
+}
+
+.promo-modal .promo-copy { max-width: 720px; }
+.promo-modal .promo-kicker { font-size: .75rem; margin-bottom: .8rem; }
+.promo-modal h3 { font-size: clamp(2rem, 5vw, 4.5rem); line-height: 1.02; margin-bottom: 1rem; }
+.promo-modal p { color: rgba(255, 250, 241, .86); font-size: clamp(1rem, 2vw, 1.2rem); line-height: 1.6; max-width: 650px; }
+
+.promo-modal .promo-close {
+    display: flex;
+    align-items: center;
+    background: rgba(8, 20, 12, .55);
+    border-color: rgba(255, 255, 255, .35);
+    color: #fff;
+    right: 1.25rem;
+    top: 1.25rem;
+    transform: none;
+    z-index: 3;
+}
+
+.promo-modal .promo-close:hover { transform: rotate(90deg); }
+
+@media (max-width: 600px) {
+    .promo-modal { padding: .75rem; }
+    .promo-modal-card { border-radius: 18px; min-height: min(620px, calc(100vh - 1.5rem)); }
+    .promo-modal .promo-content { min-height: min(620px, calc(100vh - 1.5rem)); padding: 2rem 1.5rem 2.25rem; }
+    .promo-modal h3 { font-size: clamp(2rem, 11vw, 3.25rem); }
+    .promo-modal .promo-close { right: .85rem; top: .85rem; }
 }

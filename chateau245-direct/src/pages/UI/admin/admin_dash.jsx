@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { FiBarChart2, FiCalendar, FiChevronDown, FiEdit2, FiGift, FiGrid, FiLogOut, FiMenu, FiPackage, FiPlus, FiSave, FiSearch, FiSettings, FiShoppingBag, FiTable, FiTrash2, FiTruck, FiUpload, FiUsers, FiX, FiMap } from 'react-icons/fi';
+import { FiBarChart2, FiCalendar, FiChevronDown, FiEdit2, FiGift, FiGrid, FiLogOut, FiMenu, FiPackage, FiPlus, FiSave, FiSearch, FiSettings, FiShoppingBag, FiTable, FiTrash2, FiTruck, FiUpload, FiUsers, FiX, FiMap, FiCheckCircle, FiClock, FiUser } from 'react-icons/fi';
 import Brand from '../../../components/Navigation';
 import AdminFleetMap from '../../../components/AdminFleetMap';
 import { useSocket } from '../../../contexts/SocketContext';
 import { useToast } from '../../../contexts/ToastContext';
 import { AdminWorkspaceSkeleton, LoaderSkeleton } from '../../../components/ui/loaders-skeleton';
-
+import { GrBlog } from "react-icons/gr";
 const AdminDashboard = ({ user, token, api, onLogout }) => {
   const [activePage, setActivePage] = useState('Dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -250,6 +250,7 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
         if (!res.ok) throw new Error('Failed to update table');
         const data = await res.json();
         setTables((prev) => prev.map((t) => t.id === editingTable.id ? data.table : t));
+        addToast('Table updated successfully', 'success');
       } else {
         const res = await fetch(`${api}/tables`, {
           method: 'POST',
@@ -259,10 +260,11 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
         if (!res.ok) throw new Error('Failed to create table');
         const data = await res.json();
         setTables((prev) => [...prev, data.table]);
+        addToast('Table added successfully', 'success');
       }
       setEditingTable(null);
     } catch (err) {
-      alert(err.message);
+      addToast(err.message || 'Table update failed', 'error');
     }
   };
 
@@ -275,8 +277,9 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
       });
       if (!res.ok) throw new Error('Failed to update table status');
       setTables((prev) => prev.map((t) => t.id === tableId ? { ...t, status } : t));
+      addToast('Table status updated', 'success');
     } catch (err) {
-      alert(err.message);
+      addToast(err.message || 'Status update failed', 'error');
     }
   };
 
@@ -285,8 +288,9 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
       const res = await fetch(`${api}/tables/${tableId}`, { method: 'DELETE', headers });
       if (!res.ok) throw new Error('Failed to delete table');
       setTables((prev) => prev.filter((t) => t.id !== tableId));
+      addToast('Table deleted', 'success');
     } catch (err) {
-      alert(err.message);
+      addToast(err.message || 'Delete failed', 'error');
     }
   };
 
@@ -376,6 +380,7 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
           { label: 'Fleet Map', icon: FiMap },
           { label: 'Reports', icon: FiBarChart2 },
           { label: 'Promotions', icon: FiGift },
+          { label: 'Media', icon: GrBlog },
           { label: 'Settings', icon: FiSettings },
         ].map(({ label, icon: Icon, count }) => <button className={activePage === label ? 'active' : ''} key={label} onClick={() => selectPage(label)}><Icon /><span>{label}</span>{count && <b>{count}</b>}</button>)}
       </nav>
@@ -391,7 +396,8 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
       {activePage === 'Customers' && <CustomersContent customers={customers} />}
       {activePage === 'Riders' && <RidersContent riders={riders} onAdd={() => setRiderEditorOpen(true)} onRemove={removeRider} />}
       {activePage === 'Fleet Map' && <FleetMapContent token={token} api={api} />}
-      {['Reports', 'Promotions', 'Settings'].includes(activePage) && <PlaceholderContent title={activePage} />}
+      {activePage === 'Promotions' && <PromotionsContent api={api} headers={headers} addToast={addToast} />}
+      {['Reports', 'Settings'].includes(activePage) && <PlaceholderContent title={activePage} />}
       {editingItem && <MenuEditor item={editingItem === true ? null : editingItem} onSave={saveMenuItem} onClose={() => setEditingItem(null)} />}
       {editingTable && <TableEditor table={editingTable === true ? null : editingTable} onSave={saveTable} onClose={() => setEditingTable(null)} />}
       {riderEditorOpen && <RiderEditor onSave={addRider} onClose={() => setRiderEditorOpen(false)} />}
@@ -705,20 +711,382 @@ const ReservationsContent = ({ bookings, tables, onAssignTable, onUnassignTable,
     </tr>)}{!filtered.length && <tr><td colSpan={9} style={{ textAlign: 'center', padding: '2rem', color: '#a0958e' }}>No reservations found</td></tr>}</tbody></table></div></>;
 };
 
-const TablesContent = ({ tables, setEditingTable, onSave, onDelete, onUpdateStatus }) => {
-  const statusColors = { available: '#4d9057', reserved: '#e65100', occupied: '#7b1fa2' };
-  const statusBg = { available: '#e8f5e9', reserved: '#fff3e0', occupied: '#f3e5f5' };
-  return <><div className="admin-content-heading"><div><p className="eyebrow">Floor plan</p><h2>Tables</h2></div><button className="admin-primary" onClick={() => setEditingTable(true)}><FiPlus /> Add table</button></div>
-    <div className="admin-menu-grid">{tables.map((table) => <article className="admin-menu-row" key={table.id}><div className="admin-menu-icon"><FiTable /></div><div><strong>Table {table.table_number}</strong><span>Seats {table.capacity}</span></div><b><span style={{ display: 'inline-block', padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 700, background: statusBg[table.status] || '#f5f5f5', color: statusColors[table.status] || '#666', textTransform: 'capitalize' }}>{table.status}</span></b><em className={table.status === 'available' ? 'available' : table.status === 'reserved' ? 'unavailable' : 'unavailable'}>{table.status}</em><div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-        <select className="rider-select" value={table.status} onChange={(e) => onUpdateStatus(table.id, e.target.value)}>
-          <option value="available">Available</option>
-          <option value="reserved">Reserved</option>
-          <option value="occupied">Occupied</option>
-        </select>
-        <button onClick={() => { if (window.confirm(`Delete Table ${table.table_number}?`)) onDelete(table.id); }} aria-label={`Delete Table ${table.table_number}`}><FiTrash2 /></button>
-      </div></article>)}</div>{!tables.length && <div className="admin-placeholder"><div className="admin-placeholder-icon"><FiTable /></div><h2>No tables yet</h2><p>Add tables to manage floor reservations.</p></div>}</>;
+const TablesContent = ({ tables, setEditingTable, onDelete, onUpdateStatus }) => {
+  const [filter, setFilter] = useState('all');
+
+  const counts = {
+    total: tables.length,
+    available: tables.filter((t) => t.status === 'available').length,
+    reserved: tables.filter((t) => t.status === 'reserved').length,
+    occupied: tables.filter((t) => t.status === 'occupied').length,
+    totalCapacity: tables.reduce((sum, t) => sum + Number(t.capacity || 0), 0),
+  };
+
+  const filtered = filter === 'all' ? tables : tables.filter((t) => t.status === filter);
+
+  return (
+    <>
+      <div className="admin-content-heading">
+        <div>
+          <p className="eyebrow">Restaurant floor & seating</p>
+          <h2>Tables Management</h2>
+        </div>
+        <button className="admin-primary" onClick={() => setEditingTable(true)}>
+          <FiPlus /> Add table
+        </button>
+      </div>
+
+      {/* Summary KPI Cards */}
+      <div className="admin-tables-summary">
+        <div className="admin-tables-stat-card">
+          <div className="admin-tables-stat-icon total"><FiTable /></div>
+          <div>
+            <span>Total Tables</span>
+            <strong>{counts.total}</strong>
+          </div>
+        </div>
+        <div className="admin-tables-stat-card">
+          <div className="admin-tables-stat-icon available"><FiCheckCircle /></div>
+          <div>
+            <span>Available</span>
+            <strong>{counts.available}</strong>
+          </div>
+        </div>
+        <div className="admin-tables-stat-card">
+          <div className="admin-tables-stat-icon reserved"><FiClock /></div>
+          <div>
+            <span>Reserved</span>
+            <strong>{counts.reserved}</strong>
+          </div>
+        </div>
+        <div className="admin-tables-stat-card">
+          <div className="admin-tables-stat-icon occupied"><FiUsers /></div>
+          <div>
+            <span>Occupied</span>
+            <strong>{counts.occupied}</strong>
+          </div>
+        </div>
+        <div className="admin-tables-stat-card">
+          <div className="admin-tables-stat-icon capacity"><FiUser /></div>
+          <div>
+            <span>Total Capacity</span>
+            <strong>{counts.totalCapacity} seats</strong>
+          </div>
+        </div>
+      </div>
+
+      {/* Filter Tabs */}
+      <div className="admin-tabs" style={{ marginBottom: '20px' }}>
+        <button className={filter === 'all' ? 'active' : ''} onClick={() => setFilter('all')}>
+          All Tables ({counts.total})
+        </button>
+        <button className={filter === 'available' ? 'active' : ''} onClick={() => setFilter('available')}>
+          Available ({counts.available})
+        </button>
+        <button className={filter === 'reserved' ? 'active' : ''} onClick={() => setFilter('reserved')}>
+          Reserved ({counts.reserved})
+        </button>
+        <button className={filter === 'occupied' ? 'active' : ''} onClick={() => setFilter('occupied')}>
+          Occupied ({counts.occupied})
+        </button>
+      </div>
+
+      {/* Tables Grid */}
+      {filtered.length > 0 ? (
+        <div className="admin-tables-grid">
+          {filtered
+            .slice()
+            .sort((a, b) => Number(a.table_number) - Number(b.table_number))
+            .map((table) => {
+              return (
+                <article className={`admin-table-card status-${table.status}`} key={table.id}>
+                  <div className="admin-table-card-top">
+                    <div className="admin-table-badge">
+                      <FiTable className="admin-table-badge-icon" />
+                      <span>Table {table.table_number}</span>
+                    </div>
+                    <span className={`admin-table-status-pill ${table.status}`}>
+                      {table.status}
+                    </span>
+                  </div>
+
+                  <div className="admin-table-card-middle">
+                    <div className="admin-table-capacity-tag">
+                      <FiUsers size={14} />
+                      <span>Seats {table.capacity} {table.capacity === 1 ? 'Guest' : 'Guests'}</span>
+                    </div>
+                    <div className="admin-table-visual">
+                      <div className="admin-table-visual-plate">
+                        <span>T-{table.table_number}</span>
+                      </div>
+                      <div className="admin-table-seats-wrap">
+                        {Array.from({ length: Math.min(Number(table.capacity) || 2, 8) }).map((_, i) => (
+                          <span key={i} className="admin-table-seat-dot" />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="admin-table-card-footer">
+                    <div className="admin-table-status-wrap">
+                      <label className="admin-table-status-label">Status:</label>
+                      <select
+                        className={`admin-table-status-select ${table.status}`}
+                        value={table.status}
+                        onChange={(e) => onUpdateStatus(table.id, e.target.value)}
+                      >
+                        <option value="available">Available</option>
+                        <option value="reserved">Reserved</option>
+                        <option value="occupied">Occupied</option>
+                      </select>
+                    </div>
+
+                    <div className="admin-table-actions">
+                      <button
+                        type="button"
+                        className="admin-table-action-btn edit"
+                        onClick={() => setEditingTable(table)}
+                        aria-label={`Edit Table ${table.table_number}`}
+                        title="Edit Table"
+                      >
+                        <FiEdit2 />
+                      </button>
+                      <button
+                        type="button"
+                        className="admin-table-action-btn delete"
+                        onClick={() => {
+                          if (window.confirm(`Are you sure you want to delete Table ${table.table_number}?`)) {
+                            onDelete(table.id);
+                          }
+                        }}
+                        aria-label={`Delete Table ${table.table_number}`}
+                        title="Delete Table"
+                      >
+                        <FiTrash2 />
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+        </div>
+      ) : (
+        <div className="admin-placeholder">
+          <div className="admin-placeholder-icon">
+            <FiTable />
+          </div>
+          <h2>No tables found</h2>
+          <p>
+            {filter !== 'all'
+              ? `There are currently no tables marked as "${filter}".`
+              : 'Add tables to manage your dining floor reservations.'}
+          </p>
+        </div>
+      )}
+    </>
+  );
 };
 
-const TableEditor = ({ table, onSave, onClose }) => <div className="admin-modal-backdrop"><form className="admin-modal" onSubmit={onSave}><button type="button" className="admin-modal-close" onClick={onClose}><FiX /></button><p className="eyebrow">Floor plan</p><h2>{table ? 'Edit table' : 'Add table'}</h2><label>Table number<input name="table_number" type="number" min="1" defaultValue={table?.table_number || ''} required /></label><label>Capacity<input name="capacity" type="number" min="1" max="20" defaultValue={table?.capacity || '2'} required /></label><button className="admin-primary" type="submit"><FiSave /> Save table</button></form></div>;
+const TableEditor = ({ table, onSave, onClose }) => (
+  <div className="admin-modal-backdrop">
+    <form className="admin-modal" onSubmit={onSave}>
+      <button type="button" className="admin-modal-close" onClick={onClose}>
+        <FiX />
+      </button>
+      <p className="eyebrow">Floor plan</p>
+      <h2>{table ? 'Edit table' : 'Add table'}</h2>
+      <label>
+        Table number
+        <input name="table_number" type="number" min="1" defaultValue={table?.table_number || ''} required />
+      </label>
+      <label>
+        Seating capacity
+        <input name="capacity" type="number" min="1" max="20" defaultValue={table?.capacity || '2'} required />
+      </label>
+      <button className="admin-primary" type="submit">
+        <FiSave /> Save table
+      </button>
+    </form>
+  </div>
+);
+
+
+const PromotionsContent = ({ api, headers, addToast }) => {
+  const [promotions, setPromotions] = useState([]);
+  const [editingPromo, setEditingPromo] = useState(null);
+  const [isPromoModalOpen, setIsPromoModalOpen] = useState(false);
+  const [form, setForm] = useState({ title: '', message: '', image_url: '', link_url: '', is_active: true, priority: 0, starts_at: '', ends_at: '' });
+  const [preview, setPreview] = useState('');
+  const [fileName, setFileName] = useState('');
+  const fileRef = useRef(null);
+
+  const fetchPromotions = useCallback(async () => {
+    const res = await fetch(`${api}/promotions?all=true`, { headers });
+    if (!res.ok) throw new Error('Failed to load promotions');
+    const data = await res.json();
+    setPromotions(data.promotions || []);
+  }, [api, headers]);
+
+  useEffect(() => { fetchPromotions(); }, [fetchPromotions]);
+
+  const resetForm = () => {
+    setEditingPromo(null);
+    setForm({ title: '', message: '', image_url: '', link_url: '', is_active: true, priority: 0, starts_at: '', ends_at: '' });
+    setPreview('');
+    setFileName('');
+  };
+
+  const openEditor = (promo) => {
+    if (promo) {
+      setEditingPromo(promo);
+      setForm({
+        title: promo.title || '',
+        message: promo.message || '',
+        image_url: promo.image_url || '',
+        link_url: promo.link_url || '',
+        is_active: promo.is_active,
+        priority: promo.priority || 0,
+        starts_at: promo.starts_at ? promo.starts_at.slice(0, 16) : '',
+        ends_at: promo.ends_at ? promo.ends_at.slice(0, 16) : '',
+      });
+      setPreview(promo.image_url || '');
+      setFileName('');
+    } else {
+      resetForm();
+    }
+    setIsPromoModalOpen(true);
+  };
+
+  const closePromoModal = () => {
+    setIsPromoModalOpen(false);
+    resetForm();
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (preview && preview.startsWith('blob:')) URL.revokeObjectURL(preview);
+    const url = URL.createObjectURL(file);
+    setPreview(url);
+    setFileName(file.name);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setForm((prev) => ({ ...prev, image_url: reader.result }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const clearImage = () => {
+    if (preview && preview.startsWith('blob:')) URL.revokeObjectURL(preview);
+    setPreview('');
+    setFileName('');
+    setForm((prev) => ({ ...prev, image_url: '' }));
+    if (fileRef.current) fileRef.current.value = '';
+  };
+
+  const savePromotion = async (e) => {
+    e.preventDefault();
+    const payload = {
+      title: form.title,
+      message: form.message,
+      image_url: form.image_url || null,
+      link_url: form.link_url || null,
+      is_active: form.is_active,
+      priority: Number(form.priority || 0),
+      starts_at: form.starts_at || null,
+      ends_at: form.ends_at || null,
+    };
+    try {
+      const url = editingPromo ? `${api}/promotions/${editingPromo.id}` : `${api}/promotions`;
+      const res = await fetch(url, {
+        method: editingPromo ? 'PATCH' : 'POST',
+        headers,
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error('Failed to save promotion');
+      addToast(editingPromo ? 'Promotion updated' : 'Promotion created', 'success');
+      resetForm();
+      await fetchPromotions();
+    } catch (err) {
+      addToast(err.message || 'Save failed', 'error');
+    }
+  };
+
+  const deletePromotion = async (id) => {
+    if (!window.confirm('Delete this promotion?')) return;
+    try {
+      const res = await fetch(`${api}/promotions/${id}`, { method: 'DELETE', headers });
+      if (!res.ok) throw new Error('Failed to delete promotion');
+      addToast('Promotion deleted', 'success');
+      await fetchPromotions();
+    } catch (err) {
+      addToast(err.message || 'Delete failed', 'error');
+    }
+  };
+
+  return (
+    <>
+      <div className="admin-content-heading"><div><p className="eyebrow">Marketing</p><h2>Promotions</h2></div><button className="admin-primary" onClick={() => openEditor(null)}><FiPlus /> New promotion</button></div>
+      <div className="admin-menu-grid">
+        {promotions.map((promo) => (
+          <article className="admin-menu-card" key={promo.id}>
+            <div className="admin-menu-card-body">
+              <div className="admin-menu-card-top">
+                <div className="admin-menu-card-icon"><FiGift /></div>
+                <div className="admin-menu-card-info">
+                  <strong className="admin-menu-card-name">{promo.title || 'Untitled promotion'}</strong>
+                  <span className="admin-menu-card-category">{promo.is_active ? 'Active' : 'Inactive'} · Priority {promo.priority || 0}</span>
+                </div>
+                <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                  <span className={`admin-menu-card-availability ${promo.is_active ? 'available' : 'unavailable'}`}>{promo.is_active ? 'Active' : 'Inactive'}</span>
+                </div>
+              </div>
+              <p className="admin-menu-card-description">{promo.message}</p>
+              {(promo.image_url || preview) && <img className="admin-modal-image-preview" src={promo.image_url || preview} alt={promo.title || 'Promo'} onError={(e) => { e.target.style.display = 'none'; }} />}
+              <div className="admin-menu-card-footer">
+                <small>{promo.starts_at ? new Date(promo.starts_at).toLocaleString() : ''} {promo.ends_at ? '→ ' + new Date(promo.ends_at).toLocaleString() : ''}</small>
+                <div className="admin-menu-card-actions">
+                  <button onClick={() => openEditor(promo)} aria-label={`Edit ${promo.title || 'promotion'}`} title="Edit"><FiEdit2 /></button>
+                  <button onClick={() => deletePromotion(promo.id)} aria-label={`Delete ${promo.title || 'promotion'}`} title="Delete"><FiTrash2 /></button>
+                </div>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+      {!promotions.length && <div className="admin-placeholder"><div className="admin-placeholder-icon"><FiGift /></div><h2>No promotions yet</h2><p>Create your first promotional banner.</p></div>}
+
+      {isPromoModalOpen && (
+        <div className="admin-modal-backdrop">
+          <form className="admin-modal" onSubmit={savePromotion}>
+            <button type="button" className="admin-modal-close" onClick={closePromoModal}><FiX /></button>
+            <p className="eyebrow">Marketing</p>
+            <h2>{editingPromo ? 'Edit promotion' : 'New promotion'}</h2>
+            <div className="admin-modal-form">
+              <label>Title<input name="title" value={form.title} onChange={(e) => setForm((prev) => ({ ...prev, title: e.target.value }))} /></label>
+              <label>Message<textarea name="message" rows="3" value={form.message} onChange={(e) => setForm((prev) => ({ ...prev, message: e.target.value }))} required /></label>
+              <label>Image<input id="promo-image-input" name="image" type="hidden" value={form.image_url} />
+                <div className="admin-upload-row">
+                  <button type="button" className="admin-upload-button" onClick={() => fileRef.current?.click()}>
+                    <FiUpload /> {fileName || 'Choose image'}
+                  </button>
+                  {preview && <button type="button" className="admin-upload-clear" onClick={clearImage}>Remove</button>}
+                </div>
+                <input ref={fileRef} name="image_file" type="file" accept="image/jpeg,image/png,image/webp" onChange={handleFileChange} style={{ display: 'none' }} />
+                {preview && <img className="admin-modal-image-preview" src={preview} alt="Preview" onError={(e) => { e.target.style.display = 'none'; }} />}
+              </label>
+              <label>Link URL<input name="link_url" value={form.link_url} onChange={(e) => setForm((prev) => ({ ...prev, link_url: e.target.value }))} placeholder="https://..." /></label>
+              <label>Priority<input name="priority" type="number" value={form.priority} onChange={(e) => setForm((prev) => ({ ...prev, priority: e.target.value }))} /></label>
+              <label>Starts<input name="starts_at" type="datetime-local" value={form.starts_at} onChange={(e) => setForm((prev) => ({ ...prev, starts_at: e.target.value }))} /></label>
+              <label>Ends<input name="ends_at" type="datetime-local" value={form.ends_at} onChange={(e) => setForm((prev) => ({ ...prev, ends_at: e.target.value }))} /></label>
+              <label className="admin-toggle-label"><input type="checkbox" checked={form.is_active} onChange={(e) => setForm((prev) => ({ ...prev, is_active: e.target.checked }))} /> Active</label>
+            </div>
+            <button className="admin-primary" type="submit"><FiSave /> Save promotion</button>
+          </form>
+        </div>
+      )}
+    </>
+  );
+};
 
 export default AdminDashboard;

@@ -45,9 +45,9 @@ const DEFAULT_ITEMS = [
     hoverStyles: { bgColor: '#4a904a', textColor: '#ffffff' }
   },
   {
-    label: 'Blog',
-    href: '/blog',
-    ariaLabel: 'Blog',
+    label: 'Feed',
+    href: '/feed',
+    ariaLabel: 'Feed',
     rotation: -8,
     icon: FiBookOpen,
     hoverStyles: { bgColor: '#5ab55a', textColor: '#ffffff' }

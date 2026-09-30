@@ -147,7 +147,7 @@ const OFFERS_DATA = [
   }
 ];
 
-const Menu = ({
+const Menu = ({ api,
   items,
   categories,
   filter,
@@ -174,7 +174,36 @@ const Menu = ({
   loading = false,
 }) => {
   const { addToast } = useToast();
+  const [promotions, setPromotions] = useState([]);
+  const [dismissedPromos, setDismissedPromos] = useState([]);
   const isWineActive = filter === "Wine";
+
+  useEffect(() => {
+    fetch(`${api}/promotions`)
+      .then((res) => { console.log('[promo] fetch status', res.status); return res.json(); })
+      .then((data) => { console.log('[promo] fetched', data.promotions?.length || 0); setPromotions(data.promotions || []); })
+      .catch((err) => { console.error('[promo] fetch failed', err); });
+    const dismissed = JSON.parse(localStorage.getItem('chateau254_dismissed_promotions') || '[]');
+    setDismissedPromos(dismissed);
+  }, []);
+
+  const dismissPromotion = (id) => {
+    const updated = [...dismissedPromos, id];
+    setDismissedPromos(updated);
+    localStorage.setItem('chateau254_dismissed_promotions', JSON.stringify(updated));
+  };
+
+  // For testing: run clearDismissedPromos() in console to reset dismissed promos
+  if (typeof window !== 'undefined') {
+    window.clearDismissedPromos = () => {
+      localStorage.removeItem('chateau254_dismissed_promotions');
+      setDismissedPromos([]);
+    };
+  }
+
+  const activePromo = promotions.find((p) => !dismissedPromos.includes(p.id) && p.is_active);
+  console.log("[promo-menu] promotions", promotions, "dismissed", dismissedPromos, "activePromo", activePromo);
+  console.log("[promo] activePromo", activePromo);
 
   // Carousel slider state & drag handlers
   const carouselTrackRef = useRef(null);
@@ -396,6 +425,35 @@ const Menu = ({
           </button>
         </div>
       </div>
+
+      {activePromo && (
+        <div className="promo-banner promo-modal" role="status" aria-live="polite" onClick={(event) => { if (event.target === event.currentTarget) dismissPromotion(activePromo.id); }}>
+          <div className="promo-modal-card">
+            {activePromo.image_url && (
+              <div className="promo-media">
+                <img src={activePromo.image_url} alt={activePromo.title || 'Promotion'} />
+              </div>
+            )}
+            <div className="promo-modal-shade" aria-hidden="true" />
+            <div className="promo-content">
+              <div className="promo-copy">
+                <span className="promo-kicker">Château feature</span>
+                {activePromo.title && <h3>{activePromo.title}</h3>}
+                <p>{activePromo.message}</p>
+              </div>
+            </div>
+            <button className="promo-close" onClick={() => dismissPromotion(activePromo.id)} aria-label="Close promotion"><FiX /></button>
+          </div>
+        </div>
+      )}
+      {/* {!activePromo && promotions.length === 0 && (
+        <div className="promo-banner promo-banner-placeholder">
+          <div className="promo-content">
+            <h3>Coming Soon</h3>
+            <p>We have exciting promotions coming your way. Stay tuned!</p>
+          </div>
+        </div>
+      )} */}
 
       <div className="menu-mode-toggle">
         <button className="mode-button" onClick={() => onModeChange(mode === "takeout" ? "dining" : "takeout")} type="button">

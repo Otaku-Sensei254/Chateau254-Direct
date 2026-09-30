@@ -765,7 +765,7 @@
 .menu-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
-    gap: 16px;
+    gap: 10px;
 }
 
 .menu-card {
@@ -775,6 +775,7 @@
     overflow: hidden;
     animation: rise .5s both;
     position: relative;
+    /* width: 500px; */
 }
 
 .food-image {
