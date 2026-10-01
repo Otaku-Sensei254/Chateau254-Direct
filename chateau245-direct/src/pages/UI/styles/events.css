@@ -248,7 +248,7 @@
 
 .catering-banner-content p {
     font-size: 13px;
-    color: #eed5ce;
+    color: var(--border-strong);
     margin: 0;
     max-width: 540px;
     line-height: 1.5;

@@ -84,16 +84,16 @@ const Booking = ({ user, token, selectedItems = [], onClearSelections }) => {
       <div className="booking-field">
         <label>Selected items</label>
         {selectedItems.length === 0 ? (
-          <p style={{ color: '#837a75', fontSize: '13px' }}>No items selected yet. Browse the Dine-in menu and add items before booking.</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: '13px' }}>No items selected yet. Browse the Dine-in menu and add items before booking.</p>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {selectedItems.map((item) => (
-              <div key={item.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', padding: '8px 10px', border: '1px solid #e9e1dc', borderRadius: '8px', background: '#fff' }}>
+              <div key={item.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', padding: '8px 10px', border: '1px solid var(--border)', borderRadius: '8px', background: 'var(--surface-raised)' }}>
                 <div>
                   <strong>{item.name}</strong>
-                  <span style={{ marginLeft: '8px', color: '#837a75', fontSize: '12px' }}>KES {Number(item.price).toLocaleString()}</span>
+                  <span style={{ marginLeft: '8px', color: 'var(--text-muted)', fontSize: '12px' }}>KES {Number(item.price).toLocaleString()}</span>
                 </div>
-                <button type="button" onClick={() => onClearSelections((prev) => prev.filter((i) => i.id !== item.id))} style={{ background: 'none', border: 'none', color: '#c62828', cursor: 'pointer' }}><FiX /></button>
+                <button type="button" onClick={() => onClearSelections((prev) => prev.filter((i) => i.id !== item.id))} style={{ background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer' }}><FiX /></button>
               </div>
             ))}
           </div>

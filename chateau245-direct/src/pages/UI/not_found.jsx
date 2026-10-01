@@ -76,7 +76,7 @@ const NotFound = ({ onHome, onBack }) => {
         {/* Quick Search */}
         <div className="notfound-search">
           <form onSubmit={handleSearchSubmit}>
-            <FiSearch style={{ color: '#a0958e', marginRight: '8px', fontSize: '16px' }} />
+            <FiSearch style={{ color: 'var(--text-faint)', marginRight: '8px', fontSize: '16px' }} />
             <input
               type="text"
               placeholder="Search dishes, wines, or categories..."

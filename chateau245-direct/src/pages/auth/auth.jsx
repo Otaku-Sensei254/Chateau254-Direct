@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FiArrowLeft, FiArrowRight, FiMail, FiLock, FiUser, FiPhone, FiEye, FiEyeOff } from 'react-icons/fi';
-import Brand from '../../components/Navigation';
+import Brand from '../../components/Brand';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 

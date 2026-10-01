@@ -81,6 +81,50 @@
     /* WhatsApp's mark colour is fixed by the platform, not the brand. */
     --whatsapp: #25d366;
 
+    /* Panels that sit on a dark fill (sidebar, rider rail, voucher forms) need
+       their own border and text values, because --border and --text-muted are
+       tuned for a light page background. */
+    --border-on-dark: #3a3228;
+    --border-on-dark-strong: #4a3e36;
+    --text-on-dark-muted: #aeb2b1;
+    --text-on-dark-faint: #c0b4aa;
+    --gold-ink: #a97643;
+    --gold-ink-bright: #b56e37;
+
+    /* Softer status inks for badges, counters and inline hints. */
+    --danger-soft: #cf5e58;
+    --danger-ink: #efb0ac;
+    --danger-ink-bright: #f08090;
+    --warning-soft: #e17d36;
+    --warning-ink: #ffc93c;
+    --info-soft: #6e83ca;
+    --info-deep: #1a5b82;
+    --info-ink: #c5dfef;
+    --success-ink-alt: #579a74;
+    --success-ink-light: #c8e6c9;
+    --success-deep: #54715b;
+
+    /* Wine varietal accents, mirroring the cellar badge family above. */
+    --varietal-red: #c05070;
+    --varietal-red-deep: #854d0e;
+    --varietal-red-ink: #7a3b00;
+    --varietal-white: #a8c888;
+    --varietal-white-ink: #854d0e;
+    --varietal-sparkling-ink: #713f12;
+    --varietal-rose-soft: #cb8493;
+    --varietal-rose-ink: #d890a0;
+    --varietal-sparkling-edge: #fef08a;
+    --varietal-amber: #9c5800;
+
+    /* Badge edge colours. */
+    --info-edge: #c7d2fe;
+    --info-edge-ink: #3730a3;
+    --success-edge: #a7f3d0;
+    --success-edge-ink: #065f46;
+    --warning-edge-ink: #92400e;
+    --danger-edge: #fecaca;
+    --danger-edge-ink: #c2410c;
+
     /* Legacy aliases kept so older rules keep working unchanged. */
     --wine: #761329;
     --wine-dark: #3d0b18;
@@ -88,7 +132,6 @@
     --cream: #f7f3ef;
     --muted: #837a75;
     --line: #e9e1dc;
-    --rider-grid-cols: 1fr 1fr;
 
     /* Channel triplets, used by translucent rgba() rules such as tinted overlays. */
     --brand-rgb: 118, 19, 41;
@@ -104,6 +147,27 @@
        rather than borrowing --success, which would leave it green after a rebrand. */
     --accent-nav: #2c5f2d;
     --accent-nav-deep: #1e4d1e;
+
+    /* Home hero sits on a dark photograph in both schemes, so its text and
+       button fills need values that stay legible over imagery rather than
+       following the page palette. */
+    --hero-text: #f7f3ef;
+    --hero-text-soft: #ded5c6;
+    --hero-accent: #e8d4a0;
+
+    --cta-primary-text: #ffffff;
+    --cta-quiet-bg: rgba(255, 255, 255, 0.08);
+    --cta-quiet-bg-hover: rgba(255, 255, 255, 0.16);
+    --cta-quiet-border: rgba(255, 255, 255, 0.32);
+    --cta-quiet-border-hover: rgba(255, 255, 255, 0.55);
+    --cta-quiet-text: #f7f3ef;
+
+    --cta-wine-bg: #4a1424;
+    --cta-wine-bg-hover: #5d1a2f;
+    --cta-wine-text: #f7f3ef;
+
+    /* Layout switch for the rider delivery/completed split. */
+    --rider-grid-cols: 1fr 1fr;
 }
 
 /* --------------------------------------------------------------------------
@@ -167,6 +231,44 @@
 
     --whatsapp: #25d366;
 
+    --border-on-dark: #2f2a22;
+    --border-on-dark-strong: #3f382d;
+    --text-on-dark-muted: #948a78;
+    --text-on-dark-faint: #b8ae9a;
+    --gold-ink: #cba961;
+    --gold-ink-bright: #d3a05a;
+
+    --danger-soft: #d3776f;
+    --danger-ink: #4a2b28;
+    --danger-ink-bright: #e08a82;
+    --warning-soft: #d3a05a;
+    --warning-ink: #e0c489;
+    --info-soft: #7f9ad4;
+    --info-deep: #a8c8dc;
+    --info-ink: #161d2a;
+    --success-ink-alt: #74b07a;
+    --success-ink-light: #1a2a1c;
+    --success-deep: #5f9c66;
+
+    --varietal-red: #c9707f;
+    --varietal-red-deep: #c9a961;
+    --varietal-red-ink: #cba961;
+    --varietal-white: #9dbb7d;
+    --varietal-white-ink: #cba961;
+    --varietal-sparkling-ink: #d3a05a;
+    --varietal-rose-soft: #c98fa0;
+    --varietal-rose-ink: #d9a3b1;
+    --varietal-sparkling-edge: #3f382d;
+    --varietal-amber: #d3a05a;
+
+    --info-edge: #2c3549;
+    --info-edge-ink: #a5b6f0;
+    --success-edge: #23402c;
+    --success-edge-ink: #7fd3a6;
+    --warning-edge-ink: #d3a05a;
+    --danger-edge: #3a2220;
+    --danger-edge-ink: #d3776f;
+
     --wine: #b08d45;
     --wine-dark: #7a6129;
     --ink: #f6f1e6;
@@ -182,7 +284,27 @@
     --warning-rgb: 211, 160, 90;
     --info-rgb: 127, 154, 212;
     --surface-raised-rgb: 23, 21, 18;
+    --rider-grid-cols: 1fr 1fr;
 
     --accent-nav: #b08d45;
     --accent-nav-deep: #8a6c30;
+
+    /* Black and dirty gold: only one gold accent is allowed on the hero, so
+       the headline reads as cream and the remaining buttons take solid,
+       darker fills instead of competing gold gradients. */
+    --hero-text: #f6f1e6;
+    --hero-text-soft: #d6cdba;
+    --hero-accent: #d8bd82;
+
+    --cta-primary-text: #14100a;
+
+    --cta-quiet-bg: rgba(20, 18, 14, 0.72);
+    --cta-quiet-bg-hover: rgba(30, 26, 20, 0.9);
+    --cta-quiet-border: rgba(216, 189, 130, 0.42);
+    --cta-quiet-border-hover: rgba(216, 189, 130, 0.75);
+    --cta-quiet-text: #e8dfcc;
+
+    --cta-wine-bg: #1c1913;
+    --cta-wine-bg-hover: #2a251b;
+    --cta-wine-text: #d8bd82;
 }

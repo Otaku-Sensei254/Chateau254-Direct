@@ -1,16 +1,13 @@
 import React from 'react';
 import StaggeredMenu from './StaggeredMenu';
-// import Logo from "./images/chateauLogo2.png";
 
-export const AppHeader = ({ cartCount, userName = '', onProfile, onCart, onHome, onBack }) => {
+export const AppHeader = ({ cartCount, userName = '', onProfile, onCart }) => {
   return (
     <StaggeredMenu
       cartCount={cartCount}
       userName={userName}
       onProfile={onProfile}
       onCart={onCart}
-      onHome={onHome}
-      onBack={onBack}
       menuButtonColor="var(--accent-nav)"
       openMenuButtonColor="var(--accent-nav-deep)"
       accentColor="var(--accent-nav)"
@@ -24,11 +21,6 @@ export const AppHeader = ({ cartCount, userName = '', onProfile, onCart, onHome,
   );
 };
 
-export const Brand = () => (
-  <div className="brand">
-    <span style={{color: "black"}}>Chateau</span><span style={{color: "gold"}}>254</span>
-  </div>
-);
 
 export const Summary = ({ subtotal, delivery }) => (
   <div className="summary">

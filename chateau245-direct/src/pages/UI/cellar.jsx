@@ -195,12 +195,12 @@ const Cellar = ({ user, onMenu, onBack, loading = false }) => {
           {loading ? (
             <div className="cellar-grid">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} style={{ background: '#181410', borderRadius: '14px', border: '1px solid #2a2420', overflow: 'hidden', padding: '14px' }}>
-                  <LoaderSkeleton width="100%" height={165} borderRadius={8} baseColor="#201c18" highlightColor="rgba(201, 170, 124, 0.15)" />
+                <div key={i} style={{ background: 'var(--surface-inverse)', borderRadius: '14px', border: '1px solid var(--border-on-dark-strong)', overflow: 'hidden', padding: '14px' }}>
+                  <LoaderSkeleton width="100%" height={165} borderRadius={8} baseColor="var(--text-strong)" highlightColor="rgba(201, 170, 124, 0.15)" />
                   <div style={{ marginTop: '14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <LoaderSkeleton width="70%" height={18} borderRadius={4} baseColor="#201c18" highlightColor="rgba(201, 170, 124, 0.15)" />
-                    <LoaderSkeleton width="45%" height={12} borderRadius={4} baseColor="#201c18" highlightColor="rgba(201, 170, 124, 0.15)" />
-                    <LoaderSkeleton width="55%" height={12} borderRadius={4} baseColor="#201c18" highlightColor="rgba(201, 170, 124, 0.15)" />
+                    <LoaderSkeleton width="70%" height={18} borderRadius={4} baseColor="var(--text-strong)" highlightColor="rgba(201, 170, 124, 0.15)" />
+                    <LoaderSkeleton width="45%" height={12} borderRadius={4} baseColor="var(--text-strong)" highlightColor="rgba(201, 170, 124, 0.15)" />
+                    <LoaderSkeleton width="55%" height={12} borderRadius={4} baseColor="var(--text-strong)" highlightColor="rgba(201, 170, 124, 0.15)" />
                   </div>
                 </div>
               ))}

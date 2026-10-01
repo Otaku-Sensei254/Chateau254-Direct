@@ -53,7 +53,7 @@ export default function InstallButton() {
       style={{
         padding: '8px 16px',
         background: 'var(--accent-nav)',
-        color: '#fff',
+        color: 'var(--text-on-accent)',
         border: 'none',
         borderRadius: '4px',
         cursor: 'pointer',

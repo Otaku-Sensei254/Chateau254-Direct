@@ -162,18 +162,18 @@ const NavigationPage = ({ order, riderLocation, customerLocation, onClose }) => 
   return (
     <div style={{
       position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-      zIndex: 9999, background: '#fff',
+      zIndex: 9999, background: 'var(--surface-raised)',
       display: 'flex', flexDirection: 'column',
     }}>
       {/* Top bar */}
       <div className="nav-top-bar" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '12px 16px', background: '#1a1a2e', color: 'white',
+        padding: '12px 16px', background: 'var(--surface-inverse)', color: 'var(--text-on-accent)',
         boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
       }}>
         <button onClick={onClose} style={{
           background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: '8px',
-          padding: '8px 12px', color: 'white', cursor: 'pointer',
+          padding: '8px 12px', color: 'var(--text-on-accent)', cursor: 'pointer',
           display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px',
         }}><FiX size={16} /> Close</button>
           <div style={{ textAlign: 'center' }}>
@@ -193,9 +193,9 @@ const NavigationPage = ({ order, riderLocation, customerLocation, onClose }) => 
           {!riderLocation && (
             <div style={{
               position: 'absolute', top: '16px', left: '50%', transform: 'translateX(-50%)',
-              background: 'white', padding: '12px 20px', borderRadius: '10px',
+              background: 'var(--surface-raised)', padding: '12px 20px', borderRadius: '10px',
               boxShadow: '0 4px 16px rgba(0,0,0,0.15)', zIndex: 1000,
-              fontSize: '14px', color: '#333', textAlign: 'center',
+              fontSize: '14px', color: 'var(--text)', textAlign: 'center',
               display: 'flex', alignItems: 'center', gap: '8px',
             }}>
               <FiMapPin size={18} color="#2196F3" />
@@ -206,22 +206,22 @@ const NavigationPage = ({ order, riderLocation, customerLocation, onClose }) => 
           {loading && (
             <div style={{
               position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-              background: 'white', padding: '16px 24px', borderRadius: '12px',
+              background: 'var(--surface-raised)', padding: '16px 24px', borderRadius: '12px',
               boxShadow: '0 4px 16px rgba(0,0,0,0.15)', zIndex: 1000,
-              fontSize: '14px', color: '#333',
+              fontSize: '14px', color: 'var(--text)',
             }}>Calculating route...</div>
           )}
           {error && (
             <div style={{
               position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-              background: '#fff3cd', padding: '16px 24px', borderRadius: '12px',
+              background: 'var(--surface-hover)', padding: '16px 24px', borderRadius: '12px',
               boxShadow: '0 4px 16px rgba(0,0,0,0.15)', zIndex: 1000,
-              fontSize: '14px', color: '#856404', textAlign: 'center',
+              fontSize: '14px', color: 'var(--varietal-amber)', textAlign: 'center',
             }}>
               {error}
               <br />
               <button onClick={fetchRoute} style={{
-                marginTop: '8px', padding: '6px 16px', background: '#ffc107',
+                marginTop: '8px', padding: '6px 16px', background: 'var(--warning-ink)',
                 border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 600,
               }}>Retry</button>
             </div>
@@ -241,7 +241,7 @@ const NavigationPage = ({ order, riderLocation, customerLocation, onClose }) => 
 
             {polylineCoords.length > 0 && (
               <>
-                <Polyline positions={polylineCoords} color="#ccc" weight={6} opacity={0.5} />
+                <Polyline positions={polylineCoords} color="var(--varietal-blue-ink)" weight={6} opacity={0.5} />
                 <Polyline positions={polylineCoords.slice(
                   (() => {
                     const stepGeomLengths = steps.slice(0, activeIdx).reduce((sum, s) => {
@@ -257,12 +257,12 @@ const NavigationPage = ({ order, riderLocation, customerLocation, onClose }) => 
           ) : (
             <div style={{
               position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
-              alignItems: 'center', justifyContent: 'center', background: '#f5f5f5',
-              color: '#666', gap: '12px',
+              alignItems: 'center', justifyContent: 'center', background: 'var(--surface-sunken)',
+              color: 'var(--success-deep)', gap: '12px',
             }}>
-              <FiMapPin size={40} color="#ccc" />
+              <FiMapPin size={40} color="var(--varietal-blue-ink)" />
               <div style={{ fontSize: '16px', fontWeight: 600 }}>Waiting for location...</div>
-              <div style={{ fontSize: '13px', color: '#999' }}>Enable location access to start navigation</div>
+              <div style={{ fontSize: '13px', color: 'var(--text-faint)' }}>Enable location access to start navigation</div>
             </div>
           )}
 
@@ -270,31 +270,31 @@ const NavigationPage = ({ order, riderLocation, customerLocation, onClose }) => 
           {steps[activeIdx] && (
             <div className="nav-instruction-overlay" style={{
               position: 'absolute', bottom: '16px', left: '16px', right: '16px',
-              background: 'white', borderRadius: '12px', padding: '16px',
+              background: 'var(--surface-raised)', borderRadius: '12px', padding: '16px',
               boxShadow: '0 4px 16px rgba(0,0,0,0.2)', zIndex: 1000,
               display: 'flex', alignItems: 'center', gap: '12px',
             }}>
               <div style={{
                 width: '44px', height: '44px', borderRadius: '10px',
-                background: '#e3f2fd', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: 'var(--surface-sunken)', display: 'flex', alignItems: 'center', justifyContent: 'center',
                 flexShrink: 0,
               }}>
                 {(() => {
                   const Icon = maneuverIcon(steps[activeIdx].maneuver?.type, steps[activeIdx].maneuver?.modifier);
-                  return <Icon size={22} color="#1565c0" />;
+                  return <Icon size={22} color="var(--info)" />;
                 })()}
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 700, fontSize: '16px', marginBottom: '2px' }}>
                   {instructionText(steps[activeIdx])}
                 </div>
-                <div style={{ fontSize: '13px', color: '#666' }}>
+                <div style={{ fontSize: '13px', color: 'var(--success-deep)' }}>
                   in {formatDistance(steps[activeIdx].distance || 0)}
                 </div>
               </div>
               <button onClick={onClose} style={{
                 flexShrink: 0, width: '40px', height: '40px', borderRadius: '10px',
-                background: '#e53935', color: 'white', border: 'none',
+                background: '#e53935', color: 'var(--text-on-accent)', border: 'none',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 cursor: 'pointer',
               }}><FiX size={18} /></button>
@@ -304,11 +304,11 @@ const NavigationPage = ({ order, riderLocation, customerLocation, onClose }) => 
 
         {/* Directions panel (desktop) */}
         <div style={{
-          width: '320px', background: '#fafafa', borderLeft: '1px solid #e0e0e0',
+          width: '320px', background: 'var(--surface-subtle)', borderLeft: '1px solid var(--border)',
           display: 'flex', flexDirection: 'column', overflow: 'hidden',
         }} className="nav-directions-panel">
-          <div style={{ padding: '12px 16px', borderBottom: '1px solid #e0e0e0', background: 'white' }}>
-            <div style={{ fontSize: '13px', color: '#666' }}>Turn-by-turn directions</div>
+          <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)', background: 'var(--surface-raised)' }}>
+            <div style={{ fontSize: '13px', color: 'var(--success-deep)' }}>Turn-by-turn directions</div>
           </div>
 
           <div ref={stepsListRef} style={{ flex: 1, overflowY: 'auto' }}>
@@ -323,28 +323,28 @@ const NavigationPage = ({ order, riderLocation, customerLocation, onClose }) => 
                   style={{
                     display: 'flex', alignItems: 'flex-start', gap: '12px',
                     padding: '12px 16px',
-                    background: isActive ? '#e3f2fd' : 'transparent',
+                    background: isActive ? 'var(--surface-sunken)' : 'transparent',
                     borderLeft: isActive ? '3px solid #1565c0' : '3px solid transparent',
                     opacity: isDone ? 0.5 : 1,
                   }}
                 >
                   <div style={{
                     width: '32px', height: '32px', borderRadius: '8px',
-                    background: isDone ? '#e8f5e9' : isActive ? '#bbdefb' : '#f0f0f0',
+                    background: isDone ? 'var(--surface-muted)' : isActive ? 'var(--info-ink)' : 'var(--surface-hover)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     flexShrink: 0, marginTop: '2px',
                   }}>
-                    {isDone ? <FiCheck size={16} color="#4caf50" /> : <Icon size={16} color={isActive ? '#1565c0' : '#666'} />}
+                    {isDone ? <FiCheck size={16} color="#4caf50" /> : <Icon size={16} color={isActive ? 'var(--info)' : 'var(--success-deep)'} />}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{
                       fontSize: '14px', fontWeight: isActive ? 700 : 500,
-                      color: isDone ? '#999' : '#333', marginBottom: '2px',
+                      color: isDone ? 'var(--text-faint)' : 'var(--text)', marginBottom: '2px',
                     }}>
                       {instructionText(step)}
                     </div>
                     {step.name && (
-                      <div style={{ fontSize: '12px', color: '#888' }}>{step.name}</div>
+                      <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{step.name}</div>
                     )}
                     <div style={{ fontSize: '12px', color: '#aaa', marginTop: '2px' }}>
                       {formatDistance(step.distance || 0)} · {formatDuration(step.duration || 0)}
@@ -355,9 +355,9 @@ const NavigationPage = ({ order, riderLocation, customerLocation, onClose }) => 
             })}
           </div>
 
-          <div style={{ padding: '12px 16px', borderTop: '1px solid #e0e0e0', background: 'white' }}>
+          <div style={{ padding: '12px 16px', borderTop: '1px solid var(--border)', background: 'var(--surface-raised)' }}>
             <button onClick={onClose} style={{
-              width: '100%', padding: '12px', background: '#e53935', color: 'white',
+              width: '100%', padding: '12px', background: '#e53935', color: 'var(--text-on-accent)',
               border: 'none', borderRadius: '10px', fontSize: '14px', fontWeight: 600,
               cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
             }}><FiX size={16} /> End navigation</button>

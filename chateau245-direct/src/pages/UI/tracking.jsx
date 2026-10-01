@@ -98,14 +98,14 @@ const Tracking = ({ order, token, api, onMenu }) => {
         )}
       </div>
 
-      <div className="tracking-map-container" style={{ height: '300px', borderRadius: '12px', overflow: 'hidden', marginBottom: '1.5rem', border: '1px solid #e5e5e5' }}>
+      <div className="tracking-map-container" style={{ height: '300px', borderRadius: '12px', overflow: 'hidden', marginBottom: '1.5rem', border: '1px solid var(--border)' }}>
         <RiderMap riderLocation={riderLocation} customerLocation={customerLocation} orderAddress={currentOrder.delivery_address} />
       </div>
 
       {error && (
-        <div style={{ background: '#fff3cd', border: '1px solid #ffc107', borderRadius: '8px', padding: '12px', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ color: '#856404' }}>{error}</span>
-          <button onClick={fetchOrderRoute} style={{ background: 'none', border: 'none', color: '#856404', cursor: 'pointer', padding: '4px' }}><FiRefreshCw size={16} /></button>
+        <div style={{ background: 'var(--surface-hover)', border: '1px solid #ffc107', borderRadius: '8px', padding: '12px', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ color: 'var(--varietal-amber)' }}>{error}</span>
+          <button onClick={fetchOrderRoute} style={{ background: 'none', border: 'none', color: 'var(--varietal-amber)', cursor: 'pointer', padding: '4px' }}><FiRefreshCw size={16} /></button>
         </div>
       )}
 
@@ -115,9 +115,9 @@ const Tracking = ({ order, token, api, onMenu }) => {
         <p>{currentOrder.status === 'out_for_delivery' ? 'Your order is out for delivery.' : currentOrder.status === 'preparing' ? 'Your order is being prepared.' : currentOrder.status === 'completed' ? 'Your order has been delivered.' : 'Waiting for rider assignment...'}</p>
 
         {routeInfo && currentOrder.status === 'out_for_delivery' && (
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', margin: '1rem 0', padding: '0.75rem', background: '#f8f9fa', borderRadius: '8px' }}>
-            <div style={{ textAlign: 'center' }}><FiMapPin size={16} color="#4CAF50" /><div style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>{routeInfo.distance >= 1000 ? `${(routeInfo.distance / 1000).toFixed(1)} km` : `${Math.round(routeInfo.distance)} m`}</div></div>
-            <div style={{ textAlign: 'center' }}><FiClock size={16} color="#2196F3" /><div style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>{formatDuration(routeInfo.duration)}</div></div>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', margin: '1rem 0', padding: '0.75rem', background: 'var(--surface-subtle)', borderRadius: '8px' }}>
+            <div style={{ textAlign: 'center' }}><FiMapPin size={16} color="var(--success)" /><div style={{ fontSize: '14px', color: 'var(--success-deep)', marginTop: '4px' }}>{routeInfo.distance >= 1000 ? `${(routeInfo.distance / 1000).toFixed(1)} km` : `${Math.round(routeInfo.distance)} m`}</div></div>
+            <div style={{ textAlign: 'center' }}><FiClock size={16} color="var(--info)" /><div style={{ fontSize: '14px', color: 'var(--success-deep)', marginTop: '4px' }}>{formatDuration(routeInfo.duration)}</div></div>
           </div>
         )}
 

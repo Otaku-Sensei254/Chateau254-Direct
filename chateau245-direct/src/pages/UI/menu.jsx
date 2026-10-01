@@ -339,7 +339,7 @@ const Menu = ({ api,
           <span className="order-badge">
             <RiEBike2Fill /> Quick delivery
           </span>
-          <button className="order-badge" onClick={onBooking}>
+          <button className="reservations" onClick={onBooking}>
             <FiCalendar /> My Reservations {dineInSelections.length > 0 && <span className="reservation-count">{dineInSelections.length}</span>}
           </button>
         </div>

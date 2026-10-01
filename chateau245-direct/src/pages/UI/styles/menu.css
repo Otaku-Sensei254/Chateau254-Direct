@@ -17,7 +17,7 @@
 }
 .order-badge {
     color: var(--success-muted);
-    font-size: 11px;
+    font-size: 15px;
     font-weight: 700;
     display: flex;
     gap: 5px;
@@ -25,6 +25,17 @@
     justify-content: center;
     padding-bottom: 9px;
     border:none;
+}
+.reservations{
+    background: none;
+    border: none;
+    color: var(--success-muted);
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
 }
 
 .reservation-count {
@@ -459,13 +470,13 @@
 
 .offer-note.smart-value {
     background: var(--info-tint);
-    color: #1a5b82;
-    border: 1px solid #c5dfef;
+    color: var(--info-deep);
+    border: 1px solid var(--info-ink);
 }
 
 .offer-note.bundled {
     background: var(--warning-tint);
-    color: #9c5800;
+    color: var(--varietal-amber);
     border: 1px solid var(--gold-pale);
 }
 
@@ -510,7 +521,7 @@
     left: 8px;
     background: rgba(var(--brand-rgb), 0.88);
     backdrop-filter: blur(4px);
-    color: #ffc93c;
+    color: var(--warning-ink);
     font-size: 11px;
     font-weight: 700;
     padding: 3px 8px;
@@ -826,7 +837,7 @@
 }
 
 .menu-card.is-on-offer:hover {
-    border-color: #cb8493;
+    border-color: var(--varietal-rose-soft);
     box-shadow: 0 4px 16px rgba(var(--brand-rgb), 0.08);
 }
 

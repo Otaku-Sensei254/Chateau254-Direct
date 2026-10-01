@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { FiShoppingBag, FiUser, FiTwitter, FiChevronDown, FiX, FiInstagram, } from 'react-icons/fi';
 import { RiWhatsappLine } from "react-icons/ri";
 import { GiHamburgerMenu } from 'react-icons/gi';
+import Brand from './Brand';
 import './styles/StaggeredMenu.css';
 
 const defaultMenuItems = [
@@ -53,8 +54,6 @@ export const StaggeredMenu = ({
   userName = '',
   onProfile,
   onCart,
-  onHome,
-  onBack,
   user
 }) => {
   const navigate = useNavigate();
@@ -417,9 +416,7 @@ export const StaggeredMenu = ({
       </div>
 
       <header className="staggered-menu-header" aria-label="Main navigation header">
-        <div className="brand">
-          <span style={{ color: "black" }}>Chateau</span><span style={{ color: "gold" }}>254</span>
-        </div>
+        <Brand />
 
         {/* Desktop inline navigation */}
         <nav className="sm-desktop-nav" aria-label="Desktop Navigation">

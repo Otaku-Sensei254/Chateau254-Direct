@@ -176,7 +176,7 @@ const LocationPicker = ({ onLocationSelect }) => {
             top: '50%',
             transform: 'translateY(-50%)',
             fontSize: '12px',
-            color: '#999',
+            color: 'var(--text-faint)',
           }}>Searching...</span>
         )}
         {suggestions.length > 0 && (
@@ -185,7 +185,7 @@ const LocationPicker = ({ onLocationSelect }) => {
             top: '100%',
             left: 0,
             right: 0,
-            background: 'white',
+            background: 'var(--surface-raised)',
             border: '1px solid #ddd',
             borderTop: 'none',
             borderRadius: '0 0 8px 8px',
@@ -204,15 +204,15 @@ const LocationPicker = ({ onLocationSelect }) => {
                   width: '100%',
                   padding: '10px 12px',
                   textAlign: 'left',
-                  background: 'white',
+                  background: 'var(--surface-raised)',
                   border: 'none',
-                  borderBottom: '1px solid #f0f0f0',
+                  borderBottom: '1px solid var(--border-soft)',
                   cursor: 'pointer',
                   fontSize: '13px',
-                  color: '#333',
+                  color: 'var(--text)',
                 }}
-                onMouseEnter={(e) => e.target.style.background = '#f5f5f5'}
-                onMouseLeave={(e) => e.target.style.background = 'white'}
+                onMouseEnter={(e) => e.target.style.background='var(--surface-sunken)'}
+                onMouseLeave={(e) => e.target.style.background = 'var(--surface-raised)'}
               >
                 {item.display_name}
               </button>

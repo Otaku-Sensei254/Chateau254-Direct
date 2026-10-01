@@ -71,7 +71,7 @@
 .voucher-field input,
 .voucher-field select {
   background: var(--text-strong);
-  border: 1px solid #3a2e27;
+  border: 1px solid var(--border-on-dark);
   border-radius: 6px;
   color: var(--text-inverse);
   font-family: 'Montserrat', Arial, sans-serif;
@@ -171,7 +171,7 @@
   align-items: center;
   gap: 0.5rem;
   background: transparent;
-  border: 1px solid #3a2e27;
+  border: 1px solid var(--border-on-dark);
   color: var(--text-muted);
   border-radius: 8px;
   padding: 0.65rem 1.3rem;
@@ -183,7 +183,7 @@
 }
 
 .voucher-btn-print:hover {
-  border-color: #837a75;
+  border-color: var(--text-muted);
   color: var(--text-inverse);
 }
 
@@ -410,7 +410,7 @@
 
 .voucher-list-action-btn {
   background: transparent;
-  border: 1px solid #3a2e27;
+  border: 1px solid var(--border-on-dark);
   color: var(--text-muted);
   border-radius: 5px;
   padding: 0.3rem 0.6rem;
@@ -428,8 +428,8 @@
 }
 
 .voucher-list-action-btn.danger:hover {
-  border-color: #e05252;
-  color: #e05252;
+  border-color: var(--danger);
+  color: var(--danger);
 }
 
 /* ============================================================

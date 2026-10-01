@@ -202,7 +202,7 @@
 
 .cellar-card:hover {
     transform: translateY(-3px);
-    border-color: #4a3e36;
+    border-color: var(--border-on-dark-strong);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
 }
 
@@ -291,7 +291,7 @@
     top: 28px;
     right: 0;
     background: var(--text-strong);
-    border: 1px solid #3a3228;
+    border: 1px solid var(--border-on-dark);
     border-radius: 8px;
     overflow: hidden;
     z-index: 20;
@@ -307,7 +307,7 @@
     padding: 10px 14px;
     background: none;
     border: none;
-    color: #c0b4aa;
+    color: var(--text-on-dark-faint);
     font-size: 12px;
     text-align: left;
     cursor: pointer;
@@ -321,7 +321,7 @@
 
 .cellar-dropdown button.danger:hover {
     background: var(--brand-deep);
-    color: #f08090;
+    color: var(--danger-ink-bright);
 }
 
 /* Card info section */
@@ -408,7 +408,7 @@
 
 .cellar-empty button {
     background: none;
-    border: 1px solid #3a3228;
+    border: 1px solid var(--border-on-dark);
     color: var(--gold-light);
     padding: 8px 20px;
     border-radius: 20px;
@@ -468,15 +468,15 @@
 }
 
 .cellar-stat-icon.red {
-    color: #c05070;
+    color: var(--varietal-red);
 }
 
 .cellar-stat-icon.white {
-    color: #a8c888;
+    color: var(--varietal-white);
 }
 
 .cellar-stat-icon.rose {
-    color: #d890a0;
+    color: var(--varietal-rose-ink);
 }
 
 .cellar-stat div {
@@ -554,7 +554,7 @@
     width: 100%;
     padding: 10px 16px;
     background: var(--text);
-    border: 1px solid #3a3228;
+    border: 1px solid var(--border-on-dark);
     border-radius: 8px;
     color: var(--gold-pale);
     font-size: 12.5px;

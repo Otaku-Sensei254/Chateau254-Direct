@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FiBarChart2, FiCalendar, FiChevronDown, FiDownload, FiEdit2, FiGift, FiGrid, FiLogOut, FiMenu, FiPackage, FiPlus, FiSave, FiSearch, FiSettings, FiShoppingBag, FiTable, FiTrash2, FiTruck, FiUpload, FiUsers, FiX, FiMap, FiCheckCircle, FiClock, FiUser } from 'react-icons/fi';
-import Brand from '../../../components/Navigation';
+import Brand from '../../../components/Brand';
 import AdminFleetMap from '../../../components/AdminFleetMap';
 import { useSocket } from '../../../contexts/SocketContext';
 import { useToast } from '../../../contexts/ToastContext';
@@ -446,10 +446,10 @@ const OrdersContent = ({ orders, onUpdateStatus, updatingOrder, riders, formatCu
           <button className="accept-button" disabled={updatingOrder === order.id || !selectedRiders[order.id]} onClick={() => onUpdateStatus(order.id, 'out_for_delivery', selectedRiders[order.id])}>Send out</button>
         </div>}
       </td>
-    </tr>)}{!filtered.length && <tr><td colSpan={8} style={{ textAlign: 'center', padding: '2rem', color: '#a0958e' }}>No orders found</td></tr>}</tbody></table></div></>;
+    </tr>)}{!filtered.length && <tr><td colSpan={8} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-faint)' }}>No orders found</td></tr>}</tbody></table></div></>;
 };
 
-const OrderTable = ({ orders, formatCurrency, formatTime, compact }) => <div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>Order</th><th>Customer</th><th>Amount</th><th>Address</th><th>Time</th></tr></thead><tbody>{orders.map((order) => <tr key={order.id}><td>#{order.id.slice(0, 8)}</td><td>{order.customer_name || 'Unknown'}</td><td>{formatCurrency(order.total_amount)}</td><td>{order.delivery_address || '—'}</td><td>{formatTime(order.created_at)}</td></tr>)}{!orders.length && <tr><td colSpan={5} style={{ textAlign: 'center', padding: '2rem', color: '#a0958e' }}>No orders yet</td></tr>}</tbody></table></div>;
+const OrderTable = ({ orders, formatCurrency, formatTime, compact }) => <div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>Order</th><th>Customer</th><th>Amount</th><th>Address</th><th>Time</th></tr></thead><tbody>{orders.map((order) => <tr key={order.id}><td>#{order.id.slice(0, 8)}</td><td>{order.customer_name || 'Unknown'}</td><td>{formatCurrency(order.total_amount)}</td><td>{order.delivery_address || '—'}</td><td>{formatTime(order.created_at)}</td></tr>)}{!orders.length && <tr><td colSpan={5} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-faint)' }}>No orders yet</td></tr>}</tbody></table></div>;
 
 const MenuContent = ({ menu, setEditingItem, onDelete, fetchMenu, menuFilters, setMenuFilters, allCategories = [], allSubcategories = [] }) => {
   useEffect(() => {
@@ -576,7 +576,7 @@ const MenuContent = ({ menu, setEditingItem, onDelete, fetchMenu, menuFilters, s
   </>;
 };
 
-const CustomersContent = ({ customers }) => <><div className="admin-content-heading"><div><p className="eyebrow">Loyalty and accounts</p><h2>Customers</h2></div></div><div className="customer-summary"><span><strong>{customers.length}</strong> registered customers</span><span><strong>{customers.filter((c) => c.loyalty_points > 0).length}</strong> with loyalty points</span><span><strong>{customers.reduce((sum, c) => sum + (c.loyalty_points || 0), 0).toLocaleString()}</strong> total points</span></div><div className="admin-table-wrap"><table className="admin-table customer-table"><thead><tr><th>Customer</th><th>Email</th><th>Phone</th><th>Loyalty points</th><th>Joined</th></tr></thead><tbody>{customers.map((customer) => <tr key={customer.id || customer.email}><td><strong>{customer.full_name}</strong></td><td>{customer.email}</td><td>{customer.phone || '—'}</td><td>{customer.loyalty_points || 0} pts</td><td>{new Date(customer.created_at).toLocaleDateString()}</td></tr>)}{!customers.length && <tr><td colSpan={5} style={{ textAlign: 'center', padding: '2rem', color: '#a0958e' }}>No customers yet</td></tr>}</tbody></table></div></>;
+const CustomersContent = ({ customers }) => <><div className="admin-content-heading"><div><p className="eyebrow">Loyalty and accounts</p><h2>Customers</h2></div></div><div className="customer-summary"><span><strong>{customers.length}</strong> registered customers</span><span><strong>{customers.filter((c) => c.loyalty_points > 0).length}</strong> with loyalty points</span><span><strong>{customers.reduce((sum, c) => sum + (c.loyalty_points || 0), 0).toLocaleString()}</strong> total points</span></div><div className="admin-table-wrap"><table className="admin-table customer-table"><thead><tr><th>Customer</th><th>Email</th><th>Phone</th><th>Loyalty points</th><th>Joined</th></tr></thead><tbody>{customers.map((customer) => <tr key={customer.id || customer.email}><td><strong>{customer.full_name}</strong></td><td>{customer.email}</td><td>{customer.phone || '—'}</td><td>{customer.loyalty_points || 0} pts</td><td>{new Date(customer.created_at).toLocaleDateString()}</td></tr>)}{!customers.length && <tr><td colSpan={5} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-faint)' }}>No customers yet</td></tr>}</tbody></table></div></>;
 
 const RidersContent = ({ riders, onAdd, onRemove }) => <><div className="admin-content-heading"><div><p className="eyebrow">Delivery team</p><h2>Riders</h2></div><button className="admin-primary" onClick={onAdd}><FiPlus /> Add rider</button></div><div className="customer-summary"><span><strong>{riders.length}</strong> registered riders</span><span><strong>{riders.filter((r) => r.status === 'online').length}</strong> online now</span></div><div className="admin-rider-grid">{riders.map((rider) => <article className="admin-rider-row" key={rider.id}><div className="admin-rider-avatar">{rider.full_name?.split(' ').map((p) => p[0]).join('').slice(0, 2).toUpperCase()}</div><div className="admin-rider-name"><strong>{rider.full_name}</strong><span>{rider.phone}</span></div><span className={`rider-online-status ${rider.status === 'online' ? 'online' : ''}`}>{rider.status === 'online' ? 'Online' : rider.status === 'on_break' ? 'On break' : 'Offline'}</span><button className="admin-remove-rider" onClick={() => { if (window.confirm(`Remove ${rider.full_name}?`)) onRemove(rider.id); }} aria-label={`Remove ${rider.full_name}`}><FiTrash2 /></button></article>)}</div></>;
 
@@ -691,7 +691,7 @@ const ReportsContent = ({ api, headers, addToast }) => {
               <thead><tr><th>Item</th><th>Qty</th><th>Revenue</th></tr></thead>
               <tbody>
                 {report.topItems.map((item, index) => <tr key={`${item.name}-${index}`}><td>{item.name}</td><td>{item.quantity}</td><td>{kes(item.revenue)}</td></tr>)}
-                {!report.topItems.length && <tr><td colSpan={3} style={{ textAlign: 'center', padding: '2rem', color: '#a0958e' }}>No items sold</td></tr>}
+                {!report.topItems.length && <tr><td colSpan={3} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-faint)' }}>No items sold</td></tr>}
               </tbody>
             </table></div>
           </section>
@@ -702,7 +702,7 @@ const ReportsContent = ({ api, headers, addToast }) => {
               <thead><tr><th>Status</th><th>Orders</th><th>Value</th></tr></thead>
               <tbody>
                 {report.byStatus.map((row) => <tr key={row.status}><td>{row.status.replace(/_/g, ' ')}</td><td>{row.count}</td><td>{kes(row.revenue)}</td></tr>)}
-                {!report.byStatus.length && <tr><td colSpan={3} style={{ textAlign: 'center', padding: '2rem', color: '#a0958e' }}>No orders</td></tr>}
+                {!report.byStatus.length && <tr><td colSpan={3} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-faint)' }}>No orders</td></tr>}
               </tbody>
             </table></div>
           </section>
@@ -843,7 +843,7 @@ const ReservationsContent = ({ bookings, tables, onAssignTable, onUnassignTable,
         {!booking.table_id && assigningId !== booking.id && availableTables.length > 0 && <button className="accept-button" onClick={() => setAssigningId(booking.id)}>Assign table</button>}
         {booking.table_id && <button className="reject-button" onClick={() => onUnassignTable(booking.id)}>Release</button>}
       </td>
-    </tr>)}{!filtered.length && <tr><td colSpan={9} style={{ textAlign: 'center', padding: '2rem', color: '#a0958e' }}>No reservations found</td></tr>}</tbody></table></div></>;
+    </tr>)}{!filtered.length && <tr><td colSpan={9} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-faint)' }}>No reservations found</td></tr>}</tbody></table></div></>;
 };
 
 const TablesContent = ({ tables, setEditingTable, onDelete, onUpdateStatus }) => {

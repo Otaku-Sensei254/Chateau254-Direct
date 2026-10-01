@@ -5,11 +5,11 @@ import { ProfileOrderSkeleton } from '../../components/ui/loaders-skeleton';
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const statusColor = {
-  pending: '#b56e37',
-  preparing: '#6e83ca',
-  out_for_delivery: '#5ca968',
-  completed: '#3c7045',
-  cancelled: '#cf5e58',
+  pending: 'var(--gold-ink-bright)',
+  preparing: 'var(--info-soft)',
+  out_for_delivery: 'var(--success-ink-alt)',
+  completed: 'var(--success-strong)',
+  cancelled: 'var(--danger-soft)',
 };
 
 const statusLabel = {
@@ -21,11 +21,11 @@ const statusLabel = {
 };
 
 const bookingStatusColor = {
-  pending: '#b56e37',
-  confirmed: '#6e83ca',
-  seated: '#7b1fa2',
-  completed: '#3c7045',
-  cancelled: '#cf5e58',
+  pending: 'var(--gold-ink-bright)',
+  confirmed: 'var(--info-soft)',
+  seated: 'var(--occupied)',
+  completed: 'var(--success-strong)',
+  cancelled: 'var(--danger-soft)',
 };
 
 const bookingStatusLabel = {
@@ -116,16 +116,16 @@ const Profile = ({ user, token, onBack, onLogout, onTrack, onBooking, onCellar }
             <span className="profile-order-status" style={{ color: bookingStatusColor[booking.status] }}>{bookingStatusLabel[booking.status]}</span>
           </div>
         </div>
-        {booking.table_number && <div style={{ marginTop: '12px', padding: '12px', background: '#faf5ff', borderRadius: '10px', border: '1px solid #e9d5ff' }}>
+        {booking.table_number && <div style={{ marginTop: '12px', padding: '12px', background: 'var(--surface-subtle)', borderRadius: '10px', border: '1px solid var(--occupied-tint)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#7c3aed', color: '#fff', padding: '6px 14px', borderRadius: '8px', fontSize: '0.85rem', fontWeight: 600 }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'var(--occupied-strong)', color: 'var(--surface-page)', padding: '6px 14px', borderRadius: '8px', fontSize: '0.85rem', fontWeight: 600 }}>
               <FiCalendar size={14} /> Table {booking.table_number}
             </span>
-            {booking.status === 'confirmed' && <span style={{ fontSize: '0.85rem', color: '#6e83ca', fontWeight: 500 }}>Awaiting you</span>}
-            {booking.status === 'completed' && <span style={{ fontSize: '0.85rem', color: '#3c7045', fontWeight: 500 }}>Served</span>}
+            {booking.status === 'confirmed' && <span style={{ fontSize: '0.85rem', color: 'var(--info-soft)', fontWeight: 500 }}>Awaiting you</span>}
+            {booking.status === 'completed' && <span style={{ fontSize: '0.85rem', color: 'var(--success-strong)', fontWeight: 500 }}>Served</span>}
           </div>
         </div>}
-        <div style={{ marginTop: '10px', fontSize: '0.85rem', color: '#a0958e' }}>
+        <div style={{ marginTop: '10px', fontSize: '0.85rem', color: 'var(--text-faint)' }}>
           <span>{booking.party_size} guest{booking.party_size !== 1 ? 's' : ''}</span>
           {booking.preferred_item && <span> &middot; {booking.preferred_item}</span>}
         </div>

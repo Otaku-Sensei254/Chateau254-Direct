@@ -194,18 +194,18 @@ const RiderDashboard = ({ user, token, api, onLogout }) => {
         <button className={activeTab === 'history' ? 'active' : ''} onClick={() => setActiveTab('history')}><FiClock /> History</button>
       </nav>
       <div style={{ padding: '0 1rem' }}>
-        <div className="rider-status" onClick={toggleOnlineStatus} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 12px', borderRadius: '8px', background: rider?.status === 'online' ? '#e8f5e9' : '#f5f5f5', border: `1px solid ${rider?.status === 'online' ? '#4CAF50' : '#ddd'}` }}>
-          <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: rider?.status === 'online' ? '#4CAF50' : '#999' }} />
+        <div className="rider-status" onClick={toggleOnlineStatus} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 12px', borderRadius: '8px', background: rider?.status === 'online' ? 'var(--surface-muted)' : 'var(--surface-sunken)', border: `1px solid ${rider?.status === 'online' ? '#4CAF50' : 'var(--border)'}` }}>
+          <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: rider?.status === 'online' ? '#4CAF50' : 'var(--text-faint)' }} />
           <span style={{ fontSize: '14px', fontWeight: 500 }}>{rider?.status === 'online' ? 'Online — Accepting deliveries' : 'Go online'}</span>
         </div>
         {rider?.status === 'online' && (
-          <div style={{ marginTop: '8px', padding: '8px 12px', borderRadius: '8px', background: gpsError ? '#fff3e0' : riderLocation ? '#e8f5e9' : '#fff8e1', border: `1px solid ${gpsError ? '#FF9800' : riderLocation ? '#4CAF50' : '#FFC107'}`, fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <div style={{ marginTop: '8px', padding: '8px 12px', borderRadius: '8px', background: gpsError ? 'var(--surface-hover)' : riderLocation ? 'var(--surface-muted)' : 'var(--surface-hover)', border: `1px solid ${gpsError ? '#FF9800' : riderLocation ? '#4CAF50' : '#FFC107'}`, fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
             {gpsError ? (
-              <><FiAlertTriangle size={14} color="#FF9800" /><span style={{ color: '#e65100' }}>GPS: {gpsError}</span></>
+              <><FiAlertTriangle size={14} color="#FF9800" /><span style={{ color: 'var(--warning)' }}>GPS: {gpsError}</span></>
             ) : riderLocation ? (
-              <><FiMapPin size={14} color="#4CAF50" /><span style={{ color: '#2e7d32' }}>GPS active{accuracy ? ` (~${Math.round(accuracy)}m)` : ''}</span></>
+              <><FiMapPin size={14} color="#4CAF50" /><span style={{ color: 'var(--success-strong)' }}>GPS active{accuracy ? ` (~${Math.round(accuracy)}m)` : ''}</span></>
             ) : (
-              <><FiRefreshCw className="spin" size={14} color="#F9A825" /><span style={{ color: '#f57f17' }}>Getting GPS fix...</span></>
+              <><FiRefreshCw className="spin" size={14} color="#F9A825" /><span style={{ color: 'var(--warning-soft)' }}>Getting GPS fix...</span></>
             )}
           </div>
         )}
@@ -229,9 +229,9 @@ const RiderDashboard = ({ user, token, api, onLogout }) => {
               </div>
 
               {!deliveries.length ? (
-                <div style={{ textAlign: 'center', padding: '3rem 1rem', color: '#999', background: '#fafafa', borderRadius: '12px', border: '1px dashed #ddd' }}>
+                <div style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--text-faint)', background: 'var(--surface-subtle)', borderRadius: '12px', border: '1px dashed #ddd' }}>
                   <FiCheck size={40} style={{ marginBottom: '0.75rem', opacity: 0.3 }} />
-                  <h3 style={{ margin: '0 0 0.25rem', color: '#333' }}>No active deliveries</h3>
+                  <h3 style={{ margin: '0 0 0.25rem', color: 'var(--text)' }}>No active deliveries</h3>
                   <p style={{ margin: 0, fontSize: '14px' }}>Go online to start receiving orders</p>
                 </div>
               ) : (
@@ -246,26 +246,26 @@ const RiderDashboard = ({ user, token, api, onLogout }) => {
                         style={{
                           padding: '14px 16px',
                           borderRadius: '10px',
-                          border: `2px solid ${isSelected ? '#e53935' : '#e8e8e8'}`,
-                          background: isSelected ? '#fff5f5' : 'white',
+                          border: `2px solid ${isSelected ? '#e53935' : 'var(--surface-deep)'}`,
+                          background: isSelected ? 'var(--surface-subtle)' : 'var(--surface-raised)',
                           cursor: 'pointer',
                           transition: 'all 0.15s',
                         }}
                       >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
                           <div>
-                            <span style={{ fontSize: '12px', fontWeight: 600, color: '#e53935', background: '#ffebee', padding: '2px 8px', borderRadius: '4px' }}>#{order.id.slice(0, 8)}</span>
+                            <span style={{ fontSize: '12px', fontWeight: 600, color: '#e53935', background: 'var(--surface-hover)', padding: '2px 8px', borderRadius: '4px' }}>#{order.id.slice(0, 8)}</span>
                             <span style={{ marginLeft: '8px', fontSize: '12px', color: isPreparing ? '#FF9800' : '#4CAF50', fontWeight: 500 }}>{isPreparing ? 'Ready for pickup' : 'Out for delivery'}</span>
                           </div>
-                          <FiChevronRight size={16} color={isSelected ? '#e53935' : '#ccc'} />
+                          <FiChevronRight size={16} color={isSelected ? '#e53935' : 'var(--border-strong)'} />
                         </div>
                         <p style={{ margin: '0 0 4px', fontWeight: 600, fontSize: '14px' }}>{order.customer_name || 'Customer'}</p>
-                        <p style={{ margin: '0 0 4px', fontSize: '13px', color: '#666', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <p style={{ margin: '0 0 4px', fontSize: '13px', color: 'var(--success-deep)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                           <FiMapPin size={12} /> {order.delivery_address?.slice(0, 50) || 'No address'}{order.delivery_address?.length > 50 ? '...' : ''}
                         </p>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px' }}>
                           <span style={{ fontSize: '13px', fontWeight: 600 }}>{formatCurrency(order.total_amount)}</span>
-                          <span style={{ fontSize: '12px', color: '#999' }}>{formatTime(order.created_at)}</span>
+                          <span style={{ fontSize: '12px', color: 'var(--text-faint)' }}>{formatTime(order.created_at)}</span>
                         </div>
                       </div>
                     );
@@ -276,7 +276,7 @@ const RiderDashboard = ({ user, token, api, onLogout }) => {
 
             {selectedDelivery && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e8e8e8', overflow: 'hidden' }}>
+                <div style={{ background: 'var(--surface-raised)', borderRadius: '12px', border: '1px solid #e8e8e8', overflow: 'hidden' }}>
                   <div className="rider-map-container" style={{ height: '300px' }}>
                     <RiderMap
                       riderLocation={riderLocation}
@@ -287,49 +287,49 @@ const RiderDashboard = ({ user, token, api, onLogout }) => {
                 </div>
 
                 {routeLoading && (
-                  <div style={{ textAlign: 'center', padding: '0.75rem', color: '#666', fontSize: '13px' }}>
+                  <div style={{ textAlign: 'center', padding: '0.75rem', color: 'var(--success-deep)', fontSize: '13px' }}>
                     <FiRefreshCw className="spin" size={14} style={{ marginRight: '6px' }} /> Calculating route...
                   </div>
                 )}
 
                 {routeInfo && (
                   <div className="rider-route-info" style={{ display: 'flex', gap: '0.75rem' }}>
-                    <div style={{ flex: 1, background: '#f8f9fa', borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
+                    <div style={{ flex: 1, background: 'var(--surface-subtle)', borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
                       <FiNavigation size={16} color="#2196F3" style={{ marginBottom: '4px' }} />
                       <div style={{ fontSize: '18px', fontWeight: 700 }}>{formatDistance(routeInfo.distance)}</div>
-                      <div style={{ fontSize: '12px', color: '#666' }}>Distance</div>
+                      <div style={{ fontSize: '12px', color: 'var(--success-deep)' }}>Distance</div>
                     </div>
-                    <div style={{ flex: 1, background: '#f8f9fa', borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
+                    <div style={{ flex: 1, background: 'var(--surface-subtle)', borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
                       <FiClock size={16} color="#4CAF50" style={{ marginBottom: '4px' }} />
                       <div style={{ fontSize: '18px', fontWeight: 700 }}>{formatDuration(routeInfo.duration)}</div>
-                      <div style={{ fontSize: '12px', color: '#666' }}>ETA</div>
+                      <div style={{ fontSize: '12px', color: 'var(--success-deep)' }}>ETA</div>
                     </div>
                   </div>
                 )}
 
-                <div style={{ background: 'white', borderRadius: '12px', border: '1px solid #e8e8e8', padding: '16px' }}>
+                <div style={{ background: 'var(--surface-raised)', borderRadius: '12px', border: '1px solid #e8e8e8', padding: '16px' }}>
                   <h3 style={{ margin: '0 0 12px', fontSize: '14px' }}>Order Details</h3>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}><span style={{ color: '#666' }}>Customer</span><span style={{ fontWeight: 600 }}>{selectedDelivery.customer_name || '—'}</span></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}><span style={{ color: 'var(--success-deep)' }}>Customer</span><span style={{ fontWeight: 600 }}>{selectedDelivery.customer_name || '—'}</span></div>
                     {selectedDelivery.customer_phone && (
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
-                        <span style={{ color: '#666' }}>Phone</span>
+                        <span style={{ color: 'var(--success-deep)' }}>Phone</span>
                         <a href={`tel:${selectedDelivery.customer_phone}`} style={{ fontWeight: 600, color: '#e53935', textDecoration: 'none' }}>{selectedDelivery.customer_phone}</a>
                       </div>
                     )}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}><span style={{ color: '#666' }}>Address</span><span style={{ fontWeight: 600, textAlign: 'right', maxWidth: '60%' }}>{selectedDelivery.delivery_address || '—'}</span></div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}><span style={{ color: '#666' }}>Total</span><span style={{ fontWeight: 700 }}>{formatCurrency(selectedDelivery.total_amount)}</span></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}><span style={{ color: 'var(--success-deep)' }}>Address</span><span style={{ fontWeight: 600, textAlign: 'right', maxWidth: '60%' }}>{selectedDelivery.delivery_address || '—'}</span></div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}><span style={{ color: 'var(--success-deep)' }}>Total</span><span style={{ fontWeight: 700 }}>{formatCurrency(selectedDelivery.total_amount)}</span></div>
                   </div>
                 </div>
 
                 <div className="rider-action-buttons" style={{ display: 'flex', gap: '0.5rem' }}>
                   {selectedLocation && (
-                    <button onClick={() => setNavigating(true)} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '12px', background: '#2196F3', color: 'white', border: 'none', borderRadius: '10px', fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}>
+                    <button onClick={() => setNavigating(true)} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '12px', background: '#2196F3', color: 'var(--surface-raised)', border: 'none', borderRadius: '10px', fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}>
                       <FiNavigation size={16} /> Navigate
                     </button>
                   )}
                   {selectedDelivery.customer_phone && (
-                    <a href={`tel:${selectedDelivery.customer_phone}`} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '12px', background: '#f5f5f5', color: '#333', border: '1px solid #ddd', borderRadius: '10px', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>
+                    <a href={`tel:${selectedDelivery.customer_phone}`} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '12px', background: 'var(--surface-sunken)', color: 'var(--text)', border: '1px solid #ddd', borderRadius: '10px', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>
                       <FiPhone size={16} /> Call
                     </a>
                   )}
@@ -339,7 +339,7 @@ const RiderDashboard = ({ user, token, api, onLogout }) => {
                       if (selectedDelivery.status === 'preparing') updateStatus(selectedDelivery.id, 'out_for_delivery');
                       else updateStatus(selectedDelivery.id, 'completed');
                     }}
-                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '12px', background: selectedDelivery.status === 'preparing' ? '#FF9800' : '#4CAF50', color: 'white', border: 'none', borderRadius: '10px', fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}
+                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '12px', background: selectedDelivery.status === 'preparing' ? '#FF9800' : '#4CAF50', color: 'var(--surface-raised)', border: 'none', borderRadius: '10px', fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}
                   >
                     <FiCheck size={16} /> {updatingId === selectedDelivery.id ? 'Updating...' : selectedDelivery.status === 'preparing' ? 'Pick up order' : 'Mark delivered'}
                   </button>
@@ -357,22 +357,22 @@ const RiderDashboard = ({ user, token, api, onLogout }) => {
           {completed.length ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               {completed.map((order) => (
-                <div key={order.id} style={{ padding: '14px 16px', borderRadius: '10px', border: '1px solid #e8e8e8', background: 'white' }}>
+                <div key={order.id} style={{ padding: '14px 16px', borderRadius: '10px', border: '1px solid var(--border)', background: 'var(--surface-raised)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                    <span style={{ fontSize: '12px', fontWeight: 600, color: '#4CAF50', background: '#e8f5e9', padding: '2px 8px', borderRadius: '4px' }}>#{order.id.slice(0, 8)}</span>
-                    <span style={{ fontSize: '12px', color: '#4CAF50', fontWeight: 500 }}><FiCheck size={12} /> Completed</span>
+                    <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--success)', background: 'var(--surface-muted)', padding: '2px 8px', borderRadius: '4px' }}>#{order.id.slice(0, 8)}</span>
+                    <span style={{ fontSize: '12px', color: 'var(--success)', fontWeight: 500 }}><FiCheck size={12} /> Completed</span>
                   </div>
                   <p style={{ margin: '0 0 4px', fontWeight: 600, fontSize: '14px' }}>{order.customer_name || 'Customer'}</p>
-                  <p style={{ margin: '0 0 4px', fontSize: '13px', color: '#666' }}><FiMapPin size={12} /> {order.delivery_address || 'N/A'}</p>
+                  <p style={{ margin: '0 0 4px', fontSize: '13px', color: 'var(--success-deep)' }}><FiMapPin size={12} /> {order.delivery_address || 'N/A'}</p>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '6px' }}>
                     <span style={{ fontSize: '13px', fontWeight: 600 }}>{formatCurrency(order.total_amount)}</span>
-                    <span style={{ fontSize: '12px', color: '#999' }}>{formatTime(order.updated_at || order.created_at)}</span>
+                    <span style={{ fontSize: '12px', color: 'var(--text-faint)' }}>{formatTime(order.updated_at || order.created_at)}</span>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div style={{ textAlign: 'center', padding: '3rem', color: '#999' }}>
+            <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-faint)' }}>
               <FiClock size={40} style={{ marginBottom: '0.75rem', opacity: 0.3 }} />
               <p>No completed deliveries yet</p>
             </div>

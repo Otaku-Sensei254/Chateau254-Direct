@@ -325,7 +325,7 @@ const App = () => {
 
   return <SocketProvider token={session?.token}>
     <div className={`app-shell${showAppHeader ? ' has-app-header' : ''}`}>
-      {showAppHeader && <AppHeader cartCount={cartCount} userName={session?.user?.full_name} onBack={handleBack} onCart={() => navigate('/cart')} onHome={() => navigate('/menu')} onProfile={() => navigate('/profile')} api={API_URL} />}
+      {showAppHeader && <AppHeader cartCount={cartCount} userName={session?.user?.full_name} onCart={() => navigate('/cart')} onProfile={() => navigate('/profile')} api={API_URL} />}
       <Routes>
         <Route path="/" element={<GuestRoute user={session?.user}><Home api={API_URL} onTakeout={() => { switchMode('takeout'); navigate('/menu'); }} onDining={() => { switchMode('dining'); navigate('/menu'); }} onEvents={() => navigate('/events')} onWines={() => navigate('/wines')} onAuth={() => navigate('/auth')} /></GuestRoute>} />
         <Route path="/events" element={<EventsPage user={session?.user} onExploreCatering={() => { switchMode('events'); navigate('/menu'); }} />} />

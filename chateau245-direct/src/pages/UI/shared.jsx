@@ -3,7 +3,7 @@ import {FiShoppingBag } from 'react-icons/fi';
 // import Logo from "../../components/images/chateauLogo2.png"
 // import { Link } from 'react-router-dom';
 import InstallButton from '../../components/InstallButton';
-import Brand from '../../components/Navigation';
+import Brand from '../../components/Brand';
 
 export const Summary = ({ subtotal, delivery }) => {
   return (
@@ -24,14 +24,10 @@ export const Summary = ({ subtotal, delivery }) => {
   );
 };
 
-const AppHeader = ({ cartCount, onBack, onCart, onHome, onProfile, userName = '' }) => {
+const AppHeader = ({ cartCount, onCart, onProfile, userName = '' }) => {
   return (
     <header className="app-header">
-   
-      
-      <button className="wordmark" onClick={onHome}>
-        <Brand />
-      </button>
+      <Brand />
       
       <div className="header-actions">
         <button className="welcome-link" onClick={onProfile}>

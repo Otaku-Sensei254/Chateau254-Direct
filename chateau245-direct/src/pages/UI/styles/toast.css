@@ -30,11 +30,11 @@
 }
 
 .toast-error {
-    border-left: 4px solid #cf5e58;
+    border-left: 4px solid var(--danger-soft);
 }
 
 .toast-info {
-    border-left: 4px solid #6e83ca;
+    border-left: 4px solid var(--info-soft);
 }
 
 .toast span {

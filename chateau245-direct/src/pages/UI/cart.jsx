@@ -25,7 +25,7 @@ const Cart = ({ cart, subtotal, delivery, changeQuantity, onCheckout, onMenu, us
               <CartItemSkeleton key={n} />
             ))}
           </div>
-          <div style={{ background: 'white', padding: '16px', borderRadius: '12px', border: '1px solid #e9e1dc', marginBottom: '16px' }}>
+          <div style={{ background: 'var(--surface-raised)', padding: '16px', borderRadius: '12px', border: '1px solid var(--border)', marginBottom: '16px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
               <LoaderSkeleton width={80} height={14} borderRadius={4} />
               <LoaderSkeleton width={100} height={14} borderRadius={4} />
@@ -34,7 +34,7 @@ const Cart = ({ cart, subtotal, delivery, changeQuantity, onCheckout, onMenu, us
               <LoaderSkeleton width={90} height={14} borderRadius={4} />
               <LoaderSkeleton width={70} height={14} borderRadius={4} />
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '10px', borderTop: '1px solid #f4eee9' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '10px', borderTop: '1px solid var(--border-soft)' }}>
               <LoaderSkeleton width={60} height={18} borderRadius={4} />
               <LoaderSkeleton width={120} height={18} borderRadius={4} />
             </div>

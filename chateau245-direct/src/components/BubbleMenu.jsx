@@ -42,7 +42,7 @@ const DEFAULT_ITEMS = [
     ariaLabel: 'Reserve',
     rotation: 8,
     icon: FiMapPin,
-    hoverStyles: { bgColor: '#4a904a', textColor: 'var(--text-on-accent)' }
+    hoverStyles: { bgColor: 'var(--success-muted)', textColor: 'var(--text-on-accent)' }
   },
   {
     label: 'Feed',
@@ -50,7 +50,7 @@ const DEFAULT_ITEMS = [
     ariaLabel: 'Feed',
     rotation: -8,
     icon: FiBookOpen,
-    hoverStyles: { bgColor: '#5ab55a', textColor: 'var(--text-on-accent)' }
+    hoverStyles: { bgColor: 'var(--success)', textColor: 'var(--text-on-accent)' }
   }
 ];
 
@@ -59,8 +59,8 @@ export default function BubbleMenu({
   className,
   style,
   menuAriaLabel = 'Toggle menu',
-  menuBg = '#fff',
-  menuContentColor = '#111',
+  menuBg='var(--surface-raised)',
+  menuContentColor='var(--surface-inverse)',
   useFixedPosition = true,
   items,
   animationEase = 'back.out(1.5)',
@@ -228,7 +228,7 @@ export default function BubbleMenu({
                         '--item-rot': `${item.rotation ?? 0}deg`,
                         '--pill-bg': menuBg,
                         '--pill-color': menuContentColor,
-                        '--hover-bg': item.hoverStyles?.bgColor || '#f3f4f6',
+                        '--hover-bg': item.hoverStyles?.bgColor || 'var(--surface-sunken)',
                         '--hover-color': item.hoverStyles?.textColor || menuContentColor
                       }}
                       ref={el => {
@@ -272,7 +272,7 @@ export default function BubbleMenu({
                       '--item-rot': `${item.rotation ?? 0}deg`,
                       '--pill-bg': menuBg,
                       '--pill-color': menuContentColor,
-                      '--hover-bg': item.hoverStyles?.bgColor || '#f3f4f6',
+                      '--hover-bg': item.hoverStyles?.bgColor || 'var(--surface-sunken)',
                       '--hover-color': item.hoverStyles?.textColor || menuContentColor
                     }}
                     ref={el => {

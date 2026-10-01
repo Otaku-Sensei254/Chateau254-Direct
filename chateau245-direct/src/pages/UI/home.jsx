@@ -5,7 +5,7 @@ import {
   FiUser,
   FiX,
 } from "react-icons/fi";
-import Brand from '../../components/Navigation';
+import Brand from '../../components/Brand';
 import { RiWhatsappFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { RiEBike2Fill } from "react-icons/ri";
@@ -149,11 +149,11 @@ const Home = ({ api, onTakeout, onDining, onEvents, onWines, onAuth }) => {
           </p>
           <span className="options">Enjoy our Chateau Options:</span>
           <div className="cta-btns">
+            <button className="cta-button cta-dining" onClick={onDining}>
+              <GiMeal /> Fine Dining
+            </button>
             <button className="cta-button cta-takeout" onClick={onTakeout}>
               <RiEBike2Fill /> Take Out
-            </button>
-            <button className="cta-button cta-dining" onClick={onDining}>
-              <GiMeal /> Dine-in
             </button>
             <button className="cta-button cta-events" onClick={onEvents}>
               <GiPartyPopper />Events

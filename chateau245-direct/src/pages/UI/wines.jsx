@@ -31,7 +31,12 @@ const WineBottleGraphic = ({ wine, size = 'card' }) => {
   const height = isModal ? 370 : isSibling ? 96 : 190;
   const color = (wine?.color || '').toLowerCase();
 
-  // Choose bottle glass color & capsule colors based on wine color
+  // Bottle artwork colours. These stay literal hex rather than theme tokens on
+  // purpose: a wine bottle is a physical object, with dark glass, a metallic
+  // capsule, and a cream label printed with ink. Driving them from --surface-*
+  // and --text-* tokens collapsed the glass and the label to the same near-black
+  // under the dark theme, which erased the illustration. These are the original
+  // artwork values, so the bottle looks the same in both schemes.
   let glassDark = '#1b0c10';
   let glassLight = '#3e1622';
   let foilDark = '#5e1022';
@@ -677,9 +682,9 @@ const WinesPage = ({ loading = false }) => {
 
       {/* Wine Grid */}
       <div style={{ marginTop: '20px' }}>
-        <h2 style={{ marginBottom: '16px', color: '#211d1b', fontSize: '20px', fontWeight: 700 }}>
+        <h2 style={{ marginBottom: '16px', color: 'var(--text-strong)', fontSize: '20px', fontWeight: 700 }}>
           {selectedProducer ? `Wines from ${selectedProducer}` : selectedRegion !== 'All' ? `Wines from ${selectedRegion}` : selectedCollection === 'italian' ? 'Italian Wines' : selectedCollection === 'south-african' ? 'South African Wines' : selectedCollection === 'french' ? 'French Wines' : 'All Wines'}
-          <span style={{ fontWeight: 400, fontSize: '16px', color: '#746c65', marginLeft: '10px' }}>
+          <span style={{ fontWeight: 400, fontSize: '16px', color: 'var(--text-muted)', marginLeft: '10px' }}>
             ({filteredWines.length})
           </span>
         </h2>
@@ -691,7 +696,7 @@ const WinesPage = ({ loading = false }) => {
             ))}
           </div>
         ) : filteredWines.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '60px 20px', color: '#888' }}>
+          <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
             <p style={{ fontSize: '18px', marginBottom: '8px', fontWeight: 600 }}>No wines found</p>
             <p>Try adjusting your search query or region filter</p>
           </div>
@@ -759,7 +764,7 @@ const WinesPage = ({ loading = false }) => {
                     </div>
                   )}
                   {wine.producerIndex > 0 && (
-                    <div style={{ marginTop: '8px', fontSize: '11px', color: '#8c8278' }}>
+                    <div style={{ marginTop: '8px', fontSize: '11px', color: 'var(--text-muted)' }}>
                       {wine.producerIndex + 1} of {wine.siblings.length} from {wine.producer}
                     </div>
                   )}
@@ -852,8 +857,8 @@ const WinesPage = ({ loading = false }) => {
                               gap: '3px',
                               marginTop: '4px',
                               fontSize: '10px',
-                              background: '#fff7ed',
-                              color: '#c2410c',
+                              background: 'var(--surface-subtle)',
+                              color: 'var(--danger-edge-ink)',
                               padding: '1px 5px',
                               borderRadius: '6px',
                               fontWeight: 700,
@@ -987,7 +992,7 @@ const WinesPage = ({ loading = false }) => {
                         <span className="wine-rating-label">Score</span>
                         <span className="wine-rating-val">
                           {selectedWine.rating.found ? (
-                            <span style={{ color: '#c2410c', fontWeight: 700 }}>
+                            <span style={{ color: 'var(--danger-edge-ink)', fontWeight: 700 }}>
                               ★ {selectedWine.rating.score} / {selectedWine.rating.scale}
                             </span>
                           ) : (
@@ -1002,7 +1007,7 @@ const WinesPage = ({ loading = false }) => {
                         </div>
                       )}
                       {selectedWine.rating.reason && !selectedWine.rating.found && (
-                        <p style={{ margin: '8px 0 0', fontSize: '12px', color: '#888078', fontStyle: 'italic', lineHeight: 1.5 }}>
+                        <p style={{ margin: '8px 0 0', fontSize: '12px', color: 'var(--text-muted)', fontStyle: 'italic', lineHeight: 1.5 }}>
                           {selectedWine.rating.reason}
                         </p>
                       )}

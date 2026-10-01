@@ -61,12 +61,12 @@ const Checkout = ({ subtotal, delivery, placeOrder }) => {
               alignItems: 'center',
               gap: '8px',
               padding: '10px 16px',
-              background: coords ? '#e8f5e9' : '#f5f5f5',
-              border: `1px solid ${coords ? '#4CAF50' : '#ddd'}`,
+              background: coords ? 'var(--surface-muted)' : 'var(--surface-sunken)',
+              border: `1px solid ${coords ? 'var(--success)' : 'var(--border)'}`,
               borderRadius: '8px',
               cursor: 'pointer',
               fontSize: '14px',
-              color: coords ? '#2e7d32' : '#333',
+              color: coords ? 'var(--success-strong)' : 'var(--text)',
               width: '100%',
               justifyContent: 'center',
             }}
@@ -80,7 +80,7 @@ const Checkout = ({ subtotal, delivery, placeOrder }) => {
           <div style={{ marginBottom: '1rem' }}>
             <LocationPicker onLocationSelect={handleLocationSelect} />
             {reverseStatus === 'loading' && (
-              <p style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
+              <p style={{ fontSize: '12px', color: 'var(--success-deep)', marginTop: '4px' }}>
                 Looking up address...
               </p>
             )}

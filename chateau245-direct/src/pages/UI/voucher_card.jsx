@@ -68,8 +68,8 @@ export function VoucherCard({ voucher, cardRef }) {
           <QRCodeSVG
             value={qrValue}
             size={64}
-            bgColor="#ffffff"
-            fgColor="#18120e"
+            bgColor="var(--surface-raised)"
+            fgColor="var(--surface-inverse)"
             level="M"
           />
         </div>

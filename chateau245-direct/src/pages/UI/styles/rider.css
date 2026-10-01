@@ -118,7 +118,7 @@
     border: 0;
     border-radius: 5px;
     background: transparent;
-    color: #aeb2b1;
+    color: var(--text-on-dark-muted);
     text-align: left;
     font-size: 12px;
 }
@@ -130,7 +130,7 @@
 }
 
 .rider-nav button.active {
-    box-shadow: inset 3px 0 0 #bc9660;
+    box-shadow: inset 3px 0 0 var(--gold-deep);
 }
 
 .rider-nav b {
@@ -348,7 +348,7 @@
     padding: 7px 10px;
     border-radius: 4px;
     background: var(--warning-tint);
-    color: #b56e37;
+    color: var(--gold-ink-bright);
     font-size: 10px;
     font-weight: 800;
 }

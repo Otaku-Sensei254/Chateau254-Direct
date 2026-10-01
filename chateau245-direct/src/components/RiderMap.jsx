@@ -41,9 +41,9 @@ const stepIcon = (type, modifier) => {
   return L.divIcon({
     className: 'step-marker',
     html: `<div style="
-      width:22px;height:22px;background:#1565c0;color:white;border-radius:50%;
+      width:22px;height:22px;background:var(--info);color:var(--surface-page);border-radius:50%;
       display:flex;align-items:center;justify-content:center;font-size:12px;
-      border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3);
+      border:2px solid var(--surface-page);box-shadow:0 1px 4px rgba(0,0,0,0.3);
     ">${symbol}</div>`,
     iconSize: [22, 22],
     iconAnchor: [11, 11],
@@ -123,12 +123,12 @@ const RiderMap = ({ riderLocation, customerLocation, restaurantLocation, orderAd
       {!defaultCenter && (
         <div style={{
           position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
-          alignItems: 'center', justifyContent: 'center', background: '#f5f5f5',
-          color: '#666', zIndex: 1000, gap: '8px',
+          alignItems: 'center', justifyContent: 'center', background: 'var(--surface-sunken)',
+          color: 'var(--success-deep)', zIndex: 1000, gap: '8px',
         }}>
-          <FiMapPin size={28} color="#999" />
+          <FiMapPin size={28} color="var(--text-faint)" />
           <div style={{ fontSize: '14px', fontWeight: 600 }}>Waiting for GPS...</div>
-          <div style={{ fontSize: '12px', color: '#999' }}>Allow location access to continue</div>
+          <div style={{ fontSize: '12px', color: 'var(--text-faint)' }}>Allow location access to continue</div>
         </div>
       )}
 
@@ -216,7 +216,7 @@ const RiderMap = ({ riderLocation, customerLocation, restaurantLocation, orderAd
           position: 'absolute',
           top: '10px',
           right: '10px',
-          background: 'white',
+          background: 'var(--surface-raised)',
           padding: '8px 12px',
           borderRadius: '4px',
           boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
@@ -231,7 +231,7 @@ const RiderMap = ({ riderLocation, customerLocation, restaurantLocation, orderAd
           position: 'absolute',
           bottom: '10px',
           left: '10px',
-          background: 'white',
+          background: 'var(--surface-raised)',
           padding: '12px',
           borderRadius: '8px',
           boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
@@ -239,7 +239,7 @@ const RiderMap = ({ riderLocation, customerLocation, restaurantLocation, orderAd
           maxWidth: '200px',
         }}>
           <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>Route Info</div>
-          <div style={{ fontSize: '14px', color: '#666' }}>
+          <div style={{ fontSize: '14px', color: 'var(--success-deep)' }}>
             <p style={{ margin: '2px 0' }}>Distance: {formatDistance(route.distance)}</p>
             <p style={{ margin: '2px 0' }}>Duration: {formatDuration(route.duration)}</p>
           </div>

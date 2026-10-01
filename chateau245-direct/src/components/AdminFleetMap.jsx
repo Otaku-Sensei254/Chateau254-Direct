@@ -6,7 +6,7 @@ import { FiRefreshCw, FiTruck, FiUser } from 'react-icons/fi';
 import { useSocket } from '../contexts/SocketContext';
 
 const createRiderIcon = (status) => {
-  const color = status === 'online' ? '#4CAF50' : status === 'on_break' ? '#FF9800' : '#9E9E9E';
+  const color = status === 'online' ? '#4CAF50' : status === 'on_break' ? '#FF9800' : 'var(--text-faint)';
 
   return L.divIcon({
     className: 'rider-marker',
@@ -21,7 +21,7 @@ const createRiderIcon = (status) => {
       align-items: center;
       justify-content: center;
     ">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="2">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--surface-page)" stroke="var(--surface-page)" strokeWidth="2">
         <circle cx="12" cy="12" r="10"/>
       </svg>
     </div>`,
@@ -147,20 +147,20 @@ const AdminFleetMap = ({ token, api }) => {
                   <FiUser size={14} style={{ verticalAlign: 'middle', marginRight: '4px' }} />
                   {rider.full_name}
                 </strong>
-                <p style={{ margin: '2px 0', fontSize: '12px', color: '#666' }}>
+                <p style={{ margin: '2px 0', fontSize: '12px', color: 'var(--success-deep)' }}>
                   <FiTruck size={12} style={{ verticalAlign: 'middle', marginRight: '4px' }} />
                   {rider.phone}
                 </p>
-                <p style={{ margin: '2px 0', fontSize: '12px', color: '#666' }}>
+                <p style={{ margin: '2px 0', fontSize: '12px', color: 'var(--success-deep)' }}>
                   Status: <span style={{
-                    color: rider.status === 'online' ? '#4CAF50' : rider.status === 'on_break' ? '#FF9800' : '#9E9E9E',
+                    color: rider.status === 'online' ? '#4CAF50' : rider.status === 'on_break' ? '#FF9800' : 'var(--text-faint)',
                     fontWeight: 'bold',
                   }}>
                     {rider.status}
                   </span>
                 </p>
                 {rider.updated_at && (
-                  <p style={{ margin: '2px 0', fontSize: '11px', color: '#999' }}>
+                  <p style={{ margin: '2px 0', fontSize: '11px', color: 'var(--text-faint)' }}>
                     Last update: {formatTime(rider.updated_at)}
                   </p>
                 )}
@@ -174,7 +174,7 @@ const AdminFleetMap = ({ token, api }) => {
         position: 'absolute',
         top: '10px',
         right: '10px',
-        background: 'white',
+        background: 'var(--surface-raised)',
         padding: '8px 12px',
         borderRadius: '4px',
         boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
@@ -197,7 +197,7 @@ const AdminFleetMap = ({ token, api }) => {
         >
           <FiRefreshCw size={16} className={loading ? 'spin' : ''} />
         </button>
-        <span style={{ fontSize: '12px', color: '#666' }}>
+        <span style={{ fontSize: '12px', color: 'var(--success-deep)' }}>
           {riders.length} rider{riders.length !== 1 ? 's' : ''} online
         </span>
       </div>
@@ -207,8 +207,8 @@ const AdminFleetMap = ({ token, api }) => {
           position: 'absolute',
           bottom: '10px',
           left: '10px',
-          background: '#f8d7da',
-          color: '#721c24',
+          background: 'var(--surface-deep)',
+          color: 'var(--brand)',
           padding: '8px 12px',
           borderRadius: '4px',
           boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
@@ -223,7 +223,7 @@ const AdminFleetMap = ({ token, api }) => {
         position: 'absolute',
         bottom: '10px',
         right: '10px',
-        background: 'white',
+        background: 'var(--surface-raised)',
         padding: '8px 12px',
         borderRadius: '4px',
         boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
@@ -241,7 +241,7 @@ const AdminFleetMap = ({ token, api }) => {
           <span style={{ fontSize: '11px' }}>On Break</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#9E9E9E' }} />
+          <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: 'var(--text-faint)' }} />
           <span style={{ fontSize: '11px' }}>Offline</span>
         </div>
       </div>
