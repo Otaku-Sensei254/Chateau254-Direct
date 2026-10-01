@@ -16,7 +16,7 @@
 
 }
 .order-badge {
-    color: #4f7b55;
+    color: var(--success-muted);
     font-size: 11px;
     font-weight: 700;
     display: flex;
@@ -29,7 +29,7 @@
 
 .reservation-count {
     background: var(--wine);
-    color: white;
+    color: var(--text-on-accent);
     font: 700 9px Arial;
     min-width: 16px;
     height: 16px;
@@ -46,7 +46,7 @@
 }
 
 .search-box {
-    background: white;
+    background: var(--surface-raised);
     border: 1px solid var(--line);
     border-radius: 30px;
     height: 45px;
@@ -54,14 +54,14 @@
     align-items: center;
     padding: 0 16px;
     gap: 10px;
-    color: #a0958e;
+    color: var(--text-faint);
     transition: all 0.2s ease;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
 }
 
 .search-box:focus-within {
     border-color: var(--wine);
-    box-shadow: 0 4px 14px rgba(118, 19, 41, 0.12);
+    box-shadow: 0 4px 14px rgba(var(--brand-rgb), 0.12);
 }
 
 .search-box input {
@@ -76,7 +76,7 @@
 .search-clear-btn {
     background: none;
     border: none;
-    color: #a0958e;
+    color: var(--text-faint);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -88,7 +88,7 @@
 
 .search-clear-btn:hover {
     color: var(--ink);
-    background: #f4eee9;
+    background: var(--brand-tint);
 }
 
 /* ── Search Dropdown Menu ────────────────────────────────────── */
@@ -97,10 +97,10 @@
     top: calc(100% + 6px);
     left: 0;
     right: 0;
-    background: #ffffff;
+    background: var(--surface-raised);
     border: 1px solid var(--line);
     border-radius: 16px;
-    box-shadow: 0 12px 32px rgba(33, 29, 27, 0.14);
+    box-shadow: 0 12px 32px rgba(var(--brand-rgb), 0.14);
     max-height: 380px;
     overflow-y: auto;
     z-index: 50;
@@ -129,7 +129,7 @@
     color: var(--muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    border-bottom: 1px solid #f4eee9;
+    border-bottom: 1px solid var(--brand-tint);
 }
 
 .search-dropdown-count {
@@ -150,7 +150,7 @@
     padding: 10px 16px;
     cursor: pointer;
     transition: background 0.15s ease;
-    border-bottom: 1px solid #faf7f5;
+    border-bottom: 1px solid var(--surface-subtle);
     text-align: left;
     width: 100%;
     background: none;
@@ -166,7 +166,7 @@
 }
 
 .search-dropdown-item:hover {
-    background: #faf4f0;
+    background: var(--surface-page);
 }
 
 .search-dropdown-thumb {
@@ -175,7 +175,7 @@
     border-radius: 8px;
     background-size: cover;
     background-position: center;
-    background-color: #f7f3ef;
+    background-color: var(--surface-page);
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -214,7 +214,7 @@
     font-weight: 700;
     text-transform: uppercase;
     color: var(--wine);
-    background: #faecee;
+    background: var(--brand-tint);
     padding: 1px 6px;
     border-radius: 4px;
 }
@@ -252,7 +252,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    border-bottom: 1px solid #faf7f5;
+    border-bottom: 1px solid var(--surface-subtle);
 }
 
 .search-dropdown-skeleton:last-child {
@@ -261,7 +261,7 @@
 
 /* ── Menu Grid Skeleton Cards ────────────────────────────────── */
 .menu-skeleton-card {
-    background: white;
+    background: var(--surface-raised);
     border: 1px solid var(--line);
     border-radius: 8px;
     overflow: hidden;
@@ -299,7 +299,7 @@
 }
 
 .offer-badge {
-    color: #4f7b55;
+    color: var(--success-muted);
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
@@ -329,7 +329,7 @@
     height: 32px;
     border-radius: 50%;
     border: 1px solid var(--line);
-    background: #ffffff;
+    background: var(--surface-raised);
     color: var(--ink);
     display: flex;
     align-items: center;
@@ -342,7 +342,7 @@
 
 .offers-nav-btn:hover {
     background: var(--cream);
-    border-color: #c9bfb8;
+    border-color: var(--border-strong);
     color: var(--wine);
     transform: scale(1.05);
 }
@@ -384,7 +384,7 @@
     flex: 0 0 280px;
     width: 280px;
     scroll-snap-align: start;
-    background: #ffffff;
+    background: var(--surface-raised);
     border: 1px solid var(--line);
     border-radius: 16px;
     padding: 14px;
@@ -399,8 +399,8 @@
 
 .offer-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(118, 19, 41, 0.08);
-    border-color: #ebdcd5;
+    box-shadow: 0 8px 24px rgba(var(--brand-rgb), 0.08);
+    border-color: var(--border);
 }
 
 .offer-top-row {
@@ -416,7 +416,7 @@
     font-size: 11px;
     font-weight: 700;
     color: var(--wine);
-    background: #faecee;
+    background: var(--brand-tint);
     padding: 3px 9px;
     border-radius: 12px;
     display: inline-flex;
@@ -433,46 +433,46 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
     white-space: nowrap;
-    background: #eef7ee;
-    color: #2e6930;
-    border: 1px solid #cce5cc;
+    background: var(--success-tint);
+    color: var(--success);
+    border: 1px solid var(--border);
 }
 
 .offers-empty {
     padding: 28px 0;
-    color: #a0958e;
+    color: var(--text-faint);
     font-size: 13px;
     text-align: center;
 }
 
 .offer-note.members {
-    background: #380814;
-    color: #fce8a6;
-    border: 1px solid #761329;
+    background: var(--brand-deep);
+    color: var(--gold-pale);
+    border: 1px solid var(--brand);
 }
 
 .offer-note.great-value {
-    background: #eef7ee;
-    color: #2e6930;
-    border: 1px solid #cce5cc;
+    background: var(--success-tint);
+    color: var(--success);
+    border: 1px solid var(--border);
 }
 
 .offer-note.smart-value {
-    background: #eaf3f8;
+    background: var(--info-tint);
     color: #1a5b82;
     border: 1px solid #c5dfef;
 }
 
 .offer-note.bundled {
-    background: #fff4e5;
+    background: var(--warning-tint);
     color: #9c5800;
-    border: 1px solid #fde0b2;
+    border: 1px solid var(--gold-pale);
 }
 
 .offer-note.great-price {
-    background: #fdf0f5;
-    color: #9c1c4e;
-    border: 1px solid #fad2e2;
+    background: var(--surface-sunken);
+    color: var(--brand-strong);
+    border: 1px solid var(--border);
 }
 
 .offer-image-wrap {
@@ -481,7 +481,7 @@
     height: 145px;
     border-radius: 10px;
     overflow: hidden;
-    background: #f8f5f2;
+    background: var(--surface-sunken);
     margin-bottom: 12px;
     display: flex;
     align-items: center;
@@ -508,7 +508,7 @@
     position: absolute;
     bottom: 8px;
     left: 8px;
-    background: rgba(33, 29, 27, 0.88);
+    background: rgba(var(--brand-rgb), 0.88);
     backdrop-filter: blur(4px);
     color: #ffc93c;
     font-size: 11px;
@@ -522,7 +522,7 @@
 }
 
 .offer-rating-badge span {
-    color: #ffffff;
+    color: var(--text-inverse);
     font-weight: 400;
     font-size: 10px;
     opacity: 0.9;
@@ -573,7 +573,7 @@
 
 .offer-original-price {
     font-size: 12px;
-    color: #a49b96;
+    color: var(--text-faint);
     text-decoration: line-through;
 }
 
@@ -594,32 +594,32 @@
 
 .offer-action-btn.wine-btn {
     background: var(--wine);
-    color: #ffffff;
+    color: var(--text-inverse);
 }
 
 .offer-action-btn.wine-btn:hover {
     background: var(--wine-dark);
-    box-shadow: 0 4px 12px rgba(118, 19, 41, 0.25);
+    box-shadow: 0 4px 12px rgba(var(--brand-rgb), 0.25);
 }
 
 .offer-action-btn.meal-btn {
-    background: #2b6a38;
-    color: #ffffff;
+    background: var(--success);
+    color: var(--text-inverse);
 }
 
 .offer-action-btn.meal-btn:hover {
-    background: #1f4f29;
-    box-shadow: 0 4px 12px rgba(43, 106, 56, 0.25);
+    background: var(--success);
+    box-shadow: 0 4px 12px rgba(var(--brand-rgb), 0.25);
 }
 
 .offer-action-btn.reservation-btn {
-    background: #211d1b;
-    color: #ffffff;
+    background: var(--text-strong);
+    color: var(--text-inverse);
 }
 
 .offer-action-btn.reservation-btn:hover {
-    background: #3a332f;
-    box-shadow: 0 4px 12px rgba(33, 29, 27, 0.25);
+    background: var(--text);
+    box-shadow: 0 4px 12px rgba(var(--brand-rgb), 0.25);
 }
 
 /* ── Mode Badge ─────────────────────────────────────────────── */
@@ -627,8 +627,8 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: #fdf5ef;
-    border: 1px solid #eed8c7;
+    background: var(--surface-page);
+    border: 1px solid var(--border);
     color: var(--wine);
     border-radius: 20px;
     font-size: 11px;
@@ -647,8 +647,8 @@
 
 .filter-row button {
     border: 1px solid var(--line);
-    background: white;
-    color: #57504b;
+    background: var(--surface-raised);
+    color: var(--text-soft);
     border-radius: 20px;
     padding: 11px 22px;
     font-size: 14px;
@@ -668,7 +668,7 @@
 .filter-row button.active:hover {
     background: var(--wine);
     border-color: var(--wine);
-    color: white;
+    color: var(--text-on-accent);
 }
 
 .wine-filter-chip {
@@ -677,7 +677,7 @@
     gap: 10px;
     border: 1px solid var(--wine);
     border-radius: 999px;
-    background: #fffaf6;
+    background: var(--surface-subtle);
     color: var(--wine);
     padding: 8px 14px;
     font-size: 11px;
@@ -691,7 +691,7 @@
 
 .wine-filter-chip button {
     background: var(--wine);
-    color: white;
+    color: var(--text-on-accent);
     border: 0;
     border-radius: 999px;
     padding: 5px 12px;
@@ -702,8 +702,8 @@
 
 /* ── Wine Classification Sub-Filter ────────────────────────── */
 .wine-class-filter-section {
-    background: #fffbf7;
-    border: 1px solid #f0e4d7;
+    background: var(--surface-subtle);
+    border: 1px solid var(--border-soft);
     border-radius: 10px;
     padding: 12px 14px;
     margin-bottom: 18px;
@@ -736,9 +736,9 @@
 }
 
 .wine-class-btn {
-    border: 1px solid #e8d5c6;
-    background: white;
-    color: #746c67;
+    border: 1px solid var(--border);
+    background: var(--surface-raised);
+    color: var(--text-muted);
     border-radius: 20px;
     padding: 5px 12px;
     font-size: 10px;
@@ -750,7 +750,7 @@
 .wine-class-btn.active {
     background: var(--wine);
     border-color: var(--wine);
-    color: white;
+    color: var(--text-on-accent);
     font-weight: 700;
 }
 
@@ -773,7 +773,7 @@
 }
 
 .menu-card {
-    background: white;
+    background: var(--surface-raised);
     border: 1px solid var(--line);
     border-radius: 8px;
     overflow: hidden;
@@ -794,7 +794,7 @@
     top: 11px;
     left: 11px;
     border-radius: 3px;
-    background: rgba(255, 255, 255, .9);
+    background: rgba(var(--surface-raised-rgb), .9);
     padding: 5px 8px;
     color: var(--wine);
     font: 700 9px Arial;
@@ -807,8 +807,8 @@
     top: 11px;
     right: 11px;
     border-radius: 4px;
-    background: linear-gradient(135deg, #8a152e, #5f0c1e);
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--brand-strong), var(--brand));
+    color: var(--text-inverse);
     padding: 4px 8px;
     font: 700 9px sans-serif;
     text-transform: uppercase;
@@ -816,18 +816,18 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    box-shadow: 0 2px 8px rgba(118, 19, 41, 0.4);
+    box-shadow: 0 2px 8px rgba(var(--brand-rgb), 0.4);
     z-index: 2;
 }
 
 .menu-card.is-on-offer {
-    border-color: #eed6dc;
+    border-color: var(--border);
     transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .menu-card.is-on-offer:hover {
     border-color: #cb8493;
-    box-shadow: 0 4px 16px rgba(118, 19, 41, 0.08);
+    box-shadow: 0 4px 16px rgba(var(--brand-rgb), 0.08);
 }
 
 .menu-card-body {
@@ -860,20 +860,20 @@
 }
 
 .menu-card-offer-price {
-    color: #c62828;
+    color: var(--danger);
     font-size: 13px;
 }
 
 .menu-card-original-price {
-    color: #a09a95;
+    color: var(--text-faint);
     text-decoration: line-through;
     font-size: 11px;
 }
 
 .menu-card-offer-pill {
-    background: #faecee;
+    background: var(--brand-tint);
     color: var(--wine);
-    border: 1px solid #f0ccd3;
+    border: 1px solid var(--border);
     font-size: 10px;
     font-weight: 700;
     padding: 2px 7px;
@@ -898,7 +898,7 @@
     border: 0;
     border-radius: 5px;
     background: var(--wine);
-    color: white;
+    color: var(--text-on-accent);
     display: grid;
     place-items: center;
     font-size: 18px;
@@ -910,7 +910,7 @@
     width: 100%;
     padding: 0;
     border: 0;
-    background: white;
+    background: var(--surface-raised);
     color: inherit;
     text-align: left;
 }
@@ -989,5 +989,5 @@
 .menu-category-section h2 {
     font-size: 24px;
     margin-bottom: 16px;
-    color: #3e2723;
+    color: var(--text);
 }

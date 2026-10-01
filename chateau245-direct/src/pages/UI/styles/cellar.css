@@ -1,15 +1,15 @@
 /* ═══════════════════════════════════════════════════════════
    cellar.css — My Cellar page styles
    Dark luxury aesthetic matching the design reference
-   Uses system palette: --wine #761329, --ink #211d1b, --cream #f7f3ef
+   Uses system palette: --wine var(--brand), --ink var(--text-strong), --cream var(--surface-page)
 ═══════════════════════════════════════════════════════════ */
 
 /* ── Page wrapper — full width, dark background ── */
 .cellar-page {
     margin: 4rem auto;
     min-height: 100vh;
-    background: #0f0d0c;
-    color: #e8e0d8;
+    background: var(--surface-inverse);
+    color: var(--text-inverse);
     font-family: inherit;
     
     /* space for mobile summary bar */
@@ -31,9 +31,9 @@
     position: absolute;
     inset: 0;
     background: linear-gradient(to right,
-            rgba(10, 8, 7, 0.92) 0%,
-            rgba(10, 8, 7, 0.7) 45%,
-            rgba(10, 8, 7, 0.1) 100%);
+            rgba(var(--brand-rgb), 0.92) 0%,
+            rgba(var(--brand-rgb), 0.7) 45%,
+            rgba(var(--brand-rgb), 0.1) 100%);
 }
 
 .cellar-hero-content {
@@ -47,7 +47,7 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    color: #c9aa7c;
+    color: var(--gold-light);
     background: none;
     border: none;
     font-size: 13px;
@@ -60,14 +60,14 @@
 }
 
 .cellar-back-btn:hover {
-    color: #e8d4a0;
+    color: var(--gold-pale);
 }
 
 .cellar-hero-title {
     font-family: Georgia, 'Times New Roman', serif;
     font-size: clamp(34px, 5vw, 52px);
     font-weight: 400;
-    color: #e8d4a0;
+    color: var(--gold-pale);
     margin: 0 0 4px;
     line-height: 1.1;
     letter-spacing: -0.5px;
@@ -80,7 +80,7 @@
 .cellar-hero-eyebrow {
     font-size: 11px;
     letter-spacing: 2.5px;
-    color: #a89070;
+    color: var(--gold-deep);
     text-transform: uppercase;
     margin: 0 0 12px;
     font-weight: 500;
@@ -90,13 +90,13 @@
     display: block;
     width: 36px;
     height: 2px;
-    background: #c9aa7c;
+    background: var(--gold-light);
     margin-bottom: 14px;
 }
 
 .cellar-hero-desc {
     font-size: 13px;
-    color: #b0a090;
+    color: var(--text-faint);
     line-height: 1.6;
     margin: 0;
     max-width: 380px;
@@ -125,9 +125,9 @@
 .cellar-filter-btn {
     padding: 8px 22px;
     border-radius: 30px;
-    border: 1px solid #2e2925;
-    background: #1a1613;
-    color: #a8998c;
+    border: 1px solid var(--surface-inverse);
+    background: var(--surface-inverse);
+    color: var(--text-faint);
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
@@ -136,14 +136,14 @@
 }
 
 .cellar-filter-btn:hover {
-    border-color: #c9aa7c;
-    color: #e8d4a0;
+    border-color: var(--gold-light);
+    color: var(--gold-pale);
 }
 
 .cellar-filter-btn.active {
-    background: #3a3228;
-    border-color: #c9aa7c;
-    color: #e8d4a0;
+    background: var(--text);
+    border-color: var(--gold-light);
+    color: var(--gold-pale);
 }
 
 /* ── SEARCH ── */
@@ -157,29 +157,29 @@
     left: 16px;
     top: 50%;
     transform: translateY(-50%);
-    color: #7a6e68;
+    color: var(--text-muted);
     font-size: 16px;
     pointer-events: none;
 }
 
 .cellar-search-input {
     width: 100%;
-    background: #1a1613;
-    border: 1px solid #2e2925;
+    background: var(--surface-inverse);
+    border: 1px solid var(--surface-inverse);
     border-radius: 30px;
     padding: 12px 16px 12px 44px;
-    color: #e8e0d8;
+    color: var(--text-inverse);
     font-size: 13px;
     outline: none;
     transition: border-color 0.2s;
 }
 
 .cellar-search-input::placeholder {
-    color: #5c5149;
+    color: var(--text-soft);
 }
 
 .cellar-search-input:focus {
-    border-color: #c9aa7c;
+    border-color: var(--gold-light);
 }
 
 /* ════════════════════════════════════════════════
@@ -192,8 +192,8 @@
 }
 
 .cellar-card {
-    background: #181410;
-    border: 1px solid #2a2420;
+    background: var(--surface-inverse);
+    border: 1px solid var(--surface-inverse);
     border-radius: 14px;
     overflow: hidden;
     transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
@@ -210,7 +210,7 @@
 .cellar-card-image-wrap {
     position: relative;
     height: 195px;
-    background: #110e0c;
+    background: var(--surface-inverse);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -243,23 +243,23 @@
 }
 
 .cellar-badge--red {
-    background: #761329;
-    color: #ffffff;
+    background: var(--brand);
+    color: var(--text-inverse);
 }
 
 .cellar-badge--white {
-    background: #3a4c2f;
-    color: #c8e6b2;
+    background: var(--success);
+    color: var(--success-ink);
 }
 
 .cellar-badge--rose {
-    background: #7c2640;
-    color: #ffd6e3;
+    background: var(--brand-strong);
+    color: var(--varietal-rose-ink);
 }
 
 .cellar-badge--sparkling {
-    background: #2a3d4f;
-    color: #b8d8e8;
+    background: var(--varietal-blue);
+    color: var(--varietal-blue-ink);
 }
 
 /* 3-dot context menu */
@@ -272,7 +272,7 @@
 .cellar-card-menu-btn {
     background: none;
     border: none;
-    color: #7a6e68;
+    color: var(--text-muted);
     font-size: 18px;
     padding: 4px;
     display: flex;
@@ -283,14 +283,14 @@
 }
 
 .cellar-card-menu-btn:hover {
-    color: #e8d4a0;
+    color: var(--gold-pale);
 }
 
 .cellar-dropdown {
     position: absolute;
     top: 28px;
     right: 0;
-    background: #201c19;
+    background: var(--text-strong);
     border: 1px solid #3a3228;
     border-radius: 8px;
     overflow: hidden;
@@ -315,33 +315,33 @@
 }
 
 .cellar-dropdown button:hover {
-    background: #2e2925;
-    color: #e8d4a0;
+    background: var(--text);
+    color: var(--gold-pale);
 }
 
 .cellar-dropdown button.danger:hover {
-    background: #2e1215;
+    background: var(--brand-deep);
     color: #f08090;
 }
 
 /* Card info section */
 .cellar-card-info {
     padding: 14px 14px 16px;
-    border-top: 1px solid #201c19;
+    border-top: 1px solid var(--text-strong);
 }
 
 .cellar-card-name {
     font-family: Georgia, serif;
     font-size: 17px;
     font-weight: 400;
-    color: #e8e0d8;
+    color: var(--text-inverse);
     margin: 0 0 2px;
     line-height: 1.2;
 }
 
 .cellar-card-subname {
     font-size: 11.5px;
-    color: #7a6e68;
+    color: var(--text-muted);
     margin: 0 0 9px;
 }
 
@@ -350,7 +350,7 @@
     align-items: center;
     gap: 8px;
     font-size: 11.5px;
-    color: #9a8e88;
+    color: var(--text-faint);
     margin-bottom: 10px;
 }
 
@@ -361,25 +361,25 @@
 }
 
 .cellar-card-divider {
-    color: #3a3228;
+    color: var(--text);
 }
 
 .cellar-card-vintage {
-    color: #9a8e88;
+    color: var(--text-faint);
 }
 
 .cellar-card-rule {
     display: block;
     width: 28px;
     height: 1px;
-    background: #c9aa7c;
+    background: var(--gold-light);
     margin-bottom: 10px;
     opacity: 0.6;
 }
 
 .cellar-card-added {
     font-size: 11px;
-    color: #5c5149;
+    color: var(--text-soft);
     margin: 0;
 }
 
@@ -387,12 +387,12 @@
 .cellar-empty {
     text-align: center;
     padding: 60px 20px;
-    color: #5c5149;
+    color: var(--text-soft);
 }
 
 .cellar-empty svg {
     font-size: 48px;
-    color: #c9aa7c;
+    color: var(--gold-light);
     opacity: 0.4;
     margin-bottom: 14px;
     display: block;
@@ -403,13 +403,13 @@
 .cellar-empty p {
     font-size: 14px;
     margin-bottom: 16px;
-    color: #7a6e68;
+    color: var(--text-muted);
 }
 
 .cellar-empty button {
     background: none;
     border: 1px solid #3a3228;
-    color: #c9aa7c;
+    color: var(--gold-light);
     padding: 8px 20px;
     border-radius: 20px;
     font-size: 12px;
@@ -418,8 +418,8 @@
 }
 
 .cellar-empty button:hover {
-    background: #3a3228;
-    color: #e8d4a0;
+    background: var(--text);
+    color: var(--gold-pale);
 }
 
 /* ════════════════════════════════════════════════
@@ -435,15 +435,15 @@
     font-family: Georgia, serif;
     font-size: 18px;
     font-weight: 400;
-    color: #c9aa7c;
+    color: var(--gold-light);
     margin: 0 0 18px;
     letter-spacing: -0.2px;
 }
 
 /* Summary card */
 .cellar-summary-card {
-    background: #181410;
-    border: 1px solid #2a2420;
+    background: var(--surface-inverse);
+    border: 1px solid var(--surface-inverse);
     border-radius: 14px;
     padding: 22px 20px;
 }
@@ -462,7 +462,7 @@
 
 .cellar-stat-icon {
     font-size: 22px;
-    color: #c9aa7c;
+    color: var(--gold-light);
     flex-shrink: 0;
     opacity: 0.8;
 }
@@ -488,27 +488,27 @@
 .cellar-stat strong {
     font-size: 22px;
     font-weight: 700;
-    color: #e8e0d8;
+    color: var(--text-inverse);
     line-height: 1;
 }
 
 .cellar-stat span {
     font-size: 11px;
-    color: #7a6e68;
+    color: var(--text-muted);
     letter-spacing: 0.2px;
 }
 
 /* Divider between summary sections */
 .cellar-sidebar-divider {
     border: none;
-    border-top: 1px solid #2a2420;
+    border-top: 1px solid var(--text-strong);
     margin: 4px 0;
 }
 
 /* Next pour */
 .cellar-next-pour {
-    background: #181410;
-    border: 1px solid #2a2420;
+    background: var(--surface-inverse);
+    border: 1px solid var(--surface-inverse);
     border-radius: 14px;
     padding: 22px 20px;
 }
@@ -524,7 +524,7 @@
     width: 64px;
     height: 82px;
     object-fit: contain;
-    background: #110e0c;
+    background: var(--surface-inverse);
     border-radius: 8px;
     flex-shrink: 0;
 }
@@ -537,14 +537,14 @@
 
 .cellar-next-pour-info strong {
     font-size: 14px;
-    color: #e8e0d8;
+    color: var(--text-inverse);
     font-weight: 600;
     line-height: 1.2;
 }
 
 .cellar-next-pour-info span {
     font-size: 11.5px;
-    color: #7a6e68;
+    color: var(--text-muted);
 }
 
 .cellar-next-pour-btn {
@@ -553,10 +553,10 @@
     justify-content: space-between;
     width: 100%;
     padding: 10px 16px;
-    background: #2e2925;
+    background: var(--text);
     border: 1px solid #3a3228;
     border-radius: 8px;
-    color: #e8d4a0;
+    color: var(--gold-pale);
     font-size: 12.5px;
     font-weight: 600;
     cursor: pointer;
@@ -564,14 +564,14 @@
 }
 
 .cellar-next-pour-btn:hover {
-    background: #3a3228;
-    border-color: #c9aa7c;
+    background: var(--text);
+    border-color: var(--gold-light);
 }
 
 /* Quote card */
 .cellar-quote-card {
-    background: #181410;
-    border: 1px solid #2a2420;
+    background: var(--surface-inverse);
+    border: 1px solid var(--surface-inverse);
     border-radius: 14px;
     padding: 22px 20px;
     text-align: center;
@@ -581,7 +581,7 @@
     font-family: Georgia, serif;
     font-size: 14px;
     font-style: italic;
-    color: #a89070;
+    color: var(--gold-deep);
     line-height: 1.65;
     margin: 0 0 16px;
 }
@@ -590,7 +590,7 @@
     display: block;
     width: 36px;
     height: 2px;
-    background: #c9aa7c;
+    background: var(--gold-light);
     margin: 0 auto 16px;
     opacity: 0.5;
 }
@@ -599,7 +599,7 @@
     display: flex;
     justify-content: center;
     gap: 8px;
-    color: #c9aa7c;
+    color: var(--gold-light);
     opacity: 0.25;
     font-size: 20px;
 }
@@ -613,8 +613,8 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: #181410;
-    border-top: 1px solid #2a2420;
+    background: var(--surface-inverse);
+    border-top: 1px solid var(--text-strong);
     padding: 12px 20px;
     z-index: 50;
 }
@@ -628,7 +628,7 @@
 }
 
 .cellar-mobile-summary-icon {
-    color: #c9aa7c;
+    color: var(--gold-light);
     font-size: 20px;
     flex-shrink: 0;
 }
@@ -636,7 +636,7 @@
 .cellar-mobile-summary-label {
     font-size: 12px;
     font-weight: 700;
-    color: #c9aa7c;
+    color: var(--gold-light);
     white-space: nowrap;
 }
 
@@ -648,13 +648,13 @@
 
 .cellar-mobile-stats span {
     font-size: 11px;
-    color: #9a8e88;
+    color: var(--text-faint);
     display: flex;
     gap: 4px;
 }
 
 .cellar-mobile-stats strong {
-    color: #e8e0d8;
+    color: var(--text-inverse);
     font-weight: 700;
 }
 

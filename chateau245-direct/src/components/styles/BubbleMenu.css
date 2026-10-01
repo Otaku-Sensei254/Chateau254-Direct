@@ -34,7 +34,7 @@
 .logo-bubble {
   width: 56px;
   height: 56px;
-  background: #fff;
+  background: var(--surface-raised);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
@@ -52,14 +52,14 @@
 .toggle-bubble {
   width: 56px;
   height: 56px;
-  background: #fff;
+  background: var(--surface-raised);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 .user-bubble {
   width: auto;
   height: 48px;
-  background: #fff;
+  background: var(--surface-raised);
   border-radius: 24px;
   padding: 0 16px;
   gap: 12px;
@@ -114,12 +114,12 @@
   cursor: pointer;
   border-radius: 20px;
   transition: all 0.2s ease;
-  color: #2c5f2d;
+  color: var(--success);
 }
 
 .welcome-link:hover {
-  background: #e8f5e9;
-  color: #1e4d1e;
+  background: var(--success-tint);
+  color: var(--success);
 }
 
 /* Cart Button */
@@ -134,7 +134,7 @@
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  color: #fff;
+  color: var(--text-inverse);
 }
 
 .bag-button:hover {
@@ -148,7 +148,7 @@
   min-width: 18px;
   height: 18px;
   background: #e53935;
-  color: #fff;
+  color: var(--text-inverse);
   border-radius: 9px;
   font-size: 11px;
   font-weight: 700;
@@ -156,7 +156,7 @@
   align-items: center;
   justify-content: center;
   padding: 0 4px;
-  border: 2px solid #fff;
+  border: 2px solid var(--surface-raised);
 }
 
 /* Overlay / Menu Items */
@@ -199,8 +199,8 @@
   font-size: 20px;
   font-weight: 700;
   text-decoration: none;
-  color: var(--pill-color, #111);
-  background: var(--pill-bg, #fff);
+  color: var(--pill-color, var(--text-strong));
+  background: var(--pill-bg, var(--surface-raised));
   border-radius: 60px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   border: 2px solid transparent;
@@ -211,8 +211,8 @@
 }
 
 .pill-link:hover {
-  background: var(--hover-bg, #f3f4f6);
-  color: var(--hover-color, #111);
+  background: var(--hover-bg, var(--surface-sunken));
+  color: var(--hover-color, var(--text-strong));
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
   transform: rotate(var(--item-rot, 0deg)) scale(1.02);
 }
@@ -228,10 +228,10 @@
 /* Dropdown */
 .dropdown-menu {
   margin-top: 12px;
-  background: #fff;
+  background: var(--surface-raised);
   border-radius: 20px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-  border: 1px solid #e9e1dc;
+  border: 1px solid var(--border);
   overflow: hidden;
   animation: dropdownSlideIn 0.25s ease-out;
 }
@@ -260,7 +260,7 @@
   padding: 14px 24px;
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: var(--text);
   text-decoration: none;
   transition: all 0.15s ease;
   width: 100%;
@@ -268,17 +268,17 @@
 }
 
 .dropdown-item:hover {
-  background: #f5f0e9;
-  color: #2c5f2d;
+  background: var(--surface-hover);
+  color: var(--success);
 }
 
 .dropdown-item svg {
   flex-shrink: 0;
-  color: #888;
+  color: var(--text-muted);
 }
 
 .dropdown-item:hover svg {
-  color: #2c5f2d;
+  color: var(--success);
 }
 
 /* Mobile Responsive */

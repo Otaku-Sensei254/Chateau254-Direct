@@ -1,7 +1,7 @@
 .events-page {
     min-height: 100vh;
     padding: 30px clamp(16px, 5vw, 60px) 80px;
-    background: #fdfbf7;
+    background: var(--surface-subtle);
     color: var(--ink);
 }
 
@@ -16,7 +16,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: #fff;
+    background: var(--surface-raised);
     color: var(--wine);
     border: 1px solid var(--wine);
     border-radius: 999px;
@@ -29,7 +29,7 @@
 
 .catering-pill-btn:hover {
     background: var(--wine);
-    color: white;
+    color: var(--text-on-accent);
 }
 
 /* Events Hero */
@@ -99,7 +99,7 @@
 }
 
 .event-card {
-    background: white;
+    background: var(--surface-raised);
     border: 1px solid var(--line);
     border-radius: 12px;
     overflow: hidden;
@@ -125,9 +125,9 @@
     position: absolute;
     top: 12px;
     left: 12px;
-    background: rgba(30, 10, 15, 0.85);
+    background: rgba(var(--brand-rgb), 0.85);
     backdrop-filter: blur(4px);
-    color: #e8c49e;
+    color: var(--gold-pale);
     font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
@@ -175,7 +175,7 @@
     padding-top: 12px;
     border-top: 1px solid var(--line);
     margin-bottom: 16px;
-    color: #554d48;
+    color: var(--text-soft);
 }
 
 .event-meta span {
@@ -196,9 +196,9 @@
     gap: 8px;
     width: 100%;
     padding: 10px;
-    background: #fdf5ef;
+    background: var(--surface-page);
     color: var(--wine);
-    border: 1px solid #ebd7c8;
+    border: 1px solid var(--border);
     border-radius: 6px;
     font-size: 12px;
     font-weight: 700;
@@ -209,13 +209,13 @@
 .event-book-btn:hover {
     background: var(--wine);
     border-color: var(--wine);
-    color: white;
+    color: var(--text-on-accent);
 }
 
 /* Catering Banner */
 .catering-banner {
-    background: linear-gradient(135deg, #440d18, #6e1528);
-    color: white;
+    background: linear-gradient(135deg, var(--brand-deep), var(--brand));
+    color: var(--text-on-accent);
     border-radius: 12px;
     padding: 32px 36px;
     display: flex;
@@ -223,7 +223,7 @@
     align-items: center;
     gap: 24px;
     margin-bottom: 60px;
-    box-shadow: 0 12px 30px rgba(68, 13, 24, 0.25);
+    box-shadow: 0 12px 30px rgba(var(--brand-rgb), 0.25);
 }
 
 .badge-pill {
@@ -237,7 +237,7 @@
     text-transform: uppercase;
     letter-spacing: 0.8px;
     margin-bottom: 10px;
-    color: #ffd9af;
+    color: var(--gold-pale);
 }
 
 .catering-banner-content h2 {
@@ -256,22 +256,22 @@
 
 .catering-cta {
     white-space: nowrap;
-    background: #bc9660;
-    color: #1a1210;
+    background: var(--gold-deep);
+    color: var(--text-strong);
     border: none;
     padding: 12px 24px;
     font-weight: 700;
 }
 
 .catering-cta:hover {
-    background: #cca670;
+    background: var(--gold-light);
 }
 
 /* Booking Section Form */
 .booking-section {
     max-width: 720px;
     margin: 0 auto;
-    background: white;
+    background: var(--surface-raised);
     border: 1px solid var(--line);
     border-radius: 12px;
     padding: 36px clamp(20px, 4vw, 44px);
@@ -315,7 +315,7 @@
     left: 12px;
     top: 50%;
     transform: translateY(-50%);
-    color: #a0958e;
+    color: var(--text-faint);
     font-size: 15px;
 }
 
@@ -326,7 +326,7 @@
     border: 1px solid var(--line);
     border-radius: 6px;
     padding: 0 12px 0 38px;
-    background: white;
+    background: var(--surface-raised);
     color: var(--ink);
     font-size: 13px;
     outline: none;
@@ -338,7 +338,7 @@
     border: 1px solid var(--line);
     border-radius: 6px;
     padding: 12px 14px;
-    background: white;
+    background: var(--surface-raised);
     color: var(--ink);
     font-size: 13px;
     outline: none;
@@ -369,7 +369,7 @@
 
 .success-icon {
     font-size: 52px;
-    color: #2e7d32;
+    color: var(--success-strong);
     margin-bottom: 14px;
 }
 

@@ -35,16 +35,16 @@ const defaultSocialItems = [
 
 export const StaggeredMenu = ({
   position = 'right',
-  colors = ['#2c5f2d', '#1e4d1e', '#3d7a3d'],
+  colors = ['var(--accent-nav)', 'var(--accent-nav-deep)', 'var(--gold-deep)'],
   items = defaultMenuItems,
   socialItems = defaultSocialItems,
   displaySocials = true,
   displayItemNumbering = true,
   className,
   logoUrl,
-  menuButtonColor = '#2c5f2d',
-  openMenuButtonColor = '#2c5f2d',
-  accentColor = '#2c5f2d',
+  menuButtonColor = 'var(--accent-nav)',
+  openMenuButtonColor = 'var(--accent-nav-deep)',
+  accentColor = 'var(--accent-nav)',
   isFixed = true,
   closeOnClickAway = true,
   onMenuOpen,
@@ -406,7 +406,7 @@ export const StaggeredMenu = ({
 
       <div ref={preLayersRef} className="sm-prelayers" aria-hidden="true">
         {(() => {
-          const raw = colors && colors.length ? colors.slice(0, 4) : ['#2c5f2d', '#1e4d1e'];
+          const raw = colors && colors.length ? colors.slice(0, 4) : ['var(--accent-nav)', 'var(--accent-nav-deep)'];
           let arr = [...raw];
           if (arr.length >= 3) {
             const mid = Math.floor(arr.length / 2);

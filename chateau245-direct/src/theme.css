@@ -1,0 +1,188 @@
+/* ==========================================================================
+   Design tokens
+   --------------------------------------------------------------------------
+   The :root block below holds the ORIGINAL cream-and-burgundy palette, kept
+   verbatim so the previous look can be restored at any time by removing the
+   data-theme attribute from <html>.
+
+   The [data-theme="black-gold"] block holds the black and dirty gold rebrand.
+   Every colour in the app resolves through these variables, so switching
+   between the two schemes never requires touching a component stylesheet.
+
+   To revert: delete data-theme="black-gold" from public/index.html.
+   ========================================================================== */
+
+:root {
+    /* Surfaces */
+    --surface-page: #f7f3ef;
+    --surface-raised: #ffffff;
+    --surface-card: #ffffff;
+    --surface-sunken: #f7f5f3;
+    --surface-subtle: #faf8f5;
+    --surface-hover: #f5f0e9;
+    --surface-muted: #f0ebe8;
+    --surface-deep: #ede6e0;
+    --surface-inverse: #171a1b;
+
+    /* Text */
+    --text-strong: #211d1b;
+    --text: #3a3228;
+    --text-soft: #5c5149;
+    --text-muted: #837a75;
+    --text-faint: #a0958e;
+    --text-inverse: #f7f3ef;
+    --text-on-accent: #ffffff;
+
+    /* Borders */
+    --border: #e9e1dc;
+    --border-soft: #ede6e0;
+    --border-strong: #d1c7bc;
+
+    /* Brand (formerly burgundy) */
+    --brand: #761329;
+    --brand-strong: #8b1c35;
+    --brand-deep: #3d0b18;
+    --brand-tint: #f5eee8;
+
+    /* Gold */
+    --gold: #c5a059;
+    --gold-light: #c9aa7c;
+    --gold-pale: #e8d4a0;
+    --gold-deep: #bc9660;
+    --gold-darkest: #8c6a2e;
+    --gold-tint: #f3d7a9;
+
+    /* Status */
+    --success: #2c5f2d;
+    --success-strong: #2e7d32;
+    --success-muted: #4d9057;
+    --success-ink: #c8e6b2;
+    --success-tint: #e8f5e9;
+    --danger: #c62828;
+    --danger-tint: #fce4e4;
+    --warning: #e65100;
+    --warning-tint: #fff3e0;
+    --info: #1565c0;
+    --info-tint: #e3f2fd;
+
+    /* Seated and occupied share one violet identity across admin tables,
+       order badges and rider screens. */
+    --occupied: #7b1fa2;
+    --occupied-strong: #9c27b0;
+    --occupied-tint: #f3e5f5;
+    --occupied-ink: #e1bee7;
+
+    /* Wine varietal badge pair, kept as its own channel so a rebrand can move
+       it without disturbing the generic brand scale. */
+    --varietal-blue: #2a3d4f;
+    --varietal-blue-ink: #b8d8e8;
+    --varietal-rose-ink: #ffd6e3;
+
+    /* WhatsApp's mark colour is fixed by the platform, not the brand. */
+    --whatsapp: #25d366;
+
+    /* Legacy aliases kept so older rules keep working unchanged. */
+    --wine: #761329;
+    --wine-dark: #3d0b18;
+    --ink: #211d1b;
+    --cream: #f7f3ef;
+    --muted: #837a75;
+    --line: #e9e1dc;
+    --rider-grid-cols: 1fr 1fr;
+
+    /* Channel triplets, used by translucent rgba() rules such as tinted overlays. */
+    --brand-rgb: 118, 19, 41;
+    --brand-deep-rgb: 61, 11, 24;
+    --gold-rgb: 197, 160, 89;
+    --success-rgb: 44, 95, 45;
+    --danger-rgb: 198, 40, 40;
+    --warning-rgb: 230, 81, 0;
+    --info-rgb: 21, 101, 192;
+    --surface-raised-rgb: 255, 255, 255;
+
+    /* Navigation accent. The staggered menu ships green, so it gets its own token
+       rather than borrowing --success, which would leave it green after a rebrand. */
+    --accent-nav: #2c5f2d;
+    --accent-nav-deep: #1e4d1e;
+}
+
+/* --------------------------------------------------------------------------
+   Black and dirty gold
+   -------------------------------------------------------------------------- */
+:root[data-theme="black-gold"] {
+    --surface-page: #0b0a08;
+    --surface-raised: #141210;
+    --surface-card: #171512;
+    --surface-sunken: #0f0e0b;
+    --surface-subtle: #1b1815;
+    --surface-hover: #211d18;
+    --surface-muted: #26221c;
+    --surface-deep: #2f2a22;
+    --surface-inverse: #050504;
+
+    --text-strong: #f6f1e6;
+    --text: #ded6c6;
+    --text-soft: #b8ae9a;
+    --text-muted: #948a78;
+    --text-faint: #6f6757;
+    --text-inverse: #0b0a08;
+    --text-on-accent: #14100a;
+
+    --border: #2c2721;
+    --border-soft: #221e19;
+    --border-strong: #3f382d;
+
+    --brand: #b08d45;
+    --brand-strong: #c9a558;
+    --brand-deep: #7a6129;
+    --brand-tint: #241d10;
+
+    --gold: #b08d45;
+    --gold-light: #cba961;
+    --gold-pale: #e0c489;
+    --gold-deep: #8a6c30;
+    --gold-darkest: #5e4a1f;
+    --gold-tint: #2a2211;
+
+    --success: #74b07a;
+    --success-strong: #8cc792;
+    --success-muted: #5f9c66;
+    --success-ink: #1a2a1c;
+    --success-tint: #16241a;
+    --danger: #d3776f;
+    --danger-tint: #2a1715;
+    --warning: #d3a05a;
+    --warning-tint: #2a2113;
+    --info: #7f9ad4;
+    --info-tint: #161d2a;
+
+    --occupied: #b18fd6;
+    --occupied-strong: #c9a9e8;
+    --occupied-tint: #241d2e;
+    --occupied-ink: #3a2f47;
+
+    --varietal-blue: #1c2a36;
+    --varietal-blue-ink: #a8c8dc;
+    --varietal-rose-ink: #f0cdd9;
+
+    --whatsapp: #25d366;
+
+    --wine: #b08d45;
+    --wine-dark: #7a6129;
+    --ink: #f6f1e6;
+    --cream: #0b0a08;
+    --muted: #948a78;
+    --line: #2c2721;
+
+    --brand-rgb: 176, 141, 69;
+    --brand-deep-rgb: 122, 97, 41;
+    --gold-rgb: 176, 141, 69;
+    --success-rgb: 116, 176, 122;
+    --danger-rgb: 211, 119, 111;
+    --warning-rgb: 211, 160, 90;
+    --info-rgb: 127, 154, 212;
+    --surface-raised-rgb: 23, 21, 18;
+
+    --accent-nav: #b08d45;
+    --accent-nav-deep: #8a6c30;
+}

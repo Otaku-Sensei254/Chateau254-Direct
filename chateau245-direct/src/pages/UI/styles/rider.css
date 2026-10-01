@@ -5,7 +5,7 @@
 .rider-layout {
     display: flex;
     min-height: 100vh;
-    background: #f7f5f3;
+    background: var(--surface-sunken);
 }
 
 .rider-sidebar {
@@ -15,8 +15,8 @@
     flex-direction: column;
     flex-shrink: 0;
     padding: 28px 17px 22px;
-    background: #171a1b;
-    color: #f7f3ef;
+    background: var(--surface-inverse);
+    color: var(--text-inverse);
 }
 
 .rider-sidebar-brand {
@@ -24,25 +24,25 @@
     align-items: center;
     gap: 9px;
     padding: 0 10px;
-    color: white;
+    color: var(--text-on-accent);
     font: 700 14px Georgia, serif;
     letter-spacing: 1.5px;
 }
 
 .rider-sidebar-brand > span:nth-child(2) > span {
-    color: #bc9660;
+    color: var(--gold-deep);
 }
 
 .rider-sidebar-brand small {
     display: block;
     margin-top: 4px;
-    color: #929796;
+    color: var(--text-faint);
     font: 7px Arial, sans-serif;
     letter-spacing: 1px;
 }
 
 .rider-brand-mark {
-    color: #bc9660;
+    color: var(--gold-deep);
     font-size: 29px;
     line-height: 1;
 }
@@ -52,7 +52,7 @@
     margin-left: auto;
     border: 0;
     background: transparent;
-    color: white;
+    color: var(--text-on-accent);
     font-size: 20px;
 }
 
@@ -62,8 +62,8 @@
     gap: 10px;
     margin: 45px 8px 24px;
     padding: 15px 0;
-    border-top: 1px solid #303434;
-    border-bottom: 1px solid #303434;
+    border-top: 1px solid var(--text);
+    border-bottom: 1px solid var(--text);
 }
 
 .rider-avatar {
@@ -72,8 +72,8 @@
     width: 38px;
     height: 38px;
     border-radius: 50%;
-    background: #bc9660;
-    color: #211d1b;
+    background: var(--gold-deep);
+    color: var(--text-strong);
     font-size: 11px;
     font-weight: 800;
 }
@@ -92,7 +92,7 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    color: #73b27a;
+    color: var(--success-muted);
     font-size: 10px;
 }
 
@@ -100,7 +100,7 @@
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: #73b27a;
+    background: var(--success-muted);
 }
 
 .rider-nav {
@@ -125,8 +125,8 @@
 
 .rider-nav button:hover,
 .rider-nav button.active {
-    background: #292d2e;
-    color: white;
+    background: var(--text);
+    color: var(--text-on-accent);
 }
 
 .rider-nav button.active {
@@ -141,13 +141,13 @@
     margin-left: auto;
     border-radius: 50%;
     background: var(--wine);
-    color: white;
+    color: var(--text-on-accent);
     font-size: 10px;
 }
 
 .rider-logout {
     margin-top: auto;
-    color: #929796;
+    color: var(--text-faint);
 }
 
 .rider-content {
@@ -185,10 +185,10 @@
     align-items: center;
     gap: 8px;
     padding: 9px 13px;
-    border: 1px solid #cde3d1;
+    border: 1px solid var(--border);
     border-radius: 20px;
-    background: #f1faf2;
-    color: #4d9057;
+    background: var(--surface-sunken);
+    color: var(--success-muted);
     font-size: 11px;
     font-weight: 700;
 }
@@ -197,7 +197,7 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #5ca968;
+    background: var(--success-muted);
 }
 
 .rider-stats {
@@ -215,7 +215,7 @@
     padding: 15px 17px;
     border: 1px solid var(--line);
     border-radius: 6px;
-    background: white;
+    background: var(--surface-raised);
     color: var(--wine);
 }
 
@@ -262,12 +262,12 @@
     padding: 20px;
     border: 1px solid var(--line);
     border-radius: 7px;
-    background: white;
+    background: var(--surface-raised);
 }
 
 .rider-delivery-card.selected {
     border-color: var(--wine);
-    box-shadow: 0 0 0 1px var(--wine), 0 8px 20px rgba(118, 19, 41, .08);
+    box-shadow: 0 0 0 1px var(--wine), 0 8px 20px rgba(var(--brand-rgb), .08);
 }
 
 .rider-map-section {
@@ -275,7 +275,7 @@
     margin-bottom: 34px;
     border: 1px solid var(--line);
     border-radius: 7px;
-    background: white;
+    background: var(--surface-raised);
 }
 
 .rider-map-heading {
@@ -347,7 +347,7 @@
     gap: 6px;
     padding: 7px 10px;
     border-radius: 4px;
-    background: #fff3e9;
+    background: var(--warning-tint);
     color: #b56e37;
     font-size: 10px;
     font-weight: 800;
@@ -359,8 +359,8 @@
     gap: 18px;
     margin: 20px 0;
     padding: 17px 0;
-    border-top: 1px solid #f0ebe8;
-    border-bottom: 1px solid #f0ebe8;
+    border-top: 1px solid var(--surface-muted);
+    border-bottom: 1px solid var(--surface-muted);
 }
 
 .rider-card-details > div {
@@ -408,27 +408,27 @@
 .rider-card-actions a,
 .rider-directions {
     border: 1px solid var(--line);
-    background: white;
+    background: var(--surface-raised);
     color: var(--muted);
 }
 
 .rider-complete {
-    border: 1px solid #559b61;
-    background: #559b61;
-    color: white;
+    border: 1px solid var(--success);
+    background: var(--success);
+    color: var(--text-on-accent);
 }
 
 .rider-empty {
     padding: 75px 20px;
-    border: 1px dashed #c9d9cb;
+    border: 1px dashed var(--border-strong);
     border-radius: 7px;
-    background: #f8fcf8;
+    background: var(--surface-subtle);
     color: var(--muted);
     text-align: center;
 }
 
 .rider-empty svg {
-    color: #559b61;
+    color: var(--success);
     font-size: 36px;
 }
 
@@ -459,7 +459,7 @@
         height: 40px;
         border: 1px solid var(--line);
         border-radius: 5px;
-        background: white;
+        background: var(--surface-raised);
         color: var(--wine);
         font-size: 21px;
     }
@@ -470,7 +470,7 @@
         inset: 0;
         display: block;
         border: 0;
-        background: rgba(23, 26, 27, .55);
+        background: rgba(var(--brand-rgb), .55);
     }
 
     .rider-sidebar {

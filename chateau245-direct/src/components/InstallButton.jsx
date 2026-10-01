@@ -52,7 +52,7 @@ export default function InstallButton() {
       onClick={handleInstallClick}
       style={{
         padding: '8px 16px',
-        background: '#2c5f2d',
+        background: 'var(--accent-nav)',
         color: '#fff',
         border: 'none',
         borderRadius: '4px',
@@ -65,8 +65,8 @@ export default function InstallButton() {
         boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
         transition: 'background 0.2s',
       }}
-      onMouseEnter={(e) => e.target.style.background = '#1e4d1e'}
-      onMouseLeave={(e) => e.target.style.background = '#2c5f2d'}
+      onMouseEnter={(e) => e.target.style.background = 'var(--accent-nav-deep)'}
+      onMouseLeave={(e) => e.target.style.background = 'var(--accent-nav)'}
     >
       📥 Install App
     </button>

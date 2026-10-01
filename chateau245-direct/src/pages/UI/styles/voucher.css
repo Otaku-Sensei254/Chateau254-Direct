@@ -20,20 +20,20 @@
 .admin-vouchers-header h2 {
   font-family: 'Playfair Display', Georgia, serif;
   font-size: 1.5rem;
-  color: #c5a059;
+  color: var(--gold);
   margin: 0;
 }
 
 .admin-vouchers-header p {
   font-size: 0.8rem;
-  color: #837a75;
+  color: var(--text-muted);
   margin: 0.2rem 0 0;
 }
 
 /* --- Form panel ------------------------------------------ */
 .voucher-form-panel {
-  background: #18120e;
-  border: 1px solid #2e211a;
+  background: var(--surface-inverse);
+  border: 1px solid var(--surface-inverse);
   border-radius: 12px;
   padding: 2rem;
 }
@@ -41,7 +41,7 @@
 .voucher-form-panel h3 {
   font-family: 'Playfair Display', Georgia, serif;
   font-size: 1.1rem;
-  color: #c5a059;
+  color: var(--gold);
   margin: 0 0 1.5rem;
   display: flex;
   align-items: center;
@@ -65,15 +65,15 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #837a75;
+  color: var(--text-muted);
 }
 
 .voucher-field input,
 .voucher-field select {
-  background: #211d1b;
+  background: var(--text-strong);
   border: 1px solid #3a2e27;
   border-radius: 6px;
-  color: #f7f3ef;
+  color: var(--text-inverse);
   font-family: 'Montserrat', Arial, sans-serif;
   font-size: 0.9rem;
   padding: 0.6rem 0.8rem;
@@ -83,11 +83,11 @@
 
 .voucher-field input:focus,
 .voucher-field select:focus {
-  border-color: #c5a059;
+  border-color: var(--gold);
 }
 
 .voucher-field select option {
-  background: #211d1b;
+  background: var(--text-strong);
 }
 
 .voucher-form-actions {
@@ -101,8 +101,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: linear-gradient(135deg, #c5a059, #dfba6a);
-  color: #18120e;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: var(--text-strong);
   border: none;
   border-radius: 8px;
   padding: 0.7rem 1.4rem;
@@ -130,7 +130,7 @@
 .voucher-preview-wrap h3 {
   font-family: 'Playfair Display', Georgia, serif;
   font-size: 1.1rem;
-  color: #c5a059;
+  color: var(--gold);
   margin: 0;
   align-self: flex-start;
   display: flex;
@@ -149,9 +149,9 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: #211d1b;
-  border: 1px solid #c5a059;
-  color: #c5a059;
+  background: var(--text-strong);
+  border: 1px solid var(--gold);
+  color: var(--gold);
   border-radius: 8px;
   padding: 0.65rem 1.3rem;
   font-family: 'Montserrat', Arial, sans-serif;
@@ -162,8 +162,8 @@
 }
 
 .voucher-btn-download:hover {
-  background: #c5a059;
-  color: #18120e;
+  background: var(--gold);
+  color: var(--text-strong);
 }
 
 .voucher-btn-print {
@@ -172,7 +172,7 @@
   gap: 0.5rem;
   background: transparent;
   border: 1px solid #3a2e27;
-  color: #837a75;
+  color: var(--text-muted);
   border-radius: 8px;
   padding: 0.65rem 1.3rem;
   font-family: 'Montserrat', Arial, sans-serif;
@@ -184,7 +184,7 @@
 
 .voucher-btn-print:hover {
   border-color: #837a75;
-  color: #f7f3ef;
+  color: var(--text-inverse);
 }
 
 /* ============================================================
@@ -250,7 +250,7 @@
   font-family: 'Playfair Display', Georgia, serif;
   font-size: 1.05rem;
   font-weight: 700;
-  color: #18120e;
+  color: var(--text-strong);
   letter-spacing: 0.06em;
   /* sits in the golden rectangle area */
   line-height: 1;
@@ -264,7 +264,7 @@
   justify-content: center;
   width: 72px;
   height: 72px;
-  background: #ffffff;
+  background: var(--surface-raised);
   padding: 4px;
   border-radius: 4px;
 }
@@ -296,7 +296,7 @@
 }
 
 .voucher-box + .voucher-box {
-  border-left: 1px solid rgba(197,160,89,0.25);
+  border-left: 1px solid rgba(var(--gold-rgb), 0.25);
 }
 
 .voucher-box-label {
@@ -304,18 +304,18 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #c5a059;
+  color: var(--gold);
   margin-bottom: 0.3rem;
   line-height: 1;
 }
 
 .voucher-box-value {
   font-size: 0.8rem;
-  color: #f7f3ef;
+  color: var(--text-inverse);
   font-weight: 600;
   letter-spacing: 0.04em;
   line-height: 1.2;
-  border-bottom: 1px solid rgba(197,160,89,0.45);
+  border-bottom: 1px solid rgba(var(--gold-rgb), 0.45);
   padding-bottom: 0.1rem;
   min-height: 1.4em;
 }
@@ -325,7 +325,7 @@
   font-family: 'Great Vibes', cursive;
   font-size: 1.35rem;
   font-weight: 400;
-  color: #dfba6a;
+  color: var(--gold-light);
   letter-spacing: 0.02em;
   border-bottom: none;
   padding-bottom: 0;
@@ -336,15 +336,15 @@
   font-family: 'Playfair Display', Georgia, serif;
   font-size: 0.78rem;
   font-style: italic;
-  color: #dfba6a;
+  color: var(--gold-light);
 }
 
 /* ============================================================
    GENERATED VOUCHERS LIST
    ============================================================ */
 .voucher-list-panel {
-  background: #18120e;
-  border: 1px solid #2e211a;
+  background: var(--surface-inverse);
+  border: 1px solid var(--surface-inverse);
   border-radius: 12px;
   padding: 1.5rem 2rem;
 }
@@ -352,13 +352,13 @@
 .voucher-list-panel h3 {
   font-family: 'Playfair Display', Georgia, serif;
   font-size: 1.05rem;
-  color: #c5a059;
+  color: var(--gold);
   margin: 0 0 1.2rem;
 }
 
 .voucher-list-empty {
   text-align: center;
-  color: #837a75;
+  color: var(--text-muted);
   font-size: 0.85rem;
   padding: 2rem 0;
 }
@@ -370,31 +370,31 @@
 }
 
 .voucher-list-table th {
-  color: #837a75;
+  color: var(--text-muted);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 0.5rem 0.8rem;
-  border-bottom: 1px solid #2e211a;
+  border-bottom: 1px solid var(--text-strong);
   text-align: left;
 }
 
 .voucher-list-table td {
-  color: #f7f3ef;
+  color: var(--text-inverse);
   padding: 0.7rem 0.8rem;
-  border-bottom: 1px solid #1e1712;
+  border-bottom: 1px solid var(--surface-inverse);
   vertical-align: middle;
 }
 
 .voucher-list-table tr:hover td {
-  background: rgba(197,160,89,0.04);
+  background: rgba(var(--gold-rgb), 0.04);
 }
 
 .voucher-num-badge {
-  background: rgba(197,160,89,0.12);
-  color: #c5a059;
-  border: 1px solid rgba(197,160,89,0.3);
+  background: rgba(var(--gold-rgb), 0.12);
+  color: var(--gold);
+  border: 1px solid rgba(var(--gold-rgb), 0.3);
   border-radius: 4px;
   padding: 0.15rem 0.5rem;
   font-size: 0.75rem;
@@ -411,7 +411,7 @@
 .voucher-list-action-btn {
   background: transparent;
   border: 1px solid #3a2e27;
-  color: #837a75;
+  color: var(--text-muted);
   border-radius: 5px;
   padding: 0.3rem 0.6rem;
   cursor: pointer;
@@ -423,8 +423,8 @@
 }
 
 .voucher-list-action-btn:hover {
-  border-color: #c5a059;
-  color: #c5a059;
+  border-color: var(--gold);
+  color: var(--gold);
 }
 
 .voucher-list-action-btn.danger:hover {

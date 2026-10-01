@@ -1,6 +1,6 @@
 body {
   margin:0;
-  background: #f7f3ef;
+  background: var(--surface-page);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

@@ -11,10 +11,10 @@ export const AppHeader = ({ cartCount, userName = '', onProfile, onCart, onHome,
       onCart={onCart}
       onHome={onHome}
       onBack={onBack}
-      menuButtonColor="#2c5f2d"
-      openMenuButtonColor="#2c5f2d"
-      accentColor="#2c5f2d"
-      colors={['#2c5f2d', '#1e4d1e', '#3d7a3d']}
+      menuButtonColor="var(--accent-nav)"
+      openMenuButtonColor="var(--accent-nav-deep)"
+      accentColor="var(--accent-nav)"
+      colors={['var(--accent-nav)', 'var(--accent-nav-deep)', 'var(--gold-deep)']}
       position="right"
       displayItemNumbering={true}
       displaySocials={true}

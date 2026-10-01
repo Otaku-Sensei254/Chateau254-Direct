@@ -39,7 +39,7 @@ a{
     align-items: center;
     justify-content: space-between;
     padding: 14px clamp(20px, 5vw, 60px);
-    background: white;
+    background: var(--surface-raised);
     border-bottom: 1px solid var(--line);
     position: sticky;
     top: 0;
@@ -79,7 +79,7 @@ a{
 
 .brand span:first-child,
 .brand .brand-main {
-    color: #1a1415 !important;
+    color: var(--text-strong) !important;
     font-weight: 800;
     letter-spacing: 1.8px;
     font-style: normal;
@@ -88,8 +88,8 @@ a{
 
 .brand span:last-child,
 .brand .brand-accent {
-    color: #c5a059 !important;
-    background: linear-gradient(135deg, #dfba6a 0%, #c5a059 40%, #8c6a2e 100%);
+    color: var(--gold) !important;
+    background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 40%, var(--gold-darkest) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: 900;
@@ -98,7 +98,7 @@ a{
     margin-left: 2px;
     display: inline-block;
     position: relative;
-    filter: drop-shadow(0 1px 2px rgba(197, 160, 89, 0.25));
+    filter: drop-shadow(0 1px 2px rgba(var(--gold-rgb), 0.25));
     transition: transform 0.25s ease;
 }
 
@@ -146,7 +146,7 @@ a{
     top: 2px;
     right: 0;
     background: var(--wine);
-    color: white;
+    color: var(--text-on-accent);
     font: 700 9px Arial;
     min-width: 16px;
     height: 16px;
@@ -170,7 +170,7 @@ h1 {
 h1 span,
 h1 em {
     display: block;
-    color: #d6a16c;
+    color: var(--gold-light);
     font-style: normal;
 }
 
@@ -198,24 +198,24 @@ h1 em {
 }
 
 .primary-button {
-    color: white;
+    color: var(--text-on-accent);
     background: var(--wine);
-    box-shadow: 0 10px 20px rgba(118, 19, 41, .18);
+    box-shadow: 0 10px 20px rgba(var(--brand-rgb), .18);
 }
 
 .primary-button:hover {
-    background: #8b1c35;
+    background: var(--brand-strong);
     transform: translateY(-1px);
 }
 
 .secondary-button {
-    background: #C0A16B;
+    background: var(--gold);
     width: 120px;
     border: none;
     outline: none;
     display: flex;
     align-items: center;
-    color: white;
+    color: var(--text-on-accent);
     justify-content: center;
     border-radius: 8px;
 }
@@ -223,7 +223,7 @@ h1 em {
 .outline-button {
     display: flex;
     margin-top: 12px;
-    color: white;
+    color: var(--text-on-accent);
     background: rgba(0, 0, 0, .25);
     border: 1px solid rgba(255, 255, 255, .55);
     width: 190px;
@@ -275,7 +275,7 @@ h1 em {
     border: 0;
     border-radius: 25px;
     background: var(--wine-dark);
-    color: white;
+    color: var(--text-on-accent);
     padding: 12px 15px 12px 20px;
     display: flex;
     gap: 18px;
@@ -288,7 +288,7 @@ h1 em {
 .floating-cart span {
     font: 700 10px Arial;
     background: var(--wine);
-    color: white;
+    color: var(--text-on-accent);
     border-radius: 50%;
     min-width: 18px;
     height: 18px;
@@ -306,11 +306,11 @@ h1 em {
     white-space: nowrap;
 }
 
-.status-pending { background: #fff3e0; color: #e65100; }
-.status-preparing { background: #e3f2fd; color: #1565c0; }
-.status-out_for_delivery { background: #f3e5f5; color: #7b1fa2; }
-.status-completed { background: #e8f5e9; color: #2e7d32; }
-.status-cancelled { background: #fce4ec; color: #c62828; }
+.status-pending { background: var(--warning-tint); color: var(--warning); }
+.status-preparing { background: var(--info-tint); color: var(--info); }
+.status-out_for_delivery { background: var(--surface-muted); color: var(--occupied); }
+.status-completed { background: var(--success-tint); color: var(--success-strong); }
+.status-cancelled { background: var(--danger-tint); color: var(--danger); }
 
 @keyframes rise {
     from { opacity: 0; transform: translateY(10px); }
@@ -343,7 +343,7 @@ h1 em {
 
 .light {
     border: 1px solid rgba(255, 255, 255, .35);
-    color: white;
+    color: var(--text-on-accent);
 }
 
 @media (max-width: 540px) {

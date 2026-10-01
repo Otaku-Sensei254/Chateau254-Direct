@@ -11,7 +11,7 @@ const DEFAULT_ITEMS = [
     ariaLabel: 'Events',
     rotation: -8,
     icon: FiCalendar,
-    hoverStyles: { bgColor: '#2c5f2d', textColor: '#ffffff' }
+    hoverStyles: { bgColor: 'var(--accent-nav)', textColor: 'var(--text-on-accent)' }
   },
   {
     label: 'Packages',
@@ -19,7 +19,7 @@ const DEFAULT_ITEMS = [
     ariaLabel: 'Packages',
     rotation: 8,
     icon: FiPackage,
-    hoverStyles: { bgColor: '#1e4d1e', textColor: '#ffffff' }
+    hoverStyles: { bgColor: 'var(--accent-nav-deep)', textColor: 'var(--text-on-accent)' }
   },
   {
     label: 'Menus',
@@ -34,7 +34,7 @@ const DEFAULT_ITEMS = [
       { label: 'Dine-In', icon: FiCoffee, href: '/menu?mode=dining' },
       { label: 'Take-Out', icon: FiCoffee, href: '/menu?mode=takeout' },
     ],
-    hoverStyles: { bgColor: '#3d7a3d', textColor: '#ffffff' }
+    hoverStyles: { bgColor: 'var(--gold-deep)', textColor: 'var(--text-on-accent)' }
   },
   {
     label: 'Reserve',
@@ -42,7 +42,7 @@ const DEFAULT_ITEMS = [
     ariaLabel: 'Reserve',
     rotation: 8,
     icon: FiMapPin,
-    hoverStyles: { bgColor: '#4a904a', textColor: '#ffffff' }
+    hoverStyles: { bgColor: '#4a904a', textColor: 'var(--text-on-accent)' }
   },
   {
     label: 'Feed',
@@ -50,7 +50,7 @@ const DEFAULT_ITEMS = [
     ariaLabel: 'Feed',
     rotation: -8,
     icon: FiBookOpen,
-    hoverStyles: { bgColor: '#5ab55a', textColor: '#ffffff' }
+    hoverStyles: { bgColor: '#5ab55a', textColor: 'var(--text-on-accent)' }
   }
 ];
 
@@ -202,7 +202,7 @@ export default function BubbleMenu({
             <FiUser size={16} /> {userName || 'Guest'}
           </button>
           <InstallButton />
-          <button className="bag-button" aria-label="Open cart" onClick={onCart} style={{ background: '#2c5f2d' }}>
+          <button className="bag-button" aria-label="Open cart" onClick={onCart} style={{ background: 'var(--accent-nav)' }}>
             <FiShoppingBag size={20} />
             {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
           </button>

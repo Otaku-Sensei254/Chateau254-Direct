@@ -17,7 +17,7 @@
     border-radius: 5px;
     padding: 14px;
     margin-top: 8px;
-    background: white;
+    background: var(--surface-raised);
     color: var(--ink);
     outline-color: var(--wine);
     font-size: 12px;

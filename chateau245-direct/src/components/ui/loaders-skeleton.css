@@ -5,7 +5,7 @@
 .loader-skeleton-container {
   position: relative;
   overflow: hidden;
-  background-color: #ede6e0;
+  background-color: var(--surface-deep);
   display: inline-block;
   vertical-align: middle;
 }
@@ -23,8 +23,8 @@
 
 /* ── Menu Card Skeleton ──────────────────────────────────────── */
 .skeleton-menu-card {
-  background: white;
-  border: 1px solid #e9e1dc;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
   display: flex;
@@ -36,7 +36,7 @@
 .skeleton-menu-image {
   width: 100%;
   height: 165px;
-  background-color: #ede6e0;
+  background-color: var(--surface-deep);
   position: relative;
 }
 
@@ -49,8 +49,8 @@
 
 /* ── Wine Card Skeleton ──────────────────────────────────────── */
 .skeleton-wine-card {
-  background: white;
-  border: 1px solid #e9e1dc;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
   padding: 16px;
@@ -64,7 +64,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f7f3ef;
+  background: var(--surface-page);
   border-radius: 8px;
 }
 
@@ -74,16 +74,16 @@
   align-items: center;
   gap: 14px;
   padding: 14px;
-  background: white;
-  border: 1px solid #e9e1dc;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
   border-radius: 12px;
   margin-bottom: 12px;
 }
 
 /* ── Profile Order Skeleton ─────────────────────────────────── */
 .skeleton-profile-order {
-  background: white;
-  border: 1px solid #e9e1dc;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 12px;
@@ -101,8 +101,8 @@
 }
 
 .skeleton-admin-kpi {
-  background: white;
-  border: 1px solid #e9e1dc;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 20px;
   display: flex;
@@ -111,8 +111,8 @@
 }
 
 .skeleton-admin-table {
-  background: white;
-  border: 1px solid #e9e1dc;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 20px;
   display: flex;
@@ -125,7 +125,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 0;
-  border-bottom: 1px solid #f4eee9;
+  border-bottom: 1px solid var(--brand-tint);
 }
 
 .skeleton-table-row:last-child {

@@ -50,7 +50,7 @@
 }
 
 .menu-card-original-price {
-    color: #a09a95;
+    color: var(--text-faint);
     text-decoration: line-through;
     font-size: 13px;
     margin-left: 8px;
@@ -63,7 +63,7 @@
 }
 
 .tasting-notes {
-    border-left: 2px solid #bc9660;
+    border-left: 2px solid var(--gold-deep);
     padding-left: 15px;
     margin: 25px 0;
 }
@@ -104,7 +104,7 @@
     padding: 12px 13px;
     border: 1px solid var(--line);
     border-radius: 12px;
-    background: linear-gradient(180deg, #fff 0%, #fdfaf6 100%);
+    background: linear-gradient(180deg, var(--surface-raised) 0%, var(--surface-subtle) 100%);
     color: var(--text);
     font: inherit;
     text-align: left;
@@ -115,8 +115,8 @@
 .detail-fact:hover {
     transform: translateY(-2px);
     border-color: var(--wine);
-    box-shadow: 0 8px 22px rgba(117, 71, 34, 0.11);
-    background: #fffaf5;
+    box-shadow: 0 8px 22px rgba(var(--brand-rgb), 0.11);
+    background: var(--surface-subtle);
 }
 
 .detail-fact span {
@@ -146,7 +146,7 @@
 .wine-pairing-section {
     margin: 25px 0;
     padding: 20px;
-    background: #faf8f6;
+    background: var(--surface-subtle);
     border: 1px solid var(--line);
     border-radius: 8px;
     width:fit-content;
@@ -178,7 +178,7 @@
 }
 .pairing-card {
     padding: 14px 16px;
-    background: white;
+    background: var(--surface-raised);
     border: 1px solid var(--line);
     border-radius: 6px;
 }
@@ -235,7 +235,7 @@
     align-items: center;
     gap: 8px;
     padding: 10px 12px;
-    background: #faf8f6;
+    background: var(--surface-subtle);
     border: 1px solid var(--line);
     border-radius: 6px;
     font-size: 13px;
@@ -243,7 +243,7 @@
 }
 
 .components-list li svg {
-    color: #4d9057;
+    color: var(--success-muted);
     flex-shrink: 0;
 }
 
@@ -251,7 +251,7 @@
 .pricing-section {
     margin: 25px 0;
     padding: 20px;
-    background: #f5f0eb;
+    background: var(--surface-hover);
     border: 1px solid var(--line);
     border-radius: 8px;
 }
@@ -277,7 +277,7 @@
     align-items: center;
     gap: 12px;
     padding: 14px 16px;
-    background: white;
+    background: var(--surface-raised);
     border: 2px solid var(--line);
     border-radius: 8px;
     cursor: pointer;
@@ -286,13 +286,13 @@
 
 .pricing-option:hover {
     border-color: var(--wine);
-    background: #fffaf5;
+    background: var(--surface-subtle);
 }
 
 .pricing-option.selected {
     border-color: var(--wine);
-    background: #fffaf5;
-    box-shadow: 0 0 0 2px rgba(118, 19, 41, 0.15);
+    background: var(--surface-subtle);
+    box-shadow: 0 0 0 2px rgba(var(--brand-rgb), 0.15);
 }
 
 .pricing-option input[type="radio"] {
@@ -336,7 +336,7 @@
 
 .option-savings {
     font-size: 12px;
-    color: #2e7d32;
+    color: var(--success-strong);
     font-weight: 600;
 }
 
@@ -354,7 +354,7 @@
     justify-content: space-between;
     gap: 12px;
     padding: 14px 16px;
-    background: white;
+    background: var(--surface-raised);
     border: 1px solid var(--line);
     border-radius: 6px;
     cursor: pointer;
@@ -364,7 +364,7 @@
 
 .pairing-card:hover {
     border-color: var(--wine);
-    background: #fffaf5;
+    background: var(--surface-subtle);
 }
 
 .pairing-link {

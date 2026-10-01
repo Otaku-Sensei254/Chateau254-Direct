@@ -3,7 +3,7 @@
     display: grid;
     place-items: center;
     padding: 30px 20px;
-    background: linear-gradient(120deg, rgba(61, 11, 24, .97), rgba(118, 19, 41, .87)), url('https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=1800&q=85') center/cover;
+    background: linear-gradient(120deg, rgba(var(--brand-deep-rgb), .97), rgba(var(--brand-rgb), .87)), url('https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=1800&q=85') center/cover;
 }
 
 .auth-panel {
@@ -11,7 +11,7 @@
     padding: 32px clamp(24px, 6vw, 54px);
     border-radius: 8px;
     background: var(--cream);
-    box-shadow: 0 24px 60px rgba(20, 5, 8, .3);
+    box-shadow: 0 24px 60px rgba(var(--brand-rgb), .3);
 }
 
 .auth-back {
@@ -56,7 +56,7 @@
     height: 45px;
     border: 1px solid var(--line);
     border-radius: 5px;
-    background: white;
+    background: var(--surface-raised);
     color: var(--ink);
     font-size: 12px;
     font-weight: 700;
@@ -107,8 +107,8 @@
     padding: 0 13px;
     border: 1px solid var(--line);
     border-radius: 5px;
-    background: white;
-    color: #a0958e;
+    background: var(--surface-raised);
+    color: var(--text-faint);
 }
 
 .auth-input:focus-within {
@@ -129,7 +129,7 @@
     align-items: center;
     border: 0;
     background: transparent;
-    color: #a0958e;
+    color: var(--text-faint);
     cursor: pointer;
     padding: 0;
     font-size: 15px;
@@ -178,7 +178,7 @@
 
 .auth-demo-note {
     display: block;
-    color: #a0958e;
+    color: var(--text-faint);
     text-align: center;
     font-size: 9px;
 }

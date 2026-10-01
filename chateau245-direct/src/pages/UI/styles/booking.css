@@ -3,7 +3,7 @@
 }
 
 .booking-form {
-    background: white;
+    background: var(--surface-raised);
     border: 1px solid var(--line);
     border-radius: 8px;
     padding: 24px;
@@ -43,7 +43,7 @@
     border: 1px solid var(--line);
     border-radius: 5px;
     padding: 14px 14px 14px 42px;
-    background: white;
+    background: var(--surface-raised);
     color: var(--ink);
     outline-color: var(--wine);
     font-size: 14px;
@@ -55,7 +55,7 @@
     border: 1px solid var(--line);
     border-radius: 5px;
     padding: 14px 14px 14px 42px;
-    background: white;
+    background: var(--surface-raised);
     color: var(--ink);
     outline-color: var(--wine);
     font-size: 14px;
@@ -73,7 +73,7 @@
 .booking-success {
     text-align: center;
     padding: 60px 20px;
-    background: white;
+    background: var(--surface-raised);
     border: 1px solid var(--line);
     border-radius: 8px;
 }
@@ -82,8 +82,8 @@
     width: 72px;
     height: 72px;
     border-radius: 50%;
-    background: #e8f5e9;
-    color: #2e7d32;
+    background: var(--success-tint);
+    color: var(--success-strong);
     display: flex;
     align-items: center;
     justify-content: center;
