@@ -7,7 +7,9 @@ import { GiHamburgerMenu } from 'react-icons/gi';
 import './styles/StaggeredMenu.css';
 
 const defaultMenuItems = [
+  { label: 'Wine Cellar', link: '/wines' },
   { label: 'Packages', ariaLabel: 'Packages', link: '/packages' },
+
   {
     label: 'Menus',
     ariaLabel: 'Menus',

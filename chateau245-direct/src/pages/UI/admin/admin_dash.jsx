@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { FiBarChart2, FiCalendar, FiChevronDown, FiEdit2, FiGift, FiGrid, FiLogOut, FiMenu, FiPackage, FiPlus, FiSave, FiSearch, FiSettings, FiShoppingBag, FiTable, FiTrash2, FiTruck, FiUpload, FiUsers, FiX, FiMap, FiCheckCircle, FiClock, FiUser } from 'react-icons/fi';
+import { FiBarChart2, FiCalendar, FiChevronDown, FiDownload, FiEdit2, FiGift, FiGrid, FiLogOut, FiMenu, FiPackage, FiPlus, FiSave, FiSearch, FiSettings, FiShoppingBag, FiTable, FiTrash2, FiTruck, FiUpload, FiUsers, FiX, FiMap, FiCheckCircle, FiClock, FiUser } from 'react-icons/fi';
 import Brand from '../../../components/Navigation';
 import AdminFleetMap from '../../../components/AdminFleetMap';
 import { useSocket } from '../../../contexts/SocketContext';
@@ -397,7 +397,8 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
       {activePage === 'Riders' && <RidersContent riders={riders} onAdd={() => setRiderEditorOpen(true)} onRemove={removeRider} />}
       {activePage === 'Fleet Map' && <FleetMapContent token={token} api={api} />}
       {activePage === 'Promotions' && <PromotionsContent api={api} headers={headers} addToast={addToast} />}
-      {['Reports', 'Settings'].includes(activePage) && <PlaceholderContent title={activePage} />}
+      {activePage === 'Reports' && <ReportsContent api={api} headers={headers} addToast={addToast} />}
+      {activePage === 'Settings' && <PlaceholderContent title={activePage} />}
       {editingItem && <MenuEditor item={editingItem === true ? null : editingItem} onSave={saveMenuItem} onClose={() => setEditingItem(null)} />}
       {editingTable && <TableEditor table={editingTable === true ? null : editingTable} onSave={saveTable} onClose={() => setEditingTable(null)} />}
       {riderEditorOpen && <RiderEditor onSave={addRider} onClose={() => setRiderEditorOpen(false)} />}
@@ -584,6 +585,140 @@ const FleetMapContent = ({ token, api }) => (
     <AdminFleetMap token={token} api={api} />
   </div>
 );
+
+const REPORTS_PERIODS = [
+  { value: 'today', label: 'Today' },
+  { value: 'week', label: 'This Week' },
+  { value: 'month', label: 'This Month' },
+];
+
+const ReportsContent = ({ api, headers, addToast }) => {
+  const [period, setPeriod] = useState('today');
+  const [report, setReport] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [downloading, setDownloading] = useState(false);
+
+  const kes = (value) => `KES ${Number(value || 0).toLocaleString('en-KE')}`;
+
+  const fetchReport = useCallback(async (selected) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${api}/reports?period=${selected}`, { headers });
+      if (!res.ok) throw new Error('Failed to load report');
+      setReport(await res.json());
+    } catch (err) {
+      addToast(err.message || 'Failed to load report', 'error');
+      setReport(null);
+    } finally {
+      setLoading(false);
+    }
+  }, [api, headers, addToast]);
+
+  useEffect(() => { fetchReport(period); }, [period, fetchReport]);
+
+  const downloadPdf = async () => {
+    setDownloading(true);
+    try {
+      const res = await fetch(`${api}/reports/pdf?period=${period}`, { headers });
+      if (!res.ok) throw new Error('Failed to generate the PDF');
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `chateau254-${period}-${new Date().toISOString().slice(0, 10)}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      addToast('Report downloaded', 'success');
+    } catch (err) {
+      addToast(err.message || 'Download failed', 'error');
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  const summary = report?.summary;
+  const previous = report?.previous;
+  const change = summary && previous && previous.revenue > 0
+    ? ((summary.revenue - previous.revenue) / previous.revenue) * 100
+    : null;
+  const peak = report?.series.length ? Math.max(...report.series.map((point) => point.revenue), 0) : 0;
+  const peakScale = peak > 0 ? peak : 1;
+  const hasOrders = Boolean(summary && summary.orders > 0);
+
+  return <>
+    <div className="admin-content-heading">
+      <div><p className="eyebrow">Business intelligence</p><h2>Reports</h2></div>
+      <button className="admin-primary" onClick={downloadPdf} disabled={downloading}><FiDownload /> {downloading ? 'Preparing…' : 'Download PDF'}</button>
+    </div>
+
+    <div className="admin-category-tabs">
+      {REPORTS_PERIODS.map((option) => (
+        <button key={option.value} className={`admin-category-tab ${period === option.value ? 'active' : ''}`} onClick={() => setPeriod(option.value)}>{option.label}</button>
+      ))}
+    </div>
+
+    {loading && <div className="admin-placeholder"><div className="admin-placeholder-icon"><FiBarChart2 /></div><h2>Loading report</h2><p>Pulling the latest figures</p></div>}
+
+    {!loading && summary && <>
+      <div className="admin-stats">
+        <StatCard label="Revenue" value={kes(summary.revenue)} note={change === null ? `${report.label} to date` : `${change >= 0 ? 'Up' : 'Down'} ${Math.abs(change).toFixed(1)}% vs previous`} icon={FiBarChart2} tone="orange" />
+        <StatCard label="Orders" value={summary.orders} note={`${summary.completed} completed`} icon={FiShoppingBag} tone="blue" />
+        <StatCard label="Average Order" value={kes(summary.averageOrderValue)} note={`${summary.itemsSold} items sold`} icon={FiPackage} tone="green" />
+        <StatCard label="New Customers" value={summary.newCustomers} note={`${summary.inProgress} orders in progress`} icon={FiUsers} tone="mint" />
+      </div>
+
+      {!hasOrders && <div className="admin-placeholder"><div className="admin-placeholder-icon"><FiBarChart2 /></div><h2>No orders {report.label.toLowerCase()}</h2><p>Once orders come in for this period the figures will appear here.</p></div>}
+
+      {hasOrders && <>
+        <section className="report-panel">
+          <div className="report-panel-head"><h3>Revenue {report.granularity === 'hour' ? 'by hour' : 'by day'}</h3><span>Peak {kes(peak)}</span></div>
+          <div className="report-chart">
+            {report.series.map((point, index) => (
+              <div className="report-chart-col" key={`${point.label}-${index}`} title={`${point.label} · ${point.orders} orders · ${kes(point.revenue)}`}>
+                <div className="report-chart-bar" style={{ height: `${point.revenue > 0 ? Math.max((point.revenue / peakScale) * 100, 3) : 0}%` }} />
+                <span className="report-chart-label">{point.label}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <div className="report-grid">
+          <section className="report-panel">
+            <div className="report-panel-head"><h3>Top items</h3></div>
+            <div className="admin-table-wrap"><table className="admin-table">
+              <thead><tr><th>Item</th><th>Qty</th><th>Revenue</th></tr></thead>
+              <tbody>
+                {report.topItems.map((item, index) => <tr key={`${item.name}-${index}`}><td>{item.name}</td><td>{item.quantity}</td><td>{kes(item.revenue)}</td></tr>)}
+                {!report.topItems.length && <tr><td colSpan={3} style={{ textAlign: 'center', padding: '2rem', color: '#a0958e' }}>No items sold</td></tr>}
+              </tbody>
+            </table></div>
+          </section>
+
+          <section className="report-panel">
+            <div className="report-panel-head"><h3>Orders by status</h3></div>
+            <div className="admin-table-wrap"><table className="admin-table">
+              <thead><tr><th>Status</th><th>Orders</th><th>Value</th></tr></thead>
+              <tbody>
+                {report.byStatus.map((row) => <tr key={row.status}><td>{row.status.replace(/_/g, ' ')}</td><td>{row.count}</td><td>{kes(row.revenue)}</td></tr>)}
+                {!report.byStatus.length && <tr><td colSpan={3} style={{ textAlign: 'center', padding: '2rem', color: '#a0958e' }}>No orders</td></tr>}
+              </tbody>
+            </table></div>
+          </section>
+        </div>
+
+        {report.categories.length > 0 && <section className="report-panel">
+          <div className="report-panel-head"><h3>Sales by category</h3></div>
+          <div className="admin-table-wrap"><table className="admin-table">
+            <thead><tr><th>Category</th><th>Qty</th><th>Revenue</th></tr></thead>
+            <tbody>{report.categories.map((row) => <tr key={row.category}><td>{row.category}</td><td>{row.quantity}</td><td>{kes(row.revenue)}</td></tr>)}</tbody>
+          </table></div>
+        </section>}
+      </>}
+    </>}
+  </>;
+};
 
 const PlaceholderContent = ({ title }) => <div className="admin-placeholder"><div className="admin-placeholder-icon"><FiSettings /></div><h2>{title} workspace</h2><p>This section is ready for your {title.toLowerCase()} tools and data.</p></div>;
 

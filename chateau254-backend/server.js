@@ -16,6 +16,7 @@ const bookingsRoutes = require('./routes/bookings.routes');
 const tablesRoutes = require('./routes/tables.routes');
 const feedRoutes = require('./routes/feed.routes');
 const promotionsRoutes = require('./routes/promotions.routes');
+const reportsRoutes = require('./routes/reports.routes');
 const { notFound, errorHandler } = require('./middleware/error.middleware');
 
 const app = express();
@@ -49,6 +50,7 @@ app.use('/api/bookings', bookingsRoutes);
 app.use('/api/tables', tablesRoutes);
 app.use('/api/feed', feedRoutes);
 app.use('/api/promotions', promotionsRoutes);
+app.use('/api/reports', reportsRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

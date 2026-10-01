@@ -6,7 +6,6 @@ import {
   FiSearch,
   FiChevronLeft,
   FiChevronRight,
-  FiStar,
   FiTag,
   FiX
 } from "react-icons/fi";
@@ -58,96 +57,29 @@ const MODE_LABELS = {
   events: '🎉 Event Catering & Beverage Menu',
 };
 
-// Curated specials: 3 wines, 2 dinner packages, 1 paired reservation discount
-const OFFERS_DATA = [
-  {
-    id: "luxury-wine-1",
-    name: "Krug Grande Cuvée",
-    type: "wine",
-    category: "Wine",
-    deal: "Buy 1, get 1 FREE",
-    badge: "Members only",
-    badgeType: "members",
-    rating: { score: "4.9", count: "Vivino 97 pts" },
-    originalPrice: 14000,
-    price: 11900,
-    image: "https://ik.imagekit.io/drinksvine/products/krug-grande-cuvee.webp",
-    description: "Prestige multi-vintage Champagne with toasted brioche and hazelnut finish."
-  },
-  {
-    id: "full-signature-mains-5",
-    name: "Master's Tomahawk Feast",
-    type: "meal",
-    category: "Signature Mains",
-    deal: "Dinner Package • 20% OFF",
-    badge: "Bundled deal",
-    badgeType: "bundled",
+// Offers come entirely from the database: any menu item flagged on_offer appears here.
+// The discount is parsed from the item's own offer text, so no price or copy is invented.
+const buildOffer = (item) => {
+  const percent = parseOfferPercent(item.offer);
+  const originalPrice = Number(item.price) || 0;
+  return {
+    id: item.id,
+    name: item.name,
+    description: item.description,
+    image: item.image,
+    category: item.category,
+    type: item.menuType === 'wine' ? 'wine' : 'meal',
+    deal: item.offer || 'On Offer',
+    price: percent ? Math.round(originalPrice * (1 - percent / 100)) : originalPrice,
+    originalPrice: percent ? originalPrice : null,
     rating: null,
-    originalPrice: 6500,
-    price: 5200,
-    image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=900&q=80",
-    description: "600g dry-aged prime Tomahawk, rosemary herb butter, crisp fries & rich jus."
-  },
-  {
-    id: "luxury-wine-0",
-    name: "Dom Pérignon Vintage",
-    type: "wine",
-    category: "Wine",
-    deal: "Special Reserve • 15% OFF",
-    badge: "Great value",
-    badgeType: "great-value",
-    rating: { score: "4.9", count: "98 pts" },
-    originalPrice: 16500,
-    price: 13900,
-    image: "https://images.unsplash.com/photo-1569919659476-f0852f6834b7?auto=format&fit=crop&w=900&q=80",
-    description: "Prestige cuvée, crisp minerality, toasted brioche and lingering citrus vibrancy."
-  },
-  {
-    id: "reservation-steak-pairing",
-    name: "Steak & Bordeaux Paired Tasting",
-    type: "reservation",
-    category: "Dine In Special",
-    deal: "Paired Menu • Save KES 2,000",
-    badge: null,
-    badgeType: null,
-    rating: null,
-    originalPrice: 8800,
-    price: 6800,
-    image: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=900&q=80",
-    description: "3-course dry-aged steak dinner paired with sommelier French vintage pours."
-  },
-  {
-    id: "luxury-wine-2",
-    name: "Château Margaux Grand Cru",
-    type: "wine",
-    category: "Wine",
-    deal: "Cellar Promo • 20% OFF",
-    badge: "Smart value",
-    badgeType: "smart-value",
-    rating: { score: "4.8", count: "96 pts" },
-    originalPrice: 12500,
-    price: 9900,
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHs0yVN6uSQeQL1S_OvDdbEzPEiV1jJ8ReASwbASBRGg&s=10",
-    description: "Silky tannins, deep dark fruits, floral cedar notes. Premier Grand Cru Classé."
-  },
-  {
-    id: "full-signature-mains-2",
-    name: "28-Day Dry-Aged Sirloin & Truffle Duo",
-    type: "meal",
-    category: "Signature Mains",
-    deal: "Dinner Package • Save KES 1,200",
-    badge: "Great price",
-    badgeType: "great-price",
-    rating: null,
-    originalPrice: 5800,
-    price: 4600,
-    image: "https://karoobraai.com/wp-content/uploads/2024/05/Sirloin-Steak-1.jpg",
-    description: "300g marbled sirloin served alongside signature creamy truffle risotto."
-  }
-];
+    source: item,
+  };
+};
 
 const Menu = ({ api,
   items,
+  offerItems = [],
   categories,
   filter,
   setFilter,
@@ -175,6 +107,13 @@ const Menu = ({ api,
   const [promotions, setPromotions] = useState([]);
   const [dismissedPromos, setDismissedPromos] = useState([]);
   const isWineActive = filter === "Wine";
+
+  // Only items the admin flagged on_offer surface here, and they stay put regardless
+  // of the active category, search or menu mode.
+  const offers = useMemo(
+    () => offerItems.filter((item) => item.on_offer).map(buildOffer),
+    [offerItems]
+  );
 
   useEffect(() => {
     fetch(`${api}/promotions`)
@@ -284,48 +223,30 @@ const Menu = ({ api,
   const handleOfferAction = (e, offer) => {
     e.stopPropagation();
 
-    if (offer.type === "wine") {
-      const wineItem = {
-        id: offer.id,
-        name: offer.name,
-        price: offer.price,
-        description: offer.description,
-        category: "Wine",
-        image: offer.image
-      };
-      addToCart(wineItem);
-      addToast(`${offer.name} added to your cellar!`, "success");
-    } else if (offer.type === "meal") {
-      const mealItem = {
-        id: offer.id,
-        name: offer.name,
-        price: offer.price,
-        description: offer.description,
-        category: offer.category || "Meals",
-        image: offer.image
-      };
-      if (mode === "dinein" && addDineInItem) {
-        addDineInItem(mealItem);
-        addToast(`${offer.name} added to reservation!`, "success");
-      } else {
-        addToCart(mealItem);
-        addToast(`${offer.name} added to cart!`, "success");
-      }
-    } else if (offer.type === "reservation") {
-      if (onBooking) {
-        onBooking();
-        addToast(`Booking reservation for ${offer.name}!`, "info");
-      }
+    // Built from the real menu item so the cart keeps its database id and stays
+    // resolvable at checkout; only the price reflects the offer.
+    const cartItem = {
+      id: offer.source.id,
+      name: offer.source.name,
+      price: offer.price,
+      description: offer.source.description,
+      category: offer.source.category,
+      image: offer.source.image,
+      menuType: offer.source.menuType,
+    };
+
+    if (offer.type === "meal" && (mode === "dining" || mode === "dinein") && addDineInItem) {
+      addDineInItem(cartItem);
+      addToast(`${offer.name} added to reservation!`, "success");
+    } else {
+      addToCart(cartItem);
+      addToast(`${offer.name} added to cart!`, "success");
     }
   };
 
   const handleCardClick = (offer) => {
     if (hasDragged) return;
-    if (offer.type === "reservation") {
-      if (onBooking) onBooking();
-    } else if (onViewItem) {
-      onViewItem(offer);
-    }
+    if (onViewItem) onViewItem(offer.source);
   };
 
   const handleClassFilter = (field, value) => {
@@ -416,7 +337,7 @@ const Menu = ({ api,
         </div>
         <div className="badges">
           <span className="order-badge">
-            <RiEBike2Fill /> 45 min delivery
+            <RiEBike2Fill /> Quick delivery
           </span>
           <button className="order-badge" onClick={onBooking}>
             <FiCalendar /> My Reservations {dineInSelections.length > 0 && <span className="reservation-count">{dineInSelections.length}</span>}
@@ -547,8 +468,10 @@ const Menu = ({ api,
       <section className="offers-section" aria-label="Special Offers">
         <div className="offers-header">
           <div className="offers-header-left">
-            <span className="offer-badge"><FiTag /> 10% off on all wines this week!</span>
-            <h2 className="offers-title">Exclusive Offers & Packages</h2>
+            {offers.length > 0 && (
+              <span className="offer-badge"><FiTag /> {offers.length} {offers.length === 1 ? "item" : "items"} on offer</span>
+            )}
+            <h2 className="offers-title">Current Offers</h2>
           </div>
           <div className="offers-controls">
             <button
@@ -583,7 +506,7 @@ const Menu = ({ api,
           onTouchStart={() => setIsHovered(true)}
           onTouchEnd={() => setIsHovered(false)}
         >
-          {OFFERS_DATA.map((offer) => (
+          {offers.map((offer) => (
             <article
               key={offer.id}
               className="offer-card"
@@ -593,31 +516,22 @@ const Menu = ({ api,
                 <span className="offer-deal-pill">
                   {offer.deal}
                 </span>
-                {offer.badge && (
-                  <span className={`offer-note ${offer.badgeType}`}>
-                    {offer.badge}
+                {offer.originalPrice && (
+                  <span className="offer-note">
+                    Save {Math.round((1 - offer.price / offer.originalPrice) * 100)}%
                   </span>
                 )}
               </div>
 
               <div className="offer-image-wrap">
-                <img
-                  src={offer.image}
-                  alt={offer.name}
-                  className={`offer-image ${offer.type === "wine" ? "contain" : ""}`}
-                  loading="lazy"
-                  onError={(e) => {
-                    e.target.src = offer.type === "wine"
-                      ? "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=900&q=80"
-                      : "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=900&q=80";
-                  }}
-                />
-                {offer.rating && (
-                  <div className="offer-rating-badge">
-                    <FiStar fill="currentColor" />
-                    <strong>{offer.rating.score}</strong>
-                    {offer.rating.count && <span>• {offer.rating.count}</span>}
-                  </div>
+                {offer.image && (
+                  <img
+                    src={offer.image}
+                    alt={offer.name}
+                    className={`offer-image ${offer.type === "wine" ? "contain" : ""}`}
+                    loading="lazy"
+                    onError={(e) => { e.target.style.display = "none"; }}
+                  />
                 )}
               </div>
 
@@ -642,7 +556,7 @@ const Menu = ({ api,
                 >
                   <GiWineBottle /> Add to cellar
                 </button>
-              ) : offer.type === "meal" ? (
+              ) : (
                 <button
                   type="button"
                   className="offer-action-btn meal-btn"
@@ -650,17 +564,12 @@ const Menu = ({ api,
                 >
                   <FiPlus /> Add to cart
                 </button>
-              ) : (
-                <button
-                  type="button"
-                  className="offer-action-btn reservation-btn"
-                  onClick={(e) => handleOfferAction(e, offer)}
-                >
-                  <FiCalendar /> Make reservation
-                </button>
               )}
             </article>
           ))}
+          {!offers.length && (
+            <p className="offers-empty">No items are currently on offer. Check back soon.</p>
+          )}
         </div>
       </section>
 

@@ -15,12 +15,29 @@ const MENU_TABLES = {
   lunchbox: 'lunchbox_menu',
 };
 
+// Accepted spellings for each menu type, normalised to the MENU_TABLES key.
+const MENU_TYPE_ALIASES = {
+  wine: 'wine',
+  wines: 'wine',
+  dine_in: 'dine_in',
+  'dine-in': 'dine_in',
+  takeout: 'takeout',
+  'take-out': 'takeout',
+  lunchbox: 'lunchbox',
+  'lunch-box': 'lunchbox',
+};
+
+// Resolves a menu type to its table. Throws on an unrecognised value so a typo or a
+// missing menu_type can never silently create, update or delete a row in wines.
 const resolveTable = (menuType) => {
-  const key = (menuType || '').toLowerCase();
-  if (key === 'dine_in' || key === 'dine-in') return MENU_TABLES.dine_in;
-  if (key === 'takeout' || key === 'take-out') return MENU_TABLES.takeout;
-  if (key === 'lunchbox' || key === 'lunch-box') return MENU_TABLES.lunchbox;
-  return MENU_TABLES.wine;
+  const key = (menuType || '').trim().toLowerCase();
+  const table = MENU_TABLES[MENU_TYPE_ALIASES[key]];
+  if (!table) {
+    const error = new Error(`Unknown menu type "${menuType}". Expected one of: dine_in, takeout, lunchbox, wine.`);
+    error.statusCode = 400;
+    throw error;
+  }
+  return table;
 };
 
 const WINE_COLUMNS = `id, name, description, price, category, subcategory, image_url AS "image", is_available AS "availability", on_offer, offer, wine_type AS "wineType", region, grape, tasting_notes AS "tastingNotes", order_index, 'wine' AS "menuType"`;
@@ -117,7 +134,7 @@ router.post('/', authenticate, requireRole('admin'), asyncHandler(async (req, re
     [name.trim(), description || '', price, category, subcategory || null, image_url || null, Boolean(on_offer), offer || null],
   );
 
-  const menuTypeResult = menu_type === 'dine_in' || menu_type === 'dine-in' ? 'dine_in' : menu_type === 'takeout' || menu_type === 'take-out' ? 'takeout' : 'wine';
+  const menuTypeResult = MENU_TYPE_ALIASES[(menu_type || '').toLowerCase()];
   res.status(201).json({ item: { ...result.rows[0], menuType: menuTypeResult } });
 }));
 

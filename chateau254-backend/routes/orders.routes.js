@@ -36,10 +36,19 @@ router.get('/:id', authenticate, asyncHandler(async (req, res) => {
   const result = await query(`${orderQuery} WHERE o.id = $1`, [req.params.id]);
   if (!result.rowCount) return res.status(404).json({ error: 'Order not found' });
 
+  // order_items.menu_item_id references whichever of the four live menu tables the item
+  // was ordered from, so names are resolved across all of them. LEFT JOIN keeps a line
+  // visible even if the item has since been deleted from the catalog.
   const items = await query(
-    `SELECT oi.*, mi.name AS item_name, mi.image_url
+    `WITH catalog AS (
+       SELECT id, name, image_url FROM wines
+       UNION ALL SELECT id, name, image_url FROM dine_in_menu
+       UNION ALL SELECT id, name, image_url FROM takeout_menu
+       UNION ALL SELECT id, name, image_url FROM lunchbox_menu
+     )
+     SELECT oi.*, c.name AS item_name, c.image_url
      FROM order_items oi
-     JOIN menu_items mi ON mi.id = oi.menu_item_id
+     LEFT JOIN catalog c ON c.id = oi.menu_item_id
      WHERE oi.order_id = $1`,
     [req.params.id],
   );
