@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chateau254 - Image Matcher</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#141a16;color:#f2f5f3}
+header{position:sticky;top:0;z-index:9;background:#1d2721;border-bottom:1px solid #33413a;padding:12px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+h1{font-size:16px;margin:0 12px 0 0}
+#count{font-weight:700;color:#ffd479}
+button{background:#2f7d4f;color:#fff;border:0;border-radius:8px;padding:8px 14px;font-weight:600;cursor:pointer}
+button.ghost{background:#39463f}
+button:disabled{opacity:.45;cursor:not-allowed}
+input,select{background:#101613;color:#eef3f0;border:1px solid #3b4a42;border-radius:8px;padding:8px}
+#bar{padding:10px 16px;background:#182119;border-bottom:1px solid #2b3831;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;padding:16px}
+.card{background:#1d2721;border:1px solid #33413a;border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px}
+.card.done{border-color:#3f9c63;box-shadow:0 0 0 1px #3f9c63 inset}
+.card img{width:100%;height:190px;object-fit:cover;border-radius:8px;background:#0d120f;display:block}
+.fn{font-size:11px;color:#9fb3a8;word-break:break-all;font-family:ui-monospace,monospace}
+select{width:100%}
+#json{width:100%;height:150px;font-family:ui-monospace,monospace;font-size:11px;margin-top:10px}
+.hide{display:none}
+</style></head><body>
+
+<header>
+  <h1>Image Matcher</h1>
+  <span>matched <span id="count">0</span> / 60</span>
+  <button id="export" disabled>Download mapping.json</button>
+  <button id="copy" class="ghost">Copy JSON</button>
+  <button id="clear" class="ghost">Reset all</button>
+</header>
+
+<div id="bar">
+  <input id="filter" placeholder="Filter by filename or dish..." size="34">
+  <label class="fn"><input type="checkbox" id="onlytodo"> only unmatched</label>
+  <span class="fn" id="hint">5 pre-filled from filenames. Pick a dish for each photo, then Download.</span>
+</div>
+
+<div id="grid"></div>
+<textarea id="json" class="hide" readonly></textarea>
+
+<script>
+const DATA = {"images": ["beetrootHummus.jpeg", "beetrootSalad.jpeg", "carrot&Ginger Soup.jpeg", "grilled Kenyan sausage.jpeg", "veggie skewers.jpeg", "WhatsApp Image 2026-10-01 at 18.15.27 (1).jpeg", "WhatsApp Image 2026-10-01 at 18.15.27 (2).jpeg", "WhatsApp Image 2026-10-01 at 18.15.27 (3).jpeg", "WhatsApp Image 2026-10-01 at 18.15.27 (4).jpeg", "WhatsApp Image 2026-10-01 at 18.15.27.jpeg", "WhatsApp Image 2026-10-01 at 18.15.28 (3).jpeg", "WhatsApp Image 2026-10-01 at 18.15.28 (4).jpeg", "WhatsApp Image 2026-10-01 at 18.15.28.jpeg", "WhatsApp Image 2026-10-01 at 18.15.29 (2).jpeg", "WhatsApp Image 2026-10-01 at 18.15.29 (3).jpeg", "WhatsApp Image 2026-10-01 at 18.15.29 (4).jpeg", "WhatsApp Image 2026-10-01 at 18.15.29.jpeg", "WhatsApp Image 2026-10-01 at 18.15.30 (1).jpeg", "WhatsApp Image 2026-10-01 at 18.15.30 (2).jpeg", "WhatsApp Image 2026-10-01 at 18.15.30 (3).jpeg", "WhatsApp Image 2026-10-01 at 18.15.30 (4).jpeg", "WhatsApp Image 2026-10-01 at 18.15.30.jpeg", "WhatsApp Image 2026-10-01 at 18.15.31 (1).jpeg", "WhatsApp Image 2026-10-01 at 18.15.31 (2).jpeg", "WhatsApp Image 2026-10-01 at 18.15.31 (3).jpeg", "WhatsApp Image 2026-10-01 at 18.15.31.jpeg", "WhatsApp Image 2026-10-01 at 18.15.32 (1).jpeg", "WhatsApp Image 2026-10-01 at 18.15.32 (3).jpeg", "WhatsApp Image 2026-10-01 at 18.15.33 (1).jpeg", "WhatsApp Image 2026-10-01 at 18.15.33 (2).jpeg", "WhatsApp Image 2026-10-01 at 18.15.33.jpeg", "WhatsApp Image 2026-10-01 at 18.15.34 (1).jpeg", "WhatsApp Image 2026-10-01 at 18.15.34 (2).jpeg", "WhatsApp Image 2026-10-01 at 18.15.35.jpeg", "WhatsApp Image 2026-10-01 at 18.15.36 (1).jpeg", "WhatsApp Image 2026-10-01 at 18.15.36 (2).jpeg", "WhatsApp Image 2026-10-01 at 18.15.36 (3).jpeg", "WhatsApp Image 2026-10-01 at 18.15.36.jpeg", "WhatsApp Image 2026-10-01 at 18.15.37 (1).jpeg", "WhatsApp Image 2026-10-01 at 18.15.37 (2).jpeg", "WhatsApp Image 2026-10-01 at 18.15.37 (3).jpeg", "WhatsApp Image 2026-10-01 at 18.15.37.jpeg", "WhatsApp Image 2026-10-01 at 18.15.38 (1).jpeg", "WhatsApp Image 2026-10-01 at 18.15.38 (2).jpeg", "WhatsApp Image 2026-10-01 at 18.15.38 (3).jpeg", "WhatsApp Image 2026-10-01 at 18.15.38.jpeg", "WhatsApp Image 2026-10-01 at 18.15.39 (1).jpeg", "WhatsApp Image 2026-10-01 at 18.15.39 (2).jpeg", "WhatsApp Image 2026-10-01 at 18.15.39 (3).jpeg", "WhatsApp Image 2026-10-01 at 18.15.39.jpeg", "WhatsApp Image 2026-10-01 at 18.15.40 (1).jpeg", "WhatsApp Image 2026-10-01 at 18.15.40 (2).jpeg", "WhatsApp Image 2026-10-01 at 18.15.40 (3).jpeg", "WhatsApp Image 2026-10-01 at 18.15.40.jpeg", "WhatsApp Image 2026-10-01 at 18.15.41 (2).jpeg", "WhatsApp Image 2026-10-01 at 18.15.41.jpeg", "WhatsApp Image 2026-10-01 at 18.15.42 (3).jpeg", "WhatsApp Image 2026-10-01 at 18.15.42.jpeg", "WhatsApp Image 2026-10-01 at 18.15.43 (1).jpeg", "WhatsApp Image 2026-10-01 at 18.15.43.jpeg"], "known": {"beetrootHummus.jpeg": "Beetroot Hummus with Herbs & Beetroot Shavings", "beetrootSalad.jpeg": "Beetroot Seasonal Garden Salad", "carrot&Ginger Soup.jpeg": "Carrot & Ginger Soup", "grilled Kenyan sausage.jpeg": "Grilled Kenyan Sausages", "veggie skewers.jpeg": "Vegetable Skewers"}, "groups": [{"label": "DINE-IN / Appetizers", "items": ["Beetroot Hummus with Herbs & Beetroot Shavings", "Bruschetta with an Extra Touch of Herbs", "Caprese: Cherry Tomatoes, Bocconcini & Basil", "Classic Hummus with Olives, Olive Oil & Paprika", "Herb Roasted Red Peppers in Olive Oil", "Tomatoes with Olive Oil Drizzled with Balsamic & Honey", "Whipped Feta with Roasted Tomatoes, Honey & Hot Pepper Flakes"]}, {"label": "DINE-IN / Bar Bites & Sandwiches", "items": ["BUTTER - CHARRED TENDERLOIN BRIOCHE", "Beef Samosa", "Beef Sandwich", "CHAR -GRILLED CHICKEN ROYALE/SANDWICH", "CURATED CHARCUTERIE BRIOCHE.", "Char Grilled Beef / Chicken Skewers", "Classic Home Fries", "Crispy Feta Samosas", "Grilled Kenyan Sausages", "Nocturnal House Wings", "Paneer | Naan Bread", "Parmesan Fries", "Vegetable Skewers"]}, {"label": "DINE-IN / Chateau Classics", "items": ["Biryani", "Chateaubriand Tenderloin", "Chicken Curry", "Chimichurri T-Bone Steak", "Garlic Butter Ribeye", "Gratin Loaded with a Side of Salad", "Grilled Snapper with Creamy Lemon Sauce", "Milk-Fed Molo Lamb Cutlets", "Pepper Crusted Sirloin Steak", "Stuffed Chicken Alla Mediterranea"]}, {"label": "DINE-IN / Farinaceous Delicacies", "items": ["Chicken Mushroom Alfredo", "Fusilli alla Crudaiolla", "Fusilli alla Puttanesca Reduction", "Penne alla Prima Vera", "Tagliatelle alla Vodka Cream & Fine Herbs", "Verdant Chicken Pesto Pasta"]}, {"label": "DINE-IN / Mains", "items": ["28-Day Aged Ribeye Steak", "28-Day Aged Sirloin Steak", "28-Day Aged T-Bone Steak", "Apple & Bleu-Stuffed Chicken Supreme", "Master's 28-Day Aged Reserve Tomahawk", "Signature Truffle Risotto"]}, {"label": "DINE-IN / Platters & Boards", "items": ["Artisanal Cheese Board", "Carnivore Indulgence", "Lamb Leg A La Maison", "Mezze Board", "Nairobi Style Board"]}, {"label": "DINE-IN / Salads", "items": ["Avocado and Mango Salad", "Beetroot Seasonal Garden Salad", "Goat Cheese, Pears & Crispy Apple Salad", "Golden Thai Beef & Mango Mosaic", "Grilled Cajun Chicken Salad", "Ham, Mozzarella and Rocket Salad"]}, {"label": "DINE-IN / Soups", "items": ["Butternut Squash & Almond Soup", "Carrot & Ginger Soup", "Creamy Mushroom & Feta Soup", "Creamy Tomato & Basil Soup", "French Oxtail Soup with Red Wine Flamb\u00e9", "High Protein Broccoli Feta Immunity Soup", "Mediterranean Chicken Lemon Soup", "Saffron & White Wine Shrimp Veloute"]}, {"label": "TAKEOUT / Appetizers", "items": ["Beef Skewers (Mini)", "Bruschetta Platter", "Chicken Samosas (Mini)", "Smoked Salmon Canap\u00e9s", "Stuffed Mushrooms", "Vegetable Spring Rolls"]}, {"label": "TAKEOUT / Beverages", "items": ["Americano", "Bottled Water (500ml)", "Cappuccino", "Coffee/Tea Station", "Fresh Juice (Mango, Passion, Watermelon)", "Fresh Juice Dispenser", "Hot Chocolate", "Iced Tea", "Kenyan Chai (Milk Tea)", "Latte", "Milkshake", "Mocha", "Soda (Coca-Cola, Fanta, Sprite)", "Soda Crate Assortment", "Sparkling Water", "Water Bottles (Case)"]}, {"label": "TAKEOUT / Combos", "items": ["Beef or Chicken Wraps (2 Portions)", "Stir-Fried Tenderloin (\u00bd kg)", "T-Bone or Sirloin Steak (\u00bd kg)", "Whole Chicken Takeaway"]}, {"label": "TAKEOUT / Desserts", "items": ["Brownie with Ice Cream", "Celebration Cake (2-tier)", "Cheesecake Slice", "Chocolate Cake Slice", "Cupcake Tower (Dozen)", "Doughnuts (3pc)", "Fruit Platter (Large)", "Fruit Salad with Cream", "Ice Cream (2 scoops)", "Mini Dessert Platter"]}, {"label": "TAKEOUT / Fast Food", "items": ["2pc Fried Chicken & Chips", "5pc Fried Chicken Bucket", "Beef Burger & Fries", "Beef Samosas (3pc)", "Chicken Burger & Fries", "Chicken Wings (6pc)", "Fried Chicken Wrap", "Hot Dog", "Loaded Fries", "Spicy Fried Chicken Strips"]}, {"label": "TAKEOUT / Mains", "items": ["Beef Pilau", "Beef Pilau (Catering Tray)", "Chicken Biryani", "Grilled Chicken with Vegetables", "Grilled Fish Platter", "Nyama Choma (Grilled Meat, 1kg)", "Nyama Choma Platter (5kg)", "Pasta Bar (Catering Tray)", "Ugali with Beef Stew", "Vegetable Biryani (Catering Tray)", "Vegetable Curry with Chapati", "Whole Roasted Chicken (Carving Station)"]}, {"label": "TAKEOUT / Platters", "items": ["Cheese & Charcuterie Board", "Mediterranean Mezze Board", "Nairobi-Style Board", "Steak Board"]}, {"label": "TAKEOUT / Salads", "items": ["Coleslaw (Catering Bowl)", "Garlic Bread Basket", "Greek Salad (Catering Bowl)", "Roasted Vegetable Medley"]}, {"label": "LUNCHBOX / Chateau Lunchbox", "items": ["Coastal Mbaazi in Creamy Coconut Emulsion", "Golden Chicken Stew Dhania Infused Jus", "Luxury Beef Bourguignon", "Prime Beef Tenderloin / Chicken Breast, Signature Teriyaki", "Slow Roasted Kenyan Country Chicken", "Traditional Gishiri Tumbukiza"]}]};
+const KEY = 'chateau_image_map_v1';
+const grid = document.getElementById('grid');
+const countEl = document.getElementById('count');
+const expBtn = document.getElementById('export');
+let map = {};
+
+try { map = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { map = {}; }
+// filename-derived matches fill in only blanks
+for (const f in DATA.known) { if (!map[f]) map[f] = DATA.known[f]; }
+
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const enc = encodeURIComponent;
+
+function opts(sel) {
+  let h = '<option value="">-- choose dish --</option>';
+  for (const g of DATA.groups) {
+    h += '<optgroup label="' + esc(g.label) + '">';
+    for (const it of g.items) {
+      h += '<option value="' + esc(it) + '"' + (sel === it ? ' selected' : '') + '>' + esc(it) + '</option>';
+    }
+    h += '</optgroup>';
+  }
+  return h;
+}
+
+function card(f) {
+  const d = document.createElement('div');
+  d.className = 'card' + (map[f] ? ' done' : '');
+  d.dataset.f = f;
+  d.dataset.s = (f + ' ' + (map[f] || '')).toLowerCase();
+  d.innerHTML =
+    '<img src="' + enc(f) + '" alt="' + esc(f) + '" loading="lazy">' +
+    '<div class="fn">' + esc(f) + '</div>' +
+    '<select>' + opts(map[f] || '') + '</select>';
+  const sel = d.querySelector('select');
+  sel.addEventListener('change', () => {
+    if (sel.value) { map[f] = sel.value; d.classList.add('done'); nextUnmatched(d); }
+    else { delete map[f]; d.classList.remove('done'); }
+    save(); paint();
+  });
+  return d;
+}
+
+function all() { return Array.from(grid.children); }
+function nextUnmatched(from) {
+  const list = all();
+  const i = list.indexOf(from);
+  for (let k = i + 1; k < list.length; k++) if (!list[k].querySelector('select').value) return list[k].querySelector('select').focus();
+  for (let k = 0; k < i; k++)      if (!list[k].querySelector('select').value) return list[k].querySelector('select').focus();
+}
+function save() { localStorage.setItem(KEY, JSON.stringify(map)); }
+function result() {
+  const o = {};
+  for (const f in map) if (map[f]) o[f] = map[f];
+  return o;
+}
+function paint() {
+  const r = result(), n = Object.keys(r).length;
+  countEl.textContent = n;
+  expBtn.disabled = n === 0;
+  const q = document.getElementById('filter').value.trim().toLowerCase();
+  const only = document.getElementById('onlytodo').checked;
+  all().forEach(c => {
+    const hit = !q || c.dataset.s.includes(q);
+    const todo = !c.querySelector('select').value;
+    c.classList.toggle('hide', !hit || (only && !todo));
+  });
+  document.getElementById('json').value = JSON.stringify(r, null, 2);
+}
+
+DATA.images.forEach(f => grid.appendChild(card(f)));
+
+expBtn.addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(result(), null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'mapping.json';
+  a.click();
+});
+document.getElementById('copy').addEventListener('click', async () => {
+  const t = document.getElementById('json');
+  t.classList.remove('hide');
+  try { await navigator.clipboard.writeText(t.value); } catch (e) { t.select(); }
+});
+document.getElementById('clear').addEventListener('click', () => {
+  if (!confirm('Clear all selections?')) return;
+  map = {}; save(); location.reload();
+});
+document.getElementById('filter').addEventListener('input', paint);
+document.getElementById('onlytodo').addEventListener('change', paint);
+paint();
+</script>
+</body></html>

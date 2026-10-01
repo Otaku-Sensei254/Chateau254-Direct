@@ -10,8 +10,7 @@ import {
   FiTag,
   FiX
 } from "react-icons/fi";
-import { LuPackageOpen } from "react-icons/lu";
-import { GiMeal, GiWineBottle } from "react-icons/gi";
+import { GiWineBottle } from "react-icons/gi";
 import { useToast } from "../../contexts/ToastContext";
 import { LoaderSkeleton, MenuCardSkeleton } from "../../components/ui/loaders-skeleton";
 
@@ -55,7 +54,7 @@ const MODE_LABELS = {
   dining: '🍽️ Dine In Menu',
   dinein: '🍽️ Dine In Menu',
   takeout: '🛍️ Take Out Menu',
-  lunchbox: '🍱 Chateau Lunchbox',
+  lunchbox: '🍱 Lunch & Bar',
   events: '🎉 Event Catering & Beverage Menu',
 };
 
@@ -167,7 +166,6 @@ const Menu = ({ api,
   mode,
   winePairingFilter,
   onClearWinePairingFilter,
-  onModeChange,
   onBack,
   dineInSelections,
   addDineInItem,
@@ -454,12 +452,6 @@ const Menu = ({ api,
           </div>
         </div>
       )} */}
-
-      <div className="menu-mode-toggle">
-        <button className="mode-button" onClick={() => onModeChange(mode === "takeout" ? "dining" : "takeout")} type="button">
-          {mode === "takeout" ? <> Dine In <GiMeal className="mode-icon" /></> : <>Take Out <LuPackageOpen className="mode-icon" /> </>}
-        </button>
-      </div>
 
       {/* Search Bar with Autocomplete Dropdown & Skeleton Loader */}
       <div className="search-wrapper" ref={searchWrapperRef}>

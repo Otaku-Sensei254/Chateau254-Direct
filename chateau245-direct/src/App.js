@@ -139,19 +139,23 @@ const App = () => {
 
   const dineInItems = useMemo(() => menuItems.filter((i) => i.menuType === 'dine_in'), [menuItems]);
   const takeoutItems = useMemo(() => menuItems.filter((i) => i.menuType === 'takeout'), [menuItems]);
-  const lunchboxItems = useMemo(() => menuItems.filter((i) => i.menuType === 'lunchbox'), [menuItems]);
   const eventItems = useMemo(() => takeoutItems.filter((i) => ['Appetizers', 'Mains', 'Desserts', 'Beverages', 'Salads', 'Platters', 'Combos'].includes(i.subcategory)), [takeoutItems]);
 
+  // Bar bites and lunchbox plates belong to the "Lunch & Bar" mode, not Dine In.
+  // A few of these sit in dine_in_menu, so they are re-homed here rather than moved in the DB.
+  const lunchAndBarItems = useMemo(() => menuItems.filter((i) => i.menuType === 'lunchbox' || (i.menuType === 'dine_in' && ['Bar Bites & Sandwiches', 'Chateau Lunchbox'].includes(i.subcategory))), [menuItems]);
+  const dineInFoodItems = useMemo(() => dineInItems.filter((i) => i.subcategory !== 'Bar Bites & Sandwiches' && i.subcategory !== 'Chateau Lunchbox'), [dineInItems]);
+
   const catalogs = useMemo(() => ({
-    dining: [...dineInItems, ...allRegionalWines],
+    dining: [...dineInFoodItems, ...allRegionalWines],
     takeout: [...takeoutItems, ...allRegionalWines],
-    lunchbox: [...lunchboxItems],
+    lunchbox: [...lunchAndBarItems],
     events: [...eventItems, ...allRegionalWines],
-  }), [dineInItems, takeoutItems, lunchboxItems, eventItems]);
+  }), [dineInFoodItems, takeoutItems, lunchAndBarItems, eventItems]);
 
   const activeCatalog = catalogs[mode] || catalogs.dining;
   const activeCategories = useMemo(() => {
-    const cats = new Set(activeCatalog.map((i) => i.category).filter((c) => c !== 'Wine'));
+    const cats = new Set(activeCatalog.map((i) => i.category).filter((c) => c !== 'Wine' && c !== 'Meals'));
     const subs = new Set(activeCatalog.map((i) => i.subcategory).filter(Boolean));
     const combined = ['All', ...Array.from(cats), ...Array.from(subs)];
     return combined;
@@ -323,13 +327,13 @@ const App = () => {
     <div className={`app-shell${showAppHeader ? ' has-app-header' : ''}`}>
       {showAppHeader && <AppHeader cartCount={cartCount} userName={session?.user?.full_name} onBack={handleBack} onCart={() => navigate('/cart')} onHome={() => navigate('/menu')} onProfile={() => navigate('/profile')} api={API_URL} />}
       <Routes>
-        <Route path="/" element={<GuestRoute user={session?.user}><Home api={API_URL} onTakeout={() => { switchMode('takeout'); navigate('/menu'); }} onDining={() => { switchMode('dining'); navigate('/menu'); }} onEvents={() => navigate('/events')} onAuth={() => navigate('/auth')} /></GuestRoute>} />
+        <Route path="/" element={<GuestRoute user={session?.user}><Home api={API_URL} onTakeout={() => { switchMode('takeout'); navigate('/menu'); }} onDining={() => { switchMode('dining'); navigate('/menu'); }} onEvents={() => navigate('/events')} onWines={() => navigate('/wines')} onAuth={() => navigate('/auth')} /></GuestRoute>} />
         <Route path="/events" element={<EventsPage user={session?.user} onExploreCatering={() => { switchMode('events'); navigate('/menu'); }} />} />
         <Route path="/auth" element={<Auth onSuccess={handleAuthSuccess} onBack={() => navigate('/')} />} />
         <Route path="/admin/*" element={<ProtectedRoute user={session?.user} roles={['admin']}><AdminDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
         <Route path="/rider" element={<ProtectedRoute user={session?.user} roles={['rider']}><RiderDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
         <Route path="/booking" element={<ProtectedRoute user={session?.user}><Booking user={session?.user} token={session?.token} selectedItems={dineInSelections} onClearSelections={() => setDineInSelections([])} /></ProtectedRoute>} />
-        <Route path="/menu" element={<Menu api={API_URL} items={visibleItems} user={session?.user} categories={activeCategories} filter={filter} setFilter={(cat) => { setFilter(cat); if (cat !== 'Wine') setWineClassFilter(null); }} query={query} setQuery={setQuery} addToCart={addToCart} cartCount={cartCount} onCart={() => navigate('/cart')} onViewItem={(item) => navigate(`/item/${item.id}`)} onBooking={() => navigate('/booking')} wineFilter={wineFilter} onClearWineFilter={() => { setWineFilter(null); setWinePairingFilter(null); }} wineClassFilter={wineClassFilter} setWineClassFilter={setWineClassFilter} mode={mode} winePairingFilter={winePairingFilter} onClearWinePairingFilter={() => setWinePairingFilter(null)} onModeChange={switchMode} onBack={handleBack} dineInSelections={dineInSelections} addDineInItem={addDineInItem} />} />
+        <Route path="/menu" element={<Menu api={API_URL} items={visibleItems} user={session?.user} categories={activeCategories} filter={filter} setFilter={(cat) => { setFilter(cat); if (cat !== 'Wine') setWineClassFilter(null); }} query={query} setQuery={setQuery} addToCart={addToCart} cartCount={cartCount} onCart={() => navigate('/cart')} onViewItem={(item) => navigate(`/item/${item.id}`)} onBooking={() => navigate('/booking')} wineFilter={wineFilter} onClearWineFilter={() => { setWineFilter(null); setWinePairingFilter(null); }} wineClassFilter={wineClassFilter} setWineClassFilter={setWineClassFilter} mode={mode} winePairingFilter={winePairingFilter} onClearWinePairingFilter={() => setWinePairingFilter(null)} onBack={handleBack} dineInSelections={dineInSelections} addDineInItem={addDineInItem} />} />
         <Route path="/full-menu" element={<FullMenu onMakeOrder={() => { switchMode('takeout'); navigate('/menu'); }} onReserveTable={() => navigate('/booking')} />} />
         <Route path="/item/:itemId" element={<ItemRoute addToCart={addToCart} onWineFactSelect={(field, value) => {
           setFilter('Wine');

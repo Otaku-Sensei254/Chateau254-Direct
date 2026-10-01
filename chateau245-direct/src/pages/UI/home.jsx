@@ -10,7 +10,7 @@ import { RiWhatsappFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { RiEBike2Fill } from "react-icons/ri";
 import { GiMeal } from "react-icons/gi";
-import { GiPartyPopper } from "react-icons/gi";
+import { GiPartyPopper, GiWineGlass } from "react-icons/gi";
 const typewriterPhrases = [
   "Welcome to Chateau254",
   "Serene Dining",
@@ -27,7 +27,7 @@ const getGreeting = () => {
   return "Good night";
 };
 
-const Home = ({ api, onTakeout, onDining, onEvents, onAuth }) => {
+const Home = ({ api, onTakeout, onDining, onEvents, onWines, onAuth }) => {
   const [currentPhrase, setCurrentPhrase] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
@@ -158,8 +158,8 @@ const Home = ({ api, onTakeout, onDining, onEvents, onAuth }) => {
             <button className="cta-button cta-events" onClick={onEvents}>
               <GiPartyPopper />Events
             </button>
-             <button className="cta-button cta-events" onClick={onEvents}>
-              <GiPartyPopper />Wine Cellar
+            <button className="cta-button cta-cellar" onClick={onWines}>
+              <GiWineGlass />Wine Cellar
             </button>
           </div>
         </div>

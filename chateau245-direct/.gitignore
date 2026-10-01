@@ -10,7 +10,7 @@
 
 # production
 /build
-
+chateau245-direct/src/components/images/Chateau-pics
 # misc
 .DS_Store
 .env.local

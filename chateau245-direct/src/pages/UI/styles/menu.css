@@ -627,22 +627,6 @@
     margin-bottom: 14px;
     letter-spacing: 0.3px;
 }
-.mode-button{
-    background:rgb(229, 203, 161);
-    display:"flex";
-    align-items: center;
-    justify-content: center;
-    border:none;
-    margin-bottom:0.5rem;
-    font-size: 18px;
-    border-radius:25px;
-    width:120px;
-    padding:4px;
-    color: #4f7b55;
-}
-.mode-icon{
-    color:white;
-}
 
 .filter-row {
     display: flex;
@@ -654,14 +638,24 @@
 .filter-row button {
     border: 1px solid var(--line);
     background: white;
-    color: #746c67;
+    color: #57504b;
     border-radius: 20px;
-    padding: 8px 16px;
-    font-size: 11px;
+    padding: 11px 22px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
     white-space: nowrap;
+    cursor: pointer;
+    transition: background .2s ease, color .2s ease, border-color .2s ease;
 }
 
-.filter-row button.active {
+.filter-row button:hover {
+    border-color: var(--wine);
+    color: var(--wine);
+}
+
+.filter-row button.active,
+.filter-row button.active:hover {
     background: var(--wine);
     border-color: var(--wine);
     color: white;

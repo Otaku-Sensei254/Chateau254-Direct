@@ -147,20 +147,21 @@
 .cta-btns {
     display: flex;
     flex-direction: row;
-    gap: 1rem;
+    gap: 1.15rem;
     flex-wrap: wrap;
 }
 
 .cta-button {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    min-height: 48px;
-    padding: 0 24px;
+    justify-content: center;
+    gap: 12px;
+    min-height: 66px;
+    padding: 0 38px;
     border: none;
-    border-radius: 6px;
-    font: 700 11px 'Montserrat', Arial, sans-serif;
-    letter-spacing: 1px;
+    border-radius: 10px;
+    font: 700 14px 'Montserrat', Arial, sans-serif;
+    letter-spacing: 1.2px;
     text-transform: uppercase;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -168,7 +169,7 @@
 }
 
 .cta-button svg {
-    font-size: 16px;
+    font-size: 22px;
 }
 
 .cta-takeout {
@@ -204,6 +205,19 @@
     background: rgba(255, 255, 255, 0.15);
     border-color: rgba(255, 255, 255, 0.5);
     transform: translateY(-2px);
+}
+
+.cta-cellar {
+    background: linear-gradient(135deg, #4a1d3f, #6d2b52);
+    border: 1px solid rgba(226, 194, 123, 0.45);
+    box-shadow: 0 8px 24px rgba(74, 29, 63, 0.45);
+}
+
+.cta-cellar:hover {
+    background: linear-gradient(135deg, #5d2449, #823461);
+    border-color: rgba(226, 194, 123, 0.75);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(74, 29, 63, 0.6);
 }
 
 .home-foot {
