@@ -1,9 +1,32 @@
 const express = require('express');
+const multer = require('multer');
 const asyncHandler = require('../middleware/async.middleware');
 const { query } = require('../config/db');
 const { authenticate, requireRole } = require('../middleware/auth.middleware');
+const env = require('../config/env');
+const { ALLOWED_IMAGE_TYPES, uploadPromotionImage } = require('../config/storage');
 
 const router = express.Router();
+
+const imageUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: env.r2MaxFileSize, files: 1 },
+  fileFilter: (req, file, callback) => {
+    if (!ALLOWED_IMAGE_TYPES.has(file.mimetype)) {
+      const error = new Error('Only JPEG, PNG, and WebP images are allowed');
+      error.statusCode = 400;
+      return callback(error);
+    }
+    return callback(null, true);
+  },
+});
+
+router.post('/upload', authenticate, requireRole('admin'), imageUpload.single('image'), asyncHandler(async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'An image file is required' });
+
+  const uploaded = await uploadPromotionImage(req.file);
+  return res.status(201).json(uploaded);
+}));
 
 router.get('/', asyncHandler(async (req, res) => {
   const includeAll = String(req.query.all).toLowerCase() === 'true';
@@ -32,6 +55,9 @@ router.get('/', asyncHandler(async (req, res) => {
 router.post('/', authenticate, requireRole('admin'), asyncHandler(async (req, res) => {
   const { title, message, image_url, link_url, is_active, priority, starts_at, ends_at } = req.body;
   if (!message) return res.status(400).json({ error: 'Promotion message is required' });
+  if (typeof image_url === 'string' && image_url.startsWith('data:')) {
+    return res.status(400).json({ error: 'Image must be uploaded via /api/promotions/upload' });
+  }
 
   const result = await query(
     `INSERT INTO promotions (title, message, image_url, link_url, is_active, priority, starts_at, ends_at)
@@ -43,6 +69,10 @@ router.post('/', authenticate, requireRole('admin'), asyncHandler(async (req, re
 
 router.patch('/:id', authenticate, requireRole('admin'), asyncHandler(async (req, res) => {
   const { title, message, image_url, link_url, is_active, priority, starts_at, ends_at } = req.body;
+  if (typeof image_url === 'string' && image_url.startsWith('data:')) {
+    return res.status(400).json({ error: 'Image must be uploaded via /api/promotions/upload' });
+  }
+
   const result = await query(
     `UPDATE promotions SET
       title = COALESCE($1, title),

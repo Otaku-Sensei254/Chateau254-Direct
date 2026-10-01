@@ -70,6 +70,8 @@ const uploadObject = async (file, prefix) => {
 
 const uploadMenuImage = (file) => uploadObject(file, 'menu-items');
 
+const uploadPromotionImage = (file) => uploadObject(file, 'promotions');
+
 const uploadFeedMedia = async (file) => {
   const uploaded = await uploadObject(file, 'feed');
   return {
@@ -78,6 +80,8 @@ const uploadFeedMedia = async (file) => {
     mediaMimeType: file.mimetype,
   };
 };
+
+const STORED_PREFIXES = ['menu-items/', 'feed/', 'promotions/'];
 
 const keyFromPublicUrl = (imageUrl) => {
   if (!imageUrl || !env.r2PublicUrl) return null;
@@ -93,7 +97,7 @@ const keyFromPublicUrl = (imageUrl) => {
       ? key.slice(basePath.length + 1)
       : key;
 
-    return relativeKey.startsWith('menu-items/') || relativeKey.startsWith('feed/') ? relativeKey : null;
+    return STORED_PREFIXES.some((prefix) => relativeKey.startsWith(prefix)) ? relativeKey : null;
   } catch {
     return null;
   }
@@ -116,6 +120,7 @@ module.exports = {
   FEED_ALLOWED_MEDIA_TYPES,
   uploadMenuImage,
   uploadFeedMedia,
+  uploadPromotionImage,
   deleteMenuImage,
   deleteStoredMedia,
 };

@@ -140,7 +140,7 @@ const Home = ({ api, onTakeout, onDining, onEvents, onAuth }) => {
           <p className="eyebrow">Nairobi's finest dining room</p>
           <h1>
             {getGreeting()}
-            <span>at Château254</span>
+            {/* <span>Welcome to Château</span> */}
           </h1>
           <p className="hero-text">
             Great food, fine wine,
@@ -157,6 +157,9 @@ const Home = ({ api, onTakeout, onDining, onEvents, onAuth }) => {
             </button>
             <button className="cta-button cta-events" onClick={onEvents}>
               <GiPartyPopper />Events
+            </button>
+             <button className="cta-button cta-events" onClick={onEvents}>
+              <GiPartyPopper />Wine Cellar
             </button>
           </div>
         </div>
