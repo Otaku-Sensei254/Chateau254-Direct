@@ -605,7 +605,7 @@
 
 .offer-action-btn.wine-btn {
     background: var(--wine);
-    color: var(--text-inverse);
+    color: var(--text-on-accent);
 }
 
 .offer-action-btn.wine-btn:hover {
@@ -615,7 +615,7 @@
 
 .offer-action-btn.meal-btn {
     background: var(--success);
-    color: var(--text-inverse);
+    color: var(--text-on-accent);
 }
 
 .offer-action-btn.meal-btn:hover {
@@ -624,12 +624,12 @@
 }
 
 .offer-action-btn.reservation-btn {
-    background: var(--text-strong);
+    background: var(--surface-inverse);
     color: var(--text-inverse);
 }
 
 .offer-action-btn.reservation-btn:hover {
-    background: var(--text);
+    background: var(--surface-deep);
     box-shadow: 0 4px 12px rgba(var(--brand-rgb), 0.25);
 }
 
@@ -819,7 +819,7 @@
     right: 11px;
     border-radius: 4px;
     background: linear-gradient(135deg, var(--brand-strong), var(--brand));
-    color: var(--text-inverse);
+    color: var(--text-on-accent);
     padding: 4px 8px;
     font: 700 9px sans-serif;
     text-transform: uppercase;

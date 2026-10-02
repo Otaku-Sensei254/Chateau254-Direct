@@ -188,8 +188,11 @@
     --text: #ded6c6;
     --text-soft: #b8ae9a;
     --text-muted: #948a78;
-    --text-faint: #6f6757;
-    --text-inverse: #0b0a08;
+    --text-faint: #8c8371;
+    /* Stays light in both schemes: it always pairs with --surface-inverse,
+       which is a dark fill in both. Making this dark put near-black text on
+       near-black fields (the cellar search bar, admin inputs) at a 1.03 ratio. */
+    --text-inverse: #f2ece1;
     --text-on-accent: #14100a;
 
     --border: #2c2721;

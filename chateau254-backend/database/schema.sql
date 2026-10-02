@@ -94,6 +94,27 @@ CREATE TABLE IF NOT EXISTS wines (
 );
 ALTER TABLE wines ADD COLUMN IF NOT EXISTS wine_type VARCHAR(80);
 ALTER TABLE wines ADD COLUMN IF NOT EXISTS region VARCHAR(160);
+
+-- Cellar catalogue fields backing the public /wines page. Mirrors
+-- database/migrations/2026-10-03-wine-cellar-fields.sql. Additive only; the
+-- admin-managed columns above (image_url, description, price, availability and
+-- offer flags) are never written by the sync script.
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS producer VARCHAR(160);
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS producer_region VARCHAR(160);
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS collection VARCHAR(40);
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS color VARCHAR(40);
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS category_filter VARCHAR(40);
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS confidence VARCHAR(40);
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS source_note TEXT;
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS rating_source VARCHAR(120);
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS rating_score VARCHAR(40);
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS rating_scale VARCHAR(40);
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS rating_count VARCHAR(40);
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS rating_found BOOLEAN;
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS rating_reason TEXT;
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS price_min NUMERIC(12, 2);
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS price_max NUMERIC(12, 2);
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS cellar_order INTEGER;
 ALTER TABLE wines ADD COLUMN IF NOT EXISTS grape VARCHAR(160);
 ALTER TABLE wines ADD COLUMN IF NOT EXISTS tasting_notes TEXT;
 ALTER TABLE wines ADD COLUMN IF NOT EXISTS on_offer BOOLEAN NOT NULL DEFAULT FALSE;
@@ -171,6 +192,13 @@ CREATE TABLE IF NOT EXISTS feed_posts (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 CREATE INDEX IF NOT EXISTS feed_posts_published_idx ON feed_posts(is_published, published_at DESC);
+CREATE TABLE IF NOT EXISTS feed_likes (
+  post_id UUID NOT NULL REFERENCES feed_posts(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (post_id, user_id)
+);
+CREATE INDEX IF NOT EXISTS feed_likes_user_idx ON feed_likes(user_id, created_at DESC);
 CREATE TABLE IF NOT EXISTS promotions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title VARCHAR(180) NOT NULL DEFAULT '',

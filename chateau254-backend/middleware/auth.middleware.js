@@ -1,17 +1,30 @@
 const jwt = require('jsonwebtoken');
 const env = require('../config/env');
 
-const authenticate = (req, res, next) => {
-  const header = req.get('authorization');
+const verifyToken = (header) => {
   const token = header && header.startsWith('Bearer ') ? header.slice(7) : null;
-  if (!token) return res.status(401).json({ error: 'Authentication required' });
-
+  if (!token) return null;
   try {
-    req.user = jwt.verify(token, env.jwtSecret);
-    next();
+    return jwt.verify(token, env.jwtSecret);
   } catch (error) {
-    return res.status(401).json({ error: 'Invalid or expired token' });
+    return null;
   }
+};
+
+const authenticate = (req, res, next) => {
+  const user = verifyToken(req.get('authorization'));
+  if (!user) return res.status(401).json({ error: 'Authentication required' });
+
+  req.user = user;
+  return next();
+};
+
+/* Attaches req.user when a valid token is present but never rejects. Public
+   endpoints use this so they can personalise a response for signed-in visitors
+   while still serving anonymous ones. */
+const optionalAuthenticate = (req, res, next) => {
+  req.user = verifyToken(req.get('authorization')) || undefined;
+  return next();
 };
 
 const requireRole = (...roles) => (req, res, next) => {
@@ -20,4 +33,4 @@ const requireRole = (...roles) => (req, res, next) => {
   next();
 };
 
-module.exports = { authenticate, requireRole };
+module.exports = { authenticate, optionalAuthenticate, requireRole };

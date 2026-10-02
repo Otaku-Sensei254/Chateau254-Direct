@@ -34,7 +34,14 @@ const io = new Server(httpServer, {
 
 app.use(helmet());
 app.use(cors({ origin: env.frontendUrl, credentials: true }));
-app.use(express.json({ limit: '10mb' }));
+/* verify records the first bytes of every JSON body. body-parser's parse error
+   does not carry the raw payload, so without this there is no way to tell a
+   genuinely malformed JSON request from a multipart upload that was mislabelled
+   as JSON. The error handler uses it to return an actionable message. */
+app.use(express.json({
+  limit: '10mb',
+  verify: (req, res, buf) => { req.rawBodyPrefix = buf.subarray(0, 16).toString('latin1'); },
+}));
 app.use(morgan(env.nodeEnv === 'production' ? 'combined' : 'dev'));
 
 app.get('/', (req, res) => {

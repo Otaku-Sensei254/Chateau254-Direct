@@ -8,7 +8,7 @@
 .feed-hero {
   min-height: 360px;
   background: linear-gradient(112deg, var(--text) 0%, var(--success) 55%, var(--gold-darkest) 150%);
-  color: var(--text-inverse);
+  color: var(--text-on-accent);
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -34,7 +34,7 @@
 .feed-toolbar h2 { font-family: Georgia, serif; font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 400; margin: .45rem 0 0; }
 .feed-filters { align-items: center; display: flex; flex-wrap: wrap; gap: .45rem; }
 .feed-filters button { background: transparent; border: 1px solid rgba(var(--gold-rgb), .22); border-radius: 999px; color: var(--success); cursor: pointer; font: inherit; font-size: .8rem; padding: .6rem .9rem; text-transform: capitalize; transition: .2s ease; }
-.feed-filters button:hover, .feed-filters button.active { background: var(--success); border-color: var(--success-deep); color: var(--text-inverse); }
+.feed-filters button:hover, .feed-filters button.active { background: var(--success); border-color: var(--success-deep); color: var(--text-on-accent); }
 .feed-filters .feed-refresh { border: 0; border-radius: 50%; padding: .65rem; }
 .feed-refresh svg { display: block; }
 .is-spinning { animation: feed-spin .9s linear infinite; }
@@ -44,7 +44,7 @@
 .feed-card { background: var(--surface-raised); border: 1px solid rgba(var(--brand-rgb), .1); box-shadow: 0 14px 40px rgba(var(--brand-rgb), .06); overflow: hidden; }
 .feed-card-media { aspect-ratio: 16 / 10; background: var(--surface-deep); overflow: hidden; position: relative; }
 .feed-card-media-content { display: block; height: 100%; object-fit: cover; width: 100%; }
-.feed-card-media video { background: var(--text-strong); }
+.feed-card-media video { background: var(--surface-sunken); }
 .feed-media-type { background: rgba(var(--brand-rgb), .82); color: var(--text-inverse); font-size: .68rem; font-weight: 800; left: 1rem; letter-spacing: .12em; padding: .45rem .65rem; position: absolute; text-transform: uppercase; top: 1rem; }
 .feed-card-placeholder { align-items: center; color: var(--success-deep); display: flex; flex-direction: column; gap: .65rem; height: 100%; justify-content: center; position: relative; }
 .feed-card-placeholder > svg { font-size: 2.6rem; stroke-width: 1.2; }
@@ -72,4 +72,287 @@
 
 @media (prefers-reduced-motion: reduce) {
   .is-spinning { animation: none; }
+}
+
+/* ==========================================================================
+   Card interaction: open the viewer, like a post
+   ========================================================================== */
+
+/* The whole card body is the click target for the viewer, so it is a button
+   that resets its own chrome. The footer sits outside it to keep the like
+   control from nesting an interactive element in another one. */
+.feed-card-open {
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: zoom-in;
+  display: block;
+  font: inherit;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+}
+
+.feed-card-open:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: -3px;
+}
+
+.feed-card-open:hover .feed-card-media-content {
+  transform: scale(1.04);
+}
+
+.feed-card-media-content {
+  transition: transform .45s cubic-bezier(.16, 1, .3, 1);
+}
+
+.feed-card-footer {
+  align-items: center;
+  border-top: 1px solid var(--border-soft);
+  display: flex;
+  gap: .75rem;
+  justify-content: space-between;
+  padding: .85rem 1.4rem 1.1rem;
+}
+
+.feed-like {
+  align-items: center;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 700;
+  gap: .45rem;
+  padding: .5rem .9rem;
+  transition: .2s ease;
+}
+
+.feed-like svg {
+  font-size: 1rem;
+  transition: transform .2s cubic-bezier(.16, 1, .3, 1);
+}
+
+.feed-like:hover:not(:disabled) {
+  border-color: var(--danger);
+  color: var(--danger-soft);
+}
+
+.feed-like:hover:not(:disabled) svg {
+  transform: scale(1.12);
+}
+
+.feed-like.is-liked {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.feed-like.is-liked svg {
+  fill: currentColor;
+}
+
+.feed-like:disabled {
+  cursor: not-allowed;
+  opacity: .5;
+}
+
+.feed-view {
+  background: transparent;
+  border: 0;
+  color: var(--gold-ink);
+  cursor: pointer;
+  font: inherit;
+  font-size: .78rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+  padding: .5rem .25rem;
+  text-transform: uppercase;
+}
+
+.feed-view:hover { color: var(--gold); }
+
+.feed-filter-count {
+  font-size: .7rem;
+  margin-left: .35rem;
+  opacity: .7;
+}
+
+.feed-filters button:disabled {
+  cursor: not-allowed;
+  opacity: .4;
+}
+
+/* ==========================================================================
+   Viewer overlay
+   ========================================================================== */
+
+.feed-modal-backdrop {
+  align-items: center;
+  animation: feed-fade .2s ease both;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background: rgba(5, 4, 3, .82);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 3rem);
+  position: fixed;
+  z-index: 3000;
+}
+
+.feed-modal {
+  animation: feed-rise .28s cubic-bezier(.16, 1, .3, 1) both;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: 18px;
+  box-shadow: 0 40px 120px rgba(0, 0, 0, .6);
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  max-width: 940px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.feed-modal-close {
+  align-items: center;
+  background: rgba(10, 9, 7, .62);
+  border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: 50%;
+  color: var(--hero-text, #f6f1e6);
+  cursor: pointer;
+  display: flex;
+  height: 38px;
+  justify-content: center;
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  transition: .2s ease;
+  width: 38px;
+  z-index: 3;
+}
+
+.feed-modal-close:hover {
+  background: rgba(10, 9, 7, .9);
+  transform: rotate(90deg);
+}
+
+.feed-modal-close:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.feed-modal-media {
+  align-items: center;
+  background: var(--surface-sunken);
+  display: flex;
+  justify-content: center;
+  max-height: 68vh;
+  /* Small floor only: a tall floor left wide landscape posts floating in a band
+     of dead space, since `contain` already caps the height at 68vh. */
+  min-height: 160px;
+  overflow: hidden;
+  position: relative;
+}
+
+.feed-modal-image,
+.feed-modal-video {
+  display: block;
+  max-height: 68vh;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.feed-modal-media-hint {
+  align-items: center;
+  color: var(--text-muted);
+  display: flex;
+  gap: .5rem;
+  font-size: .9rem;
+}
+
+.feed-modal-body {
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.feed-modal-meta {
+  align-items: center;
+  color: var(--text-muted);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: .74rem;
+  gap: .75rem;
+  letter-spacing: .04em;
+}
+
+.feed-modal-meta .feed-media-type {
+  background: var(--gold-tint);
+  color: var(--gold-ink);
+  left: auto;
+  padding: .2rem .5rem;
+  position: static;
+}
+
+.feed-modal-title {
+  color: var(--text-strong);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  font-weight: 600;
+  line-height: 1.15;
+  margin: .85rem 0 .6rem;
+}
+
+.feed-modal-caption {
+  color: var(--text-soft);
+  font-size: .98rem;
+  line-height: 1.7;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.feed-modal-actions {
+  align-items: center;
+  border-top: 1px solid var(--border-soft);
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.4rem;
+  padding-top: 1.2rem;
+}
+
+.feed-modal-actions .feed-like {
+  padding: .6rem 1.15rem;
+}
+
+.feed-modal-hint {
+  color: var(--text-faint);
+  font-size: .8rem;
+}
+
+@keyframes feed-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes feed-rise {
+  from { opacity: 0; transform: translateY(14px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 720px) {
+  .feed-card-footer { padding: .75rem 1rem 1rem; }
+  .feed-modal-media,
+  .feed-modal-image,
+  .feed-modal-video { max-height: 46vh; min-height: 180px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feed-modal-backdrop,
+  .feed-modal { animation: none; }
+  .feed-card-open:hover .feed-card-media-content { transform: none; }
+  .feed-modal-close:hover { transform: none; }
+  .feed-like svg { transition: none; }
 }

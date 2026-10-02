@@ -358,8 +358,7 @@ const App = () => {
         <Route path="/tracking" element={<Navigate to="/track" replace />} />
         <Route path="/profile" element={<ProfileRoute user={session?.user}><Profile user={session?.user} token={session?.token} onBack={handleBack} onLogout={handleLogout} onTrack={(o) => { setOrder({ id: o.id, number: o.id.slice(0, 8), total: Number(o.total_amount) }); navigate('/track'); }} onBooking={() => navigate('/booking')} onCellar={() => navigate('/my-cellar')} /></ProfileRoute>} />
         <Route path="/wines" element={<WinesPage />} />
-        <Route path="/feed" element={<Feed />} />
-        <Route path="/feed" element={<Navigate to="/feed" replace />} />
+        <Route path="/feed" element={<Feed session={session} />} />
         <Route path="/404" element={<NotFound onHome={() => navigate('/menu')} onBack={handleBack} />} />
         <Route path="*" element={<NotFound onHome={() => navigate('/menu')} onBack={handleBack} />} />
       </Routes>

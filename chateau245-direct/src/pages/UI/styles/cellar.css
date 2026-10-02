@@ -244,7 +244,7 @@
 
 .cellar-badge--red {
     background: var(--brand);
-    color: var(--text-inverse);
+    color: var(--text-on-accent);
 }
 
 .cellar-badge--white {
@@ -290,7 +290,7 @@
     position: absolute;
     top: 28px;
     right: 0;
-    background: var(--text-strong);
+    background: var(--surface-sunken);
     border: 1px solid var(--border-on-dark);
     border-radius: 8px;
     overflow: hidden;

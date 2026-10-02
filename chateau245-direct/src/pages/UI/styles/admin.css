@@ -869,7 +869,12 @@
 
 .admin-modal h2 { margin: 0 0 18px; font: 700 22px Georgia, serif; }
 .admin-modal label { display: block; margin: 12px 0; font-size: 11px; font-weight: 700; }
-.admin-modal input, .admin-modal select, .admin-modal textarea { display: block; width: 100%; margin-top: 6px; padding: 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface-raised); font-size: 12px; }
+/* color is required: form controls fall back to the browser's `fieldtext`
+   (black) when no colour is declared, which is unreadable on the dark raised
+   surface. Placeholder and caret get their own tokens for the same reason. */
+.admin-modal input, .admin-modal select, .admin-modal textarea { display: block; width: 100%; margin-top: 6px; padding: 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface-raised); color: var(--text); caret-color: var(--gold); font-size: 12px; }
+.admin-modal input::placeholder, .admin-modal textarea::placeholder { color: var(--text-faint); }
+.admin-modal select option { background: var(--surface-raised); color: var(--text); }
 .admin-modal textarea { resize: vertical; min-height: 56px; }
 .admin-modal .admin-primary { width: 100%; justify-content: center; margin-top: 8px; flex-shrink: 0; }
 .admin-modal-close { position: absolute; top: 14px; right: 14px; border: 0; background: transparent; color: var(--muted); font-size: 18px; }
@@ -878,7 +883,7 @@
 
 .admin-modal-form {
     overflow-y: auto;
-    padding-right: 4px;
+    padding-right: 8px;
     flex: 1 1 auto;
 }
 
@@ -923,14 +928,23 @@
     background: var(--danger-tint);
 }
 
+/* Holds the just-picked file so the operator can confirm it before publishing.
+   object-fit was declared here, on the wrapper <div>, where it has no effect --
+   only the video child was ever constrained, so portrait images rendered at
+   intrinsic size and blew past the modal. The box itself is a flex centring
+   frame; the fit rule belongs on the media children below. */
 .admin-modal-image-preview {
-    display: block;
-    margin-top: 10px;
-    width: 100%;
-    max-height: 160px;
-    object-fit: cover;
-    border-radius: 6px;
+    align-items: center;
+    background: var(--surface-sunken);
     border: 1px solid var(--line);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    max-height: 260px;
+    overflow: hidden;
+    padding: 0.5rem;
+    width: 100%;
 }
 
 .status-badge.status-pending { background: var(--warning-tint); color: var(--warning); }
@@ -1500,4 +1514,146 @@
     .admin-tables-grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* ==========================================================================
+   Media manager
+   ========================================================================== */
+
+.admin-section-note {
+  color: var(--text-muted);
+  font-size: .88rem;
+  line-height: 1.6;
+  margin: -.5rem 0 1.5rem;
+  max-width: 60ch;
+}
+
+.admin-media-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-media-stats span {
+  color: var(--text-muted);
+  font-size: .82rem;
+}
+
+.admin-media-stats strong {
+  color: var(--gold-ink);
+  font-size: 1.05rem;
+  margin-right: .3rem;
+}
+
+.admin-media-card {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+
+.admin-media-thumb {
+  aspect-ratio: 16 / 10;
+  background: var(--surface-sunken);
+  overflow: hidden;
+  position: relative;
+}
+
+.admin-media-thumb img,
+.admin-media-thumb video {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.admin-media-kind,
+.admin-media-state {
+  align-items: center;
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: .66rem;
+  font-weight: 800;
+  gap: .3rem;
+  letter-spacing: .1em;
+  padding: .35rem .6rem;
+  position: absolute;
+  text-transform: uppercase;
+  top: .7rem;
+}
+
+.admin-media-kind {
+  background: rgba(10, 9, 7, .7);
+  color: var(--hero-text, #f6f1e6);
+  left: .7rem;
+}
+
+.admin-media-kind svg { font-size: .8rem; }
+
+.admin-media-state { right: .7rem; }
+.admin-media-state.live { background: var(--success-tint); color: var(--success-strong); }
+.admin-media-state.draft { background: var(--warning-tint); color: var(--warning); }
+
+.admin-media-card .admin-menu-card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.admin-media-card .admin-menu-card-description {
+  flex: 1;
+}
+
+.admin-media-card .admin-menu-card-footer small {
+  align-items: center;
+  color: var(--text-muted);
+  display: inline-flex;
+  gap: .35rem;
+}
+
+.admin-media-card .admin-menu-card-footer small svg { color: var(--danger-soft); }
+
+/* `contain` so the whole frame is visible: a cover fit inside a fixed-height
+   box cropped portrait uploads at the forehead and shoulders. */
+.admin-modal-image-preview img,
+.admin-modal-image-preview video {
+  display: block;
+  max-height: 240px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.admin-field-count {
+  color: var(--text-faint);
+  display: block;
+  font-size: .74rem;
+  font-weight: 500;
+  margin-top: .3rem;
+}
+
+.admin-checkbox {
+  align-items: center;
+  cursor: pointer;
+  display: flex !important;
+  flex-direction: row;
+  gap: .6rem;
+}
+
+.admin-checkbox input {
+  accent-color: var(--gold);
+  height: 18px;
+  margin: 0;
+  width: 18px;
+}
+
+.admin-checkbox span {
+  color: var(--text);
+  font-size: .88rem;
+  font-weight: 500;
+}
+
+.admin-modal button.admin-primary:disabled {
+  cursor: progress;
+  opacity: .65;
 }

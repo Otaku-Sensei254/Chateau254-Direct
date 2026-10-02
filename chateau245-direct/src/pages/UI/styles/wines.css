@@ -83,7 +83,7 @@
 .wines-collection-btn.active {
   background: var(--success);
   border-color: var(--success-deep);
-  color: var(--text-inverse);
+  color: var(--text-on-accent);
 }
 
 .wines-collection-icon {
@@ -160,8 +160,16 @@
   font-size: 14px;
   outline: none;
   background: var(--surface-subtle);
+  /* Without an explicit colour this control renders the browser default
+     `fieldtext`, which is black on the dark surface. */
+  color: var(--text);
+  caret-color: var(--gold);
   transition: all 0.2s ease;
   box-sizing: border-box;
+}
+
+.wines-search-input::placeholder {
+  color: var(--text-faint);
 }
 
 .wines-search-input:focus {
@@ -348,7 +356,7 @@
 
 .wine-dropdown-item.selected {
   background: var(--wine, var(--brand));
-  color: var(--text-inverse);
+  color: var(--text-on-accent);
   font-weight: 700;
 }
 
@@ -433,7 +441,7 @@
 .wines-clear-btn:hover {
   background: var(--wine, var(--brand));
   border-color: var(--wine, var(--brand));
-  color: var(--text-inverse);
+  color: var(--text-on-accent);
 }
 
 /* ==========================================================================

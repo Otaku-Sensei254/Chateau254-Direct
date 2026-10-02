@@ -6,6 +6,7 @@ import { useSocket } from '../../../contexts/SocketContext';
 import { useToast } from '../../../contexts/ToastContext';
 import { AdminWorkspaceSkeleton, LoaderSkeleton } from '../../../components/ui/loaders-skeleton';
 import { GrBlog } from "react-icons/gr";
+import MediaContent from '../../../components/feed/MediaContent';
 const AdminDashboard = ({ user, token, api, onLogout }) => {
   const [activePage, setActivePage] = useState('Dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -397,6 +398,7 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
       {activePage === 'Riders' && <RidersContent riders={riders} onAdd={() => setRiderEditorOpen(true)} onRemove={removeRider} />}
       {activePage === 'Fleet Map' && <FleetMapContent token={token} api={api} />}
       {activePage === 'Promotions' && <PromotionsContent api={api} headers={headers} addToast={addToast} />}
+      {activePage === 'Media' && <MediaContent api={api} headers={headers} addToast={addToast} />}
       {activePage === 'Reports' && <ReportsContent api={api} headers={headers} addToast={addToast} />}
       {activePage === 'Settings' && <PlaceholderContent title={activePage} />}
       {editingItem && <MenuEditor item={editingItem === true ? null : editingItem} onSave={saveMenuItem} onClose={() => setEditingItem(null)} />}
@@ -1198,7 +1200,7 @@ const PromotionsContent = ({ api, headers, addToast }) => {
             <p className="eyebrow">Marketing</p>
             <h2>{editingPromo ? 'Edit promotion' : 'New promotion'}</h2>
             <div className="admin-modal-form">
-              <label>Title<input name="title" value={form.title} onChange={(e) => setForm((prev) => ({ ...prev, title: e.target.value }))} /></label>
+              <label>Title<input style={{color: "white"}} name="title" value={form.title} onChange={(e) => setForm((prev) => ({ ...prev, title: e.target.value }))} /></label>
               <label>Message<textarea name="message" rows="3" value={form.message} onChange={(e) => setForm((prev) => ({ ...prev, message: e.target.value }))} required /></label>
               <label>Image<input id="promo-image-input" name="image" type="hidden" value={form.image_url} />
                 <div className="admin-upload-row">

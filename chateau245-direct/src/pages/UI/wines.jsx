@@ -17,9 +17,7 @@ import {
   Tag,
   Filter
 } from 'lucide-react';
-import italianWinesData from '../../components/data/italian_wines_producer_grouped.json';
-import southAfricanWinesData from '../../components/data/chateau_south_african_wines.json';
-import frenchWinesData from '../../components/data/chateau_french_wines.json';
+import useWineCellar from '../../components/wines/useWineCellar';
 import { WineCardSkeleton } from '../../components/ui/loaders-skeleton';
 import './styles/wines.css';
 
@@ -410,7 +408,7 @@ const getConfidenceBadgeClass = (confidence) => {
   }
 };
 
-const WinesPage = ({ loading = false }) => {
+const WinesPage = () => {
   const [selectedCollection, setSelectedCollection] = useState('all');
   const [selectedProducer, setSelectedProducer] = useState(null);
   const [selectedRegion, setSelectedRegion] = useState('All');
@@ -419,31 +417,11 @@ const WinesPage = ({ loading = false }) => {
   const [siblingIndex, setSiblingIndex] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const collections = useMemo(() => [
-    { id: 'italian', name: 'Italian Wines', icon: '🇮🇹', data: italianWinesData },
-    { id: 'south-african', name: 'South African Wines', icon: '🇿🇦', data: southAfricanWinesData },
-    { id: 'french', name: 'French Wines', icon: '🇫🇷', data: frenchWinesData }
-  ], []);
-
-  // Merge all wines from both collections into one unified list
-  const allWines = useMemo(() => {
-    const wines = [];
-    collections.forEach(collection => {
-      collection.data.producers.forEach(producer => {
-        producer.wines.forEach((wine, idx) => {
-          wines.push({
-            ...wine,
-            producer: producer.producer,
-            producerRegion: producer.producer_region,
-            producerIndex: idx,
-            siblings: producer.wines,
-            collection: collection.id
-          });
-        });
-      });
-    });
-    return wines;
-  }, [collections]);
+  /* Reads the `wines` table via /api/menu?type=wine and reshapes each row into
+     the producer/collection structure this page already renders. Previously the
+     catalogue came from three JSON files bundled into the build, so an image
+     uploaded through the admin menu never showed up here. */
+  const { wines: allWines, loading, error, reload } = useWineCellar();
 
   const producers = useMemo(() => {
     const producerMap = new Map();
@@ -680,6 +658,42 @@ const WinesPage = ({ loading = false }) => {
         </div>
       </div>
 
+      {error && (
+        <div
+          role="alert"
+          style={{
+            margin: '0 0 24px',
+            padding: '12px 16px',
+            borderLeft: '3px solid var(--danger, #b4453a)',
+            background: 'var(--danger-tint, rgba(180,69,58,.12))',
+            color: 'var(--text, inherit)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '16px',
+            flexWrap: 'wrap',
+          }}
+        >
+          <span>{error}</span>
+          <button
+            type="button"
+            onClick={reload}
+            style={{
+              background: 'transparent',
+              border: '1px solid currentColor',
+              borderRadius: '999px',
+              color: 'inherit',
+              cursor: 'pointer',
+              font: 'inherit',
+              fontSize: '13px',
+              padding: '6px 14px',
+            }}
+          >
+            Try again
+          </button>
+        </div>
+      )}
+
       {/* Wine Grid */}
       <div style={{ marginTop: '20px' }}>
         <h2 style={{ marginBottom: '16px', color: 'var(--text-strong)', fontSize: '20px', fontWeight: 700 }}>
@@ -697,8 +711,10 @@ const WinesPage = ({ loading = false }) => {
           </div>
         ) : filteredWines.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
-            <p style={{ fontSize: '18px', marginBottom: '8px', fontWeight: 600 }}>No wines found</p>
-            <p>Try adjusting your search query or region filter</p>
+            <p style={{ fontSize: '18px', marginBottom: '8px', fontWeight: 600 }}>
+              {error ? 'The cellar is unavailable' : 'No wines found'}
+            </p>
+            <p>{error ? 'Please check your connection and try again.' : 'Try adjusting your search query or region filter'}</p>
           </div>
         ) : (
           <div className="wines-grid">
