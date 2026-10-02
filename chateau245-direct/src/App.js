@@ -60,11 +60,19 @@ const ProfileRoute = ({ user, children }) => {
   return children;
 };
 
-const ItemRoute = ({ addToCart, onWineFactSelect, onWinePairingSelect, catalogs }) => {
+const ItemRoute = ({ user, addToCart, addDineInItem, isDineIn, onRequireAuth, onWineFactSelect, onWinePairingSelect, catalogs }) => {
   const { itemId } = useParams();
   const navigate = useNavigate();
+  const { addToast } = useToast();
   const item = Object.values(catalogs || {}).flat().find((catalogItem) => catalogItem.id === itemId);
-  return <ViewItem item={item} addToCart={addToCart} onBack={() => navigate('/menu')} onCart={() => navigate('/cart')} onWineFactSelect={onWineFactSelect} onWinePairingSelect={onWinePairingSelect} />;
+  /* Dine-in dishes are reserved for the table, never carted. The detail page is
+     reachable straight from the Fine Dining menu, so without passing the mode
+     down it would offer "Add to cart" and quietly undo that rule. */
+  const handleReserve = (reserved) => {
+    addDineInItem?.(reserved);
+    addToast(`${reserved.name} reserved for your table`, 'success');
+  };
+  return <ViewItem item={item} user={user} addToCart={addToCart} onRequireAuth={onRequireAuth} addDineInItem={isDineIn ? handleReserve : null} onBack={() => navigate('/menu')} onCart={() => navigate('/cart')} onWineFactSelect={onWineFactSelect} onWinePairingSelect={onWinePairingSelect} />;
 };
 
 const App = () => {
@@ -303,9 +311,9 @@ const App = () => {
         <Route path="/admin/*" element={<ProtectedRoute user={session?.user} roles={['admin']}><AdminDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
         <Route path="/rider" element={<ProtectedRoute user={session?.user} roles={['rider']}><RiderDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
         <Route path="/booking" element={<ProtectedRoute user={session?.user}><Booking user={session?.user} token={session?.token} selectedItems={dineInSelections} onClearSelections={() => setDineInSelections([])} /></ProtectedRoute>} />
-        <Route path="/menu" element={<Menu api={API_URL} items={visibleItems} offerItems={menuItems} user={session?.user} categories={activeCategories} filter={filter} setFilter={(cat) => { setFilter(cat); if (cat !== 'Wine') setWineClassFilter(null); }} query={query} setQuery={setQuery} addToCart={addToCart} cartCount={cartCount} onCart={() => navigate('/cart')} onViewItem={(item) => navigate(`/item/${item.id}`)} onBooking={() => navigate('/booking')} wineFilter={wineFilter} onClearWineFilter={() => { setWineFilter(null); setWinePairingFilter(null); }} wineClassFilter={wineClassFilter} setWineClassFilter={setWineClassFilter} mode={mode} winePairingFilter={winePairingFilter} onClearWinePairingFilter={() => setWinePairingFilter(null)} onBack={handleBack} dineInSelections={dineInSelections} addDineInItem={addDineInItem} />} />
+        <Route path="/menu" element={<Menu api={API_URL} items={visibleItems} offerItems={menuItems} user={session?.user} categories={activeCategories} filter={filter} setFilter={(cat) => { setFilter(cat); if (cat !== 'Wine') setWineClassFilter(null); }} query={query} setQuery={setQuery} addToCart={addToCart} cartCount={cartCount} onCart={() => navigate('/cart')} onViewItem={(item) => navigate(`/item/${item.id}`)} onBooking={() => navigate('/booking')} wineFilter={wineFilter} onClearWineFilter={() => { setWineFilter(null); setWinePairingFilter(null); }} wineClassFilter={wineClassFilter} setWineClassFilter={setWineClassFilter} mode={mode} onRequireAuth={() => navigate('/auth')} winePairingFilter={winePairingFilter} onClearWinePairingFilter={() => setWinePairingFilter(null)} onBack={handleBack} dineInSelections={dineInSelections} addDineInItem={addDineInItem} />} />
         <Route path="/full-menu" element={<FullMenu onMakeOrder={() => { switchMode('takeout'); navigate('/menu'); }} onReserveTable={() => navigate('/booking')} />} />
-        <Route path="/item/:itemId" element={<ItemRoute addToCart={addToCart} onWineFactSelect={(field, value) => {
+        <Route path="/item/:itemId" element={<ItemRoute user={session?.user} addToCart={addToCart} addDineInItem={addDineInItem} isDineIn={mode === 'dining'} onRequireAuth={() => navigate('/auth')} onWineFactSelect={(field, value) => {
           setFilter('Wine');
           setQuery('');
           setWineFilter({ field, value });
@@ -327,7 +335,7 @@ const App = () => {
         <Route path="/track" element={<Tracking order={order} token={session?.token} api={API_URL} onMenu={() => navigate('/menu')} />} />
         <Route path="/tracking" element={<Navigate to="/track" replace />} />
         <Route path="/profile" element={<ProfileRoute user={session?.user}><Profile user={session?.user} token={session?.token} onBack={handleBack} onLogout={handleLogout} onTrack={(o) => { setOrder({ id: o.id, number: o.id.slice(0, 8), total: Number(o.total_amount) }); navigate('/track'); }} onBooking={() => navigate('/booking')} onCellar={() => navigate('/my-cellar')} /></ProfileRoute>} />
-        <Route path="/wines" element={<WinesPage />} />
+        <Route path="/wines" element={<WinesPage user={session?.user} addToCart={addToCart} addDineInItem={addDineInItem} onRequireAuth={() => navigate('/auth')} reservationCount={dineInSelections.length} onGoToReservations={() => navigate('/booking')} />} />
         <Route path="/feed" element={<Feed session={session} />} />
         <Route path="/404" element={<NotFound onHome={() => navigate('/menu')} onBack={handleBack} />} />
         <Route path="*" element={<NotFound onHome={() => navigate('/menu')} onBack={handleBack} />} />

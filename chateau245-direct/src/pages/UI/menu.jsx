@@ -11,6 +11,7 @@ import {
 } from "react-icons/fi";
 import { GiWineBottle } from "react-icons/gi";
 import { useToast } from "../../contexts/ToastContext";
+import AccountRequiredModal from "../../components/ui/AccountRequiredModal";
 import { LoaderSkeleton, MenuCardSkeleton } from "../../components/ui/loaders-skeleton";
 
 const parseOfferPercent = (offerText = "") => {
@@ -101,12 +102,32 @@ const Menu = ({ api,
   onBack,
   dineInSelections,
   addDineInItem,
+  onRequireAuth,
   loading = false,
 }) => {
   const { addToast } = useToast();
   const [promotions, setPromotions] = useState([]);
   const [dismissedPromos, setDismissedPromos] = useState([]);
+  const [authPromptOpen, setAuthPromptOpen] = useState(false);
   const isWineActive = filter === "Wine";
+
+  /* Dine-in plates are reserved for the table, never added to the cart: the
+     guest books a table and has the dishes waiting on arrival. `mode` is
+     normalised to 'dining' in App.js, so this must compare against 'dining'.
+     An earlier version compared against 'dinein', which never matches, so every
+     dine-in item silently went to the cart. */
+  const isDineIn = mode === "dining" || mode === "dinein";
+
+  /* Reserving needs an account so the venue knows who is arriving. Guests get
+     told why and sent to sign in rather than silently losing the selection. */
+  const requestReservation = (item) => {
+    if (!user) {
+      setAuthPromptOpen(true);
+      return;
+    }
+    addDineInItem?.(item);
+    addToast(`${item.name} reserved for your table`, "success");
+  };
 
   // Only items the admin flagged on_offer surface here, and they stay put regardless
   // of the active category, search or menu mode.
@@ -235,9 +256,8 @@ const Menu = ({ api,
       menuType: offer.source.menuType,
     };
 
-    if (offer.type === "meal" && (mode === "dining" || mode === "dinein") && addDineInItem) {
-      addDineInItem(cartItem);
-      addToast(`${offer.name} added to reservation!`, "success");
+    if (offer.type === "meal" && isDineIn && addDineInItem) {
+      requestReservation(cartItem);
     } else {
       addToCart(cartItem);
       addToast(`${offer.name} added to cart!`, "success");
@@ -680,17 +700,17 @@ const Menu = ({ api,
               </button>
               <button
                 className="add-button"
-                aria-label={mode === "dinein" ? `Book ${item.name}` : `Add ${item.name}`}
+                aria-label={isDineIn ? `Reserve ${item.name} for your table` : `Add ${item.name} to cart`}
+                title={isDineIn ? 'Reserve for your table' : 'Add to cart'}
                 onClick={() => {
-                  if (mode === "dinein") {
-                    addDineInItem(item);
-                    addToast(`${item.name} added to reservation`, "success");
+                  if (isDineIn) {
+                    requestReservation(item);
                   } else {
                     addToCart(item);
                   }
                 }}
               >
-                {mode === "dinein" ? <FiCalendar /> : <FiPlus />}
+                {isDineIn ? <FiCalendar /> : <FiPlus />}
               </button>
             </article>
           );
@@ -714,6 +734,12 @@ const Menu = ({ api,
           <RiWhatsappFill />
         </Link>
       </div> */}
+      <AccountRequiredModal
+        open={authPromptOpen}
+        onClose={() => setAuthPromptOpen(false)}
+        onSignIn={() => { setAuthPromptOpen(false); onRequireAuth?.(); }}
+        action="item"
+      />
     </main>
   );
 };

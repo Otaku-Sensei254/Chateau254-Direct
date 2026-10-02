@@ -479,6 +479,10 @@ export const StaggeredMenu = ({
             <button className="sm-welcome" onClick={onProfile} type="button">
               <FiUser size={16} /> <span>Hi, {firstName}</span>
             </button>
+          )}{(
+            <button className="sm-welcome" onClick={onProfile} type="button">
+              <FiUser size={16} /> <span>Hi, </span>
+            </button>
           )}
 
           <button className="sm-cart" aria-label="Open cart" onClick={onCart} type="button">

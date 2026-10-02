@@ -474,7 +474,7 @@
 
 /* Card Thumbnail with Cellar Pedestal Ambiance */
 .wine-card-thumb {
-  height: 220px;
+  height: 300px;
   background: radial-gradient(ellipse at 50% 82%, var(--surface-muted) 0%, var(--surface-subtle) 55%, var(--surface-raised) 100%);
   display: flex;
   align-items: center;
@@ -1354,4 +1354,110 @@
 
 .wine-grape-card .wine-info-card-value:hover {
   color: var(--success);
+}
+
+/* ── Wine card actions: reserve for the table, or order to take away ───────── */
+.wine-card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+.wine-action {
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  flex: 1;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  gap: 5px;
+  justify-content: center;
+  letter-spacing: 0.02em;
+  padding: 8px 10px;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* Reserve mirrors the dine-in calendar affordance used on the menu page. */
+.wine-action-reserve {
+  background: transparent;
+  border-color: rgba(var(--gold-rgb), 0.45);
+  color: var(--success);
+}
+
+.wine-action-reserve:hover:not(:disabled) {
+  background: rgba(var(--gold-rgb), 0.12);
+  border-color: var(--gold);
+}
+
+/* Order is the takeaway commitment, so it reads as the primary action. */
+.wine-action-order {
+  background: var(--gold);
+  color: var(--text-inverse);
+}
+
+.wine-action-order:hover:not(:disabled) {
+  background: var(--gold-deep);
+}
+
+.wine-action:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.wine-card-unpriced {
+  color: var(--text-muted);
+  font-size: 11px;
+  margin-top: 8px;
+}
+
+/* ── Reservations link in the cellar header ──────────────────────────────── */
+.wines-header {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.wines-header-main {
+  min-width: 0;
+}
+
+.wine-reservations-link {
+  align-items: center;
+  background: transparent;
+  border: 1px solid rgba(var(--gold-rgb), 0.45);
+  border-radius: 999px;
+  color: var(--success);
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  gap: 7px;
+  padding: 9px 16px;
+  white-space: nowrap;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.wine-reservations-link:hover {
+  background: rgba(var(--gold-rgb), 0.12);
+  border-color: var(--gold);
+}
+
+.wine-reservations-count {
+  align-items: center;
+  background: var(--gold);
+  border-radius: 999px;
+  color: var(--text-inverse);
+  display: inline-flex;
+  font-size: 11px;
+  font-weight: 700;
+  justify-content: center;
+  min-width: 20px;
+  padding: 1px 6px;
 }

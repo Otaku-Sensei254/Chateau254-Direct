@@ -50,6 +50,10 @@ export const normalizeCellarWine = (wine) => ({
   image: wine.image || '',
   rating: toRating(wine),
   price_range_kes: toPriceRange(wine),
+  /* `price` is the single sellable figure used by the cart and the booking
+     summary, and is deliberately not derived from the display range: the range
+     is a catalogue hint, while the order has to settle on one amount. */
+  price: Number(wine.price || 0),
   cellarOrder: wine.cellarOrder ?? 0,
 });
 

@@ -855,7 +855,7 @@
 }
 
 .menu-card p {
-    color: var(--muted);
+    color: "white";
     font-size: 10px;
     line-height: 1.45;
     min-height: 29px;

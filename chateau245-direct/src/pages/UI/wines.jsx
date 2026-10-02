@@ -15,9 +15,13 @@ import {
   HelpCircle,
   BookOpen,
   Tag,
-  Filter
+  Filter,
+  CalendarDays,
+  ShoppingBag
 } from 'lucide-react';
 import useWineCellar from '../../components/wines/useWineCellar';
+import AccountRequiredModal from '../../components/ui/AccountRequiredModal';
+import { useToast } from '../../contexts/ToastContext';
 import { WineCardSkeleton } from '../../components/ui/loaders-skeleton';
 import './styles/wines.css';
 
@@ -408,7 +412,9 @@ const getConfidenceBadgeClass = (confidence) => {
   }
 };
 
-const WinesPage = () => {
+const WinesPage = ({ user, addToCart, addDineInItem, onGoToReservations, onRequireAuth, reservationCount = 0 }) => {
+  const { addToast } = useToast();
+  const [authPromptOpen, setAuthPromptOpen] = useState(false);
   const [selectedCollection, setSelectedCollection] = useState('all');
   const [selectedProducer, setSelectedProducer] = useState(null);
   const [selectedRegion, setSelectedRegion] = useState('All');
@@ -422,6 +428,42 @@ const WinesPage = () => {
      catalogue came from three JSON files bundled into the build, so an image
      uploaded through the admin menu never showed up here. */
   const { wines: allWines, loading, error, reload } = useWineCellar();
+
+  /* A bottle can be either bought to take away or reserved for the table, so the
+     card carries both actions. Reserve joins the same list dine-in plates use,
+     which the booking page picks up; order goes to the takeout cart. The two are
+     kept as separate callbacks so a reservation is never priced as an order. */
+  const reserveWine = (wine) => {
+    /* Reservations need an account, so a guest is prompted to sign in instead
+       of silently losing the bottle they picked. */
+    if (!user) {
+      setAuthPromptOpen(true);
+      return;
+    }
+    if (!addDineInItem) return;
+    addDineInItem({
+      id: wine.id,
+      name: wine.name,
+      price: wine.price,
+      image: wine.image,
+      menuType: 'wine',
+      quantity: 1,
+    });
+    addToast(`${wine.name} reserved for your table`, 'success');
+  };
+
+  const orderWine = (wine) => {
+    if (!addToCart) return;
+    addToCart({
+      id: wine.id,
+      name: wine.name,
+      price: wine.price,
+      image: wine.image,
+      description: wine.backstory,
+      menuType: 'wine',
+      quantity: 1,
+    });
+  };
 
   const producers = useMemo(() => {
     const producerMap = new Map();
@@ -552,12 +594,23 @@ const WinesPage = () => {
   return (
     <div className="wines-page">
       <header className="wines-header">
-        <h1 className="wines-header-title">
-          <Wine size={32} /> Chateau Wine Collection
-        </h1>
-        <p className="wines-header-subtitle">
-          {allWines.length} wines from {producers.length} producers across Italy, South Africa & France
-        </p>
+        <div className="wines-header-main">
+          <h1 className="wines-header-title">
+            <Wine size={32} /> Chateau Wine Collection
+          </h1>
+          <p className="wines-header-subtitle">
+            {allWines.length} wines from {producers.length} producers across Italy, South Africa & France
+          </p>
+        </div>
+        {/* Reservations started here sit in the same list as dine-in plates, so
+            this reaches the booking page with everything already attached. */}
+        {onGoToReservations && (
+          <button type="button" className="wine-reservations-link" onClick={onGoToReservations}>
+            <CalendarDays size={15} />
+            My Reservations
+            {reservationCount > 0 && <span className="wine-reservations-count">{reservationCount}</span>}
+          </button>
+        )}
       </header>
 
       {/* Filters */}
@@ -783,6 +836,34 @@ const WinesPage = () => {
                     <div style={{ marginTop: '8px', fontSize: '11px', color: 'var(--text-muted)' }}>
                       {wine.producerIndex + 1} of {wine.siblings.length} from {wine.producer}
                     </div>
+                  )}
+                  {/* Reserve for the table, or order to take away. stopPropagation
+                      keeps the card's own click -- which opens the detail modal --
+                      from firing underneath either action. */}
+                  <div className="wine-card-actions" onClick={(event) => event.stopPropagation()}>
+                    <button
+                      type="button"
+                      className="wine-action wine-action-reserve"
+                      onClick={() => reserveWine(wine)}
+                      disabled={!wine.price}
+                      title={wine.price ? 'Reserve this bottle for your table' : 'No price set yet'}
+                    >
+                      <CalendarDays size={13} />
+                      Reserve
+                    </button>
+                    <button
+                      type="button"
+                      className="wine-action wine-action-order"
+                      onClick={() => orderWine(wine)}
+                      disabled={!wine.price}
+                      title={wine.price ? 'Add to cart to take away' : 'No price set yet'}
+                    >
+                      <ShoppingBag size={13} />
+                      Order
+                    </button>
+                  </div>
+                  {!wine.price && (
+                    <div className="wine-card-unpriced">Price not set — contact the team to reserve</div>
                   )}
                 </div>
               </div>
@@ -1042,6 +1123,13 @@ const WinesPage = () => {
           </div>
         </div>
       )}
+
+      <AccountRequiredModal
+        open={authPromptOpen}
+        onClose={() => setAuthPromptOpen(false)}
+        onSignIn={() => { setAuthPromptOpen(false); onRequireAuth?.(); }}
+        action="item"
+      />
     </div>
   );
 };

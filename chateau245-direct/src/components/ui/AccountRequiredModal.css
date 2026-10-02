@@ -1,0 +1,130 @@
+/* Account-required prompt, shown before a guest tries to reserve. */
+
+.acct-modal-backdrop {
+  align-items: center;
+  animation: acct-modal-fade 0.18s ease;
+  background: rgba(var(--brand-rgb), 0.62);
+  backdrop-filter: blur(3px);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 1.25rem;
+  position: fixed;
+  z-index: 1000;
+}
+
+.acct-modal {
+  animation: acct-modal-rise 0.22s ease;
+  background: var(--surface-raised);
+  border: 1px solid rgba(var(--gold-rgb), 0.28);
+  border-radius: 14px;
+  box-shadow: 0 24px 60px rgba(var(--brand-rgb), 0.3);
+  color: var(--text);
+  max-width: 420px;
+  padding: 2rem 1.75rem 1.6rem;
+  position: relative;
+  text-align: center;
+  width: 100%;
+}
+
+.acct-modal-close {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  padding: 6px;
+  position: absolute;
+  right: 0.75rem;
+  top: 0.75rem;
+  transition: color 0.2s ease;
+}
+
+.acct-modal-close:hover {
+  color: var(--text);
+}
+
+.acct-modal-icon {
+  align-items: center;
+  background: rgba(var(--gold-rgb), 0.14);
+  border: 1px solid rgba(var(--gold-rgb), 0.32);
+  border-radius: 50%;
+  color: var(--success);
+  display: inline-flex;
+  height: 54px;
+  justify-content: center;
+  margin-bottom: 0.9rem;
+  width: 54px;
+}
+
+.acct-modal-title {
+  color: var(--text);
+  font-family: Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+  margin: 0 0 0.6rem;
+}
+
+.acct-modal-body {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin: 0 0 1.5rem;
+}
+
+.acct-modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.acct-modal-primary {
+  background: var(--gold);
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  color: var(--text-inverse);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.acct-modal-primary:hover {
+  background: var(--gold-deep);
+  border-color: var(--gold-deep);
+}
+
+.acct-modal-ghost {
+  background: transparent;
+  border: 1px solid rgba(var(--gold-rgb), 0.32);
+  border-radius: 999px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.88rem;
+  padding: 0.7rem 1.5rem;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.acct-modal-ghost:hover {
+  border-color: var(--gold);
+  color: var(--text);
+}
+
+@keyframes acct-modal-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes acct-modal-rise {
+  from { opacity: 0; transform: translateY(10px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .acct-modal-backdrop,
+  .acct-modal { animation: none; }
+}

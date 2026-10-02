@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { FiArrowLeft, FiPlus, FiShoppingBag, FiTag, FiCheckCircle, FiClipboard, FiRadio, FiExternalLink } from 'react-icons/fi';
+import { FiArrowLeft, FiPlus, FiCalendar, FiShoppingBag, FiTag, FiCheckCircle, FiClipboard, FiRadio, FiExternalLink } from 'react-icons/fi';
+import AccountRequiredModal from '../../components/ui/AccountRequiredModal';
 import { PiWineFill } from "react-icons/pi";
 import { ViewItemSkeleton } from '../../components/ui/loaders-skeleton';
 
@@ -128,7 +129,8 @@ const PricingOptions = ({ pricing, price, selectedOption, onSelectOption }) => {
   );
 };
 
-const ViewItem = ({ item, addToCart, onBack, onCart, onWineFactSelect, onWinePairingSelect, loading = false }) => {
+const ViewItem = ({ item, user, addToCart, addDineInItem, onRequireAuth, onBack, onCart, onWineFactSelect, onWinePairingSelect, loading = false }) => {
+  const [authPromptOpen, setAuthPromptOpen] = useState(false);
   const [selectedPricing, setSelectedPricing] = useState('paired');
   const [selectedPrice, setSelectedPrice] = useState(item?.price || 0);
 
@@ -190,10 +192,38 @@ const ViewItem = ({ item, addToCart, onBack, onCart, onWineFactSelect, onWinePai
         <PricingOptions pricing={item.pricing} price={item.price} selectedOption={selectedPricing} onSelectOption={handlePricingSelect} />
 
         <DetailFacts item={item} onWineFactSelect={onWineFactSelect} />
-        <button className="primary-button detail-add" onClick={() => addToCart({ ...item, price: selectedPrice })}><FiPlus /> Add to cart</button>
+        {/* Dine-in dishes are reserved for the table instead of carted. App.js
+            passes addDineInItem only when the item was opened from the Fine
+            Dining menu, so the same page keeps "Add to cart" for every other
+            menu mode. */}
+        {addDineInItem ? (
+          <button
+            className="primary-button detail-add"
+            onClick={() => {
+              /* Reservations need an account, so a guest is prompted to sign in
+                 rather than silently losing the dish they picked. */
+              if (!user) {
+                setAuthPromptOpen(true);
+                return;
+              }
+              addDineInItem({ ...item, price: selectedPrice });
+            }}
+          >
+            <FiCalendar /> Reserve for table
+          </button>
+        ) : (
+          <button className="primary-button detail-add" onClick={() => addToCart({ ...item, price: selectedPrice })}><FiPlus /> Add to cart</button>
+        )}
         <button className="detail-cart" onClick={onCart}><FiShoppingBag /> View cart</button>
       </div>
     </div>
+
+    <AccountRequiredModal
+      open={authPromptOpen}
+      onClose={() => setAuthPromptOpen(false)}
+      onSignIn={() => { setAuthPromptOpen(false); onRequireAuth?.(); }}
+      action="item"
+    />
   </main>;
 };
 
