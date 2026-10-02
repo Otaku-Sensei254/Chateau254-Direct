@@ -1,9 +1,6 @@
 import './App.css';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
-import italianWinesData from './components/data/italian_wines_producer_grouped.json';
-import southAfricanWinesData from './components/data/chateau_south_african_wines.json';
-import frenchWinesData from './components/data/chateau_french_wines.json';
 import { SocketProvider } from './contexts/SocketContext';
 import { useToast } from './contexts/ToastContext';
 import Home from './pages/UI/home';
@@ -26,38 +23,6 @@ import Cellar from './pages/UI/cellar';
 import Feed from './pages/UI/feed';
 import NotFound from './pages/UI/not_found';
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-
-const flattenRegionalWines = (data, prefix) => {
-  return (data.producers || []).flatMap((producer, pIdx) =>
-    (producer.wines || []).map((wine, wIdx) => ({
-      id: `${prefix}-wine-${pIdx}-${wIdx}`,
-      name: wine.name,
-      description: wine.backstory || `${wine.color} from ${data.region}`,
-      price: Math.round(((wine.price_range_kes?.min || 0) + (wine.price_range_kes?.max || 0)) / 2),
-      priceRange: wine.price_range_kes,
-      category: 'Wine',
-      image: wine.image || '',
-      type: wine.color,
-      region: data.region,
-      grape: wine.grape,
-      notes: wine.backstory,
-      classification: wine.category_filter || null,
-      on_offer: Boolean(wine.on_offer || wine.on_Offer || wine.classification?.on_offer || wine.classification?.on_Offer),
-      offer: wine.offer || wine.classification?.offer || null,
-      producer: producer.producer,
-      producerRegion: producer.producer_region,
-      confidence: wine.confidence,
-      source_note: wine.source_note,
-      rating: wine.rating || null,
-    }))
-  );
-};
-
-const allRegionalWines = [
-  ...flattenRegionalWines(italianWinesData, 'italian'),
-  ...flattenRegionalWines(southAfricanWinesData, 'south-african'),
-  ...flattenRegionalWines(frenchWinesData, 'french'),
-];
 
 const loadCart = () => {
   try { return JSON.parse(localStorage.getItem('chateau254_cart')) || []; }
@@ -146,11 +111,16 @@ const App = () => {
   const lunchAndBarItems = useMemo(() => menuItems.filter((i) => i.menuType === 'lunchbox'), [menuItems]);
   const dineInFoodItems = dineInItems;
 
+  /* Wines are deliberately absent from every menu catalog. They have their own
+     page at /wines, backed by the same `wines` table, and mixing them into the
+     meal grids listed bottles next to food and double-listed them. The admin
+     menu still loads them via /api/menu?all=true -- this only shapes what the
+     public menu page renders. */
   const catalogs = useMemo(() => ({
-    dining: [...dineInFoodItems, ...allRegionalWines],
-    takeout: [...takeoutItems, ...allRegionalWines],
+    dining: [...dineInFoodItems],
+    takeout: [...takeoutItems],
     lunchbox: [...lunchAndBarItems],
-    events: [...eventItems, ...allRegionalWines],
+    events: [...eventItems],
   }), [dineInFoodItems, takeoutItems, lunchAndBarItems, eventItems]);
 
   const activeCatalog = catalogs[mode] || catalogs.dining;
