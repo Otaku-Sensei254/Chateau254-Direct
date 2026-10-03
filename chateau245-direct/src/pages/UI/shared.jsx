@@ -1,9 +1,11 @@
 import React from 'react';
-import {FiShoppingBag } from 'react-icons/fi';
 // import Logo from "../../components/images/chateauLogo2.png"
 // import { Link } from 'react-router-dom';
-import InstallButton from '../../components/InstallButton';
-import Brand from '../../components/Brand';
+/* The header that used to live here carried an InstallButton, but it was never
+   mounted: App.js imports AppHeader from components/Navigation, which renders
+   StaggeredMenu instead. The install button now lives in StaggeredMenu's header
+   actions, so this duplicate header has been removed rather than left to drift.
+   Summary below is still used by cart.jsx and checkout.jsx. */
 
 export const Summary = ({ subtotal, delivery }) => {
   return (
@@ -23,26 +25,3 @@ export const Summary = ({ subtotal, delivery }) => {
     </div>
   );
 };
-
-const AppHeader = ({ cartCount, onCart, onProfile, userName = '' }) => {
-  return (
-    <header className="app-header">
-      <Brand />
-      
-      <div className="header-actions">
-        <button className="welcome-link" onClick={onProfile}>
-          Hi, {userName || 'Guest'}
-        </button>
-        
-        <InstallButton />
-        
-        <button className="bag-button" aria-label="Open cart" onClick={onCart}>
-          <FiShoppingBag />
-          {cartCount > 0 && <b>{cartCount}</b>}
-        </button>
-      </div>
-    </header>
-  );
-};
-
-export default AppHeader;

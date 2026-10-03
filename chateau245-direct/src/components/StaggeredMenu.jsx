@@ -5,6 +5,7 @@ import { FiShoppingBag, FiUser, FiTwitter, FiChevronDown, FiX, FiInstagram, } fr
 import { RiWhatsappLine } from "react-icons/ri";
 import { GiHamburgerMenu } from 'react-icons/gi';
 import Brand from './Brand';
+import InstallButton from './InstallButton';
 import './styles/StaggeredMenu.css';
 
 const defaultMenuItems = [
@@ -479,11 +480,10 @@ export const StaggeredMenu = ({
             <button className="sm-welcome" onClick={onProfile} type="button">
               <FiUser size={16} /> <span>Hi, {firstName}</span>
             </button>
-          )}{(
-            <button className="sm-welcome" onClick={onProfile} type="button">
-              <FiUser size={16} /> <span>Hi, </span>
-            </button>
           )}
+
+          {/* Only renders once the browser reports the app is installable. */}
+          <InstallButton />
 
           <button className="sm-cart" aria-label="Open cart" onClick={onCart} type="button">
             <FiShoppingBag size={20} />
