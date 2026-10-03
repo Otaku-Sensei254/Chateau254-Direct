@@ -17,6 +17,7 @@ const tablesRoutes = require('./routes/tables.routes');
 const feedRoutes = require('./routes/feed.routes');
 const promotionsRoutes = require('./routes/promotions.routes');
 const reportsRoutes = require('./routes/reports.routes');
+const pesapalRoutes = require('./routes/pesapal.routes');
 const { notFound, errorHandler } = require('./middleware/error.middleware');
 
 const app = express();
@@ -42,6 +43,7 @@ app.use(express.json({
   limit: '10mb',
   verify: (req, res, buf) => { req.rawBodyPrefix = buf.subarray(0, 16).toString('latin1'); },
 }));
+app.use(express.urlencoded({ extended: false }));
 app.use(morgan(env.nodeEnv === 'production' ? 'combined' : 'dev'));
 
 app.get('/', (req, res) => {
@@ -58,6 +60,7 @@ app.use('/api/tables', tablesRoutes);
 app.use('/api/feed', feedRoutes);
 app.use('/api/promotions', promotionsRoutes);
 app.use('/api/reports', reportsRoutes);
+app.use('/api/payments/pesapal', pesapalRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
@@ -94,6 +97,7 @@ const startServer = async () => {
   try {
     await initializePool();
     await feedRoutes.ensureFeedTable();
+    await pesapalRoutes.ensurePaymentSchema();
     server = httpServer.listen(env.port, () => {
       console.log(`Château254 API listening on port ${env.port}`);
     });

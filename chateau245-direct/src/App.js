@@ -7,6 +7,7 @@ import Home from './pages/UI/home';
 import Menu from './pages/UI/menu';
 import Cart from './pages/UI/cart';
 import Checkout from './pages/UI/checkout';
+import PaymentResult from './pages/UI/payment_result';
 import Confirmation from './pages/UI/confirmation';
 import Tracking from './pages/UI/tracking';
 import Profile from './pages/UI/profile';
@@ -176,7 +177,27 @@ const App = () => {
     if (!session?.token) { navigate('/auth'); return; }
     const form = new FormData(event.currentTarget);
     const deliveryAddress = form.get('address') || 'Not specified';
+    const paymentMethod = form.get('payment') || 'cash_on_delivery';
     try {
+      if (paymentMethod === 'pesapal') {
+        const paymentResponse = await fetch(`${API_URL}/payments/pesapal/initialize`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.token}` },
+          body: JSON.stringify({
+            delivery_address: deliveryAddress,
+            phone: form.get('phone') || '',
+            latitude: coords?.latitude || null,
+            longitude: coords?.longitude || null,
+            items: cart.map((item) => ({ menu_item_id: item.id, quantity: item.quantity })),
+          }),
+        });
+        const paymentPayload = await paymentResponse.json().catch(() => ({}));
+        if (!paymentResponse.ok) throw new Error(paymentPayload.error || 'Unable to start Pesapal payment');
+        if (!paymentPayload.payment?.redirectUrl) throw new Error('Pesapal did not provide a payment page');
+        window.location.assign(paymentPayload.payment.redirectUrl);
+        return;
+      }
+
       const menuRes = await fetch(`${API_URL}/menu`);
       const menuData = await menuRes.json();
       const nameToId = {};
@@ -217,6 +238,15 @@ const App = () => {
     } catch (err) {
       alert(err.message || 'Something went wrong. Please try again.');
     }
+  };
+
+  const handlePaymentSuccess = (paymentOrder) => {
+    const placedOrder = { id: paymentOrder.id, number: paymentOrder.id.slice(0, 8), total: Number(paymentOrder.total_amount) };
+    setOrder(placedOrder);
+    localStorage.setItem('chateau254_last_order', placedOrder.id);
+    setLastOrderId(placedOrder.id);
+    setCart([]);
+    navigate('/confirmation');
   };
 
   useEffect(() => {
@@ -329,6 +359,7 @@ const App = () => {
         }} catalogs={catalogs} />} />
         <Route path="/cart" element={<Cart cart={cart} user={session?.user} subtotal={subtotal} delivery={delivery} changeQuantity={changeQuantity} onCheckout={() => navigate('/checkout')} onMenu={() => navigate('/menu')} onBack={handleBack} />} />
         <Route path="/checkout" element={<Checkout subtotal={subtotal} delivery={delivery} placeOrder={placeOrder} />} />
+        <Route path="/payment-result" element={<ProtectedRoute user={session?.user}><PaymentResult api={API_URL} token={session?.token} onSuccess={handlePaymentSuccess} onMenu={() => navigate('/menu')} /></ProtectedRoute>} />
         <Route path="/my-cellar" element={<Cellar user={session?.user} onMenu={() => navigate('/menu')} onBack={handleBack} />} />
 
         <Route path="/confirmation" element={<Confirmation order={order} onTrack={() => navigate('/track')} onMenu={() => navigate('/menu')} />} />

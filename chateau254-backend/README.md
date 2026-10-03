@@ -24,6 +24,14 @@ R2_PUBLIC_URL=https://<public-r2-domain>
 R2_ACCESS_KEY_ID=<r2-access-key-id>
 R2_SECRET_ACCESS_KEY=<r2-secret-access-key>
 R2_MAX_FILE_SIZE=5242880
+
+# Pesapal API 3.0 sandbox
+PESAPAL_CONSUMER_KEY=<pesapal-consumer-key>
+PESAPAL_CONSUMER_SECRET=<pesapal-consumer-secret>
+PESAPAL_BASE_URL=https://cybqa.pesapal.com/pesapalv3
+PESAPAL_IPN_URL=https://<railway-host>/api/payments/pesapal/ipn
+PESAPAL_IPN_ID=<returned-by-register-ipn>
+PESAPAL_CALLBACK_URL=https://<railway-host>/api/payments/pesapal/callback
 ```
 
 The upload endpoint is admin-only: `POST /api/menu/upload` with a multipart field named `image`. It accepts JPEG, PNG, and WebP files up to 5 MB.
@@ -51,6 +59,11 @@ The development seed creates the admin account `admin@chateau254.com` with passw
 - `POST /api/feed` (admin)
 - `DELETE /api/feed/:id` (admin)
 - `GET|POST /api/orders`
+- `POST /api/payments/pesapal/initialize`
+- `GET /api/payments/pesapal/status/:trackingId`
+- `GET /api/payments/pesapal/callback`
+- `GET|POST /api/payments/pesapal/ipn`
+- `POST /api/payments/pesapal/register-ipn` (admin)
 - `PATCH /api/orders/:id/status`
 - `GET /api/customers`
 - `PATCH /api/customers/:id/points`

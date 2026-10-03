@@ -233,6 +233,13 @@ CREATE TABLE IF NOT EXISTS orders (
   status VARCHAR(30) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'preparing', 'out_for_delivery', 'completed', 'cancelled')),
   delivery_address TEXT NOT NULL,
   total_amount NUMERIC(12, 2) NOT NULL CHECK (total_amount >= 0),
+  payment_method VARCHAR(30) NOT NULL DEFAULT 'cash_on_delivery',
+  payment_status VARCHAR(20) NOT NULL DEFAULT 'unpaid' CHECK (payment_status IN ('unpaid', 'pending', 'completed', 'failed', 'reversed')),
+  pesapal_merchant_reference VARCHAR(50),
+  pesapal_tracking_id UUID,
+  payment_provider_status VARCHAR(80),
+  payment_message TEXT,
+  paid_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -309,6 +316,8 @@ CREATE TABLE IF NOT EXISTS bookings (
 CREATE INDEX IF NOT EXISTS orders_status_idx ON orders(status);
 CREATE INDEX IF NOT EXISTS orders_user_id_idx ON orders(user_id);
 CREATE INDEX IF NOT EXISTS orders_rider_id_idx ON orders(rider_id);
+CREATE UNIQUE INDEX IF NOT EXISTS orders_pesapal_reference_idx ON orders(pesapal_merchant_reference) WHERE pesapal_merchant_reference IS NOT NULL;
+CREATE UNIQUE INDEX IF NOT EXISTS orders_pesapal_tracking_idx ON orders(pesapal_tracking_id) WHERE pesapal_tracking_id IS NOT NULL;
 CREATE INDEX IF NOT EXISTS user_roles_role_id_idx ON user_roles(role_id);
 CREATE INDEX IF NOT EXISTS users_email_idx ON users(email);
 CREATE INDEX IF NOT EXISTS bookings_status_idx ON bookings(status);

@@ -1,0 +1,79 @@
+.payment-result-page {
+    display: flex;
+    max-width: 620px;
+    min-height: calc(100vh - 150px);
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 20px;
+    text-align: center;
+}
+
+.payment-result-icon {
+    display: grid;
+    width: 76px;
+    height: 76px;
+    margin-bottom: 24px;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--surface-soft, #f2ebe4);
+    color: var(--wine);
+}
+
+.payment-result-icon.completed {
+    background: #e7f4ea;
+    color: #34764a;
+}
+
+.payment-result-icon.failed {
+    background: #fae9e7;
+    color: #a34d45;
+}
+
+.payment-result-icon svg {
+    width: 31px;
+    height: 31px;
+}
+
+.payment-result-page h1 {
+    margin: 6px 0 10px;
+    color: var(--ink);
+    font: 700 clamp(2.1rem, 5vw, 3.2rem)/1.1 Georgia, serif;
+    letter-spacing: -0.03em;
+}
+
+.payment-result-message {
+    max-width: 420px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.payment-result-reference {
+    margin-top: 18px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.payment-result-loader {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 26px;
+    color: var(--wine);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.payment-result-loader svg {
+    animation: payment-result-spin 1.2s linear infinite;
+}
+
+.payment-result-page .primary-button {
+    margin-top: 25px;
+}
+
+@keyframes payment-result-spin {
+    to { transform: rotate(360deg); }
+}

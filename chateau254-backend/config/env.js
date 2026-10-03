@@ -16,6 +16,12 @@ const env = {
   r2AccessKeyId: process.env.R2_ACCESS_KEY_ID || process.env.ACCESS_ID || '',
   r2SecretAccessKey: process.env.R2_SECRET_ACCESS_KEY || process.env.SECRET_ACCESS_KEY || '',
   r2MaxFileSize: Number(process.env.R2_MAX_FILE_SIZE) || 5 * 1024 * 1024,
+  pesapalConsumerKey: process.env.PESAPAL_CONSUMER_KEY || process.env.consumer_key || '',
+  pesapalConsumerSecret: process.env.PESAPAL_CONSUMER_SECRET || process.env.consumer_secret || '',
+  pesapalBaseUrl: (process.env.PESAPAL_BASE_URL || 'https://cybqa.pesapal.com/pesapalv3').replace(/\/$/, ''),
+  pesapalIpnUrl: process.env.PESAPAL_IPN_URL || '',
+  pesapalIpnId: process.env.PESAPAL_IPN_ID || '',
+  pesapalCallbackUrl: process.env.PESAPAL_CALLBACK_URL || '',
 };
 
 module.exports = env;
