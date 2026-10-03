@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
    which meant an image edited through the admin menu never appeared here. It
    now reads the `wines` table through the same /api/menu endpoint the rest of
    the site uses, and reshapes the rows into the shape the page already renders
-   (snake_case rating and price_range_kes objects, producer siblings). */
+   (a rating object and producer siblings). */
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
@@ -21,15 +21,6 @@ const toRating = (wine) => {
     found: true,
     reason: wine.ratingReason || '',
   };
-};
-
-/* Price ranges are nullable: unpriced bottles have no range at all, and the page
-   hides the block entirely rather than rendering "KES 0". */
-const toPriceRange = (wine) => {
-  const min = wine.priceMin;
-  const max = wine.priceMax;
-  if (min === null || min === undefined || max === null || max === undefined) return null;
-  return { min: Number(min), max: Number(max) };
 };
 
 export const normalizeCellarWine = (wine) => ({
@@ -49,10 +40,11 @@ export const normalizeCellarWine = (wine) => ({
   collection: wine.collection || '',
   image: wine.image || '',
   rating: toRating(wine),
-  price_range_kes: toPriceRange(wine),
-  /* `price` is the single sellable figure used by the cart and the booking
-     summary, and is deliberately not derived from the display range: the range
-     is a catalogue hint, while the order has to settle on one amount. */
+  /* Only ever `price` -- the figure the admin menu edits and the cart settles on.
+     The catalogue range (priceMin/priceMax, inherited from the source JSON) is
+     deliberately not surfaced: it was never reconciled with the sellable price,
+     so for more than half the cellar it quoted a different amount than admin
+     and checkout, which is what made the two pages look unsynced. */
   price: Number(wine.price || 0),
   cellarOrder: wine.cellarOrder ?? 0,
 });

@@ -826,10 +826,14 @@ const WinesPage = ({ user, addToCart, addDineInItem, onGoToReservations, onRequi
                       </span>
                     </div>
                   )}
-                  {wine.price_range_kes && (
+                  {/* Shows the same `price` the admin menu edits. The catalogue
+                      range (price_range_kes) came from the source JSON and was
+                      never reconciled with the sellable price, so showing both
+                      put two different prices on one card. */}
+                  {wine.price > 0 && (
                     <div className="wine-card-price">
                       <Tag size={11} className="wine-price-icon" />
-                      <span>KES {wine.price_range_kes.min.toLocaleString()} - {wine.price_range_kes.max.toLocaleString()}</span>
+                      <span>KES {wine.price.toLocaleString()}</span>
                     </div>
                   )}
                   {wine.producerIndex > 0 && (
@@ -1019,7 +1023,7 @@ const WinesPage = ({ user, addToCart, addDineInItem, onGoToReservations, onRequi
                 </div>
 
                 {/* Grape & Price */}
-                {(selectedWine.grape || selectedWine.price_range_kes) && (
+                {(selectedWine.grape || selectedWine.price > 0) && (
                   <div className="wine-grape-price-row">
                     {selectedWine.grape && (
                       <div className="wine-info-card wine-grape-card">
@@ -1038,14 +1042,16 @@ const WinesPage = ({ user, addToCart, addDineInItem, onGoToReservations, onRequi
                         </p>
                       </div>
                     )}
-                    {selectedWine.price_range_kes && (
+                    {/* The admin-managed price, so the detail view can never
+                        quote a different figure from the card or the checkout. */}
+                    {selectedWine.price > 0 && (
                       <div className="wine-info-card wine-price-card">
                         <div className="wine-info-card-header">
                           <Tag size={14} />
-                          <span>Price Range</span>
+                          <span>Price</span>
                         </div>
                         <p className="wine-info-card-value">
-                          KES {selectedWine.price_range_kes.min.toLocaleString()} - {selectedWine.price_range_kes.max.toLocaleString()}
+                          KES {selectedWine.price.toLocaleString()}
                         </p>
                       </div>
                     )}
