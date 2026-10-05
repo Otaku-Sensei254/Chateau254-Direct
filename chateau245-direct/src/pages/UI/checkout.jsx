@@ -3,7 +3,7 @@ import { FiArrowRight, FiCheck, FiChevronDown, FiClock, FiCopy, FiCreditCard, Fi
 import { Summary } from './shared';
 import LocationPicker from '../../components/LocationPicker';
 
-const Checkout = ({ subtotal, delivery, placeOrder }) => {
+const Checkout = ({ subtotal, placeOrder }) => {
   // Card payments are temporarily disabled until the card gateway is enabled.
   const CARD_PAYMENT_ENABLED = false;
   const [coords, setCoords] = useState(null);
@@ -94,7 +94,7 @@ const Checkout = ({ subtotal, delivery, placeOrder }) => {
               <label className="checkout-option">
                 <input type="radio" name="delivery_option" defaultChecked />
                 <span className="checkout-option-icon"><FiTruck /></span>
-                <span className="checkout-option-copy"><strong>Delivery</strong><small>45–60 min · KES {delivery.toLocaleString()}</small></span>
+                <span className="checkout-option-copy"><strong>Delivery</strong><small>45–60 min · No delivery fee</small></span>
                 <span className="checkout-option-check"><FiCheck /></span>
               </label>
               <label className="checkout-option">
@@ -266,7 +266,7 @@ const Checkout = ({ subtotal, delivery, placeOrder }) => {
 
         <aside className="checkout-summary-card">
           <div className="checkout-summary-top"><span className="cart-section-kicker">Order total</span><h2>Almost ready</h2><p>Review your order before placing it.</p></div>
-          <Summary subtotal={subtotal} delivery={delivery} />
+          <Summary subtotal={subtotal} />
           <div className="checkout-trust"><FiClock /><span><strong>Freshly prepared</strong><small>We'll start as soon as your order is confirmed.</small></span></div>
           <div className="checkout-trust"><FiLock /><span><strong>Safe and secure</strong><small>Your details are only used to fulfil this order.</small></span></div>
           <button className="primary-button full checkout-submit" type="submit">Place order <FiArrowRight /></button>

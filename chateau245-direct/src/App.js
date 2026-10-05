@@ -194,7 +194,6 @@ const App = () => {
   }, [activeCatalog, filter, query, wineFilter, wineClassFilter, winePairingFilter]);
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
   const subtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
-  const delivery = subtotal ? 250 : 0;
 
   useEffect(() => {
     localStorage.setItem('chateau254_cart', JSON.stringify(cart));
@@ -248,7 +247,7 @@ const App = () => {
       const body = {
         user_id: session.user.id,
         delivery_address: deliveryAddress,
-        total_amount: subtotal + delivery,
+        total_amount: subtotal,
         latitude: coords?.latitude || null,
         longitude: coords?.longitude || null,
         items: cart.map((item) => ({
@@ -379,7 +378,7 @@ const App = () => {
     <div className={`app-shell${showAppHeader ? ' has-app-header' : ''}`}>
       {showAppHeader && <AppHeader cartCount={cartCount} userName={session?.user?.full_name} onCart={() => navigate('/cart')} onProfile={() => navigate('/profile')} api={API_URL} />}
       <Routes>
-        <Route path="/" element={<GuestRoute user={session?.user}><Home api={API_URL} onTakeout={() => { switchMode('takeout'); navigate('/menu'); }} onDining={() => { switchMode('dining'); navigate('/menu'); }} onEvents={() => navigate('/events')} onWines={() => navigate('/wines')} onAuth={() => navigate('/auth')} /></GuestRoute>} />
+        <Route path="/" element={<GuestRoute user={session?.user}><Home api={API_URL} onDining={() => { switchMode('dining'); navigate('/menu'); }} onEvents={() => navigate('/events')} onWines={() => navigate('/wines')} onAuth={() => navigate('/auth')} /></GuestRoute>} />
         <Route path="/events" element={<EventsPage user={session?.user} onExploreCatering={() => { switchMode('events'); navigate('/menu'); }} />} />
         <Route path="/auth" element={<Auth onSuccess={handleAuthSuccess} onBack={() => navigate('/')} />} />
         <Route path="/admin/*" element={<ProtectedRoute user={session?.user} roles={['admin']}><AdminDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
@@ -406,8 +405,8 @@ const App = () => {
           setWinePairingFilter(pairingName);
           navigate('/menu');
         }} catalogs={catalogs} />} />
-        <Route path="/cart" element={<Cart cart={cart} user={session?.user} subtotal={subtotal} delivery={delivery} changeQuantity={changeQuantity} onCheckout={() => navigate('/checkout')} onMenu={() => navigate('/menu')} onBack={handleBack} />} />
-        <Route path="/checkout" element={<Checkout subtotal={subtotal} delivery={delivery} placeOrder={placeOrder} />} />
+        <Route path="/cart" element={<Cart cart={cart} user={session?.user} subtotal={subtotal} changeQuantity={changeQuantity} onCheckout={() => navigate('/checkout')} onMenu={() => navigate('/menu')} onBack={handleBack} />} />
+        <Route path="/checkout" element={<Checkout subtotal={subtotal} placeOrder={placeOrder} />} />
         <Route path="/payment-result" element={<ProtectedRoute user={session?.user}><PaymentResult api={API_URL} token={session?.token} onSuccess={handlePaymentSuccess} onMenu={() => navigate('/menu')} /></ProtectedRoute>} />
         <Route path="/my-cellar" element={<Cellar user={session?.user} onMenu={() => navigate('/menu')} onBack={handleBack} />} />
 

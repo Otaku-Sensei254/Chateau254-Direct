@@ -22,3 +22,4 @@ yarn-error.log*
 modifications.md
 chateau245-direct/.env.production
 .kilo
+.aider*

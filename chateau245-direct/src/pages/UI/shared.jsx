@@ -7,20 +7,16 @@ import React from 'react';
    actions, so this duplicate header has been removed rather than left to drift.
    Summary below is still used by cart.jsx and checkout.jsx. */
 
-export const Summary = ({ subtotal, delivery }) => {
+export const Summary = ({ subtotal }) => {
   return (
     <div className="summary">
       <div>
         <span>Subtotal</span>
         <b>KES {subtotal.toLocaleString()}</b>
       </div>
-      <div>
-        <span>Delivery fee</span>
-        <b>KES {delivery.toLocaleString()}</b>
-      </div>
       <div className="total">
         <span>Total</span>
-        <b>KES {(subtotal + delivery).toLocaleString()}</b>
+        <b>KES {subtotal.toLocaleString()}</b>
       </div>
     </div>
   );

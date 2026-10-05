@@ -779,8 +779,17 @@
 
 .menu-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
+}
+
+/* The footer makes .app-shell a flex column. Keep this flex child shrinkable
+   so long menu content cannot set the page's minimum width. */
+.content-page.menu-page {
+    width: 100%;
+    min-width: 0;
 }
 
 .menu-card {
@@ -790,6 +799,7 @@
     overflow: hidden;
     animation: rise .5s both;
     position: relative;
+    min-width: 0;
     /* width: 500px; */
 }
 
@@ -847,6 +857,11 @@
     justify-content: space-between;
     padding: 14px;
     padding-right: 56px;
+    min-width: 0;
+}
+
+.menu-card-body > div {
+    min-width: 0;
 }
 
 .menu-card h2 {
@@ -919,6 +934,7 @@
 .menu-card-view {
     display: block;
     width: 100%;
+    min-width: 0;
     padding: 0;
     border: 0;
     background: var(--surface-raised);
@@ -930,9 +946,9 @@
     color: var(--wine);
 }
 
-@media (min-width: 760px) {
+@media (max-width: 767px) {
     .menu-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
@@ -952,7 +968,6 @@
     }
 
     .menu-grid {
-        grid-template-columns: 1fr 1fr;
         gap: 9px;
     }
 
@@ -984,6 +999,13 @@
     .category-tag {
         font-size: 8px;
         padding: 4px;
+    }
+}
+
+@media (max-width: 480px) {
+    .menu-grid {
+        max-width: 340px;
+        margin-inline: auto;
     }
 }
 

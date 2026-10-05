@@ -3,7 +3,7 @@ import { FiArrowRight, FiArrowLeft, FiClock, FiMinus, FiPlus, FiShield, FiShoppi
 import { Summary } from './shared';
 import { CartItemSkeleton, LoaderSkeleton } from '../../components/ui/loaders-skeleton';
 
-const Cart = ({ cart, subtotal, delivery, changeQuantity, onCheckout, onMenu, user, onBack, loading = false }) => {
+const Cart = ({ cart, subtotal, changeQuantity, onCheckout, onMenu, user, onBack, loading = false }) => {
   const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   return (
@@ -28,10 +28,6 @@ const Cart = ({ cart, subtotal, delivery, changeQuantity, onCheckout, onMenu, us
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
               <LoaderSkeleton width={80} height={14} borderRadius={4} />
               <LoaderSkeleton width={100} height={14} borderRadius={4} />
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-              <LoaderSkeleton width={90} height={14} borderRadius={4} />
-              <LoaderSkeleton width={70} height={14} borderRadius={4} />
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '10px', borderTop: '1px solid var(--border-soft)' }}>
               <LoaderSkeleton width={60} height={18} borderRadius={4} />
@@ -79,7 +75,7 @@ const Cart = ({ cart, subtotal, delivery, changeQuantity, onCheckout, onMenu, us
               <span className="cart-section-kicker">Order total</span>
               <h2>Summary</h2>
             </div>
-            <Summary subtotal={subtotal} delivery={delivery} />
+            <Summary subtotal={subtotal} />
             <div className="cart-assurance">
               <div><FiClock /><span>Freshly prepared<br /><small>Estimated delivery: 45–60 min</small></span></div>
               <div><FiShield /><span>Secure checkout<br /><small>Your details stay protected</small></span></div>

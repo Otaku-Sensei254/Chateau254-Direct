@@ -22,11 +22,10 @@ export const AppHeader = ({ cartCount, userName = '', onProfile, onCart }) => {
 };
 
 
-export const Summary = ({ subtotal, delivery }) => (
+export const Summary = ({ subtotal }) => (
   <div className="summary">
     <div><span>Subtotal</span><b>KES {subtotal.toLocaleString()}</b></div>
-    <div><span>Delivery fee</span><b>KES {delivery.toLocaleString()}</b></div>
-    <div className="total"><span>Total</span><b>KES {(subtotal + delivery).toLocaleString()}</b></div>
+    <div className="total"><span>Total</span><b>KES {subtotal.toLocaleString()}</b></div>
   </div>
 );
 
