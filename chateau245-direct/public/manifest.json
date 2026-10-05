@@ -4,14 +4,14 @@
   "description": "Order great food and fine wine from Château254, Nairobi's restaurant and wine cellar.",
   "icons": [
     {
-      "src": "chateau254.jpg",
-      "type": "image/jpeg",
+      "src": "logo192.png",
+      "type": "image/png",
       "sizes": "192x192",
       "purpose": "any"
     },
     {
-      "src": "chateau254.jpg",
-      "type": "image/jpeg",
+      "src": "logo512.png",
+      "type": "image/png",
       "sizes": "512x512",
       "purpose": "any"
     }
