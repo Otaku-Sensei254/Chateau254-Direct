@@ -14,6 +14,7 @@ import Profile from './pages/UI/profile';
 import ViewItem from './pages/UI/view_item';
 import EventsPage from './pages/UI/events';
 import AppHeader from './components/Navigation';
+import AppFooter from './components/AppFooter';
 import Auth from './pages/auth/auth';
 import AdminDashboard from './pages/UI/admin/admin_dash';
 import RiderDashboard from './pages/rider/rider_dash';
@@ -365,6 +366,7 @@ const App = () => {
   }, [lastOrderId, order?.id, session?.token]);
 
   const showAppHeader = location.pathname !== '/' && location.pathname !== '/auth' && !location.pathname.startsWith('/admin') && !location.pathname.startsWith('/rider');
+  const showAppFooter = location.pathname !== '/auth' && !location.pathname.startsWith('/admin') && !location.pathname.startsWith('/rider');
 
   /* Shared by /menu and the shareable paths below so the two cannot drift. The
      active mode comes from the URL, so /lunch-and-bar renders the Lunch & Bar
@@ -418,6 +420,7 @@ const App = () => {
         <Route path="/404" element={<NotFound onHome={() => navigate('/menu')} onBack={handleBack} />} />
         <Route path="*" element={<NotFound onHome={() => navigate('/menu')} onBack={handleBack} />} />
       </Routes>
+      {showAppFooter && <AppFooter />}
     </div>
   </SocketProvider>;
 };

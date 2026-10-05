@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-export default function InstallButton() {
+export default function InstallButton({ alwaysVisible = false, className = '' }) {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [unavailable, setUnavailable] = useState(false);
 
   useEffect(() => {
     // Check if already installed (standalone mode)
@@ -29,7 +30,11 @@ export default function InstallButton() {
   }, []);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
+    if (!deferredPrompt) {
+      setUnavailable(true);
+      window.setTimeout(() => setUnavailable(false), 3200);
+      return;
+    }
 
     // Show the browser install prompt
     deferredPrompt.prompt();
@@ -43,13 +48,16 @@ export default function InstallButton() {
     setIsVisible(false);
   };
 
-  if (!isVisible) {
+  if (!isVisible && !alwaysVisible) {
     return null;
   }
 
   return (
     <button
+      className={`install-app-button ${className}`.trim()}
       onClick={handleInstallClick}
+      type="button"
+      aria-label={unavailable ? 'Installation is available from your browser menu' : 'Install Chateau254 app'}
       style={{
         padding: '8px 16px',
         background: 'var(--accent-nav)',
@@ -68,7 +76,7 @@ export default function InstallButton() {
       onMouseEnter={(e) => e.target.style.background = 'var(--accent-nav-deep)'}
       onMouseLeave={(e) => e.target.style.background = 'var(--accent-nav)'}
     >
-      📥 Install App
+      {unavailable ? 'Use browser menu to install' : '📥 Install App'}
     </button>
   );
 }
