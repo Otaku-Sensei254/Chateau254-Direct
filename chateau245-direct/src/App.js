@@ -23,11 +23,52 @@ import WinesPage from './pages/UI/wines';
 import Cellar from './pages/UI/cellar';
 import Feed from './pages/UI/feed';
 import NotFound from './pages/UI/not_found';
+import { isTakeoutEnabled } from './config/features';
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const loadCart = () => {
   try { return JSON.parse(localStorage.getItem('chateau254_cart')) || []; }
   catch { return []; }
+};
+
+/* Print-friendly menu addresses.
+   `/menu?mode=lunchbox` works in a browser but is a poor thing to encode in a QR
+   code: the `?` and `&` are exactly the characters scanners mis-parse, and a
+   scanner that trips over one tends to report a bogus host -- which is how a
+   printed code ended up resolving to "apphttps" instead of the real site. A bare
+   path has no punctuation to get wrong, so these are what should go on table
+   tents and shared cards. Add further aliases here rather than adding routes. */
+const PATH_MODES = {
+  '/lunch-and-bar': 'lunchbox',
+  '/takeout': 'takeout',
+  '/dine-in': 'dining',
+};
+
+/* mode -> its shareable path, so switchMode() can jump straight there. */
+const MODE_PATHS = Object.fromEntries(
+  Object.entries(PATH_MODES).map(([path, mode]) => [mode, path]),
+);
+
+const normaliseMode = (value) => (value === 'dinein' ? 'dining' : value);
+
+/* Withheld features fall back to the dining menu rather than 404-ing, so an
+   old link, a printed QR code or a shared URL from before the flag flipped still
+   lands somewhere sensible instead of a dead end. */
+const isModeAvailable = (mode) => (mode === 'takeout' ? isTakeoutEnabled() : true);
+
+/* Path wins over the query string so a scanned link always lands on the menu it
+   advertises. Falls back to the `?mode=` form, which existing links still use. */
+const modeFromLocation = (pathname, search) => {
+  const byPath = PATH_MODES[String(pathname || '').replace(/\/+$/, '')];
+  if (byPath) return isModeAvailable(byPath) ? byPath : 'dining';
+  try {
+    const param = new URLSearchParams(search || '').get('mode');
+    if (param) {
+      const mode = normaliseMode(param);
+      return isModeAvailable(mode) ? mode : 'dining';
+    }
+  } catch { /* malformed query string: fall through to the default */ }
+  return 'dining';
 };
 
 const loadLastOrder = () => {
@@ -77,17 +118,9 @@ const ItemRoute = ({ user, addToCart, addDineInItem, isDineIn, onRequireAuth, on
 };
 
 const App = () => {
-  const [mode, setMode] = useState(() => {
-    try {
-      const params = new URLSearchParams(window.location.search);
-      const m = params.get('mode');
-      if (m === 'dinein' || m === 'dining') return 'dining';
-      if (m === 'takeout') return 'takeout';
-      if (m === 'lunchbox') return 'lunchbox';
-      if (m === 'events') return 'events';
-    } catch { }
-    return 'dining';
-  });
+  const [mode, setMode] = useState(() => (
+    modeFromLocation(window.location.pathname, window.location.search)
+  ));
   const [filter, setFilter] = useState('All');
   const [query, setQuery] = useState('');
   const [wineFilter, setWineFilter] = useState(null);
@@ -127,7 +160,9 @@ const App = () => {
      public menu page renders. */
   const catalogs = useMemo(() => ({
     dining: [...dineInFoodItems],
-    takeout: [...takeoutItems],
+    /* takeoutItems is still fetched because eventItems is derived from it. Only
+       the public Take-Out tab is withheld. */
+    takeout: isTakeoutEnabled() ? [...takeoutItems] : [],
     lunchbox: [...lunchAndBarItems],
     events: [...eventItems],
   }), [dineInFoodItems, takeoutItems, lunchAndBarItems, eventItems]);
@@ -255,29 +290,29 @@ const App = () => {
       isProgrammaticNav.current = false;
       return;
     }
-    const params = new URLSearchParams(location.search);
-    const modeParam = params.get('mode');
-    if (modeParam) {
-      const normalized = (modeParam === 'dinein' || modeParam === 'dining') ? 'dining' : modeParam;
-        if (normalized !== mode && catalogs[normalized]) {
-        setMode(normalized);
-        setFilter('All');
-        setQuery('');
-        setWineFilter(null);
-        setWineClassFilter(null);
-      }
+    const next = modeFromLocation(location.pathname, location.search);
+    /* Only reset the filters when the menu actually changes, otherwise landing
+       on the same mode from a different URL would clear an in-progress search. */
+    if (next !== mode && isModeAvailable(next) && catalogs[next]) {
+      setMode(next);
+      setFilter('All');
+      setQuery('');
+      setWineFilter(null);
+      setWineClassFilter(null);
     }
-  }, [location.search, mode, catalogs]);
+  }, [location.pathname, location.search, mode, catalogs]);
 
   const switchMode = (newMode) => {
-    const normalized = (newMode === 'dinein' || newMode === 'dining') ? 'dining' : newMode;
+    const normalized = isModeAvailable(normaliseMode(newMode)) ? normaliseMode(newMode) : 'dining';
     setMode(normalized);
     setFilter('All');
     setQuery('');
     setWineFilter(null);
     setWineClassFilter(null);
     isProgrammaticNav.current = true;
-    navigate(`/menu?mode=${normalized}`);
+    /* Only the menu itself keeps the query form; the dedicated paths stay clean
+       so a link copied out of the address bar is safe to share or encode. */
+    navigate(MODE_PATHS[normalized] || `/menu?mode=${normalized}`);
   };
 
   const handleBack = () => navigate(-1);
@@ -331,6 +366,13 @@ const App = () => {
 
   const showAppHeader = location.pathname !== '/' && location.pathname !== '/auth' && !location.pathname.startsWith('/admin') && !location.pathname.startsWith('/rider');
 
+  /* Shared by /menu and the shareable paths below so the two cannot drift. The
+     active mode comes from the URL, so /lunch-and-bar renders the Lunch & Bar
+     catalogue with no extra plumbing. */
+  const menuElement = (
+    <Menu api={API_URL} items={visibleItems} offerItems={menuItems} user={session?.user} categories={activeCategories} filter={filter} setFilter={(cat) => { setFilter(cat); if (cat !== 'Wine') setWineClassFilter(null); }} query={query} setQuery={setQuery} addToCart={addToCart} cartCount={cartCount} onCart={() => navigate('/cart')} onViewItem={(item) => navigate(`/item/${item.id}`)} onBooking={() => navigate('/booking')} wineFilter={wineFilter} onClearWineFilter={() => { setWineFilter(null); setWinePairingFilter(null); }} wineClassFilter={wineClassFilter} setWineClassFilter={setWineClassFilter} mode={mode} onRequireAuth={() => navigate('/auth')} winePairingFilter={winePairingFilter} onClearWinePairingFilter={() => setWinePairingFilter(null)} onBack={handleBack} dineInSelections={dineInSelections} addDineInItem={addDineInItem} />
+  );
+
   return <SocketProvider token={session?.token}>
     <div className={`app-shell${showAppHeader ? ' has-app-header' : ''}`}>
       {showAppHeader && <AppHeader cartCount={cartCount} userName={session?.user?.full_name} onCart={() => navigate('/cart')} onProfile={() => navigate('/profile')} api={API_URL} />}
@@ -341,7 +383,12 @@ const App = () => {
         <Route path="/admin/*" element={<ProtectedRoute user={session?.user} roles={['admin']}><AdminDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
         <Route path="/rider" element={<ProtectedRoute user={session?.user} roles={['rider']}><RiderDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
         <Route path="/booking" element={<ProtectedRoute user={session?.user}><Booking user={session?.user} token={session?.token} selectedItems={dineInSelections} onClearSelections={() => setDineInSelections([])} /></ProtectedRoute>} />
-        <Route path="/menu" element={<Menu api={API_URL} items={visibleItems} offerItems={menuItems} user={session?.user} categories={activeCategories} filter={filter} setFilter={(cat) => { setFilter(cat); if (cat !== 'Wine') setWineClassFilter(null); }} query={query} setQuery={setQuery} addToCart={addToCart} cartCount={cartCount} onCart={() => navigate('/cart')} onViewItem={(item) => navigate(`/item/${item.id}`)} onBooking={() => navigate('/booking')} wineFilter={wineFilter} onClearWineFilter={() => { setWineFilter(null); setWinePairingFilter(null); }} wineClassFilter={wineClassFilter} setWineClassFilter={setWineClassFilter} mode={mode} onRequireAuth={() => navigate('/auth')} winePairingFilter={winePairingFilter} onClearWinePairingFilter={() => setWinePairingFilter(null)} onBack={handleBack} dineInSelections={dineInSelections} addDineInItem={addDineInItem} />} />
+        <Route path="/menu" element={menuElement} />
+        {/* Print/QR friendly addresses: a bare path with no query string, so
+            scanners cannot mis-read "?" or "&" and invent the wrong host. */}
+        <Route path="/lunch-and-bar" element={menuElement} />
+        <Route path="/takeout" element={menuElement} />
+        <Route path="/dine-in" element={menuElement} />
         <Route path="/full-menu" element={<FullMenu onMakeOrder={() => { switchMode('takeout'); navigate('/menu'); }} onReserveTable={() => navigate('/booking')} />} />
         <Route path="/item/:itemId" element={<ItemRoute user={session?.user} addToCart={addToCart} addDineInItem={addDineInItem} isDineIn={mode === 'dining'} onRequireAuth={() => navigate('/auth')} onWineFactSelect={(field, value) => {
           setFilter('Wine');

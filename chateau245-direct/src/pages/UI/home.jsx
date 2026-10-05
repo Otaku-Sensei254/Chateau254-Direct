@@ -6,6 +6,7 @@ import {
   FiX,
 } from "react-icons/fi";
 import Brand from '../../components/Brand';
+import { isTakeoutEnabled } from '../../config/features';
 import { RiWhatsappFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { RiEBike2Fill } from "react-icons/ri";
@@ -152,9 +153,18 @@ const Home = ({ api, onTakeout, onDining, onEvents, onWines, onAuth }) => {
             <button className="cta-button cta-dining" onClick={onDining}>
               <GiMeal /> Fine Dining
             </button>
-            <button className="cta-button cta-takeout" onClick={onTakeout}>
-              <RiEBike2Fill /> Take Out
-            </button>
+            {/* Disabled rather than removed: the client has not approved Take-Out
+                yet. It stays visible but inert so the page does not reflow when
+                the feature is switched back on. */}
+            {isTakeoutEnabled() ? (
+              <button className="cta-button cta-takeout" onClick={onTakeout}>
+                <RiEBike2Fill /> Take Out
+              </button>
+            ) : (
+              <button className="cta-button cta-takeout is-disabled" disabled aria-disabled="true" title="Take-Out is not available yet">
+                <RiEBike2Fill /> Take Out
+              </button>
+            )}
             <button className="cta-button cta-events" onClick={onEvents}>
               <GiPartyPopper />Events
             </button>

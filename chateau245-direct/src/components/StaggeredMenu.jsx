@@ -6,6 +6,7 @@ import { RiWhatsappLine } from "react-icons/ri";
 import { GiHamburgerMenu } from 'react-icons/gi';
 import Brand from './Brand';
 import InstallButton from './InstallButton';
+import { isTakeoutEnabled } from '../config/features';
 import './styles/StaggeredMenu.css';
 
 const defaultMenuItems = [
@@ -20,7 +21,9 @@ const defaultMenuItems = [
     dropdownItems: [
       { label: 'Fine Dining', link: '/menu?mode=dining' },
       { label: 'Lunch & Bar', link: '/menu?mode=lunchbox' },
-      { label: 'Take-Out', link: '/menu?mode=takeout' },
+      /* Withheld until the client approves it. The entry stays in the source so
+         flipping FEATURES.takeout restores it with no other edit. */
+      ...(isTakeoutEnabled() ? [{ label: 'Take-Out', link: '/menu?mode=takeout' }] : []),
       { label: 'Wine Cellar', link: '/wines' },
     ]
   },

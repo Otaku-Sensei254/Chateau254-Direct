@@ -170,6 +170,19 @@
     box-shadow: 0 12px 32px rgba(var(--gold-rgb), 0.5);
 }
 
+/* Withheld feature: kept in the layout but visibly inert, so the row does not
+   reflow when Take-Out is enabled. Suppresses the :hover lift above. */
+.cta-button.is-disabled,
+.cta-button.is-disabled:hover {
+    background: var(--surface-muted);
+    border-color: var(--line);
+    box-shadow: none;
+    color: var(--text-faint);
+    cursor: not-allowed;
+    opacity: 0.55;
+    transform: none;
+}
+
 .cta-dining {
     background: var(--cta-wine-bg);
     border-color: rgba(var(--gold-rgb), 0.5);

@@ -21,7 +21,7 @@ const NotFound = ({ onHome, onBack }) => {
   const quickLinks = [
     {
       title: 'Our Menu',
-      subtitle: 'Dine-in & Takeout',
+      subtitle: 'Dine-in & Lunch & Bar',
       icon: GiMeal,
       path: '/menu',
     },

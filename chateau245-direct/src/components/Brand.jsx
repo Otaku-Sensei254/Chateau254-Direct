@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import emblemPng from './images/chateau-emblem.png';
-import emblemWebp from './images/chateau-emblem.webp';
+import emblemPng from './images/chateau-nobg.png';
+import emblemWebp from './images/chateau-nobg.png';
 
 /* The crest is much wider than the text wordmark it replaced, so it is sized by
    height and given its own height budget per surface. WebP is offered first
@@ -14,7 +14,7 @@ import emblemWebp from './images/chateau-emblem.webp';
 const Brand = ({ className = '', to = '/' }) => (
   <Link className={`brand-emblem ${className}`.trim()} to={to} aria-label="Chateau 254 home">
     <picture>
-      <source srcSet={emblemWebp} type="image/webp" />
+      <source srcSet={emblemWebp} type="image/png" />
       <img src={emblemPng} alt="Chateau 254" />
     </picture>
   </Link>

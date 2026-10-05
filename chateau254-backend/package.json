@@ -6,8 +6,12 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
+    "local": "DB_MODE=local node server.js",
+    "dev:local": "DB_MODE=local nodemon server.js",
+    "neon": "DB_MODE=neon node server.js",
     "db:schema": "node scripts/migrate.js",
     "db:seed": "node scripts/seed.js",
+    "sync:cellar": "node scripts/sync-wine-cellar.js",
     "test": "node --check server.js"
   },
   "keywords": [],

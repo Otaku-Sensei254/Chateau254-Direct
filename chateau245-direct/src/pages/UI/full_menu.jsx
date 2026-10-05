@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FiBookOpen, FiCalendar } from 'react-icons/fi';
 import fullMenuData from '../../components/data/chateau254_full_menu.json';
 import { MenuCardSkeleton, LoaderSkeleton } from '../../components/ui/loaders-skeleton';
+import { isTakeoutEnabled } from '../../config/features';
 
 const normalizeFullMenu = (data) => {
   const categories = data?.categories || [];
@@ -47,7 +48,16 @@ const FullMenu = ({ onMakeOrder, onReserveTable, loading: propLoading }) => {
           <p>Browse our complete dine-in selection</p>
         </div>
         <div className="action-buttons">
-          <button className="primary-button" onClick={onMakeOrder} type="button">
+          {/* "Make an Order" routes into the Take-Out menu, so it is withheld
+              alongside it. Left in place but disabled. */}
+          <button
+            className="primary-button"
+            onClick={onMakeOrder}
+            type="button"
+            disabled={!isTakeoutEnabled()}
+            aria-disabled={!isTakeoutEnabled()}
+            title={isTakeoutEnabled() ? undefined : 'Take-Out is not available yet'}
+          >
             <FiBookOpen /> Make an Order
           </button>
           <button className="primary-button" onClick={onReserveTable} type="button">

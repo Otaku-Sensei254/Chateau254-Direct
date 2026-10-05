@@ -94,6 +94,20 @@ io.on('connection', (socket) => {
 app.set('io', io);
 
 const startServer = async () => {
+  /* Without this, a busy port emits an unhandled 'error' event and Node dumps a
+     raw net stack trace that says nothing about which process is holding it. */
+  httpServer.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.error(`Port ${env.port} is already in use — another copy of the server is probably still running.`);
+      console.error('Stop it with: pkill -f "node server.js"   (or use PORT=<other> npm run local)');
+    } else if (err.code === 'EACCES') {
+      console.error(`Not permitted to bind port ${env.port}. Try a port above 1024, e.g. PORT=5097.`);
+    } else {
+      console.error('Server error:', err.message);
+    }
+    process.exit(1);
+  });
+
   try {
     await initializePool();
     await feedRoutes.ensureFeedTable();
@@ -109,12 +123,53 @@ const startServer = async () => {
 
 startServer();
 
+/* Graceful shutdown.
+   `server.close()` alone only stops *new* connections; it waits on existing
+   keep-alive sockets to drain on their own, which never happens for a browser
+   holding one open. The process then hangs on Ctrl+C and every further press
+   re-enters this handler -- which is what produced the repeated
+   "SIGINT received. Closing server..." lines and the MaxListeners warning about
+   close listeners piling up on the same Server.
+
+   closeIdleConnections() releases sockets between requests and
+   closeAllConnections() severs the rest, so close() can actually complete.
+   The exit deadline is the backstop for anything still holding the loop open. */
+let shuttingDown = false;
+
 const shutdown = async (signal) => {
+  if (shuttingDown) return;
+  shuttingDown = true;
   console.log(`${signal} received. Closing server...`);
-  server.close(async () => {
-    await closeDatabase();
+
+  /* Never let a stuck socket hold the process open indefinitely. */
+  const exitTimer = setTimeout(() => {
+    console.error('Shutdown timed out; forcing exit.');
+    process.exit(1);
+  }, 10000);
+  exitTimer.unref();
+
+  let finished = false;
+  const done = async () => {
+    if (finished) return;
+    finished = true;
+    await closeDatabase().catch(() => {});
+    clearTimeout(exitTimer);
     process.exit(0);
-  });
+  };
+
+  /* SIGINT can arrive before listen() has assigned `server`. */
+  if (!server) return done();
+
+  try {
+    server.closeIdleConnections?.();
+    server.closeAllConnections?.();
+  } catch { /* older Node: the exit timer is the backstop */ }
+
+  /* Socket.io wraps this same http server and keeps its own engine.io
+     transports, which would otherwise keep close() from ever completing. Both
+     callbacks funnel through done(), so whichever lands first wins. */
+  io.close(() => done());
+  server.close(() => done());
 };
 
 process.on('SIGTERM', () => shutdown('SIGTERM'));

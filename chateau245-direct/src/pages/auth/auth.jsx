@@ -42,11 +42,16 @@ const Auth = ({ onSuccess, onBack }) => {
         <h1>{mode === 'signin' ? 'Welcome back.' : 'Join the table.'}</h1>
         <p>{mode === 'signin' ? 'Sign in to continue your Château254 experience.' : 'Create an account and make every order feel special.'}</p>
       </div>
-      <div className="auth-socials">
-        <button className="social-button" onClick={() => setError('Social sign-in is demo-only for now. Use email and password.')}><strong>G</strong> Continue with Google</button>
-        <button className="social-button" onClick={() => setError('Social sign-in is demo-only for now. Use email and password.')}><strong></strong> Continue with Apple</button>
-      </div>
-      <div className="auth-divider"><span>or continue with email</span></div>
+{/* Social sign-in is not configured yet. Left in place (commented out, not
+          deleted) so it can be restored once the Google and Apple credentials
+          and callback URLs are in place. The divider went with it: with no
+          social buttons above, "or continue with email" reads oddly.
+          <div className="auth-socials">
+            <button className="social-button" onClick={() => setError('Social sign-in is demo-only for now. Use email and password.')}><strong>G</strong> Continue with Google</button>
+            <button className="social-button" onClick={() => setError('Social sign-in is demo-only for now. Use email and password.')}><strong></strong> Continue with Apple</button>
+          </div>
+          <div className="auth-divider"><span>or continue with email</span></div>
+      */}
       <form className="auth-form" onSubmit={handleSubmit}>
         {mode === 'signup' && (
           <>
