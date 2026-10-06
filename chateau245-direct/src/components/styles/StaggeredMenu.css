@@ -250,6 +250,8 @@
    ========================================================================== */
 
 .sm-header-actions {
+  position: relative;
+  right:10rem;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -566,6 +568,61 @@
   color: var(--text-on-accent);
 }
 
+/* ── Panel user strip: profile shortcut + My Cellar (mobile menu only) ──
+   The avatar is the affordance — it tells diners the greeting is tappable
+   and leads to their profile. */
+.user-info-nav {
+  align-items: center;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.22);
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding: 2px 0 14px;
+}
+
+.user-info-profile,
+.user-info-cellar {
+  align-items: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: var(--text);
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  gap: 8px;
+  padding: 5px 12px 5px 5px;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.user-info-profile {
+  margin-right: auto;
+}
+
+.user-info-profile:hover,
+.user-info-cellar:hover {
+  background: var(--brand-tint);
+  border-color: var(--gold, #c5a059);
+}
+
+.user-info-avatar {
+  align-items: center;
+  background: var(--wine, #761329);
+  border-radius: 50%;
+  color: #fff;
+  display: inline-flex;
+  flex: none;
+  height: 30px;
+  justify-content: center;
+  width: 30px;
+}
+
+.user-info-avatar--cellar {
+  background: var(--gold-deep, #bc9660);
+}
+
 /* ==========================================================================
    Responsive Breakpoints
    Desktop view (> 900px): Shows inline menu items, hides hamburger.
@@ -584,6 +641,9 @@
   .sm-prelayers,
   .staggered-menu-panel {
     width: clamp(280px, 50vw, 440px);
+  }
+    .sm-header-actions {
+    right: 0;
   }
 }
 
@@ -617,5 +677,8 @@
   .sm-mobile-toggle {
     width: 38px;
     height: 38px;
+  }
+  .sm-header-actions {
+    right: 0;
   }
 }

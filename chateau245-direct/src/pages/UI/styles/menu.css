@@ -814,7 +814,7 @@
     animation: rise .5s both;
     position: relative;
     min-width: 0;
-    /* width: 500px; */
+    
 }
 
 .food-image {
@@ -1021,7 +1021,7 @@
 
 @media (max-width: 480px) {
     .menu-grid {
-        max-width: 340px;
+        max-width: 390px;
         margin-inline: auto;
     }
 }

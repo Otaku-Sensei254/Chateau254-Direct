@@ -17,9 +17,13 @@ import {
   Tag,
   Filter,
   CalendarDays,
-  ShoppingBag
+  ShoppingBag,
+  MoreVertical,
+  BookmarkPlus
 } from 'lucide-react';
 import useWineCellar from '../../components/wines/useWineCellar';
+import { addWineToUserCellar, getUserCellar, getUserWineRating, saveUserWineRating } from '../../components/wines/userWineStorage';
+import { addBottle, fetchCellar, fetchMyRatings, importBottles, saveRating } from '../../components/wines/cellarApi';
 import AccountRequiredModal from '../../components/ui/AccountRequiredModal';
 import { useToast } from '../../contexts/ToastContext';
 import { WineCardSkeleton } from '../../components/ui/loaders-skeleton';
@@ -412,7 +416,7 @@ const getConfidenceBadgeClass = (confidence) => {
   }
 };
 
-const WinesPage = ({ user, addToCart, addDineInItem, onGoToReservations, onRequireAuth, reservationCount = 0 }) => {
+const WinesPage = ({ user, token, addToCart, addDineInItem, onGoToReservations, onRequireAuth, reservationCount = 0 }) => {
   const { addToast } = useToast();
   const [authPromptOpen, setAuthPromptOpen] = useState(false);
   const [selectedCollection, setSelectedCollection] = useState('all');
@@ -422,12 +426,66 @@ const WinesPage = ({ user, addToCart, addDineInItem, onGoToReservations, onRequi
   const [selectedWine, setSelectedWine] = useState(null);
   const [siblingIndex, setSiblingIndex] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
+  const [openWineMenuId, setOpenWineMenuId] = useState(null);
+  const [ratingWine, setRatingWine] = useState(null);
+  const [ratingScore, setRatingScore] = useState(0);
+  const [cellarWineIds, setCellarWineIds] = useState(() => getUserCellar(user).map((wine) => wine.id));
+  const [myRatings, setMyRatings] = useState({});
+  const cardMenuRef = useRef(null);
 
   /* Reads the `wines` table via /api/menu?type=wine and reshapes each row into
      the producer/collection structure this page already renders. Previously the
      catalogue came from three JSON files bundled into the build, so an image
      uploaded through the admin menu never showed up here. */
   const { wines: allWines, loading, error, reload } = useWineCellar();
+
+  /* Load the cellar and my ratings from the server. localStorage stays as the
+     device-level fallback (and holds any bottles saved before this existed —
+     those get imported to the server once). */
+  useEffect(() => {
+    if (!token || !user?.id) return undefined;
+    let cancelled = false;
+    (async () => {
+      try {
+        const [bottles, ratings] = await Promise.all([fetchCellar(token), fetchMyRatings(token)]);
+        if (cancelled) return;
+        setCellarWineIds(bottles.map((bottle) => bottle.id));
+        setMyRatings(ratings);
+        const localIds = getUserCellar(user).map((bottle) => bottle.id);
+        const missing = localIds.filter((id) => !bottles.some((bottle) => bottle.id === id));
+        if (missing.length) importBottles(token, missing).catch(() => {});
+      } catch {
+        // server unreachable — keep whatever localStorage already holds
+      }
+    })();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token, user?.id]);
+
+  useEffect(() => {
+    if (!openWineMenuId) return undefined;
+    const closeOnOutsideClick = (event) => {
+      if (cardMenuRef.current && !cardMenuRef.current.contains(event.target)) setOpenWineMenuId(null);
+    };
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') setOpenWineMenuId(null);
+    };
+    document.addEventListener('mousedown', closeOnOutsideClick);
+    window.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.removeEventListener('mousedown', closeOnOutsideClick);
+      window.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [openWineMenuId]);
+
+  useEffect(() => {
+    if (!ratingWine) return undefined;
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') setRatingWine(null);
+    };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [ratingWine]);
 
   /* A bottle can be either bought to take away or reserved for the table, so the
      card carries both actions. Reserve joins the same list dine-in plates use,
@@ -463,6 +521,57 @@ const WinesPage = ({ user, addToCart, addDineInItem, onGoToReservations, onRequi
       menuType: 'wine',
       quantity: 1,
     });
+  };
+
+  const addWineToCellar = async (wine) => {
+    setOpenWineMenuId(null);
+    if (!user) {
+      onRequireAuth?.();
+      return;
+    }
+    try {
+      const result = await addBottle(token, wine.id);
+      addWineToUserCellar(user, wine); // device mirror for offline view
+      if (result.added) setCellarWineIds((ids) => [...ids, wine.id]);
+      addToast(result.added ? `${wine.name} added to your cellar` : `${wine.name} is already in your cellar`, result.added ? 'success' : 'info');
+    } catch {
+      const local = addWineToUserCellar(user, wine);
+      if (!local.ok) {
+        addToast('Could not save this wine', 'error');
+        return;
+      }
+      setCellarWineIds(local.bottles.map((bottle) => bottle.id));
+      addToast(`${wine.name} saved on this device`, 'info');
+    }
+  };
+
+  const openWineRating = (wine) => {
+    setOpenWineMenuId(null);
+    if (!user) {
+      onRequireAuth?.();
+      return;
+    }
+    setRatingScore(myRatings[wine.id]?.score || getUserWineRating(user, wine.id)?.score || 0);
+    setRatingWine(wine);
+  };
+
+  const saveWineRating = async () => {
+    if (!ratingWine || !ratingScore) return;
+    try {
+      const result = await saveRating(token, ratingWine.id, ratingScore);
+      setMyRatings((current) => ({ ...current, [ratingWine.id]: { score: result.score, updatedAt: new Date().toISOString() } }));
+      saveUserWineRating(user, ratingWine.id, ratingScore); // device mirror
+      const votes = Number(result.ratingVotes);
+      addToast(`Your ${result.score}-star rating was saved — ${Number(result.avgRating).toFixed(1)} average from ${votes} taster${votes === 1 ? '' : 's'}`, 'success');
+    } catch {
+      const saved = saveUserWineRating(user, ratingWine.id, ratingScore);
+      if (!saved) {
+        addToast('Could not save your rating', 'error');
+        return;
+      }
+      addToast(`Your ${ratingScore}-star rating was saved`, 'success');
+    }
+    setRatingWine(null);
   };
 
   const producers = useMemo(() => {
@@ -792,6 +901,29 @@ const WinesPage = ({ user, addToCart, addDineInItem, onGoToReservations, onRequi
                     <span className="wine-card-region-pill">{wine.producerRegion.split(',')[0]}</span>
                   </div>
                   <h3 className="wine-card-title">{wine.name}</h3>
+                  <div className="wine-card-menu-row">
+                    <div className="wine-card-menu-wrap" ref={openWineMenuId === wine.id ? cardMenuRef : null} onClick={(event) => event.stopPropagation()}>
+                      <button
+                        type="button"
+                        className="wine-card-menu-button"
+                        aria-label={`More actions for ${wine.name}`}
+                        aria-haspopup="menu"
+                        aria-expanded={openWineMenuId === wine.id}
+                        onClick={() => setOpenWineMenuId(openWineMenuId === wine.id ? null : wine.id)}
+                      >
+                        <MoreVertical size={18} />
+                      </button>
+                      {openWineMenuId === wine.id && <div className="wine-card-menu" role="menu">
+                        <button type="button" role="menuitem" disabled={cellarWineIds.includes(wine.id)} onClick={() => addWineToCellar(wine)}>
+                          <BookmarkPlus size={15} />
+                          {cellarWineIds.includes(wine.id) ? 'In your cellar' : 'Add to cellar'}
+                        </button>
+                        <button type="button" role="menuitem" onClick={() => openWineRating(wine)}>
+                          <Star size={15} /> Rate
+                        </button>
+                      </div>}
+                    </div>
+                  </div>
                   <div className="wine-card-meta">
                     <span className="wine-card-category-badge">
                       {wine.category_filter}
@@ -799,6 +931,11 @@ const WinesPage = ({ user, addToCart, addDineInItem, onGoToReservations, onRequi
                     {wine.rating?.found && (
                       <span className="wine-badge rating" style={{ padding: '2px 8px', fontSize: '11px' }}>
                         <Star size={11} fill="currentColor" /> {wine.rating.score}
+                      </span>
+                    )}
+                    {wine.ratingVotes > 0 && (
+                      <span className="wine-badge rating" style={{ padding: '2px 8px', fontSize: '11px' }} title={`${wine.ratingVotes} taster${wine.ratingVotes === 1 ? '' : 's'}`}>
+                        <Star size={11} fill="currentColor" /> {wine.avgRating.toFixed(1)} ({wine.ratingVotes})
                       </span>
                     )}
                     <span
@@ -875,6 +1012,31 @@ const WinesPage = ({ user, addToCart, addDineInItem, onGoToReservations, onRequi
           </div>
         )}
       </div>
+
+      {ratingWine && <div className="wine-rating-overlay" onClick={() => setRatingWine(null)} role="presentation">
+        <section className="wine-rating-dialog" role="dialog" aria-modal="true" aria-labelledby="wine-rating-title" onClick={(event) => event.stopPropagation()}>
+          <button type="button" className="wine-rating-close" aria-label="Close rating" onClick={() => setRatingWine(null)}><X size={18} /></button>
+          <p className="wine-rating-eyebrow">YOUR TASTING NOTES</p>
+          <h2 id="wine-rating-title">Rate this wine</h2>
+          <p className="wine-rating-wine-name">{ratingWine.name}</p>
+          <div className="wine-rating-stars" role="radiogroup" aria-label="Choose a rating from one to five stars">
+            {[1, 2, 3, 4, 5].map((score) => <button
+              type="button"
+              key={score}
+              role="radio"
+              aria-checked={ratingScore === score}
+              aria-label={`${score} star${score === 1 ? '' : 's'}`}
+              className={ratingScore >= score ? 'active' : ''}
+              onClick={() => setRatingScore(score)}
+            ><Star size={30} fill={ratingScore >= score ? 'currentColor' : 'none'} /></button>)}
+          </div>
+          <p className="wine-rating-prompt">{ratingScore ? `${ratingScore} out of 5 stars` : 'Tap a star to rate'}</p>
+          <div className="wine-rating-actions">
+            <button type="button" className="wine-rating-cancel" onClick={() => setRatingWine(null)}>Cancel</button>
+            <button type="button" className="wine-rating-save" disabled={!ratingScore} onClick={saveWineRating}>Save rating</button>
+          </div>
+        </section>
+      </div>}
 
       {/* Wine Detail Modal ("View Item") */}
       {selectedWine && (

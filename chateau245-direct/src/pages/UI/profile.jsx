@@ -100,10 +100,11 @@ const Profile = ({ user, token, onBack, onLogout, onTrack, onBooking, onCellar }
       </div>
     </div>
     <div className="user-actions">
-    <button className="primary-button" style={{ width: '80%', marginTop: '1.5rem' }} onClick={onBooking}><FiCalendar /> Make a reservation</button>
-      <button className="secondary-button" style={{ width: '70%', marginTop: '1.5rem', gap:'10px', }} onClick={onCellar}><GiCellarBarrels />My Cellar</button>
+      <button className="primary-button" onClick={onBooking}><FiCalendar /> Make a reservation</button>
+      <button className="secondary-button" onClick={onCellar}><GiCellarBarrels /> My Cellar</button>
     </div>
 
+    <div className={`profile-activity-grid ${bookings.length ? 'has-reservations' : ''}`}>
     {bookings.length > 0 && <div className="profile-section">
       <h3><FiCalendar /> Reservations</h3>
       {bookings.map((booking) => <div className="profile-order" key={booking.id} style={{ padding: '16px' }}>
@@ -160,6 +161,7 @@ const Profile = ({ user, token, onBack, onLogout, onTrack, onBooking, onCellar }
           </div>}
         </div>)
       )}
+    </div>
     </div>
   </main>;
 };

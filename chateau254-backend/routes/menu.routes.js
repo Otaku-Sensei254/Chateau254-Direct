@@ -48,7 +48,8 @@ const WINE_CELLAR_COLUMNS = `producer, producer_region AS "producerRegion", coll
   color, category_filter AS "categoryFilter", confidence, source_note AS "sourceNote",
   rating_source AS "ratingSource", rating_score AS "ratingScore", rating_scale AS "ratingScale",
   rating_count AS "ratingCount", rating_found AS "ratingFound", rating_reason AS "ratingReason",
-  price_min AS "priceMin", price_max AS "priceMax", cellar_order AS "cellarOrder"`;
+  price_min AS "priceMin", price_max AS "priceMax", cellar_order AS "cellarOrder",
+  avg_rating AS "avgRating", rating_votes AS "ratingVotes"`;
 
 const WINE_COLUMNS = `id, name, description, price, category, subcategory, image_url AS "image", is_available AS "availability", on_offer, offer, wine_type AS "wineType", region, grape, tasting_notes AS "tastingNotes", order_index, 'wine' AS "menuType", ${WINE_CELLAR_COLUMNS}`;
 const FOOD_COLUMNS = `id, name, description, price, category, subcategory, image_url AS "image", is_available AS "availability", on_offer, offer, order_index, NULL AS "wineType", NULL AS region, NULL AS grape, NULL AS "tastingNotes"`;

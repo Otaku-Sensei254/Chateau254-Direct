@@ -1,86 +1,12 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { FiSearch, FiArrowLeft, FiMoreVertical, FiTrash2, FiExternalLink, FiMapPin } from 'react-icons/fi';
 import { GiWineBottle } from 'react-icons/gi';
 import { PiWineFill } from 'react-icons/pi';
 import cellarHeroBg from '../../components/images/cellar-hero.png';
 import { LoaderSkeleton } from '../../components/ui/loaders-skeleton';
+import { getUserCellar, removeWineFromUserCellar } from '../../components/wines/userWineStorage';
+import { fetchCellar, importBottles, removeBottle } from '../../components/wines/cellarApi';
 import './styles/cellar.css';
-
-/* ── Curated sample bottles (would come from user's saved/purchased wines) ── */
-const SAMPLE_CELLAR = [
-  {
-    id: 'lw-2',
-    name: 'Château Margaux',
-    subname: 'Margaux Grand Cru',
-    color: 'Red',
-    region: 'France',
-    vintage: '2018',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHs0yVN6uSQeQL1S_OvDdbEzPEiV1jJ8ReASwbASBRGg&s=10',
-    addedOn: '12 Jun 2025',
-    notes: 'Elegant, silky tannins, floral and cedar notes',
-    price: 'KES 15,500',
-  },
-  {
-    id: 'lw-1',
-    name: 'Krug Grande Cuvée',
-    subname: 'Champagne',
-    color: 'White',
-    region: 'France',
-    vintage: '2015',
-    image: 'https://ik.imagekit.io/drinksvine/products/krug-grande-cuvee.webp',
-    addedOn: '22 May 2025',
-    notes: 'Rich, complex, multi-vintage blend with nutty depth',
-    price: 'KES 14,000',
-  },
-  {
-    id: 'lw-4',
-    name: 'Penfolds Grange',
-    subname: 'Shiraz',
-    color: 'Red',
-    region: 'Australia',
-    vintage: '2019',
-    image: 'https://75cl.sg/cdn/shop/files/STARKCONDEFIELDBLEND_grande.png?v=1749711104',
-    addedOn: '10 Apr 2025',
-    notes: "Australia's most iconic red — rich, dense and structured",
-    price: 'KES 22,000',
-  },
-  {
-    id: 'lw-sa-1',
-    name: 'Whispering Angel',
-    subname: 'Rosé',
-    color: 'Rosé',
-    region: 'France',
-    vintage: '2023',
-    image: 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=400&q=80',
-    addedOn: '28 Mar 2025',
-    notes: 'Pale, elegant Provence rosé with delicate fruit',
-    price: 'KES 7,200',
-  },
-  {
-    id: 'lw-7',
-    name: 'Sassicaia',
-    subname: 'Chianti Classico',
-    color: 'Red',
-    region: 'Italy',
-    vintage: '2020',
-    image: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=400&q=80',
-    addedOn: '15 Feb 2025',
-    notes: 'Pioneer of the Super Tuscan movement, structured and aromatic',
-    price: 'KES 12,500',
-  },
-  {
-    id: 'lw-6',
-    name: 'Opus One',
-    subname: 'Napa Valley',
-    color: 'Red',
-    region: 'USA',
-    vintage: '2019',
-    image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=400&q=80',
-    addedOn: '03 Jan 2025',
-    notes: 'Joint venture prestige wine, polished and refined',
-    price: 'KES 18,900',
-  },
-];
 
 const COLOR_BADGE = {
   Red: 'cellar-badge--red',
@@ -96,14 +22,45 @@ const QUOTES = [
   '"Wine is sunlight, held together by water." — Galileo',
 ];
 
-const Cellar = ({ user, onMenu, onBack, loading = false }) => {
+const Cellar = ({ user, token, onMenu, onBack, loading = false }) => {
   const firstName = user?.full_name?.trim().split(' ')[0] || 'Your';
 
   const [query, setQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
   const [menuOpenId, setMenuOpenId] = useState(null);
-  const [bottles, setBottles] = useState(SAMPLE_CELLAR);
+  const [bottles, setBottles] = useState(() => getUserCellar(user));
   const menuRef = useRef(null);
+
+  /* Server first: the cellar follows the account to any device. Bottles that
+     only exist in this browser (saved before the backend existed) are imported
+     once, then the server list wins. localStorage remains the offline view. */
+  useEffect(() => {
+    if (!token || !user?.id) {
+      setBottles(getUserCellar({ id: user?.id, email: user?.email }));
+      return undefined;
+    }
+    let cancelled = false;
+    (async () => {
+      try {
+        let list = await fetchCellar(token);
+        const localBottles = getUserCellar({ id: user.id, email: user.email });
+        const missing = localBottles.filter(
+          (bottle) => !list.some((server) => server.id === bottle.id)
+        );
+        if (missing.length) {
+          try {
+            await importBottles(token, missing.map((bottle) => bottle.id));
+            list = await fetchCellar(token);
+          } catch { /* keep whatever the server returned first */ }
+        }
+        if (!cancelled) setBottles(list.length ? list : localBottles);
+      } catch {
+        if (!cancelled) setBottles(getUserCellar({ id: user.id, email: user.email }));
+      }
+    })();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token, user?.id]);
 
   /* ── Derived counts ── */
   const counts = useMemo(() => ({
@@ -133,9 +90,17 @@ const Cellar = ({ user, onMenu, onBack, loading = false }) => {
   const nextPour = bottles[0] || null;
   const quote = QUOTES[0];
 
-  const handleRemove = (id) => {
-    setBottles(prev => prev.filter(b => b.id !== id));
+  const handleRemove = async (id) => {
     setMenuOpenId(null);
+    if (token) {
+      try {
+        await removeBottle(token, id);
+      } catch {
+        // server unreachable — still drop it from this device's view
+      }
+    }
+    removeWineFromUserCellar(user, id);
+    setBottles(prev => prev.filter(b => b.id !== id));
   };
 
   const filterTabs = ['All', 'Red', 'White', 'Rosé'];
@@ -208,9 +173,12 @@ const Cellar = ({ user, onMenu, onBack, loading = false }) => {
           ) : filtered.length === 0 ? (
             <div className="cellar-empty">
               <GiWineBottle />
-              <p>No wines match your search.</p>
-              <button onClick={() => { setQuery(''); setActiveFilter('All'); }}>
-                Clear filters
+              <p>{bottles.length === 0 ? 'Your cellar is empty. Add wines from the collection to keep them here.' : 'No wines match your search.'}</p>
+              <button onClick={() => {
+                if (bottles.length === 0) onMenu?.();
+                else { setQuery(''); setActiveFilter('All'); }
+              }}>
+                {bottles.length === 0 ? 'Browse wines' : 'Clear filters'}
               </button>
             </div>
           ) : (
@@ -256,15 +224,17 @@ const Cellar = ({ user, onMenu, onBack, loading = false }) => {
                   <div className="cellar-card-info">
                     <h3 className="cellar-card-name">{bottle.name}</h3>
                     <p className="cellar-card-subname">{bottle.subname}</p>
-                    <div className="cellar-card-meta">
+                    {(bottle.region || bottle.vintage) && <div className="cellar-card-meta">
+                      {bottle.region && <>
                       <span className="cellar-card-meta-region">
                         <FiMapPin /> {bottle.region}
                       </span>
-                      <span className="cellar-card-divider">|</span>
-                      <span className="cellar-card-vintage">{bottle.vintage}</span>
-                    </div>
+                      </>}
+                      {bottle.region && bottle.vintage && <span className="cellar-card-divider">|</span>}
+                      {bottle.vintage && <span className="cellar-card-vintage">{bottle.vintage}</span>}
+                    </div>}
                     <span className="cellar-card-rule" />
-                    <p className="cellar-card-added">Added on: {bottle.addedOn}</p>
+                    <p className="cellar-card-added">Added on: {new Date(bottle.addedOn).toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
                   </div>
                 </article>
               ))}

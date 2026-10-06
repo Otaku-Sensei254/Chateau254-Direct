@@ -6,7 +6,7 @@
 
 /* ── Page wrapper — full width, dark background ── */
 .cellar-page {
-    margin: 4rem auto;
+    margin: 5rem auto;
     min-height: 100vh;
     background: var(--surface-inverse);
     color: var(--text-inverse);
@@ -47,7 +47,7 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    color: var(--gold-light);
+    color:white;
     background: none;
     border: none;
     font-size: 13px;
@@ -67,7 +67,7 @@
     font-family: Georgia, 'Times New Roman', serif;
     font-size: clamp(34px, 5vw, 52px);
     font-weight: 400;
-    color: var(--gold-pale);
+    color:white;
     margin: 0 0 4px;
     line-height: 1.1;
     letter-spacing: -0.5px;
@@ -75,6 +75,7 @@
 
 .cellar-hero-title span {
     font-style: italic;
+    color: var(--gold-light);
 }
 
 .cellar-hero-eyebrow {
@@ -107,11 +108,17 @@
 ════════════════════════════════════════════════ */
 .cellar-body {
     display: grid;
-    grid-template-columns: 1fr 300px;
+    grid-template-columns: minmax(0, 1fr) 300px;
     gap: 28px;
-    max-width: 1080px;
+    width: 100%;
+    max-width: 1360px;
     margin: 0 auto;
-    padding: 28px 24px 0;
+    padding: 28px 32px 0;
+}
+
+.cellar-main {
+    width: 100%;
+    min-width: 0;
 }
 
 /* ── FILTER TABS ── */
@@ -126,8 +133,8 @@
     padding: 8px 22px;
     border-radius: 30px;
     border: 1px solid var(--surface-inverse);
-    background: var(--surface-inverse);
-    color: var(--text-faint);
+    background: goldenrod;
+    color:black;
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
@@ -136,14 +143,15 @@
 }
 
 .cellar-filter-btn:hover {
+    background: transparent;
     border-color: var(--gold-light);
-    color: var(--gold-pale);
+    color: white;
 }
 
 .cellar-filter-btn.active {
-    background: var(--text);
+    background: white;
     border-color: var(--gold-light);
-    color: var(--gold-pale);
+    color: goldenrod;
 }
 
 /* ── SEARCH ── */
@@ -187,7 +195,7 @@
 ════════════════════════════════════════════════ */
 .cellar-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 18px;
 }
 
@@ -385,6 +393,7 @@
 
 /* Empty state */
 .cellar-empty {
+    width: 100%;
     text-align: center;
     padding: 60px 20px;
     color: var(--text-soft);
@@ -553,10 +562,10 @@
     justify-content: space-between;
     width: 100%;
     padding: 10px 16px;
-    background: var(--text);
+    background:black;
     border: 1px solid var(--border-on-dark);
     border-radius: 8px;
-    color: var(--gold-pale);
+    color: white;
     font-size: 12.5px;
     font-weight: 600;
     cursor: pointer;
@@ -564,7 +573,7 @@
 }
 
 .cellar-next-pour-btn:hover {
-    background: var(--text);
+    background: goldenrod;
     border-color: var(--gold-light);
 }
 

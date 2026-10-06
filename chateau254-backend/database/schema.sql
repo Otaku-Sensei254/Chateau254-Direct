@@ -349,3 +349,25 @@ INSERT INTO role_permissions (role_id, permission_id)
 SELECT r.id, p.id FROM roles r JOIN permissions p ON p.name IN ('dashboard.view','orders.view','orders.update_status','profile.manage') WHERE r.name = 'rider' ON CONFLICT DO NOTHING;
 INSERT INTO role_permissions (role_id, permission_id)
 SELECT r.id, p.id FROM roles r JOIN permissions p ON p.name IN ('orders.create','menu.view','profile.manage') WHERE r.name = 'customer' ON CONFLICT DO NOTHING;
+
+-- Server-side wine cellar + user ratings (mirrors migrations/2026-10-06-cellar-ratings.sql).
+CREATE TABLE IF NOT EXISTS cellar_wines (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  wine_id UUID NOT NULL REFERENCES wines(id) ON DELETE CASCADE,
+  added_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (user_id, wine_id)
+);
+CREATE TABLE IF NOT EXISTS wine_ratings (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  wine_id UUID NOT NULL REFERENCES wines(id) ON DELETE CASCADE,
+  rating SMALLINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (user_id, wine_id)
+);
+CREATE INDEX IF NOT EXISTS idx_cellar_wines_user ON cellar_wines (user_id);
+CREATE INDEX IF NOT EXISTS idx_wine_ratings_wine ON wine_ratings (wine_id);
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS avg_rating NUMERIC(3,2) NOT NULL DEFAULT 0;
+ALTER TABLE wines ADD COLUMN IF NOT EXISTS rating_votes INTEGER NOT NULL DEFAULT 0;

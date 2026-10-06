@@ -418,13 +418,13 @@ const App = () => {
         <Route path="/cart" element={<Cart cart={cart} user={session?.user} subtotal={subtotal} changeQuantity={changeQuantity} onCheckout={() => navigate('/checkout')} onMenu={() => navigate('/menu')} onBack={handleBack} />} />
         <Route path="/checkout" element={<Checkout subtotal={subtotal} placeOrder={placeOrder} api={API_URL} token={session?.token} user={session?.user} onRequireAuth={() => navigate('/auth')} />} />
         <Route path="/payment-result" element={<ProtectedRoute user={session?.user}><PaymentResult api={API_URL} token={session?.token} onSuccess={handlePaymentSuccess} onMenu={() => navigate('/menu')} /></ProtectedRoute>} />
-        <Route path="/my-cellar" element={<Cellar user={session?.user} onMenu={() => navigate('/menu')} onBack={handleBack} />} />
+        <Route path="/my-cellar" element={<Cellar user={session?.user} token={session?.token} onMenu={() => navigate('/wines')} onBack={handleBack} />} />
 
         <Route path="/confirmation" element={<Confirmation order={order} onTrack={() => navigate('/track')} onMenu={() => navigate('/menu')} />} />
         <Route path="/track" element={<Tracking order={order} token={session?.token} api={API_URL} onMenu={() => navigate('/menu')} />} />
         <Route path="/tracking" element={<Navigate to="/track" replace />} />
         <Route path="/profile" element={<ProfileRoute user={session?.user}><Profile user={session?.user} token={session?.token} onBack={handleBack} onLogout={handleLogout} onTrack={(o) => { setOrder({ id: o.id, number: o.id.slice(0, 8), total: Number(o.total_amount) }); navigate('/track'); }} onBooking={() => navigate('/booking')} onCellar={() => navigate('/my-cellar')} /></ProfileRoute>} />
-        <Route path="/wines" element={<WinesPage user={session?.user} addToCart={addToCart} addDineInItem={addDineInItem} onRequireAuth={() => navigate('/auth')} reservationCount={dineInSelections.length} onGoToReservations={() => navigate('/booking')} />} />
+        <Route path="/wines" element={<WinesPage user={session?.user} token={session?.token} addToCart={addToCart} addDineInItem={addDineInItem} onRequireAuth={() => navigate('/auth')} reservationCount={dineInSelections.length} onGoToReservations={() => navigate('/booking')} />} />
         <Route path="/feed" element={<Feed session={session} />} />
         <Route path="/404" element={<NotFound onHome={() => navigate('/menu')} onBack={handleBack} />} />
         <Route path="*" element={<NotFound onHome={() => navigate('/menu')} onBack={handleBack} />} />

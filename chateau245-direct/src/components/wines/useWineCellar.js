@@ -47,6 +47,10 @@ export const normalizeCellarWine = (wine) => ({
      and checkout, which is what made the two pages look unsynced. */
   price: Number(wine.price || 0),
   cellarOrder: wine.cellarOrder ?? 0,
+  /* Community rating rolled up on the wines row from wine_ratings — powers
+     the "most rated" ranking without touching the ratings table. */
+  avgRating: Number(wine.avgRating || 0),
+  ratingVotes: Number(wine.ratingVotes || 0),
 });
 
 export const useWineCellar = () => {

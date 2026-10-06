@@ -1,3 +1,10 @@
+.content-page.profile-page {
+    width: 100%;
+    max-width: 1520px;
+    margin: 3rem auto;
+    padding: clamp(26px, 3.5vw, 48px) clamp(20px, 4vw, 68px) 64px;
+}
+
 .profile-top {
     display: flex;
     align-items: center;
@@ -68,7 +75,7 @@
 
 .profile-stats {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 12px;
     margin-bottom: 28px;
 }
@@ -214,12 +221,45 @@
     cursor: pointer;
 }
 .user-actions {
-    display: flex;
-    max-width: 800px;
-    gap: 2rem;
-    width: 100%;
-    margin-bottom: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    width: 300px;
+    margin: 0 0 28px;
 }
+
+.user-actions .primary-button,
+.user-actions .secondary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 48px;
+    margin-top: 0;
+}
+
+.profile-activity-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+}
+
+.profile-activity-grid.has-reservations {
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+}
+
+.profile-section {
+    min-width: 0;
+}
+
+@media (max-width: 1000px) {
+    .profile-activity-grid.has-reservations {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
 @media (max-width: 540px) {
     .profile-stats {
         grid-template-columns: 1fr;
@@ -227,5 +267,14 @@
 
     .profile-card {
         flex-wrap: wrap;
+    }
+
+    .content-page.profile-page {
+        padding: 24px 16px 48px;
+    }
+
+    .user-actions {
+        grid-template-columns: 1fr;
+        gap: 10px;
     }
 }

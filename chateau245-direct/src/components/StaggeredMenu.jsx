@@ -3,7 +3,7 @@ import { gsap } from 'gsap';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FiShoppingBag, FiUser, FiTwitter, FiChevronDown, FiX, FiInstagram, } from 'react-icons/fi';
 import { RiWhatsappLine } from "react-icons/ri";
-import { GiHamburgerMenu } from 'react-icons/gi';
+import { GiHamburgerMenu, GiWineBottle } from 'react-icons/gi';
 import Brand from './Brand';
 import InstallButton from './InstallButton';
 import { isTakeoutEnabled } from '../config/features';
@@ -509,8 +509,25 @@ export const StaggeredMenu = ({
       </header>
 
       <aside id="staggered-menu-panel" ref={panelRef} className="staggered-menu-panel" aria-hidden={!open}>
-        <div className="user-info-nav" style={{ display: "flex", justifyContent: "space-between" }}>
-          <p> Hi, {firstName}</p>
+        <div className="user-info-nav">
+          {firstName && (
+            <button
+              type="button"
+              className="user-info-profile"
+              onClick={() => { closeMenu(); onProfile?.(); }}
+            >
+              <span className="user-info-avatar" aria-hidden="true"><FiUser size={15} /></span>
+              <span className="user-info-greeting">Hi, {firstName}</span>
+            </button>
+          )}
+          <button
+            type="button"
+            className="user-info-cellar"
+            onClick={() => handleNavigate('/my-cellar')}
+          >
+            <span className="user-info-avatar user-info-avatar--cellar" aria-hidden="true"><GiWineBottle size={15} /></span>
+            <span>My Cellar</span>
+          </button>
         </div>
         <div className="sm-panel-inner">
           <ul className="sm-panel-list" data-numbering={displayItemNumbering || undefined}>

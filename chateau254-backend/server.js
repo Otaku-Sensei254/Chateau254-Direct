@@ -19,6 +19,7 @@ const promotionsRoutes = require('./routes/promotions.routes');
 const reportsRoutes = require('./routes/reports.routes');
 const pesapalRoutes = require('./routes/pesapal.routes');
 const mpesaRoutes = require('./routes/mpesa.routes');
+const cellarRoutes = require('./routes/cellar.routes');
 const { notFound, errorHandler } = require('./middleware/error.middleware');
 
 const app = express();
@@ -87,6 +88,7 @@ app.use('/api/promotions', promotionsRoutes);
 app.use('/api/reports', reportsRoutes);
 app.use('/api/payments/pesapal', pesapalRoutes);
 app.use('/api/payments/mpesa', mpesaRoutes);
+app.use('/api/cellar', cellarRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
