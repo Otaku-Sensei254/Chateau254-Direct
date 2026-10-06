@@ -359,8 +359,18 @@ const App = () => {
   useEffect(() => {
     if (!lastOrderId || order?.id === lastOrderId || !session?.token) return;
     fetch(`${API_URL}/orders/${lastOrderId}`, { headers: { Authorization: `Bearer ${session.token}` } })
-      .then((res) => res.ok ? res.json() : null)
-      .then((data) => { if (data?.order) setOrder({ id: data.order.id, number: data.order.id.slice(0, 8), total: Number(data.order.total_amount) }); })
+      .then((res) => {
+        if (res.status === 404) {
+          localStorage.removeItem('chateau254_last_order');
+          setLastOrderId(null);
+          return null;
+        }
+        if (!res.ok) return null;
+        return res.json();
+      })
+      .then((data) => {
+        if (data?.order) setOrder({ id: data.order.id, number: data.order.id.slice(0, 8), total: Number(data.order.total_amount) });
+      })
       .catch(() => { });
   }, [lastOrderId, order?.id, session?.token]);
 

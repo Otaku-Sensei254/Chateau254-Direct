@@ -1,7 +1,7 @@
-◇ injected env (26) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
-◇ injected env (0) from .env // tip: ⌘ enable debugging { debug: true }
+◇ injected env (27) from .env // tip: ⌘ enable debugging { debug: true }
+◇ injected env (0) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
 [DB] Attempting Neon connection...
-(node:437397) Warning: SECURITY WARNING: The SSL modes 'prefer', 'require', and 'verify-ca' are treated as aliases for 'verify-full'.
+(node:109735) Warning: SECURITY WARNING: The SSL modes 'prefer', 'require', and 'verify-ca' are treated as aliases for 'verify-full'.
 In the next major version (pg-connection-string v3.0.0 and pg v9.0.0), these modes will adopt standard libpq semantics, which have weaker security guarantees.
 
 To prepare for this change:
@@ -12,484 +12,71 @@ See https://www.postgresql.org/docs/current/libpq-ssl.html for libpq SSL mode de
 (Use `node --trace-warnings ...` to show where the warning was created)
 [DB] Connected to Neon (cloud)
 Château254 API listening on port 5000
-Socket connected: JvKamZHjXFcaNUk2AAAA
-Socket disconnected: JvKamZHjXFcaNUk2AAAA
-Socket connected: KoEuXRI0tNWslL0NAAAB
-Socket disconnected: KoEuXRI0tNWslL0NAAAB
-node:events:487
-      throw er; // Unhandled 'error' event
-      ^
-
-<ref *1> Error: read ETIMEDOUT
-    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)
-Emitted 'error' event on BoundPool instance at:
-    at Client.idleListener (/home/dtech/Projects/WebWorks/Products/Chateau254/Chateau254-Direct/chateau254-backend/node_modules/pg-pool/index.js:62:10)
-    at Client.emit (node:events:509:20)
-    at Client._handleErrorEvent (/home/dtech/Projects/WebWorks/Products/Chateau254/Chateau254-Direct/chateau254-backend/node_modules/pg/lib/client.js:422:10)
-    at Connection.emit (node:events:509:20)
-    at TLSSocket.reportStreamError (/home/dtech/Projects/WebWorks/Products/Chateau254/Chateau254-Direct/chateau254-backend/node_modules/pg/lib/connection.js:59:12)
-    at TLSSocket.emit (node:events:509:20)
-    at emitErrorNT (node:internal/streams/destroy:170:8)
-    at emitErrorCloseNT (node:internal/streams/destroy:129:3)
-    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
-  errno: -110,
-  code: 'ETIMEDOUT',
-  syscall: 'read',
-  client: Client {
-    _events: [Object: null prototype] { error: [Function (anonymous)] },
-    _eventsCount: 1,
-    _maxListeners: undefined,
-    connectionParameters: ConnectionParameters {
-      user: 'neondb_owner',
-      database: 'chateau254',
-      port: 5432,
-      host: 'ep-noisy-cloud-axhxnu7n-pooler.c-4.us-east-2.aws.neon.tech',
-      binary: false,
-      options: undefined,
-      ssl: {},
-      sslnegotiation: undefined,
-      client_encoding: '',
-      replication: undefined,
-      isDomainSocket: false,
-      application_name: undefined,
-      fallback_application_name: undefined,
-      statement_timeout: false,
-      lock_timeout: false,
-      idle_in_transaction_session_timeout: false,
-      query_timeout: false,
-      connect_timeout: 15
-    },
-    user: 'neondb_owner',
-    database: 'chateau254',
-    port: 5432,
-    host: 'ep-noisy-cloud-axhxnu7n-pooler.c-4.us-east-2.aws.neon.tech',
-    replication: undefined,
-    _Promise: [Function: Promise],
-    _types: TypeOverrides {
-      _types: {
-        getTypeParser: [Function: getTypeParser],
-        setTypeParser: [Function: setTypeParser],
-        arrayParser: { create: [Function: create] },
-        builtins: {
-          BOOL: 16,
-          BYTEA: 17,
-          CHAR: 18,
-          INT8: 20,
-          INT2: 21,
-          INT4: 23,
-          REGPROC: 24,
-          TEXT: 25,
-          OID: 26,
-          TID: 27,
-          XID: 28,
-          CID: 29,
-          JSON: 114,
-          XML: 142,
-          PG_NODE_TREE: 194,
-          SMGR: 210,
-          PATH: 602,
-          POLYGON: 604,
-          CIDR: 650,
-          FLOAT4: 700,
-          FLOAT8: 701,
-          ABSTIME: 702,
-          RELTIME: 703,
-          TINTERVAL: 704,
-          CIRCLE: 718,
-          MACADDR8: 774,
-          MONEY: 790,
-          MACADDR: 829,
-          INET: 869,
-          ACLITEM: 1033,
-          BPCHAR: 1042,
-          VARCHAR: 1043,
-          DATE: 1082,
-          TIME: 1083,
-          TIMESTAMP: 1114,
-          TIMESTAMPTZ: 1184,
-          INTERVAL: 1186,
-          TIMETZ: 1266,
-          BIT: 1560,
-          VARBIT: 1562,
-          NUMERIC: 1700,
-          REFCURSOR: 1790,
-          REGPROCEDURE: 2202,
-          REGOPER: 2203,
-          REGOPERATOR: 2204,
-          REGCLASS: 2205,
-          REGTYPE: 2206,
-          UUID: 2950,
-          TXID_SNAPSHOT: 2970,
-          PG_LSN: 3220,
-          PG_NDISTINCT: 3361,
-          PG_DEPENDENCIES: 3402,
-          TSVECTOR: 3614,
-          TSQUERY: 3615,
-          GTSVECTOR: 3642,
-          REGCONFIG: 3734,
-          REGDICTIONARY: 3769,
-          JSONB: 3802,
-          REGNAMESPACE: 4089,
-          REGROLE: 4096
-        }
-      },
-      text: {},
-      binary: {}
-    },
-    _ending: true,
-    _ended: false,
-    _connecting: false,
-    _connected: true,
-    _connectionError: false,
-    _queryable: false,
-    _activeQuery: null,
-    _txStatus: 'I',
-    enableChannelBinding: false,
-    scramMaxIterations: 100000,
-    connection: Connection {
-      _events: [Object: null prototype] {
-        newListener: [Function (anonymous)],
-        connect: [Function (anonymous)],
-        sslconnect: [Function (anonymous)],
-        authenticationCleartextPassword: [Function: bound _handleAuthCleartextPassword],
-        authenticationMD5Password: [Function: bound _handleAuthMD5Password],
-        authenticationSASL: [Function: bound _handleAuthSASL],
-        authenticationSASLContinue: [Function: bound _handleAuthSASLContinue] AsyncFunction,
-        authenticationSASLFinal: [Function: bound _handleAuthSASLFinal],
-        backendKeyData: [Function: bound _handleBackendKeyData],
-        error: [Function: bound _handleErrorEvent],
-        errorMessage: [Function: bound _handleErrorMessage],
-        readyForQuery: [Function: bound _handleReadyForQuery],
-        notice: [Function: bound _handleNotice],
-        rowDescription: [Function: bound _handleRowDescription],
-        dataRow: [Function: bound _handleDataRow],
-        portalSuspended: [Function: bound _handlePortalSuspended],
-        emptyQuery: [Function: bound _handleEmptyQuery],
-        commandComplete: [Function: bound _handleCommandComplete],
-        parseComplete: [Function: bound _handleParseComplete],
-        copyInResponse: [Function: bound _handleCopyInResponse],
-        copyData: [Function: bound _handleCopyData],
-        notification: [Function: bound _handleNotification],
-        end: [
-          [Function: bound onceWrapper] {
-            listener: [Function (anonymous)]
-          },
-          [Function: bound onceWrapper] {
-            listener: [Function (anonymous)]
-          },
-          [Function: bound onceWrapper] {
-            listener: [Function (anonymous)]
-          },
-          Symbol(events.emitting): 0
-        ]
-      },
-      _eventsCount: 23,
-      _maxListeners: undefined,
-      stream: <ref *2> TLSSocket {
-        _tlsOptions: {
-          allowHalfOpen: undefined,
-          pipe: false,
-          secureContext: SecureContext { context: SecureContext {} },
-          isServer: false,
-          requestCert: true,
-          rejectUnauthorized: true,
-          session: undefined,
-          ALPNProtocols: undefined,
-          requestOCSP: undefined,
-          enableTrace: undefined,
-          pskCallback: undefined,
-          highWaterMark: undefined,
-          onread: undefined,
-          signal: undefined,
-          noDelay: undefined,
-          keepAlive: undefined,
-          keepAliveInitialDelay: undefined
-        },
-        _secureEstablished: true,
-        _securePending: false,
-        _newSessionPending: false,
-        _controlReleased: true,
-        secureConnecting: false,
-        _SNICallback: null,
-        servername: 'ep-noisy-cloud-axhxnu7n-pooler.c-4.us-east-2.aws.neon.tech',
-        alpnProtocol: false,
-        authorized: true,
-        authorizationError: null,
-        encrypted: true,
-        _events: [Object: null prototype] {
-          close: [Function: onSocketCloseDestroySSL],
-          end: [
-            [Function: onReadableStreamEnd],
-            [Function (anonymous)],
-            Symbol(events.emitting): 0
-          ],
-          error: [Function: reportStreamError],
-          newListener: [
-            [Function: keylogNewListener],
-            [Function: newListener],
-            Symbol(events.emitting): 0
-          ],
-          secure: [Function: onConnectSecure],
-          data: [Function (anonymous)]
-        },
-        _eventsCount: 6,
-        connecting: false,
-        _hadError: false,
-        _parent: Socket {
-          connecting: false,
-          _hadError: false,
-          _parent: null,
-          _host: 'ep-noisy-cloud-axhxnu7n-pooler.c-4.us-east-2.aws.neon.tech',
-          _closeAfterHandlingError: false,
-          _events: {
-            close: [Array],
-            error: [Array],
-            prefinish: undefined,
-            finish: undefined,
-            drain: undefined,
-            data: undefined,
-            end: [Function: onReadableStreamEnd],
-            readable: undefined,
-            connect: [Function]
-          },
-          _readableState: ReadableState {
-            highWaterMark: 65536,
-            buffer: [],
-            bufferIndex: 0,
-            length: 0,
-            pipes: [],
-            awaitDrainWriters: null,
-            Symbol(kState): 60303732
-          },
-          _writableState: WritableState {
-            highWaterMark: 65536,
-            length: 0,
-            corked: 0,
-            onwrite: [Function (anonymous)],
-            writelen: 0,
-            bufferedIndex: 0,
-            pendingcb: 0,
-            Symbol(kState): 17564020,
-            Symbol(kBufferedValue): null,
-            Symbol(kWriteCbValue): null
-          },
-          allowHalfOpen: false,
-          _maxListeners: undefined,
-          _eventsCount: 4,
-          _sockname: null,
-          _pendingData: null,
-          _pendingEncoding: '',
-          server: null,
-          _server: null,
-          autoSelectFamilyAttemptedAddresses: [ '16.59.10.57:5432' ],
-          Symbol(async_id_symbol): 7,
-          Symbol(kHandle): null,
-          Symbol(lastWriteQueueSize): 0,
-          Symbol(timeout): null,
-          Symbol(kBuffer): null,
-          Symbol(kBufferCb): null,
-          Symbol(kBufferGen): null,
-          Symbol(shapeMode): true,
-          Symbol(kCapture): false,
-          Symbol(kSetNoDelay): true,
-          Symbol(kSetKeepAlive): false,
-          Symbol(kSetKeepAliveInitialDelay): 0,
-          Symbol(kSetTOS): undefined,
-          Symbol(kBytesRead): 8934,
-          Symbol(kBytesWritten): 4310
-        },
-        _host: null,
-        _closeAfterHandlingError: false,
-        _readableState: ReadableState {
-          highWaterMark: 65536,
-          buffer: [],
-          bufferIndex: 0,
-          length: 0,
-          pipes: [],
-          awaitDrainWriters: null,
-          Symbol(kState): 194521526,
-          Symbol(kErroredValue): [Circular *1]
-        },
-        _writableState: WritableState {
-          highWaterMark: 65536,
-          length: 0,
-          corked: 0,
-          onwrite: [Function (anonymous)],
-          writelen: 0,
-          bufferedIndex: 0,
-          pendingcb: 0,
-          Symbol(kState): 1091450294,
-          Symbol(kBufferedValue): null,
-          Symbol(kWriteCbValue): null,
-          Symbol(kErroredValue): [Circular *1]
-        },
-        allowHalfOpen: false,
-        _maxListeners: undefined,
-        _sockname: null,
-        _pendingData: null,
-        _pendingEncoding: '',
-        server: undefined,
-        _server: null,
-        ssl: null,
-        _requestCert: true,
-        _rejectUnauthorized: true,
-        Symbol(alpncallback): null,
-        Symbol(res): TLSWrap {
-          _parent: TCP {
-            reading: [Getter/Setter],
-            onconnection: null,
-            Symbol(owner_symbol): [Socket],
-            Symbol(handle_onclose): [Function (anonymous)]
-          },
-          _parentWrap: Socket {
-            connecting: false,
-            _hadError: false,
-            _parent: null,
-            _host: 'ep-noisy-cloud-axhxnu7n-pooler.c-4.us-east-2.aws.neon.tech',
-            _closeAfterHandlingError: false,
-            _events: [Object],
-            _readableState: [ReadableState],
-            _writableState: [WritableState],
-            allowHalfOpen: false,
-            _maxListeners: undefined,
-            _eventsCount: 4,
-            _sockname: null,
-            _pendingData: null,
-            _pendingEncoding: '',
-            server: null,
-            _server: null,
-            autoSelectFamilyAttemptedAddresses: [Array],
-            Symbol(async_id_symbol): 7,
-            Symbol(kHandle): null,
-            Symbol(lastWriteQueueSize): 0,
-            Symbol(timeout): null,
-            Symbol(kBuffer): null,
-            Symbol(kBufferCb): null,
-            Symbol(kBufferGen): null,
-            Symbol(shapeMode): true,
-            Symbol(kCapture): false,
-            Symbol(kSetNoDelay): true,
-            Symbol(kSetKeepAlive): false,
-            Symbol(kSetKeepAliveInitialDelay): 0,
-            Symbol(kSetTOS): undefined,
-            Symbol(kBytesRead): 8934,
-            Symbol(kBytesWritten): 4310
-          },
-          _secureContext: SecureContext { context: SecureContext {} },
-          reading: true,
-          onkeylog: [Function: onkeylog],
-          onhandshakestart: [Function: noop],
-          onhandshakedone: [Function (anonymous)],
-          onocspresponse: [Function: onocspresponse],
-          onnewsession: [Function: onnewsessionclient],
-          onerror: [Function: onerror],
-          Symbol(owner_symbol): [Circular *2]
-        },
-        Symbol(verified): true,
-        Symbol(pendingSession): null,
-        Symbol(async_id_symbol): 17,
-        Symbol(kHandle): null,
-        Symbol(lastWriteQueueSize): 0,
-        Symbol(timeout): null,
-        Symbol(kBuffer): null,
-        Symbol(kBufferCb): null,
-        Symbol(kBufferGen): null,
-        Symbol(shapeMode): true,
-        Symbol(kCapture): false,
-        Symbol(kSetNoDelay): false,
-        Symbol(kSetKeepAlive): false,
-        Symbol(kSetKeepAliveInitialDelay): 0,
-        Symbol(kSetTOS): undefined,
-        Symbol(kBytesRead): 2770,
-        Symbol(kBytesWritten): 2409,
-        Symbol(connect-options): {
-          rejectUnauthorized: true,
-          ciphers: 'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384:DHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA256:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!SRP:!CAMELLIA',
-          checkServerIdentity: [Function: checkServerIdentity],
-          minDHSize: 1024,
-          socket: Socket {
-            connecting: false,
-            _hadError: false,
-            _parent: null,
-            _host: 'ep-noisy-cloud-axhxnu7n-pooler.c-4.us-east-2.aws.neon.tech',
-            _closeAfterHandlingError: false,
-            _events: [Object],
-            _readableState: [ReadableState],
-            _writableState: [WritableState],
-            allowHalfOpen: false,
-            _maxListeners: undefined,
-            _eventsCount: 4,
-            _sockname: null,
-            _pendingData: null,
-            _pendingEncoding: '',
-            server: null,
-            _server: null,
-            autoSelectFamilyAttemptedAddresses: [Array],
-            Symbol(async_id_symbol): 7,
-            Symbol(kHandle): null,
-            Symbol(lastWriteQueueSize): 0,
-            Symbol(timeout): null,
-            Symbol(kBuffer): null,
-            Symbol(kBufferCb): null,
-            Symbol(kBufferGen): null,
-            Symbol(shapeMode): true,
-            Symbol(kCapture): false,
-            Symbol(kSetNoDelay): true,
-            Symbol(kSetKeepAlive): false,
-            Symbol(kSetKeepAliveInitialDelay): 0,
-            Symbol(kSetTOS): undefined,
-            Symbol(kBytesRead): 8934,
-            Symbol(kBytesWritten): 4310
-          },
-          servername: 'ep-noisy-cloud-axhxnu7n-pooler.c-4.us-east-2.aws.neon.tech',
-          singleUse: true
-        }
-      },
-      _keepAlive: false,
-      _keepAliveInitialDelayMillis: 0,
-      parsedStatements: {},
-      submittedNamedStatements: {},
-      ssl: {},
-      sslNegotiation: 'postgres',
-      _ending: true,
-      _emitMessage: false,
-      _connecting: true,
-      Symbol(shapeMode): false,
-      Symbol(kCapture): false
-    },
-    _queryQueue: [],
-    _sentQueryQueue: [],
-    pipeline: false,
-    binary: false,
-    processID: -967316907,
-    secretKey: 1956097127,
-    ssl: {},
-    sslNegotiation: 'postgres',
-    _connectionTimeoutMillis: 15000,
-    _connectionCallback: null,
-    connectionTimeoutHandle: Timeout {
-      _idleTimeout: -1,
-      _idlePrev: null,
-      _idleNext: null,
-      _idleStart: 804,
-      _onTimeout: null,
-      _timerArgs: undefined,
-      _repeat: null,
-      _destroyed: true,
-      Symbol(refed): false,
-      Symbol(kHasPrimitive): false,
-      Symbol(asyncId): 6,
-      Symbol(triggerId): 1,
-      Symbol(kAsyncContextFrame): undefined
-    },
-    saslSession: null,
-    release: [Function (anonymous)],
-    readyForQuery: true,
-    hasExecuted: true,
-    _poolUseCount: 3,
-    Symbol(shapeMode): false,
-    Symbol(kCapture): false
-  }
-}
-
-Node.js v25.9.0
+Socket connected: V0SmKFJBtFPT0U1SAAAA
+Socket connected: C8Verd8EptcFpHHmAAAB
+[0mGET /api/health [32m200[0m 4.114 ms - 46[0m
+[0mGET /api/link/blocklist [33m404[0m 15.617 ms - 52[0m
+Socket disconnected: V0SmKFJBtFPT0U1SAAAA
+[0mPOST /api/link/analyze [33m404[0m 1.907 ms - 51[0m
+Socket connected: si13LxAQ2VFDZyJkAAAC
+[0mGET /api/orders/5f5d2f84-bffe-4324-8a4a-3998a2202ae5 [33m404[0m 1633.554 ms - 27[0m
+[0mGET /api/orders/5f5d2f84-bffe-4324-8a4a-3998a2202ae5 [33m404[0m 229.031 ms - 27[0m
+[0mGET /api/auth/me [33m404[0m 2194.563 ms - 26[0m
+[0mGET /api/menu?all=true [36m304[0m 2523.565 ms - -[0m
+[0mGET /api/auth/me [33m404[0m 219.273 ms - 26[0m
+[0mGET /api/promotions [36m304[0m 3564.776 ms - -[0m
+[0mGET /api/menu?all=true [36m304[0m 1193.078 ms - -[0m
+[0mGET /api/promotions [36m304[0m 2068.066 ms - -[0m
+[0mGET /api/auth/me [33m404[0m 309.738 ms - 26[0m
+[0mGET /api/orders [36m304[0m 307.617 ms - -[0m
+[0mGET /api/bookings/me [36m304[0m 308.226 ms - -[0m
+[0mGET /api/orders [36m304[0m 218.786 ms - -[0m
+[0mGET /api/bookings/me [36m304[0m 226.187 ms - -[0m
+[0mGET /api/auth/me [33m404[0m 227.484 ms - 26[0m
+[0mGET /api/bookings/me [36m304[0m 306.437 ms - -[0m
+[0mGET /api/orders [36m304[0m 316.706 ms - -[0m
+[0mGET /api/auth/me [33m404[0m 307.113 ms - 26[0m
+[0mGET /api/orders [36m304[0m 241.823 ms - -[0m
+[0mGET /api/bookings/me [36m304[0m 249.544 ms - -[0m
+[0mGET /api/auth/me [33m404[0m 438.136 ms - 26[0m
+[0mGET /api/auth/me [33m404[0m 229.647 ms - 26[0m
+[0mGET /api/auth/me [33m404[0m 229.994 ms - 26[0m
+[0mGET /api/promotions [36m304[0m 8923.571 ms - -[0m
+[0mGET /api/link/blocklist [33m404[0m 0.673 ms - 52[0m
+[0mGET /api/promotions [36m304[0m 6379.840 ms - -[0m
+[0mGET /api/auth/me [33m404[0m 228.822 ms - 26[0m
+[0mGET /api/link/blocklist [33m404[0m 0.688 ms - 52[0m
+[0mGET /api/link/blocklist [33m404[0m 0.306 ms - 52[0m
+[0mPOST /api/link/analyze [33m404[0m 0.517 ms - 51[0m
+Socket disconnected: si13LxAQ2VFDZyJkAAAC
+Socket connected: 3sfK-IcONKJ5uJOOAAAD
+[0mGET /api/auth/me [33m404[0m 2936.717 ms - 26[0m
+[0mGET /api/auth/me [33m404[0m 257.456 ms - 26[0m
+[0mGET /api/orders/5f5d2f84-bffe-4324-8a4a-3998a2202ae5 [33m404[0m 3288.406 ms - 27[0m
+[0mGET /api/orders/5f5d2f84-bffe-4324-8a4a-3998a2202ae5 [33m404[0m 285.964 ms - 27[0m
+[0mGET /api/menu?all=true [36m304[0m 3998.589 ms - -[0m
+[0mGET /api/menu?all=true [36m304[0m 1446.407 ms - -[0m
+[0mGET /api/promotions [36m304[0m 9076.277 ms - -[0m
+[0mGET /api/promotions [36m304[0m 2428.566 ms - -[0m
+[0mGET /api/link/blocklist [33m404[0m 0.311 ms - 52[0m
+[0mGET /api/link/blocklist [33m404[0m 0.356 ms - 52[0m
+[0mGET /api/link/blocklist [33m404[0m 0.461 ms - 52[0m
+[0mGET /api/link/blocklist [33m404[0m 0.327 ms - 52[0m
+[0mGET /api/link/blocklist [33m404[0m 0.390 ms - 52[0m
+[0mGET /api/health [32m200[0m 0.722 ms - 46[0m
+[0mGET /api/health [32m200[0m 0.399 ms - 46[0m
+[0mGET /api/link/blocklist [33m404[0m 7.997 ms - 52[0m
+[0mPOST /api/link/analyze [33m404[0m 0.373 ms - 51[0m
+Socket disconnected: 3sfK-IcONKJ5uJOOAAAD
+[0mGET /api/menu [32m200[0m 3544.072 ms - 10121[0m
+Socket connected: -Pj7Oy8FbhPyVmEsAAAE
+[0mGET /api/auth/me [33m404[0m 1852.552 ms - 26[0m
+[0mGET /api/auth/me [33m404[0m 232.851 ms - 26[0m
+[0mGET /api/menu?all=true [36m304[0m 2679.599 ms - -[0m
+[0mGET /api/menu?all=true [36m304[0m 1763.792 ms - -[0m
+[0mGET /api/promotions [36m304[0m 12992.024 ms - -[0m
+[0mGET /api/promotions [36m304[0m 3080.759 ms - -[0m
+[0mGET /api/menu?menu_type=wine [32m200[0m 1963.062 ms - 47[0m
+SIGTERM received. Closing server...
+Socket disconnected: C8Verd8EptcFpHHmAAAB
+Socket disconnected: -Pj7Oy8FbhPyVmEsAAAE

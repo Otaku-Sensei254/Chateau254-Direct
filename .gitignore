@@ -24,3 +24,5 @@ chateau245-direct/.env.production
 .kilo
 .aider*
 DEPLOYMENT_NOTES.md
+chateau254-backend/server.pid
+chateau254-backend/server.log

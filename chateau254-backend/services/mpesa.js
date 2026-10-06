@@ -43,9 +43,23 @@ const getTimestamp = () => {
   return `${year}${month}${day}${hours}${minutes}${seconds}`;
 };
 
+const normalizePhone = (phoneNumber) => {
+  const digits = String(phoneNumber || '').replace(/[^0-9]/g, '');
+  if (!digits) return null;
+  if (digits.startsWith('254')) return digits;
+  if (digits.startsWith('0')) return '254' + digits.slice(1);
+  if (digits.length === 9) return '254' + digits;
+  return digits;
+};
+
 const initiateSTKPush = async (phoneNumber, amount, accountReference, transactionDesc = 'Payment') => {
   if (!env.mpesaConsumerKey || !env.mpesaConsumerSecret) {
     throw new Error('M-Pesa consumer credentials are not configured');
+  }
+
+  const normalizedPhone = normalizePhone(phoneNumber);
+  if (!normalizedPhone || normalizedPhone.length < 12) {
+    throw new Error('Invalid phone number. Use format 254724064302 or 0724064302.');
   }
 
   const accessToken = await getAccessToken();
@@ -58,9 +72,9 @@ const initiateSTKPush = async (phoneNumber, amount, accountReference, transactio
     "Timestamp": timestamp,
     "TransactionType": "CustomerPayBillOnline",
     "Amount": Math.round(amount),
-    "PartyA": phoneNumber,
+    "PartyA": normalizedPhone,
     "PartyB": env.mpesaBusinessShortCode,
-    "PhoneNumber": phoneNumber,
+    "PhoneNumber": normalizedPhone,
     "CallBackURL": env.mpesaCallbackUrl,
     "AccountReference": accountReference,
     "TransactionDesc": transactionDesc
@@ -75,8 +89,14 @@ const initiateSTKPush = async (phoneNumber, amount, accountReference, transactio
     body: JSON.stringify(payload)
   });
 
-  const data = await response.json();
-  
+  const text = await response.text();
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    throw new Error(`M-Pesa returned non-JSON response: ${text.slice(0, 200)}`);
+  }
+
   if (!response.ok || data.ResponseCode !== '0') {
     throw new Error(data.errorMessage || data.ResponseDescription || 'Failed to initiate STK push');
   }
