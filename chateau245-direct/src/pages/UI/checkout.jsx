@@ -12,7 +12,7 @@ const Checkout = ({ subtotal, placeOrder, api, token }) => {
   const [copied, setCopied] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState('mpesa');
   const [mpesaPaymentType, setMpesaPaymentType] = useState('stkpush'); // 'stkpush' or 'paybill'
-  const [isProcessingMpesa, setIsProcessingMpesa] = useState(false);
+  const[setIsProcessingMpesa] = useState(false);
   const addressRef = useRef(null);
 
   const handleLocationSelect = async (newCoords) => {
