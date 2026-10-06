@@ -17,7 +17,7 @@
 
 .wines-header-title {
   margin: 0 0 8px;
-  color: var(--success);
+  color:goldenrod;
   font-size: clamp(26px, 4vw, 34px);
   font-weight: 700;
   letter-spacing: -0.5px;
@@ -81,8 +81,8 @@
 }
 
 .wines-collection-btn.active {
-  background: var(--success);
-  border-color: var(--success-deep);
+  background: goldenrod;
+
   color: var(--text-on-accent);
 }
 
@@ -323,7 +323,7 @@
   max-height: 250px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: var(--border-strong) transparent;
+  scrollbar-color: var(--border-strong) var(--surface-sunken);
 }
 
 .wine-dropdown-list::-webkit-scrollbar {
@@ -333,6 +333,10 @@
 .wine-dropdown-list::-webkit-scrollbar-thumb {
   background: var(--border-strong);
   border-radius: 10px;
+}
+
+.wine-dropdown-list::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-deep);
 }
 
 .wine-dropdown-item {
@@ -788,7 +792,7 @@
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
-  scrollbar-color: var(--border-strong) transparent;
+  scrollbar-color: var(--border-strong) var(--surface-sunken);
 }
 
 .wine-siblings-carousel::-webkit-scrollbar {
@@ -796,12 +800,17 @@
 }
 
 .wine-siblings-carousel::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--surface-sunken);
+  border-radius: 10px;
 }
 
 .wine-siblings-carousel::-webkit-scrollbar-thumb {
   background: var(--border-strong);
   border-radius: 10px;
+}
+
+.wine-siblings-carousel::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-deep);
 }
 
 .wine-sibling-card {
@@ -1432,7 +1441,7 @@
   background: transparent;
   border: 1px solid rgba(var(--gold-rgb), 0.45);
   border-radius: 999px;
-  color: var(--success);
+  color:goldenrod;
   cursor: pointer;
   display: inline-flex;
   font: inherit;

@@ -21,7 +21,7 @@
     color: var(--text-inverse);
     z-index: 10;
     box-shadow: 8px 0 28px rgba(0, 0, 0, .12);
-    transition: width 0.25s ease, transform 0.25s ease;
+    transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .admin-page.sidebar-collapsed .admin-sidebar {
@@ -44,11 +44,13 @@
     display: grid;
     place-items: center;
     min-width: 0;
+    transition: opacity 0.15s ease, width 0.15s ease;
 }
 
 .admin-sidebar-top .brand-emblem img {
     --brand-emblem-h: 34px;
     height: 34px;
+    transition: height 0.15s ease;
 }
 
 .admin-close,
@@ -153,7 +155,7 @@
 .admin-nav button:hover,
 .admin-nav button.active {
     background: rgba(255, 255, 255, .1);
-    color: var(--text-on-accent);
+    color: white;
 }
 
 .admin-nav button.active {

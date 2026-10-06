@@ -14,3 +14,32 @@
 @import './pages/UI/styles/profile.css';
 @import './pages/UI/styles/booking.css';
 @import './pages/UI/styles/toast.css';
+
+/* One quiet, theme-aware scrollbar treatment across the app. */
+html,
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) var(--surface-sunken);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: var(--surface-sunken);
+}
+
+::-webkit-scrollbar-thumb {
+  min-height: 28px;
+  border: 2px solid var(--surface-sunken);
+  border-radius: 999px;
+  background: var(--border-strong);
+  transition: background-color .18s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-deep);
+}
