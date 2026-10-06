@@ -26,3 +26,6 @@ chateau245-direct/.env.production
 DEPLOYMENT_NOTES.md
 chateau254-backend/server.pid
 chateau254-backend/server.log
+
+# database backups
+db_backups/

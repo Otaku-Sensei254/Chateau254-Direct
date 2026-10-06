@@ -40,10 +40,14 @@ const allowedOrigins = [
   'https://chateau254.vercel.app',
 ].filter(Boolean);
 
-const isAllowedOrigin = (origin) => {
-  if (!origin) return true;
-  if (allowedOrigins.includes(origin)) return true;
-  return /^https:\/\/chateau254-git-[^/]+\.vercel\.app$/.test(origin);
+/* The cors package invokes origin functions in callback style —
+   origin(originHeader, cb) — and never reads a return value. A1-arg
+   function here makes cors wait forever for cb, hanging EVERY request. */
+const isAllowedOrigin = (origin, callback) => {
+  const allowed = !origin
+    || allowedOrigins.includes(origin)
+    || /^https:\/\/chateau254-git-[^/]+\.vercel\.app$/.test(origin);
+  callback(null, allowed);
 };
 
 const io = new Server(httpServer, {
