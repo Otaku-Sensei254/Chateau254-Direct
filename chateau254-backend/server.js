@@ -42,7 +42,7 @@ app.use(cors({ origin: allowedOrigins, credentials: true }));
    genuinely malformed JSON request from a multipart upload that was mislabelled
    as JSON. The error handler uses it to return an actionable message. */
 app.use(express.json({
-  limit: '10mb',
+  limit: '500mb',
   verify: (req, res, buf) => { req.rawBodyPrefix = buf.subarray(0, 16).toString('latin1'); },
 }));
 app.use(express.urlencoded({ extended: false }));

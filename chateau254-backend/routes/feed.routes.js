@@ -38,7 +38,7 @@ const feedColumns = (viewerParam = 1) => `
 
 const feedUpload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 50 * 1024 * 1024, files: 1 },
+  limits: { fileSize: 500 * 1024 * 1024, files: 1 },
   fileFilter: (req, file, callback) => {
     if (!FEED_ALLOWED_MEDIA_TYPES.has(file.mimetype)) {
       const error = new Error('Only JPEG, PNG, WebP, MP4, WebM, and MOV files are allowed');
