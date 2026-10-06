@@ -931,8 +931,8 @@
 
 .add-button {
     position: absolute;
-    right: 14px;
-    bottom: 14px;
+    right: 10px;
+    bottom: 10px;
     width: 29px;
     height: 29px;
     border: 0;
@@ -943,6 +943,9 @@
     place-items: center;
     font-size: 18px;
     flex: 0 0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
 .menu-card-view {
