@@ -26,17 +26,36 @@ const httpServer = createServer(app);
 
 let server = null;
 
+const addWww = (url) => {
+  if (!url) return null;
+  const variants = [url];
+  if (url.includes('://www.')) variants.push(url.replace('://www.', '://'));
+  else if (/^https?:\/\//.test(url)) variants.push(url.replace('://', '://www.'));
+  return variants;
+};
+
+const allowedOrigins = [
+  ...addWww(env.frontendUrl),
+  ...addWww(env.liveUrlCoKe),
+  'https://chateau254.vercel.app',
+].filter(Boolean);
+
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true;
+  if (allowedOrigins.includes(origin)) return true;
+  return /^https:\/\/chateau254-git-[^/]+\.vercel\.app$/.test(origin);
+};
+
 const io = new Server(httpServer, {
   cors: {
-    origin: [env.frontendUrl, env.liveUrlCoKe, 'https://chateau254.vercel.app', 'https://chateau254-git-*.vercel.app'].filter(Boolean),
+    origin: isAllowedOrigin,
     methods: ['GET', 'POST'],
     credentials: true,
   },
 });
 
 app.use(helmet());
-const allowedOrigins = [env.frontendUrl, env.liveUrlCoKe, 'https://chateau254.vercel.app', 'https://chateau254-git-*.vercel.app'].filter(Boolean);
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+app.use(cors({ origin: isAllowedOrigin, credentials: true }));
 /* verify records the first bytes of every JSON body. body-parser's parse error
    does not carry the raw payload, so without this there is no way to tell a
    genuinely malformed JSON request from a multipart upload that was mislabelled
