@@ -7,8 +7,7 @@ import {
   FiChevronLeft,
   FiChevronRight,
   FiTag,
-  FiX,
-  FiLock
+  FiX
 } from "react-icons/fi";
 import { GiWineBottle } from "react-icons/gi";
 import { useToast } from "../../contexts/ToastContext";
@@ -712,17 +711,12 @@ const Menu = ({ api,
              ) : (
                <strong>KES {item.price.toLocaleString()}</strong>
              )}
-             {isOnOffer && (
-               <span className="menu-card-offer-pill">
-                 {offerText}
-               </span>
-             )}
-             {isDineIn && (
-               <span className="dine-in-payment-badge">
-                 <FiLock /> Payment required for table reservation
-               </span>
-             )}
-           </div>
+              {isOnOffer && (
+                <span className="menu-card-offer-pill">
+                  {offerText}
+                </span>
+              )}
+            </div>
                   </div>
                 </div>
               </button>

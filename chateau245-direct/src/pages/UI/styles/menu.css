@@ -896,23 +896,6 @@
     font-size: 11px;
 }
 
-.dine-in-payment-badge {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    background: var(--surface-raised);
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    padding: 2px 6px;
-    font-size: 9px;
-    color: var(--warning);
-    font-weight: 600;
-}
-
-.dine-in-payment-badge svg {
-    color: var(--warning);
-}
-
 .menu-card-offer-pill {
     background: var(--brand-tint);
     color: var(--wine);
