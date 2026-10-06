@@ -241,7 +241,10 @@ CREATE TABLE IF NOT EXISTS orders (
   payment_message TEXT,
   paid_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  mpesa_merchant_reference VARCHAR(50),
+  mpesa_checkout_request_id VARCHAR(255),
+  mpesa_transaction_id VARCHAR(50)
 );
 
 DO $$ DECLARE

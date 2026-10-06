@@ -406,7 +406,7 @@ const App = () => {
           navigate('/menu');
         }} catalogs={catalogs} />} />
         <Route path="/cart" element={<Cart cart={cart} user={session?.user} subtotal={subtotal} changeQuantity={changeQuantity} onCheckout={() => navigate('/checkout')} onMenu={() => navigate('/menu')} onBack={handleBack} />} />
-        <Route path="/checkout" element={<Checkout subtotal={subtotal} placeOrder={placeOrder} />} />
+        <Route path="/checkout" element={<Checkout subtotal={subtotal} placeOrder={placeOrder} api={API_URL} token={session?.token} />} />
         <Route path="/payment-result" element={<ProtectedRoute user={session?.user}><PaymentResult api={API_URL} token={session?.token} onSuccess={handlePaymentSuccess} onMenu={() => navigate('/menu')} /></ProtectedRoute>} />
         <Route path="/my-cellar" element={<Cellar user={session?.user} onMenu={() => navigate('/menu')} onBack={handleBack} />} />
 

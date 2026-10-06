@@ -8,6 +8,7 @@ const env = {
   databaseUrl: process.env.DATABASE_URL || 'postgresql://postgres:dtechpsql@localhost:5432/chateau254',
   localDatabaseUrl: process.env.NEON_DATABASE_URL || 'postgresql://postgres:dtechpsql@localhost:5432/chateau254',
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
+  liveUrlCoKe: process.env.LIVE_URL_COKE || 'https://chateau254.co.ke',
   jwtSecret: process.env.JWT_SECRET || 'FINEWINE',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   r2Endpoint: process.env.R2_ENDPOINT || '',
@@ -22,6 +23,12 @@ const env = {
   pesapalIpnUrl: process.env.PESAPAL_IPN_URL || '',
   pesapalIpnId: process.env.PESAPAL_IPN_ID || '',
   pesapalCallbackUrl: process.env.PESAPAL_CALLBACK_URL || '',
+  mpesaConsumerKey: process.env.MPESA_CONSUMER_KEY || '',
+  mpesaConsumerSecret: process.env.MPESA_CONSUMER_SECRET || '',
+  mpesaBusinessShortCode: process.env.MPESA_BUSINESS_SHORT_CODE || '516600',
+  mpesaPasskey: process.env.MPESA_PASSKEY || '',
+  mpesaCallbackUrl: process.env.MPESA_CALLBACK_URL || '',
+  mpesaEnvironment: process.env.MPESA_ENVIRONMENT || 'sandbox',
 };
 
 module.exports = env;

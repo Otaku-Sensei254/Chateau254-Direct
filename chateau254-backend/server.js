@@ -18,6 +18,7 @@ const feedRoutes = require('./routes/feed.routes');
 const promotionsRoutes = require('./routes/promotions.routes');
 const reportsRoutes = require('./routes/reports.routes');
 const pesapalRoutes = require('./routes/pesapal.routes');
+const mpesaRoutes = require('./routes/mpesa.routes');
 const { notFound, errorHandler } = require('./middleware/error.middleware');
 
 const app = express();
@@ -27,14 +28,14 @@ let server = null;
 
 const io = new Server(httpServer, {
   cors: {
-    origin: env.frontendUrl,
+    origin: env.frontendUrl || env.liveUrlCoKe,
     methods: ['GET', 'POST'],
     credentials: true,
   },
 });
 
 app.use(helmet());
-app.use(cors({ origin: env.frontendUrl, credentials: true }));
+app.use(cors({ origin: env.frontendUrl || env.liveUrlCoKe, credentials: true }));
 /* verify records the first bytes of every JSON body. body-parser's parse error
    does not carry the raw payload, so without this there is no way to tell a
    genuinely malformed JSON request from a multipart upload that was mislabelled
@@ -61,6 +62,7 @@ app.use('/api/feed', feedRoutes);
 app.use('/api/promotions', promotionsRoutes);
 app.use('/api/reports', reportsRoutes);
 app.use('/api/payments/pesapal', pesapalRoutes);
+app.use('/api/payments/mpesa', mpesaRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
