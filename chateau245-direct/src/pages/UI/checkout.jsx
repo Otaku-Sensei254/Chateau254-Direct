@@ -240,7 +240,7 @@ const Checkout = ({ subtotal, placeOrder, api, token }) => {
 
             {/* M-Pesa Payment Type Selection */}
             {paymentMethod === 'mpesa' && (
-              <div className="mpesa-payment-type" style={{ marginTop: '16px', padding: '16px', background: '#f8f9fa', borderRadius: '8px' }}>
+              <div className="mpesa-payment-type">
                 <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: '600' }}>Choose M-Pesa Payment Method:</h4>
                 
                 <div style={{ display: 'flex', gap: '12px', marginBottom: '16px' }}>
@@ -250,7 +250,8 @@ const Checkout = ({ subtotal, placeOrder, api, token }) => {
                     border: mpesaPaymentType === 'stkpush' ? '2px solid #00a550' : '1px solid #ddd',
                     borderRadius: '6px',
                     cursor: 'pointer',
-                    background: mpesaPaymentType === 'stkpush' ? '#f0fdf4' : 'white'
+                    background: '#000',
+                    color: '#fff'
                   }}>
                     <input
                       type="radio"
@@ -262,7 +263,7 @@ const Checkout = ({ subtotal, placeOrder, api, token }) => {
                     />
                     <div>
                       <strong>STK Push (Recommended)</strong>
-                      <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#666' }}>
+                      <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#ccc' }}>
                         Get payment prompt on your phone
                       </p>
                     </div>
@@ -274,7 +275,8 @@ const Checkout = ({ subtotal, placeOrder, api, token }) => {
                     border: mpesaPaymentType === 'paybill' ? '2px solid #00a550' : '1px solid #ddd',
                     borderRadius: '6px',
                     cursor: 'pointer',
-                    background: mpesaPaymentType === 'paybill' ? '#f0fdf4' : 'white'
+                    background: '#000',
+                    color: '#fff'
                   }}>
                     <input
                       type="radio"
@@ -286,7 +288,7 @@ const Checkout = ({ subtotal, placeOrder, api, token }) => {
                     />
                     <div>
                       <strong>Manual Paybill</strong>
-                      <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#666' }}>
+                      <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#ccc' }}>
                         Pay manually using paybill details
                       </p>
                     </div>
@@ -451,7 +453,9 @@ const Checkout = ({ subtotal, placeOrder, api, token }) => {
           <Summary subtotal={subtotal} />
           <div className="checkout-trust"><FiClock /><span><strong>Freshly prepared</strong><small>We'll start as soon as your order is confirmed.</small></span></div>
           <div className="checkout-trust"><FiLock /><span><strong>Safe and secure</strong><small>Your details are only used to fulfil this order.</small></span></div>
-          <button className="primary-button full checkout-submit" type="submit">Place order <FiArrowRight /></button>
+          <button className="primary-button full checkout-submit" type="submit" disabled={isProcessingMpesa}>
+            {isProcessingMpesa ? 'Processing...' : 'Place order'} <FiArrowRight />
+          </button>
           <p className="checkout-note">By placing your order, you confirm that your delivery details are correct.</p>
         </aside>
       </form>
