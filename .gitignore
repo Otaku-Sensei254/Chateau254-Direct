@@ -29,3 +29,4 @@ chateau254-backend/server.log
 
 # database backups
 db_backups/
+chateau254-backend/scripts/seed-admin-riders.js

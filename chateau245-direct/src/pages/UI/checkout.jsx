@@ -1,7 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { FiArrowRight, FiCheck, FiChevronDown, FiClock, FiCopy, FiCreditCard, FiLock, FiMapPin, FiSmartphone, FiTruck } from 'react-icons/fi';
 import { Summary } from './shared';
 import LocationPicker from '../../components/LocationPicker';
+import PaymentStatusModal from '../../components/ui/PaymentStatusModal';
 
 const Checkout = ({ subtotal, placeOrder, api, token, user, onRequireAuth }) => {
   // Card payments are temporarily disabled until the card gateway is enabled.
@@ -13,7 +14,50 @@ const Checkout = ({ subtotal, placeOrder, api, token, user, onRequireAuth }) => 
   const [paymentMethod, setPaymentMethod] = useState('mpesa');
   const [mpesaPaymentType, setMpesaPaymentType] = useState('stkpush'); // 'stkpush' or 'paybill'
   const [isProcessingMpesa, setIsProcessingMpesa] = useState(false);
+  const [payModal, setPayModal] = useState(null);
+  const pollRef = useRef(null);
+  const pollTokenRef = useRef(0);
   const addressRef = useRef(null);
+  const nameRef = useRef(null);
+  const phoneRef = useRef(null);
+
+  const stopPolling = () => {
+    pollTokenRef.current += 1;
+    if (pollRef.current) {
+      clearInterval(pollRef.current);
+      pollRef.current = null;
+    }
+  };
+
+  const closePayModal = () => {
+    stopPolling();
+    setPayModal(null);
+  };
+
+  useEffect(() => stopPolling, []);
+
+  /* Daraja's result descriptions are developer-speak ("Request Cancelled by
+     user") — customers only ever see these friendly versions. */
+  const friendlyPaymentResult = (desc = '') => {
+    if (/cancel/i.test(desc)) return 'The payment was cancelled on your phone. Nothing has been charged — tap below and try again when you are ready.';
+    if (/insufficient/i.test(desc)) return 'Your M-Pesa balance is not enough for this payment. Top up and try again.';
+    if (/cannot be reached|timeout|expired|not been found/i.test(desc)) return 'We could not reach your phone in time, so nothing has been charged. Please try again.';
+    return 'Your payment did not go through and nothing has been charged. Please try again.';
+  };
+
+  // defaultValue only applies on mount — if /auth/me refreshes the session
+  // after mount (deep-link with a stale localStorage session), fill the empty
+  // fields then. Never overwrite something the user already typed.
+  useEffect(() => {
+    if (user?.full_name && nameRef.current && !nameRef.current.value) {
+      nameRef.current.value = user.full_name;
+    }
+    if (user?.phone) {
+      if (phoneRef.current && !phoneRef.current.value) phoneRef.current.value = user.phone;
+      const stkInput = document.getElementById('mpesa-phone-input');
+      if (stkInput && !stkInput.value) stkInput.value = user.phone;
+    }
+  }, [user?.full_name, user?.phone]);
 
   const handleLocationSelect = async (newCoords) => {
     setCoords(newCoords);
@@ -53,26 +97,100 @@ const Checkout = ({ subtotal, placeOrder, api, token, user, onRequireAuth }) => 
     placeOrder(event, coords);
   };
 
+  const startStatusPolling = (checkoutRequestId) => {
+    stopPolling();
+    const myToken = pollTokenRef.current;
+    let attempts = 0;
+
+    pollRef.current = setInterval(async () => {
+      if (pollTokenRef.current !== myToken) {
+        clearInterval(pollRef.current);
+        pollRef.current = null;
+        return;
+      }
+
+      attempts += 1;
+      if (attempts > 12) {
+        stopPolling();
+        setPayModal({
+          status: 'failed',
+          title: 'Payment not confirmed',
+          message: 'We could not confirm your payment. If money was taken from your account, do not worry — it will be refunded within 24 hours, or we will confirm your order by phone.',
+        });
+        return;
+      }
+
+      try {
+        const res = await fetch(`${api}/payments/mpesa/status/${checkoutRequestId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (pollTokenRef.current !== myToken) return;
+        if (res.status === 401) {
+          stopPolling();
+          setPayModal({
+            status: 'error',
+            title: 'Session expired',
+            message: 'Please sign in again to check your payment status.',
+            actionLabel: 'Go to sign in',
+            onAction: onRequireAuth,
+          });
+          return;
+        }
+        if (!res.ok) return; // transient — keep polling
+        const data = await res.json().catch(() => null);
+        if (!data || pollTokenRef.current !== myToken) return;
+        const status = data.stkStatus?.status;
+        if (status === 'success' || data.order?.payment_status === 'completed') {
+          stopPolling();
+          setPayModal({
+            status: 'success',
+            title: 'Payment received',
+            message: `Thank you! We received your payment of KES ${subtotal}. Your order is being prepared and will arrive fresh, fast, and right to your door.`,
+          });
+          return;
+        }
+        if (status === 'failed') {
+          stopPolling();
+          setPayModal({
+            status: 'failed',
+            title: 'Payment not completed',
+            message: friendlyPaymentResult(data.stkStatus?.resultDesc || ''),
+          });
+          return;
+        }
+      } catch {
+        // network hiccup — try again on the next tick
+      }
+    }, 5000); // 5s cadence stays well under Daraja's 30-queries/min spike limit
+  };
+
   const handleMpesaStkPush = async () => {
     if (!token) {
-      alert('Please sign in to pay with M-Pesa.');
-      onRequireAuth?.();
+      setPayModal({
+        status: 'error',
+        title: 'Sign in required',
+        message: 'M-Pesa payments are tied to your account, so we know who to prepare the order for. Please sign in first.',
+        actionLabel: 'Go to sign in',
+        onAction: onRequireAuth,
+      });
       return;
     }
 
     const phoneInput = document.getElementById('mpesa-phone-input');
     const phone = phoneInput?.value?.trim();
-    
+
     if (!phone) {
-      alert('Please enter your phone number for M-Pesa STK Push');
+      setPayModal({
+        status: 'failed',
+        title: 'Phone number required',
+        message: 'Enter the phone number that should receive the M-Pesa prompt, then try again.',
+      });
       return;
     }
 
     setIsProcessingMpesa(true);
-    
+
     try {
-      // Get the subtotal from the placeOrder function's context
-      // We need to calculate it here or pass it as a prop
       const response = await fetch(`${api}/payments/mpesa/stkpush`, {
         method: 'POST',
         headers: { 
@@ -82,7 +200,7 @@ const Checkout = ({ subtotal, placeOrder, api, token, user, onRequireAuth }) => 
         body: JSON.stringify({
           amount: subtotal,
           phone: phone,
-          account_reference: `CH254-${Date.now()}`,
+          account_reference: 'CH254',
           description: `Chateau254 order - ${subtotal} KES`
         }),
       });
@@ -90,30 +208,51 @@ const Checkout = ({ subtotal, placeOrder, api, token, user, onRequireAuth }) => 
       const result = await response.json().catch(() => ({}));
 
       if (response.status === 401) {
-        alert('Your session has expired. Please sign in again.');
-        onRequireAuth?.();
+        setPayModal({
+          status: 'error',
+          title: 'Session expired',
+          message: 'Please sign in again to complete your payment.',
+          actionLabel: 'Go to sign in',
+          onAction: onRequireAuth,
+        });
         return;
       }
 
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to initiate M-Pesa payment');
+        console.error('STK push failed:', response.status, result);
+        setPayModal({
+          status: 'failed',
+          title: 'Payment could not start',
+          message: 'We could not reach M-Pesa just now. Please wait a moment and try again.',
+        });
+        return;
       }
 
-      // Show success message with instructions
-      alert(`M-Pesa payment request sent to ${phone}!\n\nPlease check your phone and enter your M-Pesa PIN to complete the payment.`);
-      
-      // Wait a bit and then check payment status
-      // In a real implementation, you would poll for payment status or wait for callback
-      setTimeout(() => {
-        // After payment is confirmed, you can proceed with the order
-        // For now, we'll just show a message
-        alert('Payment completed! Your order is being processed.');
-        // You can then call placeOrder or navigate to confirmation
-      }, 3000);
+      const checkoutRequestId = result.stkPush?.checkoutRequestId;
+      if (!checkoutRequestId) {
+        console.error('STK push missing checkout id:', result);
+        setPayModal({
+          status: 'failed',
+          title: 'Payment could not start',
+          message: 'We did not get a confirmation from M-Pesa. Please try again.',
+        });
+        return;
+      }
+
+      setPayModal({
+        status: 'waiting',
+        title: 'Check your phone',
+        message: `We sent a payment request to ${phone} for KES ${subtotal}. Enter your M-Pesa PIN to approve it — this screen will update on its own.`,
+      });
+      startStatusPolling(checkoutRequestId);
 
     } catch (error) {
       console.error('M-Pesa STK Push error:', error);
-      alert(`M-Pesa payment failed: ${error.message}`);
+      setPayModal({
+        status: 'failed',
+        title: 'Payment could not start',
+        message: 'Something went wrong starting your payment. Please try again — if it keeps happening, call us and we will help.',
+      });
     } finally {
       setIsProcessingMpesa(false);
     }
@@ -134,8 +273,8 @@ const Checkout = ({ subtotal, placeOrder, api, token, user, onRequireAuth }) => 
               <div><h2>Your details</h2><p>Tell us where to bring your order.</p></div>
             </div>
             <div className="checkout-fields">
-              <label className="checkout-field"><span>Full name</span><input name="name" placeholder="Your name" defaultValue={user?.full_name || ''} required /></label>
-              <label className="checkout-field"><span>Phone number</span><input name="phone" type="tel" placeholder="+254 712 345 678" defaultValue={user?.phone || ''} required /></label>
+              <label className="checkout-field"><span>Full name</span><input ref={nameRef} name="name" placeholder="Your name" defaultValue={user?.full_name || ''} required /></label>
+              <label className="checkout-field"><span>Phone number</span><input ref={phoneRef} name="phone" type="tel" placeholder="+254 712 345 678" defaultValue={user?.phone || ''} required /></label>
               <label className="checkout-field checkout-field-wide"><span>Delivery address</span><textarea ref={addressRef} name="address" placeholder="Search on map below or type your address" required /></label>
             </div>
           </section>
@@ -315,7 +454,7 @@ const Checkout = ({ subtotal, placeOrder, api, token, user, onRequireAuth }) => 
                     </label>
                     <input
                       type="tel"
-                      placeholder="e.g., 0724064302"
+                      placeholder="e.g., 07XXXXXXXX"
                       defaultValue={user?.phone || ''}
                       style={{
                         width: '100%',
@@ -471,6 +610,16 @@ const Checkout = ({ subtotal, placeOrder, api, token, user, onRequireAuth }) => 
           <p className="checkout-note">By placing your order, you confirm that your delivery details are correct.</p>
         </aside>
       </form>
+
+      <PaymentStatusModal
+        open={!!payModal}
+        status={payModal?.status}
+        title={payModal?.title}
+        message={payModal?.message}
+        actionLabel={payModal?.actionLabel}
+        onAction={payModal?.onAction}
+        onClose={closePayModal}
+      />
     </main>
   );
 };

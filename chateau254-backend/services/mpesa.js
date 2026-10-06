@@ -18,10 +18,11 @@ const getAccessToken = async () => {
     }
   });
 
-  const data = await response.json();
-  
-  if (!response.ok || !data.access_token) {
-    throw new Error(`Failed to get M-Pesa access token: ${data.errorMessage || 'Unknown error'}`);
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok || !data?.access_token) {
+    console.warn('[M-Pesa] OAuth non-ok:', response.status, data ? JSON.stringify(data).slice(0, 200) : '(non-JSON response)');
+    throw new Error('M-Pesa is temporarily unavailable. Please try again in a moment.');
   }
 
   return data.access_token;
@@ -96,11 +97,15 @@ const initiateSTKPush = async (phoneNumber, amount, accountReference, transactio
   try {
     data = JSON.parse(text);
   } catch {
-    throw new Error(`M-Pesa returned non-JSON response: ${text.slice(0, 200)}`);
+    // Safaricom occasionally answers with an HTML error page under load —
+    // never surface that raw body to the customer.
+    console.warn('[M-Pesa] STK initiate non-JSON:', response.status, text.slice(0, 200));
+    throw new Error('M-Pesa is temporarily unavailable. Please try again in a moment.');
   }
 
   if (!response.ok || data.ResponseCode !== '0') {
-    throw new Error(data.errorMessage || data.ResponseDescription || 'Failed to initiate STK push');
+    console.warn('[M-Pesa] STK initiate rejected:', response.status, JSON.stringify(data).slice(0, 300));
+    throw new Error('We could not reach M-Pesa just now. Please wait a moment and try again.');
   }
 
   return {
@@ -134,18 +139,41 @@ const querySTKStatus = async (checkoutRequestId) => {
     body: JSON.stringify(payload)
   });
 
-  const data = await response.json();
-  
-  if (!response.ok) {
-    throw new Error(data.errorMessage || 'Failed to query STK push status');
+  const data = await response.json().catch(() => ({}));
+
+  // Daraja answers with ResultCode/ResultDesc once the STK is completed
+  // (0 = paid, 1032 = cancelled by user, 1037 = timeout, ...). While it is
+  // still on the phone it errors with "being processed" — that is not a
+  // failure, it means keep polling.
+  if (data.ResultCode !== undefined) {
+    const paid = String(data.ResultCode) === '0';
+    return {
+      success: paid,
+      status: paid ? 'success' : 'failed',
+      resultCode: String(data.ResultCode),
+      resultDesc: data.ResultDesc || data.ResponseDescription || '',
+      checkoutRequestId: data.CheckoutRequestID || checkoutRequestId,
+      responseCode: data.ResponseCode,
+      responseDescription: data.ResponseDescription,
+    };
   }
 
-  return {
-    success: true,
-    checkoutRequestId: data.CheckoutRequestID,
-    responseCode: data.ResponseCode,
-    responseDescription: data.ResponseDescription
-  };
+  if (!response.ok) {
+    console.warn('[M-Pesa] STK query non-ok:', response.status, JSON.stringify(data).slice(0, 300));
+    if (/being processed|not been found|pending/i.test(data.errorMessage || data.errorCode || '')) {
+      return { success: false, status: 'pending', checkoutRequestId, resultDesc: '' };
+    }
+    // Rate limits and gateway faults are transient — report pending so the
+    // caller keeps polling instead of failing the customer's payment view.
+    if (response.status === 429 || data.fault || /spike|gateway|timeout|temporar/i.test(data.errorMessage || data.fault?.faultstring || '')) {
+      return { success: false, status: 'pending', checkoutRequestId, resultDesc: '' };
+    }
+    // Unknown failure — treat as pending rather than surfacing a raw message;
+    // the caller keeps polling and falls back to a friendly timeout message.
+    return { success: false, status: 'pending', checkoutRequestId, resultDesc: '' };
+  }
+
+  return { success: false, status: 'pending', checkoutRequestId, resultDesc: '' };
 };
 
 module.exports = {

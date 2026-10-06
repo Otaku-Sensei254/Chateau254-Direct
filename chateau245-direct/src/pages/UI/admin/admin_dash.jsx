@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { FiBarChart2, FiCalendar, FiChevronDown, FiDownload, FiEdit2, FiGift, FiGrid, FiLogOut, FiMenu, FiPackage, FiPlus, FiSave, FiSearch, FiSettings, FiShoppingBag, FiTable, FiTrash2, FiTruck, FiUpload, FiUsers, FiX, FiMap, FiCheckCircle, FiClock, FiUser } from 'react-icons/fi';
+import { FiBarChart2, FiCalendar, FiChevronDown, FiChevronLeft, FiChevronRight, FiDownload, FiEdit2, FiGift, FiGrid, FiLogOut, FiMenu, FiPackage, FiPlus, FiSave, FiSearch, FiSettings, FiShoppingBag, FiTable, FiTrash2, FiTruck, FiUpload, FiUsers, FiX, FiMap, FiCheckCircle, FiClock, FiUser } from 'react-icons/fi';
 import Brand from '../../../components/Brand';
 import AdminFleetMap from '../../../components/AdminFleetMap';
 import { useSocket } from '../../../contexts/SocketContext';
@@ -10,6 +10,13 @@ import MediaContent from '../../../components/feed/MediaContent';
 const AdminDashboard = ({ user, token, api, onLogout }) => {
   const [activePage, setActivePage] = useState('Dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    try {
+      return window.localStorage.getItem('admin-sidebar-collapsed') === 'true';
+    } catch {
+      return false;
+    }
+  });
   const [orders, setOrders] = useState([]);
   const [menu, setMenu] = useState([]);
   const [customers, setCustomers] = useState([]);
@@ -115,6 +122,18 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
   const selectPage = (page) => {
     setActivePage(page);
     setSidebarOpen(false);
+  };
+
+  const toggleSidebar = () => {
+    setSidebarCollapsed((collapsed) => {
+      const nextCollapsed = !collapsed;
+      try {
+        window.localStorage.setItem('admin-sidebar-collapsed', String(nextCollapsed));
+      } catch {
+        // Keep the sidebar usable when browser storage is unavailable.
+      }
+      return nextCollapsed;
+    });
   };
 
   const updateOrderStatus = async (orderId, status, riderId) => {
@@ -365,11 +384,17 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
 
   if (error) return <main className="admin-page"><section className="admin-workspace"><div style={{ textAlign: 'center', padding: '4rem' }}><p>{error}</p><button onClick={loadAll}>Retry</button></div></section></main>;
 
-  return <main className="admin-page">
+  return <main className={`admin-page ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
     <button className="admin-mobile-toggle" onClick={() => setSidebarOpen(true)} aria-label="Open admin navigation"><FiMenu /></button>
     {sidebarOpen && <button className="admin-scrim" onClick={() => setSidebarOpen(false)} aria-label="Close navigation" />}
     <aside className={`admin-sidebar ${sidebarOpen ? 'open' : ''}`}>
-      <div className="admin-sidebar-top"><Brand /><button className="admin-close" onClick={() => setSidebarOpen(false)} aria-label="Close admin navigation"><FiX /></button></div>
+      <div className="admin-sidebar-top">
+        <Brand />
+        <button className="admin-collapse-toggle" onClick={toggleSidebar} aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'} aria-expanded={!sidebarCollapsed} title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}>
+          {sidebarCollapsed ? <FiChevronRight /> : <FiChevronLeft />}
+        </button>
+        <button className="admin-close" onClick={() => setSidebarOpen(false)} aria-label="Close admin navigation"><FiX /></button>
+      </div>
       <nav className="admin-nav">
         {[{ label: 'Dashboard', icon: FiGrid },
           { label: 'Orders', icon: FiShoppingBag, count: orders.filter((o) => o.status === 'pending').length || undefined },
@@ -383,13 +408,13 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
           { label: 'Promotions', icon: FiGift },
           { label: 'Media', icon: GrBlog },
           { label: 'Settings', icon: FiSettings },
-        ].map(({ label, icon: Icon, count }) => <button className={activePage === label ? 'active' : ''} key={label} onClick={() => selectPage(label)}><Icon /><span>{label}</span>{count && <b>{count}</b>}</button>)}
+        ].map(({ label, icon: Icon, count }) => <button className={activePage === label ? 'active' : ''} key={label} onClick={() => selectPage(label)} aria-current={activePage === label ? 'page' : undefined} title={sidebarCollapsed ? label : undefined}><Icon /><span>{label}</span>{count && <b>{count}</b>}</button>)}
       </nav>
-      <div className="admin-account"><div className="admin-profile"><span>{user?.full_name?.slice(0, 2).toUpperCase() || 'AD'}</span><div><strong>{user?.full_name || 'Admin'}</strong><small>Administrator</small></div></div><button className="admin-logout" onClick={onLogout}><FiLogOut /> Logout</button></div>
+      <div className="admin-account"><div className="admin-profile"><span>{user?.full_name?.slice(0, 2).toUpperCase() || 'AD'}</span><div><strong>{user?.full_name || 'Admin'}</strong><small>Administrator</small></div></div><button className="admin-logout" onClick={onLogout} title={sidebarCollapsed ? 'Logout' : undefined}><FiLogOut /><span>Logout</span></button></div>
     </aside>
     <section className="admin-workspace">
       <header className="admin-topbar"><div><p className="eyebrow">Château254 management</p><h1>{activePage}</h1></div><div className="admin-top-actions"><div className="admin-top-avatar">{user?.full_name?.slice(0, 2).toUpperCase() || 'AD'}</div></div></header>
-      {activePage === 'Dashboard' && <DashboardContent orders={orders} todayOrders={todayOrders} completedToday={completedToday} totalSales={totalSales} formatCurrency={formatCurrency} formatTime={formatTime} onOpenOrders={() => setActivePage('Orders')} />}
+      {activePage === 'Dashboard' && <DashboardContent orders={orders} todayOrders={todayOrders} completedToday={completedToday} totalSales={totalSales} formatCurrency={formatCurrency} formatTime={formatTime} onOpenOrders={() => setActivePage('Orders')} customers={customers} />}
       {activePage === 'Orders' && <OrdersContent orders={orders} onUpdateStatus={updateOrderStatus} updatingOrder={updatingOrder} riders={riders} formatCurrency={formatCurrency} formatTime={formatTime} />}
       {activePage === 'Reservations' && <ReservationsContent bookings={bookings} tables={tables} onAssignTable={assignTableToBooking} onUnassignTable={unassignTableFromBooking} formatTime={formatTime} />}
       {activePage === 'Tables' && <TablesContent tables={tables} setEditingTable={setEditingTable} onSave={saveTable} onDelete={deleteTable} onUpdateStatus={updateTableStatus} />}
@@ -410,48 +435,99 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
 
 const StatCard = ({ label, value, note, icon: Icon, tone }) => <article className="admin-stat"><div><span>{label}</span><strong>{value}</strong><small className={tone === 'positive' ? 'positive' : ''}>{note}</small></div><i className={tone}><Icon /></i></article>;
 
-const DashboardContent = ({ todayOrders, completedToday, totalSales, formatCurrency, formatTime, onOpenOrders }) => <><div className="admin-welcome"><div><h2>Dashboard overview</h2><p>Here is what is happening at Château254 today.</p></div></div><div className="admin-stats"><StatCard label="Today's Orders" value={todayOrders.length} note={`${completedToday.length} completed`} icon={FiShoppingBag} tone="orange" /><StatCard label="Total Sales" value={formatCurrency(totalSales)} note={`${todayOrders.length} orders`} icon={FiBarChart2} tone="blue" /><StatCard label="Delivered Orders" value={completedToday.length} note={todayOrders.length ? `${Math.round((completedToday.length / todayOrders.length) * 100)}% of total` : '0% of total'} icon={FiPackage} tone="green" /><StatCard label="Registered Customers" value="—" icon={FiUsers} tone="mint" /></div><div className="admin-section-heading"><h2>Recent orders</h2><button onClick={onOpenOrders}>View all orders <FiChevronDown /></button></div><OrderTable orders={todayOrders.slice(0, 5)} formatCurrency={formatCurrency} formatTime={formatTime} compact /></>;
+const DashboardContent = ({ todayOrders, completedToday, totalSales, formatCurrency, formatTime, onOpenOrders, customers }) => <><div className="admin-welcome"><div><h2>Dashboard overview</h2><p>Here is what is happening at Château254 today.</p></div></div><div className="admin-stats"><StatCard label="Today's Orders" value={todayOrders.length} note={`${completedToday.length} completed`} icon={FiShoppingBag} tone="orange" /><StatCard label="Total Sales" value={formatCurrency(totalSales)} note={`${todayOrders.length} orders`} icon={FiBarChart2} tone="blue" /><StatCard label="Delivered Orders" value={completedToday.length} note={todayOrders.length ? `${Math.round((completedToday.length / todayOrders.length) * 100)}% of total` : '0% of total'} icon={FiPackage} tone="green" /><StatCard label="Registered Customers" value={customers?.length || 0} icon={FiUsers} tone="mint" /></div><div className="admin-section-heading"><h2>Recent orders</h2><button onClick={onOpenOrders}>View all orders <FiChevronDown /></button></div><OrderTable orders={todayOrders.slice(0, 5)} formatCurrency={formatCurrency} formatTime={formatTime} compact /></>;
 
 const OrdersContent = ({ orders, onUpdateStatus, updatingOrder, riders, formatCurrency, formatTime }) => {
   const [filter, setFilter] = useState('all');
   const [selectedRiders, setSelectedRiders] = useState({});
   const filtered = filter === 'all' ? orders : orders.filter((o) => o.status === filter);
   const counts = { pending: orders.filter((o) => o.status === 'pending').length, preparing: orders.filter((o) => o.status === 'preparing').length, out_for_delivery: orders.filter((o) => o.status === 'out_for_delivery').length, completed: orders.filter((o) => o.status === 'completed').length, cancelled: orders.filter((o) => o.status === 'cancelled').length };
+  const filters = [
+    { label: 'All orders', value: 'all', count: orders.length },
+    { label: 'New', value: 'pending', count: counts.pending },
+    { label: 'Preparing', value: 'preparing', count: counts.preparing },
+    { label: 'On the way', value: 'out_for_delivery', count: counts.out_for_delivery },
+    { label: 'Completed', value: 'completed', count: counts.completed },
+    { label: 'Cancelled', value: 'cancelled', count: counts.cancelled },
+  ];
 
   return <><div className="admin-content-heading"><div><p className="eyebrow">Live order queue</p><h2>Orders</h2></div></div>
-    <div className="admin-tabs">
-      <button className={filter === 'all' ? 'active' : ''} onClick={() => setFilter('all')}>All <b>{orders.length}</b></button>
-      <button className={filter === 'pending' ? 'active' : ''} onClick={() => setFilter('pending')}>New Orders <b>{counts.pending}</b></button>
-      <button className={filter === 'preparing' ? 'active' : ''} onClick={() => setFilter('preparing')}>Preparing <b>{counts.preparing}</b></button>
-      <button className={filter === 'out_for_delivery' ? 'active' : ''} onClick={() => setFilter('out_for_delivery')}>Out for Delivery <b>{counts.out_for_delivery}</b></button>
-      <button className={filter === 'completed' ? 'active' : ''} onClick={() => setFilter('completed')}>Completed</button>
-      <button className={filter === 'cancelled' ? 'active' : ''} onClick={() => setFilter('cancelled')}>Cancelled</button>
-    </div>
-    <div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Amount</th><th>Address</th><th>Status</th><th>Time</th><th>Action</th></tr></thead><tbody>{filtered.map((order) => <tr key={order.id}>
-      <td>#{order.id.slice(0, 8)}</td>
-      <td>{order.customer_name || 'Unknown'}</td>
-      <td>{order.items_count || '—'} item{(order.items_count || 0) !== 1 ? 's' : ''}</td>
-      <td>{formatCurrency(order.total_amount)}</td>
-      <td>{order.delivery_address || '—'}</td>
-      <td><span className={`status-badge status-${order.status}`}>{order.status?.replace('_', ' ')}</span></td>
-      <td>{formatTime(order.created_at)}</td>
-      <td>
-        {order.status === 'pending' && <>
-          <button className="accept-button" disabled={updatingOrder === order.id} onClick={() => onUpdateStatus(order.id, 'preparing')}>Accept</button>
-          <button className="reject-button" disabled={updatingOrder === order.id} onClick={() => onUpdateStatus(order.id, 'cancelled')}>Reject</button>
-        </>}
-        {order.status === 'preparing' && <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-          <select className="rider-select" value={selectedRiders[order.id] || ''} onChange={(e) => setSelectedRiders((prev) => ({ ...prev, [order.id]: e.target.value }))}>
-            <option value="">Select rider</option>
-            {riders.filter((r) => r.status === 'online').map((r) => <option key={r.id} value={r.id}>{r.full_name}</option>)}
-          </select>
-          <button className="accept-button" disabled={updatingOrder === order.id || !selectedRiders[order.id]} onClick={() => onUpdateStatus(order.id, 'out_for_delivery', selectedRiders[order.id])}>Send out</button>
-        </div>}
-      </td>
-    </tr>)}{!filtered.length && <tr><td colSpan={8} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-faint)' }}>No orders found</td></tr>}</tbody></table></div></>;
+    <section className="admin-orders-panel" aria-label="Orders list">
+      <div className="admin-orders-toolbar">
+        <div className="admin-order-filters" role="group" aria-label="Filter orders by status">
+          {filters.map(({ label, value, count }) => <button key={value} type="button" className={filter === value ? 'active' : ''} onClick={() => setFilter(value)} aria-pressed={filter === value}>
+            {label}<span>{count}</span>
+          </button>)}
+        </div>
+        <p className="admin-orders-count">Showing <strong>{filtered.length}</strong> of <strong>{orders.length}</strong> orders</p>
+      </div>
+      {filtered.length ? <div className="admin-order-cards">
+        {filtered.map((order) => {
+            const customerName = order.customer_name || 'Unknown customer';
+            const initials = customerName.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join('').toUpperCase();
+            const statusLabel = order.status?.replace(/_/g, ' ') || 'Unknown';
+            const isUpdating = updatingOrder === order.id;
+            return <article className="admin-order-card" key={order.id}>
+              <header className="admin-order-card-header">
+                <div className="admin-order-id"><span>ORDER</span><strong>#{order.id.slice(0, 8)}</strong></div>
+                <span className={`admin-order-status status-${order.status || 'unknown'}`}><i />{statusLabel}</span>
+              </header>
+              <div className="admin-order-customer"><span className="admin-order-customer-avatar">{initials || 'CU'}</span><div><strong>{customerName}</strong><span>{order.customer_email || 'Customer'}</span></div></div>
+              <div className="admin-order-summary">
+                <div><span>Items</span><strong>{order.items_count || 0} <small>{Number(order.items_count) === 1 ? 'item' : 'items'}</small></strong></div>
+                <div><span>Order total</span><strong className="admin-order-total">{formatCurrency(order.total_amount)}</strong></div>
+              </div>
+              <div className="admin-order-address"><FiMap /><span title={order.delivery_address || ''}>{order.delivery_address || 'Address not provided'}</span></div>
+              <footer className="admin-order-card-footer">
+                <div className="admin-order-time"><span>Placed {formatTime(order.created_at)} · {order.created_at ? new Date(order.created_at).toLocaleDateString('en-KE', { day: 'numeric', month: 'short' }) : '—'}</span>
+                  {order.status === 'out_for_delivery' && order.rider_name && <strong>Rider: {order.rider_name}</strong>}
+                </div>
+                <div className="admin-order-actions">
+                {order.status === 'pending' && <>
+                  <button className="admin-order-accept" disabled={isUpdating} onClick={() => onUpdateStatus(order.id, 'preparing')}>{isUpdating ? 'Accepting…' : 'Accept'}</button>
+                  <button className="admin-order-reject" disabled={isUpdating} onClick={() => onUpdateStatus(order.id, 'cancelled')}>Decline</button>
+                </>}
+                {order.status === 'preparing' && <>
+                  <select className="admin-order-rider" aria-label={`Assign rider to order ${order.id.slice(0, 8)}`} value={selectedRiders[order.id] || ''} onChange={(e) => setSelectedRiders((prev) => ({ ...prev, [order.id]: e.target.value }))}>
+                    <option value="">Choose rider</option>
+                    {riders.filter((r) => r.status === 'online').map((r) => <option key={r.id} value={r.id}>{r.full_name}</option>)}
+                  </select>
+                  <button className="admin-order-accept" disabled={isUpdating || !selectedRiders[order.id]} onClick={() => onUpdateStatus(order.id, 'out_for_delivery', selectedRiders[order.id])}>{isUpdating ? 'Sending…' : 'Dispatch'}</button>
+                </>}
+                {order.status !== 'pending' && order.status !== 'preparing' && <span className="admin-order-no-action">No action needed</span>}
+              </div>
+              </footer>
+            </article>;
+          })}
+      </div> : <div className="admin-orders-empty"><span><FiShoppingBag /></span><strong>No {filter === 'all' ? '' : `${filters.find((item) => item.value === filter)?.label.toLowerCase()} `}orders found</strong><p>Orders matching this view will appear here.</p></div>}
+    </section>
+  </>;
 };
 
-const OrderTable = ({ orders, formatCurrency, formatTime, compact }) => <div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>Order</th><th>Customer</th><th>Amount</th><th>Address</th><th>Time</th></tr></thead><tbody>{orders.map((order) => <tr key={order.id}><td>#{order.id.slice(0, 8)}</td><td>{order.customer_name || 'Unknown'}</td><td>{formatCurrency(order.total_amount)}</td><td>{order.delivery_address || '—'}</td><td>{formatTime(order.created_at)}</td></tr>)}{!orders.length && <tr><td colSpan={5} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-faint)' }}>No orders yet</td></tr>}</tbody></table></div>;
+const OrderTable = ({ orders, formatCurrency, formatTime, compact }) => orders.length ? <div className={`admin-order-cards admin-recent-orders ${compact ? 'compact' : ''}`}>
+  {orders.map((order) => {
+    const customerName = order.customer_name || 'Unknown customer';
+    const initials = customerName.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join('').toUpperCase();
+    const statusLabel = order.status?.replace(/_/g, ' ') || 'Unknown';
+    return <article className="admin-order-card" key={order.id}>
+      <header className="admin-order-card-header">
+        <div className="admin-order-id"><span>ORDER</span><strong>#{order.id.slice(0, 8)}</strong></div>
+        <span className={`admin-order-status status-${order.status || 'unknown'}`}><i />{statusLabel}</span>
+      </header>
+      <div className="admin-order-customer"><span className="admin-order-customer-avatar">{initials || 'CU'}</span><div><strong>{customerName}</strong><span>{order.customer_email || 'Customer'}</span></div></div>
+      <div className="admin-order-summary">
+        <div><span>Items</span><strong>{order.items_count || 0} <small>{Number(order.items_count) === 1 ? 'item' : 'items'}</small></strong></div>
+        <div><span>Order total</span><strong className="admin-order-total">{formatCurrency(order.total_amount)}</strong></div>
+      </div>
+      <div className="admin-order-address"><FiMap /><span title={order.delivery_address || ''}>{order.delivery_address || 'Address not provided'}</span></div>
+      <footer className="admin-order-card-footer">
+        <div className="admin-order-time"><span>Placed {formatTime(order.created_at)} · {order.created_at ? new Date(order.created_at).toLocaleDateString('en-KE', { day: 'numeric', month: 'short' }) : '—'}</span>
+          {order.status === 'out_for_delivery' && order.rider_name && <strong>Rider: {order.rider_name}</strong>}
+        </div>
+      </footer>
+    </article>;
+  })}
+</div> : <div className="admin-orders-empty"><span><FiShoppingBag /></span><strong>No orders yet</strong><p>New orders will appear here.</p></div>;
 
 const MenuContent = ({ menu, setEditingItem, onDelete, fetchMenu, menuFilters, setMenuFilters, allCategories = [], allSubcategories = [] }) => {
   useEffect(() => {
@@ -815,37 +891,65 @@ const ReservationsContent = ({ bookings, tables, onAssignTable, onUnassignTable,
   const availableTables = tables.filter((t) => t.status === 'available');
   const filtered = filter === 'all' ? bookings : bookings.filter((b) => b.status === filter);
   const counts = { pending: bookings.filter((b) => b.status === 'pending').length, confirmed: bookings.filter((b) => b.status === 'confirmed').length, seated: bookings.filter((b) => b.status === 'seated').length, completed: bookings.filter((b) => b.status === 'completed').length, cancelled: bookings.filter((b) => b.status === 'cancelled').length };
+  const filters = [
+    { label: 'All reservations', value: 'all', count: bookings.length },
+    { label: 'Pending', value: 'pending', count: counts.pending },
+    { label: 'Confirmed', value: 'confirmed', count: counts.confirmed },
+    { label: 'Seated', value: 'seated', count: counts.seated },
+    { label: 'Completed', value: 'completed', count: counts.completed },
+    { label: 'Cancelled', value: 'cancelled', count: counts.cancelled },
+  ];
 
   return <><div className="admin-content-heading"><div><p className="eyebrow">Table reservations</p><h2>Reservations</h2></div></div>
-    <div className="admin-tabs">
-      <button className={filter === 'all' ? 'active' : ''} onClick={() => setFilter('all')}>All <b>{bookings.length}</b></button>
-      <button className={filter === 'pending' ? 'active' : ''} onClick={() => setFilter('pending')}>Pending <b>{counts.pending}</b></button>
-      <button className={filter === 'confirmed' ? 'active' : ''} onClick={() => setFilter('confirmed')}>Confirmed <b>{counts.confirmed}</b></button>
-      <button className={filter === 'seated' ? 'active' : ''} onClick={() => setFilter('seated')}>Seated <b>{counts.seated}</b></button>
-      <button className={filter === 'completed' ? 'active' : ''} onClick={() => setFilter('completed')}>Completed <b>{counts.completed}</b></button>
-      <button className={filter === 'cancelled' ? 'active' : ''} onClick={() => setFilter('cancelled')}>Cancelled <b>{counts.cancelled}</b></button>
-    </div>
-    <div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>Reservation</th><th>Guest</th><th>Party</th><th>Preferred</th><th>Dining time</th><th>Notes</th><th>Status</th><th>Table</th><th>Action</th></tr></thead><tbody>{filtered.map((booking) => <tr key={booking.id}>
-      <td>#{booking.id.slice(0, 8)}</td>
-      <td>{booking.customer_name}</td>
-      <td>{booking.party_size}</td>
-      <td>{booking.preferred_item || '—'}</td>
-      <td>{formatTime(booking.dining_time)}</td>
-      <td style={{ maxWidth: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{booking.notes || '—'}</td>
-      <td><span className={`status-badge status-${booking.status}`}>{booking.status}</span></td>
-      <td>{booking.table_number ? `Table ${booking.table_number}` : '—'}</td>
-      <td>
-        {assigningId === booking.id && availableTables.length > 0 && <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-          <select className="rider-select" value="" onChange={(e) => { if (e.target.value) onAssignTable(booking.id, e.target.value); setAssigningId(null); }}>
-            <option value="">Select table</option>
-            {availableTables.map((t) => <option key={t.id} value={t.id}>Table {t.table_number} (seats {t.capacity})</option>)}
-          </select>
-          <button className="reject-button" onClick={() => setAssigningId(null)}>Cancel</button>
-        </div>}
-        {!booking.table_id && assigningId !== booking.id && availableTables.length > 0 && <button className="accept-button" onClick={() => setAssigningId(booking.id)}>Assign table</button>}
-        {booking.table_id && <button className="reject-button" onClick={() => onUnassignTable(booking.id)}>Release</button>}
-      </td>
-    </tr>)}{!filtered.length && <tr><td colSpan={9} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-faint)' }}>No reservations found</td></tr>}</tbody></table></div></>;
+    <section className="admin-orders-panel admin-reservations-panel" aria-label="Reservations list">
+      <div className="admin-orders-toolbar">
+        <div className="admin-order-filters" role="group" aria-label="Filter reservations by status">
+          {filters.map(({ label, value, count }) => <button key={value} type="button" className={filter === value ? 'active' : ''} onClick={() => setFilter(value)} aria-pressed={filter === value}>
+            {label}<span>{count}</span>
+          </button>)}
+        </div>
+        <p className="admin-orders-count">Showing <strong>{filtered.length}</strong> of <strong>{bookings.length}</strong> reservations</p>
+      </div>
+      {filtered.length ? <div className="admin-order-cards admin-reservation-cards">
+        {filtered.map((booking) => {
+          const guestName = booking.customer_name || 'Guest';
+          const initials = guestName.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join('').toUpperCase();
+          const statusLabel = booking.status?.replace(/_/g, ' ') || 'Unknown';
+          const diningDate = booking.dining_time ? new Date(booking.dining_time).toLocaleDateString('en-KE', { weekday: 'short', day: 'numeric', month: 'short' }) : 'Date not set';
+          return <article className="admin-order-card admin-reservation-card" key={booking.id}>
+            <header className="admin-order-card-header">
+              <div className="admin-order-id"><span>RESERVATION</span><strong>#{booking.id.slice(0, 8)}</strong></div>
+              <span className={`admin-order-status status-${booking.status || 'unknown'}`}><i />{statusLabel}</span>
+            </header>
+            <div className="admin-order-customer"><span className="admin-order-customer-avatar"><FiUser /></span><div><strong>{guestName}</strong><span>Reservation for {booking.party_size} {Number(booking.party_size) === 1 ? 'guest' : 'guests'}</span></div></div>
+            <div className="admin-order-summary">
+              <div><span>Party size</span><strong>{booking.party_size} <small>{Number(booking.party_size) === 1 ? 'guest' : 'guests'}</small></strong></div>
+              <div><span>Seating</span><strong className="admin-reservation-table-name">{booking.table_number ? `Table ${booking.table_number}` : 'Unassigned'}</strong></div>
+            </div>
+            <div className="admin-reservation-details">
+              <div><FiCalendar /><span>{diningDate}</span><strong>{formatTime(booking.dining_time)}</strong></div>
+              {booking.preferred_item && <div><FiGift /><span>Preference</span><strong>{booking.preferred_item}</strong></div>}
+            </div>
+            {booking.notes && <p className="admin-reservation-notes"><strong>Guest note</strong>{booking.notes}</p>}
+            <footer className="admin-order-card-footer">
+              <div className="admin-order-time"><span>Booked {booking.created_at ? new Date(booking.created_at).toLocaleDateString('en-KE', { day: 'numeric', month: 'short' }) : '—'}</span></div>
+              <div className="admin-order-actions">
+                {assigningId === booking.id && availableTables.length > 0 && <>
+                  <select className="admin-order-rider" aria-label={`Choose a table for reservation ${booking.id.slice(0, 8)}`} value="" onChange={(e) => { if (e.target.value) onAssignTable(booking.id, e.target.value); setAssigningId(null); }}>
+                    <option value="">Choose table</option>
+                    {availableTables.map((table) => <option key={table.id} value={table.id}>Table {table.table_number} · {table.capacity} seats</option>)}
+                  </select>
+                  <button type="button" className="admin-order-reject" onClick={() => setAssigningId(null)}>Cancel</button>
+                </>}
+                {!booking.table_id && assigningId !== booking.id && availableTables.length > 0 && <button type="button" className="admin-order-accept" onClick={() => setAssigningId(booking.id)}>Assign table</button>}
+                {booking.table_id && <button type="button" className="admin-order-reject" onClick={() => onUnassignTable(booking.id)}>Release table</button>}
+                {!booking.table_id && availableTables.length === 0 && <span className="admin-order-no-action">No tables available</span>}
+              </div>
+            </footer>
+          </article>;
+        })}
+      </div> : <div className="admin-orders-empty"><span><FiCalendar /></span><strong>No {filter === 'all' ? '' : `${filters.find((item) => item.value === filter)?.label.toLowerCase()} `}reservations found</strong><p>Reservations matching this view will appear here.</p></div>}
+    </section></>;
 };
 
 const TablesContent = ({ tables, setEditingTable, onDelete, onUpdateStatus }) => {
