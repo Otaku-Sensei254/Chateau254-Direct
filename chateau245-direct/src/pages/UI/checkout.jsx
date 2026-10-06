@@ -3,7 +3,7 @@ import { FiArrowRight, FiCheck, FiChevronDown, FiClock, FiCopy, FiCreditCard, Fi
 import { Summary } from './shared';
 import LocationPicker from '../../components/LocationPicker';
 
-const Checkout = ({ subtotal, placeOrder, api, token }) => {
+const Checkout = ({ subtotal, placeOrder, api, token, user, onRequireAuth }) => {
   // Card payments are temporarily disabled until the card gateway is enabled.
   const CARD_PAYMENT_ENABLED = false;
   const [coords, setCoords] = useState(null);
@@ -54,6 +54,12 @@ const Checkout = ({ subtotal, placeOrder, api, token }) => {
   };
 
   const handleMpesaStkPush = async () => {
+    if (!token) {
+      alert('Please sign in to pay with M-Pesa.');
+      onRequireAuth?.();
+      return;
+    }
+
     const phoneInput = document.getElementById('mpesa-phone-input');
     const phone = phoneInput?.value?.trim();
     
@@ -81,8 +87,14 @@ const Checkout = ({ subtotal, placeOrder, api, token }) => {
         }),
       });
 
-      const result = await response.json();
-      
+      const result = await response.json().catch(() => ({}));
+
+      if (response.status === 401) {
+        alert('Your session has expired. Please sign in again.');
+        onRequireAuth?.();
+        return;
+      }
+
       if (!response.ok) {
         throw new Error(result.error || 'Failed to initiate M-Pesa payment');
       }
@@ -122,8 +134,8 @@ const Checkout = ({ subtotal, placeOrder, api, token }) => {
               <div><h2>Your details</h2><p>Tell us where to bring your order.</p></div>
             </div>
             <div className="checkout-fields">
-              <label className="checkout-field"><span>Full name</span><input name="name" placeholder="Your name" required /></label>
-              <label className="checkout-field"><span>Phone number</span><input name="phone" placeholder="+254 712 345 678" required /></label>
+              <label className="checkout-field"><span>Full name</span><input name="name" placeholder="Your name" defaultValue={user?.full_name || ''} required /></label>
+              <label className="checkout-field"><span>Phone number</span><input name="phone" type="tel" placeholder="+254 712 345 678" defaultValue={user?.phone || ''} required /></label>
               <label className="checkout-field checkout-field-wide"><span>Delivery address</span><textarea ref={addressRef} name="address" placeholder="Search on map below or type your address" required /></label>
             </div>
           </section>
@@ -304,7 +316,7 @@ const Checkout = ({ subtotal, placeOrder, api, token }) => {
                     <input
                       type="tel"
                       placeholder="e.g., 0724064302"
-                      defaultValue="0724064302"
+                      defaultValue={user?.phone || ''}
                       style={{
                         width: '100%',
                         padding: '10px 12px',
