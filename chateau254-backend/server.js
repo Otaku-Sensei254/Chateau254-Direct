@@ -28,14 +28,15 @@ let server = null;
 
 const io = new Server(httpServer, {
   cors: {
-    origin: env.frontendUrl || env.liveUrlCoKe,
+    origin: [env.frontendUrl, env.liveUrlCoKe, 'https://chateau254.vercel.app', 'https://chateau254-git-*.vercel.app'].filter(Boolean),
     methods: ['GET', 'POST'],
     credentials: true,
   },
 });
 
 app.use(helmet());
-app.use(cors({ origin: env.frontendUrl || env.liveUrlCoKe, credentials: true }));
+const allowedOrigins = [env.frontendUrl, env.liveUrlCoKe, 'https://chateau254.vercel.app', 'https://chateau254-git-*.vercel.app'].filter(Boolean);
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 /* verify records the first bytes of every JSON body. body-parser's parse error
    does not carry the raw payload, so without this there is no way to tell a
    genuinely malformed JSON request from a multipart upload that was mislabelled
