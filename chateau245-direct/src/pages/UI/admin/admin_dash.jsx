@@ -913,7 +913,6 @@ const ReservationsContent = ({ bookings, tables, onAssignTable, onUnassignTable,
       {filtered.length ? <div className="admin-order-cards admin-reservation-cards">
         {filtered.map((booking) => {
           const guestName = booking.customer_name || 'Guest';
-          const initials = guestName.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join('').toUpperCase();
           const statusLabel = booking.status?.replace(/_/g, ' ') || 'Unknown';
           const diningDate = booking.dining_time ? new Date(booking.dining_time).toLocaleDateString('en-KE', { weekday: 'short', day: 'numeric', month: 'short' }) : 'Date not set';
           return <article className="admin-order-card admin-reservation-card" key={booking.id}>
