@@ -403,7 +403,7 @@ const Menu = ({ api,
                 <span className="promo-kicker">Château feature</span>
                 {activePromo.title && <h3>{activePromo.title}</h3>}
                 <p>{activePromo.message}</p>
-                <button className="promo-cta-btn" onClick={() => navigate('/menu?mode=lunchbox')}>
+                <button className="promo-cta-btn" onClick={() => { navigate('/menu?mode=lunchbox'); dismissPromotion(activePromo.id); }}>
                   View Lunch & Bar
                 </button>
               </div>
