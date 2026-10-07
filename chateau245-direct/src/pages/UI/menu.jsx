@@ -455,7 +455,8 @@ const Menu = ({ api,
                 src={promoVideo.mediaUrl}
                 poster={promoVideo.thumbnailUrl}
                 controls
-                muted={promoVideoMuted}
+                autoPlay
+                muted
                 playsInline
               />
               <div className="promo-video-controls">

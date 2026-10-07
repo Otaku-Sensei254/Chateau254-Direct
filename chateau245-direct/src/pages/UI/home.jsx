@@ -167,7 +167,8 @@ const Home = ({ api, onDining, onLunchAndBar, onEvents, onTakeout, onWines, onAu
                 src={promoVideo.mediaUrl}
                 poster={promoVideo.thumbnailUrl}
                 controls
-                muted={promoVideoMuted}
+                autoPlay
+                muted
                 playsInline
                 onLoadedMetadata={() => {}}
               />
