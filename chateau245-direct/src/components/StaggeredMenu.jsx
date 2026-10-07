@@ -6,7 +6,6 @@ import { RiWhatsappLine } from "react-icons/ri";
 import { GiHamburgerMenu, GiWineBottle } from 'react-icons/gi';
 import Brand from './Brand';
 import InstallButton from './InstallButton';
-import { isTakeoutEnabled } from '../config/features';
 import './styles/StaggeredMenu.css';
 
 const defaultMenuItems = [
