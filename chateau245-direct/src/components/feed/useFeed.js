@@ -39,6 +39,7 @@ export const normalizePost = (post) => {
     thumbnailUrl: post.thumbnailUrl || post.thumbnail_url || '',
     authorName: post.authorName || post.author_name || 'Château254 Team',
     isPublished: post.isPublished ?? post.is_published ?? true,
+    isPromo: post.isPromo ?? post.is_promo ?? false,
     publishedAt: post.publishedAt || post.published_at || post.createdAt || post.created_at || null,
     likeCount: Number(post.likeCount ?? post.like_count ?? 0),
     likedByMe: Boolean(post.likedByMe ?? post.liked_by_me ?? false),

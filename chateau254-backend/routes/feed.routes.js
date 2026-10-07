@@ -30,8 +30,14 @@ const feedColumns = (viewerParam = 1) => `
   p.thumbnail_url AS "thumbnailUrl",
   p.author_name AS "authorName",
   p.is_published AS "isPublished",
+  p.is_promo AS "isPromo",
   p.published_at AS "publishedAt",
   p.created_at AS "createdAt",
+  pv.day_of_week AS "dayOfWeek",
+  pv.week_start_date AS "weekStartDate",
+  pv.display_order AS "displayOrder",
+  pv.link_url AS "linkUrl",
+  pv.link_text AS "linkText",
   (SELECT COUNT(*)::int FROM feed_likes fl WHERE fl.post_id = p.id) AS "likeCount",
   (SELECT COUNT(*)::int FROM feed_likes fl WHERE fl.post_id = p.id AND fl.user_id = $${viewerParam}) > 0 AS "likedByMe"
 `;
@@ -106,6 +112,7 @@ router.get('/', optionalAuthenticate, asyncHandler(async (req, res) => {
   const result = await query(
     `SELECT ${feedColumns(1)}
      FROM feed_posts p
+     LEFT JOIN promo_videos pv ON pv.feed_post_id = p.id
      ${includeAll && req.user?.roles?.includes('admin') ? '' : 'WHERE p.is_published = TRUE'}
      ORDER BY p.published_at DESC, p.created_at DESC
      LIMIT 200`,
@@ -166,14 +173,17 @@ router.post('/', authenticate, requireRole('admin'), asyncHandler(async (req, re
   );
 
   const created = await query(
-    `SELECT ${feedColumns(2)} FROM feed_posts p WHERE p.id = $1`,
+    `SELECT ${feedColumns(2)}
+     FROM feed_posts p
+     LEFT JOIN promo_videos pv ON pv.feed_post_id = p.id
+     WHERE p.id = $1`,
     [result.rows[0].id, req.user?.id || null],
   );
   return res.status(201).json({ post: created.rows[0] });
 }));
 
 router.patch('/:id', authenticate, requireRole('admin'), asyncHandler(async (req, res) => {
-  const { title, caption, author_name: authorName, is_published: isPublished } = req.body;
+  const { title, caption, author_name: authorName, is_published: isPublished, is_promo: isPromo } = req.body;
   const updates = [];
 
   if (title !== undefined) {
@@ -194,11 +204,15 @@ router.patch('/:id', authenticate, requireRole('admin'), asyncHandler(async (req
     updates.push(`is_published = $${updates.length + 1}`);
     req.body.is_published = Boolean(isPublished);
   }
+  if (isPromo !== undefined) {
+    updates.push(`is_promo = $${updates.length + 1}`);
+    req.body.is_promo = Boolean(isPromo);
+  }
 
   if (!updates.length) return res.status(400).json({ error: 'No fields to update' });
 
   const values = [];
-  for (const key of ['title', 'caption', 'author_name', 'is_published']) {
+  for (const key of ['title', 'caption', 'author_name', 'is_published', 'is_promo']) {
     if (req.body[key] !== undefined) values.push(req.body[key]);
   }
 
@@ -211,7 +225,10 @@ router.patch('/:id', authenticate, requireRole('admin'), asyncHandler(async (req
   if (!result.rowCount) return res.status(404).json({ error: 'Feed post not found' });
 
   const updated = await query(
-    `SELECT ${feedColumns(2)} FROM feed_posts p WHERE p.id = $1`,
+    `SELECT ${feedColumns(2)}
+     FROM feed_posts p
+     LEFT JOIN promo_videos pv ON pv.feed_post_id = p.id
+     WHERE p.id = $1`,
     [req.params.id, req.user?.id || null],
   );
   return res.json({ post: updated.rows[0] });

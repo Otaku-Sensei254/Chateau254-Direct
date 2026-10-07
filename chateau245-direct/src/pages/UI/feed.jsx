@@ -1,35 +1,8 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { FiCalendar, FiHeart, FiImage, FiPlay, FiRefreshCw, FiVideo } from 'react-icons/fi';
 import ViewMediaModal from '../../components/feed/ViewMediaModal';
 import { formatCount, formatFeedDate, useFeed } from '../../components/feed/useFeed';
-import steakImage from '../../components/images/steak.jpeg';
 import '../UI/styles/feed.css';
-
-/* Shown only when the feed has never been published to, so a new visitor sees
-   the intended layout instead of an empty page. Once real posts exist these are
-   never rendered. */
-const PREVIEW_POSTS = [
-  {
-    id: 'preview-image',
-    title: 'A table set for the evening',
-    caption: 'Image posts from the Château team appear here as soon as the first one is published.',
-    mediaType: 'image',
-    mediaUrl: steakImage,
-    authorName: 'Château254 Team',
-    publishedAt: null,
-    isPreview: true,
-  },
-  {
-    id: 'preview-video',
-    title: 'Behind the scenes',
-    caption: 'Video posts use the same card and open in the same viewer.',
-    mediaType: 'video',
-    mediaUrl: null,
-    authorName: 'Château254 Team',
-    publishedAt: null,
-    isPreview: true,
-  },
-];
 
 const FeedMedia = ({ post }) => {
   if (post.mediaType === 'video' && post.mediaUrl) {
@@ -63,8 +36,7 @@ const Feed = ({ session }) => {
   const [activePostId, setActivePostId] = useState(null);
   const [likeBusy, setLikeBusy] = useState(false);
 
-  const isPreview = !posts.length;
-  const displayPosts = posts.length ? posts : PREVIEW_POSTS;
+  const displayPosts = posts;
 
   const visiblePosts = useMemo(() => (
     filter === 'all' ? displayPosts : displayPosts.filter((post) => post.mediaType === filter)
@@ -81,7 +53,11 @@ const Feed = ({ session }) => {
     [displayPosts, activePostId],
   );
 
-  const canLike = Boolean(token) && !isPreview;
+  const canLike = Boolean(token);
+
+  useEffect(() => {
+    reload();
+  }, [reload]);
 
   /* The card and the open viewer read the same post object out of the shared
      list, so a like in one place updates the other with no extra wiring. */
@@ -128,12 +104,12 @@ const Feed = ({ session }) => {
           </div>
         </div>
 
-        {error && <p className="feed-notice">{error}. Showing the layout preview.</p>}
-        {loading && !posts.length && !isPreview && <div className="feed-loading">Loading Château stories…</div>}
+        {error && <p className="feed-notice">{error}</p>}
+        {loading && !posts.length && <div className="feed-loading">Loading Château stories…</div>}
 
         <div className="feed-grid">
           {visiblePosts.map((post) => (
-            <article className={`feed-card ${post.isPreview ? 'is-preview' : ''}`} key={post.id}>
+            <article className="feed-card" key={post.id}>
               <button
                 type="button"
                 className="feed-card-open"
@@ -171,12 +147,6 @@ const Feed = ({ session }) => {
             </article>
           ))}
         </div>
-
-        {isPreview && (
-          <p className="feed-preview-note">
-            This is the layout preview. It disappears once the Château team publishes its first post.
-          </p>
-        )}
       </section>
 
       <ViewMediaModal

@@ -10,6 +10,7 @@ import { RiWhatsappFill, RiEBike2Fill} from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { GiMeal } from "react-icons/gi";
 import { GiPartyPopper, GiWineGlass } from "react-icons/gi";
+import { FiPlayCircle, FiVolume2, FiVolumeX } from "react-icons/fi";
 const typewriterPhrases = [
   "Welcome to Chateau254",
   "Serene Dining",
@@ -32,6 +33,9 @@ const Home = ({ api, onDining, onLunchAndBar, onEvents, onTakeout, onWines, onAu
   const [isDeleting, setIsDeleting] = useState(false);
   const [promotions, setPromotions] = useState([]);
   const [dismissedPromos, setDismissedPromos] = useState([]);
+  const [promoVideo, setPromoVideo] = useState(null);
+  const [showPromoVideo, setShowPromoVideo] = useState(false);
+  const [promoVideoMuted, setPromoVideoMuted] = useState(false);
 
   useEffect(() => {
     console.log('[promo] useEffect running');
@@ -43,10 +47,33 @@ const Home = ({ api, onDining, onLunchAndBar, onEvents, onTakeout, onWines, onAu
     setDismissedPromos(dismissed);
   }, [api]);
 
+  // Fetch today's scheduled promo video
+  useEffect(() => {
+    fetch(`${api}/promotions/promo-video/today`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.promoVideo) {
+          setPromoVideo(data.promoVideo);
+        }
+      })
+      .catch((err) => { console.error('[promo-video] fetch failed', err); });
+  }, [api]);
+
   const dismissPromotion = (id) => {
     const updated = [...dismissedPromos, id];
     setDismissedPromos(updated);
     localStorage.setItem('chateau254_dismissed_promotions', JSON.stringify(updated));
+    // After ad is dismissed, show promo video if available
+    if (promoVideo) {
+      setShowPromoVideo(true);
+    }
+  };
+
+  const dismissPromoVideo = () => {
+    setShowPromoVideo(false);
+    // Store dismissal for this week
+    const weekKey = `chateau254_promo_video_dismissed_${new Date().toISOString().slice(0, 10).slice(0, 10)}`;
+    localStorage.setItem(weekKey, 'true');
   };
 
   // For testing: run clearDismissedPromos() in console to reset dismissed promos
@@ -122,6 +149,53 @@ const Home = ({ api, onDining, onLunchAndBar, onEvents, onTakeout, onWines, onAu
               </div>
             </div>
             <button className="promo-close" onClick={() => dismissPromotion(activePromo.id)} aria-label="Close promotion"><FiX /></button>
+          </div>
+        </div>
+      )}
+      {/* Promo Video Modal - appears after ad is dismissed */}
+      {showPromoVideo && promoVideo && (
+        <div
+          className="promo-video-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Weekly promo video"
+          onClick={(event) => { if (event.target === event.currentTarget) dismissPromoVideo(); }}
+        >
+          <div className="promo-video-card">
+            <div className="promo-video-player">
+              <video
+                src={promoVideo.mediaUrl}
+                poster={promoVideo.thumbnailUrl}
+                controls
+                muted={promoVideoMuted}
+                playsInline
+                onLoadedMetadata={() => {}}
+              />
+              <div className="promo-video-controls">
+                <button
+                  className="promo-video-mute-btn"
+                  onClick={() => setPromoVideoMuted(!promoVideoMuted)}
+                  aria-label={promoVideoMuted ? 'Unmute' : 'Mute'}
+                >
+                  {promoVideoMuted ? <FiVolumeX /> : <FiVolume2 />}
+                </button>
+              </div>
+            </div>
+            <div className="promo-video-content">
+              <span className="promo-video-kicker">This Week's Feature</span>
+              {promoVideo.title && <h3>{promoVideo.title}</h3>}
+              {promoVideo.caption && <p>{promoVideo.caption}</p>}
+              {promoVideo.linkUrl && (
+                <a
+                  href={promoVideo.linkUrl}
+                  className="promo-video-cta"
+                  onClick={dismissPromoVideo}
+                >
+                  {promoVideo.linkText || 'View Details'} <FiPlayCircle />
+                </a>
+              )}
+            </div>
+            <button className="promo-video-close" onClick={dismissPromoVideo} aria-label="Close promo video"><FiX /></button>
           </div>
         </div>
       )}

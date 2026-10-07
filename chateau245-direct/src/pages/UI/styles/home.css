@@ -836,3 +836,249 @@
         top: .85rem;
     }
 }
+
+/* ==========================================================================
+   Promo Video Modal — Weekly scheduled video ads
+   ========================================================================== */
+
+.promo-video-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background: rgba(8, 7, 5, 0.88);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    animation: promoVideoFade 0.25s ease-out;
+}
+
+@keyframes promoVideoFade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.promo-video-card {
+    position: relative;
+    width: min(95vw, 800px);
+    max-height: 90vh;
+    background: var(--surface-raised);
+    border: 1px solid rgba(var(--gold-rgb), 0.55);
+    border-radius: 20px;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: promoVideoSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes promoVideoSlide {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.promo-video-player {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    overflow: hidden;
+}
+
+.promo-video-player video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
+}
+
+.promo-video-controls {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 10;
+    display: flex;
+    gap: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.promo-video-player:hover .promo-video-controls,
+.promo-video-player:focus-within .promo-video-controls {
+    opacity: 1;
+}
+
+.promo-video-mute-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(8, 7, 5, 0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--hero-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.promo-video-mute-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.promo-video-content {
+    padding: clamp(1.5rem, 4vw, 3rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.promo-video-kicker {
+    color: var(--hero-accent);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.promo-video-content h3 {
+    margin: 0;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    line-height: 1.1;
+    color: var(--hero-text);
+}
+
+.promo-video-content p {
+    margin: 0;
+    color: rgba(255, 250, 241, 0.76);
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 500px;
+}
+
+.promo-video-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-deep));
+    border: none;
+    border-radius: 8px;
+    font: 700 14px 'Montserrat', Arial, sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--cta-primary-text);
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(var(--gold-rgb), 0.35);
+}
+
+.promo-video-cta:hover {
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(var(--gold-rgb), 0.5);
+}
+
+.promo-video-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(8, 7, 5, 0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--hero-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.promo-video-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+@media (max-width: 600px) {
+    .promo-video-modal {
+        padding: 0;
+        align-items: flex-start;
+    }
+
+    .promo-video-card {
+        width: 90%;
+        margin:15rem auto;
+        max-height: 100vh;
+        border-radius: 18px;
+        /* min-height: 100vh; */
+        animation: none;
+    }
+
+    .promo-video-player {
+        aspect-ratio: 4 / 3;
+    }
+
+    .promo-video-controls {
+        opacity: 1;
+        top: 0.5rem;
+        right: 0.5rem;
+    }
+
+    .promo-video-mute-btn,
+    .promo-video-close {
+        width: 44px;
+        height: 44px;
+        top: 0.5rem;
+        right: 0.5rem;
+    }
+
+    .promo-video-close {
+        top: 0.5rem;
+        right: 0.5rem;
+    }
+
+    .promo-video-content {
+        padding: 1.25rem 1rem 1.5rem;
+        gap: 0.875rem;
+    }
+
+    .promo-video-content h3 {
+        font-size: clamp(1.125rem, 5vw, 1.5rem);
+        line-height: 1.2;
+    }
+
+    .promo-video-content p {
+        font-size: 0.9375rem;
+        line-height: 1.5;
+    }
+
+    .promo-video-cta {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 24px;
+        font-size: 13px;
+    }
+
+    .promo-video-kicker {
+        font-size: 0.6875rem;
+    }
+}

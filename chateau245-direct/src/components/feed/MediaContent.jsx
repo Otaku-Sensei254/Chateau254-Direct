@@ -3,7 +3,7 @@ import { FiEdit2, FiEye, FiHeart, FiImage, FiPlay, FiTrash2, FiUpload, FiVideo, 
 import { FEED_ACCEPT, FEED_MAX_BYTES, formatCount, formatFeedDate, normalizePost } from './useFeed';
 
 
-const EMPTY_FORM = { title: '', caption: '', author_name: '', is_published: true };
+const EMPTY_FORM = { title: '', caption: '', author_name: '', is_published: true, is_promo: false, day_of_week: 0, week_start_date: '', display_order: 0, link_url: '', link_text: 'View Details' };
 const ACCEPTED = FEED_ACCEPT.split(',');
 
 const describeFile = (file) => {
@@ -92,6 +92,12 @@ const MediaContent = ({ api, headers, addToast }) => {
       caption: post.caption || '',
       author_name: post.authorName || '',
       is_published: post.isPublished !== false,
+      is_promo: post.isPromo || false,
+      day_of_week: post.day_of_week || 0,
+      week_start_date: post.week_start_date || '',
+      display_order: post.display_order || 0,
+      link_url: post.link_url || '',
+      link_text: post.link_text || 'View Details',
     });
     setFile(null);
     clearObjectUrl();
@@ -135,6 +141,18 @@ const MediaContent = ({ api, headers, addToast }) => {
       return;
     }
 
+    // Validate promo video fields if is_promo is checked
+    if (form.is_promo) {
+      if (form.week_start_date === '') {
+        addToast('Week start date is required for promo videos', 'error');
+        return;
+      }
+      if (form.day_of_week === undefined || form.day_of_week === '') {
+        addToast('Day of week is required for promo videos', 'error');
+        return;
+      }
+    }
+
     setUploading(true);
     try {
       let mediaUrl = editingPost?.mediaUrl || '';
@@ -143,10 +161,6 @@ const MediaContent = ({ api, headers, addToast }) => {
       if (file) {
         const body = new FormData();
         body.append('media', file);
-        // Only the auth header is sent here. Content-Type is deliberately omitted
-        // so the browser sets multipart/form-data along with the boundary it
-        // generates. Reusing the admin's shared application/json header suppresses
-        // that boundary, and the server's JSON parser then rejects the upload.
         const { Authorization } = headers;
         const uploadResponse = await fetch(`${api}/feed/upload`, {
           method: 'POST',
@@ -166,6 +180,7 @@ const MediaContent = ({ api, headers, addToast }) => {
         caption: form.caption.trim(),
         author_name: form.author_name.trim() || undefined,
         is_published: form.is_published,
+        is_promo: form.is_promo || false,
       };
 
       if (editingPost) {
@@ -183,7 +198,53 @@ const MediaContent = ({ api, headers, addToast }) => {
           body: JSON.stringify({ ...payload, media_url: mediaUrl, media_type: mediaType }),
         });
         if (!response.ok) throw new Error('Failed to publish the post');
+        const data = await response.json();
         addToast(form.is_published ? 'Post published to the feed' : 'Draft saved', 'success');
+        
+        // If this is a promo video, create the promo_videos entry
+        if (form.is_promo && mediaType === 'video' && data.post?.id) {
+          const promoPayload = {
+            feed_post_id: data.post.id,
+            day_of_week: form.day_of_week,
+            week_start_date: form.week_start_date,
+            display_order: form.display_order,
+            link_url: form.link_url || null,
+            link_text: form.link_text || 'View Details',
+            is_active: true,
+          };
+          try {
+            await fetch(`${api}/promotions/promo-videos`, {
+              method: 'POST',
+              headers: { ...headers, 'Content-Type': 'application/json' },
+              body: JSON.stringify(promoPayload),
+            });
+          } catch (err) {
+            console.error('Failed to create promo video entry:', err);
+            addToast('Post saved but promo scheduling failed', 'warning');
+          }
+        }
+      }
+
+      // If editing an existing promo video, update the promo_videos entry
+      if (editingPost && form.is_promo && editingPost.mediaType === 'video') {
+        const promoPayload = {
+          feed_post_id: editingPost.id,
+          day_of_week: form.day_of_week,
+          week_start_date: form.week_start_date,
+          display_order: form.display_order,
+          link_url: form.link_url || null,
+          link_text: form.link_text || 'View Details',
+          is_active: true,
+        };
+        try {
+          await fetch(`${api}/promotions/promo-videos`, {
+            method: 'POST',
+            headers: { ...headers, 'Content-Type': 'application/json' },
+            body: JSON.stringify(promoPayload),
+          });
+        } catch (err) {
+          console.error('Failed to update promo video entry:', err);
+        }
       }
 
       closeEditor();
@@ -372,6 +433,87 @@ const MediaContent = ({ api, headers, addToast }) => {
                 />
                 <span>Publish to the public feed</span>
               </label>
+
+              <label className="admin-checkbox">
+                <input
+                  type="checkbox"
+                  checked={form.is_promo}
+                  onChange={(e) => setForm((prev) => ({ ...prev, is_promo: e.target.checked }))}
+                  disabled={picked && !picked.isVideo && !editingPost}
+                />
+                <span>Mark as promo video for home/menu pages {picked && !picked.isVideo && '(video only)'}</span>
+              </label>
+
+              {form.is_promo && (
+                <fieldset className="admin-fieldset">
+                  <legend>Promo Video Scheduling <span className="admin-fieldset-hint">(Video-only feature)</span></legend>
+                  
+                  {picked && !picked.isVideo && !editingPost ? (
+                    <p className="admin-fieldset-warning">Please select a video file to configure promo scheduling.</p>
+                  ) : (
+                    <>
+                      <label>
+                        Day of Week
+                        <select
+                          name="day_of_week"
+                          value={form.day_of_week}
+                          onChange={(e) => setForm((prev) => ({ ...prev, day_of_week: Number(e.target.value) }))}
+                        >
+                          <option value={0}>Sunday</option>
+                          <option value={1}>Monday</option>
+                          <option value={2}>Tuesday</option>
+                          <option value={3}>Wednesday</option>
+                          <option value={4}>Thursday</option>
+                          <option value={5}>Friday</option>
+                          <option value={6}>Saturday</option>
+                        </select>
+                      </label>
+
+                      <label>
+                        Week Start Date (Monday)
+                        <input
+                          name="week_start_date"
+                          type="date"
+                          value={form.week_start_date}
+                          onChange={(e) => setForm((prev) => ({ ...prev, week_start_date: e.target.value }))}
+                        />
+                      </label>
+
+                      <label>
+                        Display Order
+                        <input
+                          name="display_order"
+                          type="number"
+                          min="0"
+                          value={form.display_order}
+                          onChange={(e) => setForm((prev) => ({ ...prev, display_order: Number(e.target.value) }))}
+                        />
+                      </label>
+
+                      <label>
+                        Link URL (optional)
+                        <input
+                          name="link_url"
+                          type="url"
+                          placeholder="https://chateau254.co.ke/menu?mode=lunchbox"
+                          value={form.link_url}
+                          onChange={(e) => setForm((prev) => ({ ...prev, link_url: e.target.value }))}
+                        />
+                      </label>
+
+                      <label>
+                        Link Text
+                        <input
+                          name="link_text"
+                          placeholder="View Details"
+                          value={form.link_text}
+                          onChange={(e) => setForm((prev) => ({ ...prev, link_text: e.target.value }))}
+                        />
+                      </label>
+                    </>
+                  )}
+                </fieldset>
+              )}
             </div>
 
             <button className="admin-primary" type="submit" disabled={uploading}>

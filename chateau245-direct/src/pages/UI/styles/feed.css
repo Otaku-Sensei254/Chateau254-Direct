@@ -7,7 +7,7 @@
 
 .feed-hero {
   min-height: 360px;
-  background: linear-gradient(112deg, var(--text) 0%, var(--success) 55%, var(--gold-darkest) 150%);
+  background: goldenrod;
   color: var(--text-on-accent);
   display: flex;
   align-items: flex-end;
@@ -19,7 +19,7 @@
 
 .feed-hero-copy { max-width: 680px; position: relative; z-index: 1; }
 .feed-eyebrow, .feed-section-kicker {
-  color: var(--gold-light);
+  color: white;
   font-size: .72rem;
   font-weight: 800;
   letter-spacing: .18em;
@@ -27,7 +27,7 @@
 }
 .feed-hero h1 { font-family: Georgia, serif; font-size: clamp(2.5rem, 6vw, 5.6rem); font-weight: 400; line-height: .98; margin: 1rem 0 1.25rem; }
 .feed-hero p { color: rgba(255, 250, 242, .8); font-size: 1.05rem; line-height: 1.7; margin: 0; max-width: 520px; }
-.feed-hero-mark { color: rgba(255, 250, 242, .1); font-family: Georgia, serif; font-size: clamp(8rem, 22vw, 20rem); line-height: .7; transform: translate(8%, 8%); user-select: none; }
+.feed-hero-mark { color: white; font-family: Georgia, serif; font-size: clamp(8rem, 22vw, 20rem); line-height: .7; transform: translate(8%, 8%); user-select: none; }
 
 .feed-content { max-width: 1240px; margin: 0 auto; padding: 4rem clamp(1.25rem, 4vw, 3rem); }
 .feed-toolbar { align-items: flex-end; display: flex; justify-content: space-between; gap: 2rem; margin-bottom: 2rem; }
