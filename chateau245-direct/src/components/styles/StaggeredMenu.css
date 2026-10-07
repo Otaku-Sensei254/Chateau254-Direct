@@ -523,6 +523,62 @@
   font-weight: 700;
 }
 
+/* Disabled dropdown items with tooltip */
+.sm-desktop-dropdown-item.is-disabled,
+.sm-dropdown-item.is-disabled {
+  color: var(--text-muted);
+  cursor: not-allowed;
+  opacity: 0.6;
+  background: transparent !important;
+}
+
+.sm-desktop-dropdown-item.is-disabled:hover,
+.sm-dropdown-item.is-disabled:hover {
+  background: transparent !important;
+  color: var(--text-muted);
+  transform: none;
+}
+
+.sm-desktop-dropdown-wrap-item,
+.sm-dropdown-list > li {
+  position: relative;
+}
+
+.sm-dropdown-tooltip {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 8px;
+  padding: 6px 10px;
+  background: var(--surface-inverse);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  white-space: nowrap;
+  z-index: 60;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-on-dark-strong);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.18s ease, visibility 0.18s ease, transform 0.18s ease;
+  pointer-events: none;
+}
+
+.sm-desktop-dropdown-wrap-item:hover .sm-dropdown-tooltip,
+.sm-dropdown-list > li:hover .sm-dropdown-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Mobile tooltip appears on long press or focus */
+.sm-dropdown-item.is-disabled:focus .sm-dropdown-tooltip,
+.sm-dropdown-item.is-disabled:active .sm-dropdown-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
 /* Socials */
 .sm-socials {
   margin-top: auto;

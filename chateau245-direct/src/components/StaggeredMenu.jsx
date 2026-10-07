@@ -21,9 +21,8 @@ const defaultMenuItems = [
     dropdownItems: [
       { label: 'Fine Dining', link: '/menu?mode=dining' },
       { label: 'Lunch & Bar', link: '/menu?mode=lunchbox' },
-      /* Withheld until the client approves it. The entry stays in the source so
-         flipping FEATURES.takeout restores it with no other edit. */
-      ...(isTakeoutEnabled() ? [{ label: 'Take-Out', link: '/menu?mode=takeout' }] : []),
+      /* Take-Out is temporarily disabled - shows tooltip on hover */
+      { label: 'Take-Out', link: '/menu?mode=takeout', disabled: true, tooltip: 'Take out Menu coming soon' },
       { label: 'Wine Cellar', link: '/wines' },
     ]
   },
@@ -447,17 +446,29 @@ export const StaggeredMenu = ({
                         className="sm-desktop-dropdown-menu"
                         role="menu"
                       >
-                        {it.dropdownItems.map((sub, sIdx) => (
-                          <button
-                            key={sIdx}
-                            type="button"
-                            role="menuitem"
-                            className={`sm-desktop-dropdown-item ${isSubItemActive(sub) ? 'active' : ''}`}
-                            onClick={() => handleNavigate(sub.link)}
-                          >
-                            {sub.label}
-                          </button>
-                        ))}
+                        {it.dropdownItems.map((sub, sIdx) => {
+                          const isDisabled = sub.disabled === true;
+                          return (
+                            <div key={sIdx} className="sm-desktop-dropdown-wrap-item" style={{ position: 'relative' }}>
+                              <button
+                                type="button"
+                                role="menuitem"
+                                className={`sm-desktop-dropdown-item ${isSubItemActive(sub) ? 'active' : ''} ${isDisabled ? 'is-disabled' : ''}`}
+                                onClick={isDisabled ? undefined : () => handleNavigate(sub.link)}
+                                disabled={isDisabled}
+                                aria-disabled={isDisabled}
+                                title={isDisabled && sub.tooltip ? sub.tooltip : undefined}
+                              >
+                                {sub.label}
+                              </button>
+                              {isDisabled && sub.tooltip && (
+                                <div className="sm-dropdown-tooltip">
+                                  {sub.tooltip}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
                     )}
                   </li>
@@ -552,18 +563,29 @@ export const StaggeredMenu = ({
                       {dropdownOpen && (
                         <div className="sm-dropdown-menu" role="menu">
                           <ul className="sm-dropdown-list">
-                            {it.dropdownItems.map((subItem, subIdx) => (
-                              <li key={subIdx} role="none">
-                                <button
-                                  type="button"
-                                  role="menuitem"
-                                  className={`sm-dropdown-item ${isSubItemActive(subItem) ? 'active' : ''}`}
-                                  onClick={() => handleNavigate(subItem.link)}
-                                >
-                                  {subItem.label}
-                                </button>
-                              </li>
-                            ))}
+                            {it.dropdownItems.map((subItem, subIdx) => {
+                              const isDisabled = subItem.disabled === true;
+                              return (
+                                <li key={subIdx} role="none" style={{ position: 'relative' }}>
+                                  <button
+                                    type="button"
+                                    role="menuitem"
+                                    className={`sm-dropdown-item ${isSubItemActive(subItem) ? 'active' : ''} ${isDisabled ? 'is-disabled' : ''}`}
+                                    onClick={isDisabled ? undefined : () => handleNavigate(subItem.link)}
+                                    disabled={isDisabled}
+                                    aria-disabled={isDisabled}
+                                    title={isDisabled && subItem.tooltip ? subItem.tooltip : undefined}
+                                  >
+                                    {subItem.label}
+                                  </button>
+                                  {isDisabled && subItem.tooltip && (
+                                    <div className="sm-dropdown-tooltip">
+                                      {subItem.tooltip}
+                                    </div>
+                                  )}
+                                </li>
+                              );
+                            })}
                           </ul>
                         </div>
                       )}

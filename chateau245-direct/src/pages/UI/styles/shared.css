@@ -309,6 +309,7 @@ h1 em {
 }
 
 .icon-button {
+    
     width: 42px;
     height: 42px;
     border-radius: 50%;
@@ -316,7 +317,8 @@ h1 em {
 
 .light {
     border: 1px solid rgba(255, 255, 255, .35);
-    color: var(--text-on-accent);
+    color: white;
+    background: rgba(255, 255, 255, .1);
 }
 
 @media (max-width: 540px) {

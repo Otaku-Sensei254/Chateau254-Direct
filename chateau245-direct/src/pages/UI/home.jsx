@@ -6,7 +6,7 @@ import {
   FiX,
 } from "react-icons/fi";
 import Brand from '../../components/Brand';
-import { RiWhatsappFill } from "react-icons/ri";
+import { RiWhatsappFill, RiEBike2Fill} from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { GiMeal } from "react-icons/gi";
 import { GiPartyPopper, GiWineGlass } from "react-icons/gi";
@@ -26,7 +26,7 @@ const getGreeting = () => {
   return "Good night";
 };
 
-const Home = ({ api, onDining, onEvents, onWines, onAuth }) => {
+const Home = ({ api, onDining, onLunchAndBar, onEvents, onTakeout, onWines, onAuth }) => {
   const [currentPhrase, setCurrentPhrase] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
@@ -116,6 +116,9 @@ const Home = ({ api, onDining, onEvents, onWines, onAuth }) => {
                 <span className="promo-kicker">Château feature</span>
                 {activePromo.title && <h3>{activePromo.title}</h3>}
                 <p>{activePromo.message}</p>
+                <button className="promo-cta-btn" onClick={onLunchAndBar}>
+                  View Lunch & Bar
+                </button>
               </div>
             </div>
             <button className="promo-close" onClick={() => dismissPromotion(activePromo.id)} aria-label="Close promotion"><FiX /></button>
@@ -151,11 +154,11 @@ const Home = ({ api, onDining, onEvents, onWines, onAuth }) => {
             <button className="cta-button cta-dining" onClick={onDining}>
               <GiMeal /> Fine Dining
             </button>
-            {/* Take-Out entry point kept here for when the home page button is restored.
-            <button className="cta-button cta-takeout" onClick={onTakeout}>
+            {/* Take-Out entry point kept here for when the home page button is restored. */}
+            <button className="cta-button cta-takeout is-disabled" disabled title="Take out Menu coming soon">
               <RiEBike2Fill /> Take Out
             </button>
-            */}
+           
             <button className="cta-button cta-events" onClick={onEvents}>
               <GiPartyPopper />Events
             </button>

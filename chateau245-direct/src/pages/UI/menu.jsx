@@ -11,6 +11,7 @@ import {
 } from "react-icons/fi";
 import { GiWineBottle } from "react-icons/gi";
 import { useToast } from "../../contexts/ToastContext";
+import { useNavigate } from "react-router-dom";
 import AccountRequiredModal from "../../components/ui/AccountRequiredModal";
 import { LoaderSkeleton, MenuCardSkeleton } from "../../components/ui/loaders-skeleton";
 
@@ -105,6 +106,7 @@ const Menu = ({ api,
   onRequireAuth,
   loading = false,
 }) => {
+  const navigate = useNavigate();
   const { addToast } = useToast();
   const [promotions, setPromotions] = useState([]);
   const [dismissedPromos, setDismissedPromos] = useState([]);
@@ -401,6 +403,9 @@ const Menu = ({ api,
                 <span className="promo-kicker">Château feature</span>
                 {activePromo.title && <h3>{activePromo.title}</h3>}
                 <p>{activePromo.message}</p>
+                <button className="promo-cta-btn" onClick={() => navigate('/menu?mode=lunchbox')}>
+                  View Lunch & Bar
+                </button>
               </div>
             </div>
             <button className="promo-close" onClick={() => dismissPromotion(activePromo.id)} aria-label="Close promotion"><FiX /></button>
