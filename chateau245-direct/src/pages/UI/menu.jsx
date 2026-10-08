@@ -594,7 +594,6 @@ const Menu = ({ api,
               <span className="offer-badge"><FiTag /> {offers.length} {offers.length === 1 ? "item" : "items"} on offer</span>
             )}
             <h2 className="offers-title">Current Offers</h2>
-          </div>
           <div className="offers-controls">
             <button
               type="button"
@@ -616,6 +615,7 @@ const Menu = ({ api,
             </button>
           </div>
         </div>
+          </div>
 
         <div
           className={`offers-carousel ${isDragging ? "dragging" : ""}`}
@@ -689,9 +689,9 @@ const Menu = ({ api,
               )}
             </article>
           ))}
-          {!offers.length && (
+          {/* {!offers.length && (
             <p className="offers-empty">No items are currently on offer. Check back soon.</p>
-          )}
+          )} */}
         </div>
       </section>
 

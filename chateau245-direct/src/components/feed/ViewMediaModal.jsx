@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { FiX, FiHeart, FiPlay } from 'react-icons/fi';
+import React, { useEffect, useRef, useState } from 'react';
+import { FiX, FiHeart, FiPlay, FiVolume2, FiVolumeX } from 'react-icons/fi';
 import { formatCount, formatFeedDate } from './useFeed';
 
 /* The "view media" overlay. Opening a card focuses this dialog and Escape or a
@@ -10,6 +10,8 @@ import { formatCount, formatFeedDate } from './useFeed';
 const ViewMediaModal = ({ post, onClose, onToggleLike, canLike, busy = false }) => {
   const closeRef = useRef(null);
   const likeRef = useRef(null);
+  const videoRef = useRef(null);
+  const [muted, setMuted] = useState(true);
 
   useEffect(() => {
     if (!post) return undefined;
@@ -36,6 +38,13 @@ const ViewMediaModal = ({ post, onClose, onToggleLike, canLike, busy = false }) 
 
   const isVideo = post.mediaType === 'video';
 
+  const toggleMute = () => {
+    setMuted(!muted);
+    if (videoRef.current) {
+      videoRef.current.muted = !muted;
+    }
+  };
+
   return (
     <div
       className="feed-modal-backdrop"
@@ -49,10 +58,31 @@ const ViewMediaModal = ({ post, onClose, onToggleLike, canLike, busy = false }) 
 
         <div className="feed-modal-media">
           {isVideo ? (
-            <video className="feed-modal-video" controls playsInline preload="metadata" poster={post.thumbnailUrl || undefined}>
-              <source src={post.mediaUrl} />
-              Your browser does not support video playback.
-            </video>
+            <div className="feed-modal-video-wrapper">
+              <video
+                ref={videoRef}
+                className="feed-modal-video"
+                controls
+                autoPlay
+                muted={muted}
+                playsInline
+                preload="metadata"
+                poster={post.thumbnailUrl || undefined}
+              >
+                <source src={post.mediaUrl} />
+                Your browser does not support video playback.
+              </video>
+              <div className="feed-modal-video-controls">
+                <button
+                  type="button"
+                  className="feed-modal-mute-btn"
+                  onClick={toggleMute}
+                  aria-label={muted ? 'Unmute' : 'Mute'}
+                >
+                  {muted ? <FiVolumeX /> : <FiVolume2 />}
+                </button>
+              </div>
+            </div>
           ) : (
             <img className="feed-modal-image" src={post.mediaUrl} alt={post.title || 'Château254 update'} />
           )}
