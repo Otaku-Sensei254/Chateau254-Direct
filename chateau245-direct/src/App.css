@@ -43,3 +43,12 @@ html,
 ::-webkit-scrollbar-thumb:hover {
   background: var(--gold-deep);
 }
+.dark-date-input {
+  background-color: #000000;
+  color: #ffffff;
+  color-scheme: dark; /* Automatically tells the browser to use a dark theme picker */
+}
+
+.dark-date-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}

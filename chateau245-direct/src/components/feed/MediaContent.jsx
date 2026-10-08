@@ -476,6 +476,7 @@ const MediaContent = ({ api, headers, addToast }) => {
                           type="date"
                           value={form.week_start_date}
                           onChange={(e) => setForm((prev) => ({ ...prev, week_start_date: e.target.value }))}
+                          className="dark-date-input"
                         />
                       </label>
 

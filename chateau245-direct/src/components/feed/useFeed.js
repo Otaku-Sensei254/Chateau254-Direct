@@ -7,7 +7,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 export const FEED_ACCEPT = 'image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime';
-export const FEED_MAX_BYTES = 50 * 1024 * 1024;
+export const FEED_MAX_BYTES = 500 * 1024 * 1024;
 
 const inferMediaType = (url) => (/\.(mp4|webm|mov)(\?|$)/i.test(url || '') ? 'video' : 'image');
 
