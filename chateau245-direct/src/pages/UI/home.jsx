@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import { GiMeal } from "react-icons/gi";
 import { GiPartyPopper, GiWineGlass } from "react-icons/gi";
 import { FiPlayCircle, FiVolume2, FiVolumeX } from "react-icons/fi";
+import WineCellarDisclaimer from '../../components/WineCellarDisclaimer';
 const typewriterPhrases = [
   "Welcome to Chateau254",
   "Serene Dining",
@@ -237,7 +238,7 @@ const Home = ({ api, onDining, onLunchAndBar, onEvents, onTakeout, onWines, onAu
             <button className="cta-button cta-events" onClick={onEvents}>
               <GiPartyPopper />Events
             </button>
-            <button className="cta-button cta-cellar" onClick={onWines}>
+            <button className="cta-button cta-cellar is-disabled" disabled title="Wine Cellar coming soon">
               <GiWineGlass />Wine Cellar
             </button>
           </div>
@@ -249,6 +250,7 @@ const Home = ({ api, onDining, onLunchAndBar, onEvents, onTakeout, onWines, onAu
           </div>
         </div>
       </section>
+      <WineCellarDisclaimer show={true} />
       <div className="home-foot">
         <span>
           <FiMapPin /> General Mathenge The Promenade, Nairobi

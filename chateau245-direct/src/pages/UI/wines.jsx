@@ -27,6 +27,7 @@ import { addBottle, fetchCellar, fetchMyRatings, importBottles, saveRating } fro
 import AccountRequiredModal from '../../components/ui/AccountRequiredModal';
 import { useToast } from '../../contexts/ToastContext';
 import { WineCardSkeleton } from '../../components/ui/loaders-skeleton';
+import WineCellarDisclaimer from '../../components/WineCellarDisclaimer';
 import './styles/wines.css';
 
 // Stylized realistic Italian Wine Bottle Graphic for wines without direct photos
@@ -721,6 +722,8 @@ const WinesPage = ({ user, token, addToCart, addDineInItem, onGoToReservations, 
           </button>
         )}
       </header>
+
+      <WineCellarDisclaimer show={true} />
 
       {/* Filters */}
       <div className="wines-filters">

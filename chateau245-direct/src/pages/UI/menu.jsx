@@ -17,6 +17,7 @@ import { useToast } from "../../contexts/ToastContext";
 import { useNavigate } from "react-router-dom";
 import AccountRequiredModal from "../../components/ui/AccountRequiredModal";
 import { LoaderSkeleton, MenuCardSkeleton } from "../../components/ui/loaders-skeleton";
+import WineCellarDisclaimer from '../../components/WineCellarDisclaimer';
 
 const parseOfferPercent = (offerText = "") => {
   const match = String(offerText).match(/(\d+(?:\.\d+)?)\s*%/);
@@ -416,6 +417,8 @@ const Menu = ({ api,
           </button>
         </div>
       </div>
+
+      <WineCellarDisclaimer show={true} />
 
       {activePromo && (
         <div className="promo-banner promo-modal" role="status" aria-live="polite" onClick={(event) => { if (event.target === event.currentTarget) dismissPromotion(activePromo.id); }}>

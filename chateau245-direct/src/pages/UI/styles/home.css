@@ -1082,3 +1082,134 @@
         font-size: 0.6875rem;
     }
 }
+
+/* ==========================================================================
+   Wine Cellar Disclaimer
+   ========================================================================== */
+
+.wine-cellar-disclaimer {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    background: linear-gradient(135deg, rgba(var(--gold-rgb), 0.12), rgba(var(--gold-rgb), 0.05));
+    border: 1px solid rgba(var(--gold-rgb), 0.3);
+    border-radius: 12px;
+    margin: 1.5rem auto;
+    max-width: 600px;
+    animation: disclaimerSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes disclaimerSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.wine-cellar-disclaimer-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(var(--gold-rgb), 0.15);
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+.wine-cellar-disclaimer-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.wine-cellar-disclaimer-content h4 {
+    margin: 0 0 0.5rem;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-strong);
+}
+
+.wine-cellar-disclaimer-content p {
+    margin: 0 0 1rem;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--text);
+}
+
+.wine-cellar-disclaimer-whatsapp {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: #25D366;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+
+.wine-cellar-disclaimer-whatsapp:hover {
+    background: #1DB954;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
+}
+
+.wine-cellar-disclaimer-dismiss {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.wine-cellar-disclaimer-dismiss:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: var(--text-strong);
+}
+
+@media (max-width: 540px) {
+    .wine-cellar-disclaimer {
+        padding: 1rem;
+        gap: 0.75rem;
+        margin: 1rem 0;
+    }
+    
+    .wine-cellar-disclaimer-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1.125rem;
+    }
+    
+    .wine-cellar-disclaimer-content h4 {
+        font-size: 1rem;
+    }
+    
+    .wine-cellar-disclaimer-content p {
+        font-size: 0.875rem;
+    }
+    
+    .wine-cellar-disclaimer-whatsapp {
+        padding: 0.625rem 1rem;
+        font-size: 0.8125rem;
+    }
+}
