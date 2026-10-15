@@ -1,0 +1,223 @@
+/* Merge: match by producer + shared main critical token (relaxed) */
+
+const { Pool } = require('pg');
+
+const LOCAL_URL = 'postgresql://postgres:dtechpsql@localhost:5432/chateau254';
+
+const pool = new Pool({ connectionString: LOCAL_URL, ssl: false });
+
+/* Normalize text for comparison */
+function normalizeText(text) {
+  return String(text || '')
+    .toLowerCase()
+    .replace(/[®™©]/g, '')
+    .replace(/[&]/g, ' and ')
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/* Extract MAIN critical wine tokens (varietal + region combos) */
+function extractMainTokens(name) {
+  const normalized = normalizeText(name);
+  const tokens = new Set();
+
+  // Main wine identity tokens - these MUST match for same wine
+  const mainTokens = [
+    'montepulciano d abruzzo',
+    'valpolicella ripasso',
+    'valpolicella superiore',
+    'amarone della valpolicella',
+    'amarone',
+    'chianti classico riserva',
+    'chianti classico gran selezione',
+    'chianti classico',
+    'brunello di montalcino',
+    'rosso di montalcino',
+    'vino nobile di montepulciano',
+    'terre di chieti',
+    'terre d abruzzo',
+    'valdobbiadene superiore',
+    'valdobbiadene',
+    'prosecco docg',
+    'prosecco doc',
+    'prosecco',
+    'nero d avola',
+    'negroamaro',
+    'primitivo',
+    'aglianico',
+    'falanghina',
+    'pecorino',
+    'trebbiano d abruzzo',
+    'soave',
+    'bardolino superiore',
+    'bardolino',
+    'corvina',
+    'moscato giallo',
+    'moscato',
+    'gavi',
+    'barbaresco',
+    'barolo',
+    'nebbiolo',
+    'carmignano',
+    'sangiovese',
+    'cabernet sauvignon',
+    'cabernet franc',
+    'merlot',
+    'pinot grigio',
+    'pinot noir',
+    'chardonnay',
+  ];
+
+  for (const token of mainTokens) {
+    if (normalized.includes(token)) {
+      tokens.add(token);
+    }
+  }
+
+  return Array.from(tokens);
+}
+
+/* Check if two names share at least one MAIN critical token */
+function shareMainToken(a, b) {
+  const tokensA = new Set(extractMainTokens(a));
+  const tokensB = new Set(extractMainTokens(b));
+
+  for (const t of tokensA) {
+    if (tokensB.has(t)) return true;
+  }
+  return false;
+}
+
+/* Check if producer/brand match */
+function producerMatch(producerA, brandA, producerB, brandB) {
+  const a = (brandA || producerA || '').toLowerCase().trim();
+  const b = (brandB || producerB || '').toLowerCase().trim();
+  if (!a || !b) return false;
+  if (a === b) return true;
+  if (a.includes(b) || b.includes(a)) return true;
+  const wordsA = new Set(a.split(' ').filter(w => w.length > 2));
+  const wordsB = new Set(b.split(' ').filter(w => w.length > 2));
+  let overlap = 0;
+  for (const w of wordsA) if (wordsB.has(w)) overlap++;
+  return overlap >= 1;
+}
+
+async function main() {
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+
+    // Get all wines
+    const allWines = await client.query(
+      `SELECT id, name, brand, producer, price, description, image_url FROM wines ORDER BY name`
+    );
+
+    console.log(`Total wines: ${allWines.rows.length}`);
+
+    // Separate JSON wines (has image, price=0, no brand) and Invoice wines (has brand, price>0, no image)
+    const jsonWines = [];
+    const invoiceWines = [];
+
+    for (const w of allWines.rows) {
+      const hasBrand = w.brand && w.brand.length > 1;
+      const hasImage = w.image_url && w.image_url.length > 10;
+      const pricePositive = w.price && w.price > 100;
+
+      if (hasImage && !hasBrand && !pricePositive) {
+        jsonWines.push(w);
+      } else if (hasBrand && pricePositive && !hasImage) {
+        invoiceWines.push(w);
+      } else if (hasBrand && pricePositive && hasImage) {
+        invoiceWines.push(w); // Already merged
+      } else {
+        jsonWines.push(w);
+      }
+    }
+
+    console.log(`JSON wines (image, no brand): ${jsonWines.length}`);
+    console.log(`Invoice wines (brand, price): ${invoiceWines.length}`);
+
+    // Match invoice wines to JSON wines by: same producer + SHARE main critical token
+    let merged = 0;
+    const matchedJsonIds = new Set();
+    const matchedInvoiceIds = new Set();
+
+    for (const inv of invoiceWines) {
+      if (matchedInvoiceIds.has(inv.id)) continue;
+
+      let bestJson = null;
+
+      for (const json of jsonWines) {
+        if (matchedJsonIds.has(json.id)) continue;
+
+        // Must have matching producer/brand
+        if (!producerMatch(json.producer, json.brand, inv.producer, inv.brand)) continue;
+
+        // Must share at least one MAIN critical token
+        if (!shareMainToken(inv.name, json.name)) continue;
+
+        // Found match!
+        bestJson = json;
+        break;
+      }
+
+      if (bestJson) {
+        console.log(`\n✅ MATCH by producer + main token:`);
+        console.log(`  Invoice: "${inv.name}" [${inv.brand}] - ${inv.price}`);
+        console.log(`  JSON:    "${bestJson.name}" [${bestJson.producer}] - has image: YES`);
+
+        // Use a temp name to avoid unique constraint, then update
+        const tempName = `__MERGE_TEMP_${inv.id}__`;
+        
+        // First rename invoice to temp
+        await client.query(`UPDATE wines SET name = $1 WHERE id = $2`, [tempName, inv.id]);
+        
+        // Then update JSON record with invoice data
+        await client.query(
+          `UPDATE wines SET 
+            name = $1, brand = $2, producer = $3, price = $4, 
+            description = $5, image_url = $6, updated_at = NOW() 
+           WHERE id = $7`,
+          [inv.name, inv.brand, inv.brand, inv.price, bestJson.description, bestJson.image_url, bestJson.id]
+        );
+
+        // Delete invoice duplicate (now has temp name)
+        await client.query(`DELETE FROM wines WHERE id = $1`, [inv.id]);
+
+        matchedJsonIds.add(bestJson.id);
+        matchedInvoiceIds.add(inv.id);
+        merged++;
+        console.log(`  → Merged into JSON record (id: ${bestJson.id})`);
+      } else {
+        console.log(`\n❓ No JSON match for: "${inv.name}" [${inv.brand}] - keeping as-is`);
+      }
+    }
+
+    await client.query('COMMIT');
+    console.log(`\n✅ Done! Merged ${merged} invoice wines into JSON records`);
+
+    // Final count
+    const final = await client.query('SELECT count(*) FROM wines');
+    console.log(`Total wines after merge: ${final.rows[0].count}`);
+
+    // Show result
+    const r = await client.query('SELECT name, brand, producer, price, description, image_url FROM wines ORDER BY brand, name');
+    console.log('\nFinal wines:');
+    r.rows.forEach(w => {
+      const hasDesc = w.description && w.description.length > 10;
+      const hasImg = w.image_url && w.image_url.length > 10;
+      console.log(`  [${w.brand || w.producer || 'NULL'}] ${w.name} - ${w.price} - desc: ${hasDesc ? 'YES' : 'NO'} - img: ${hasImg ? 'YES' : 'NO'}`);
+    });
+
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error('❌ Error:', err.message);
+    console.error(err.stack);
+  } finally {
+    client.release();
+    await pool.end();
+  }
+}
+
+main();

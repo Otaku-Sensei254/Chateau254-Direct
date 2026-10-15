@@ -7,8 +7,18 @@ const router = express.Router();
 
 const orderQuery = `
     SELECT o.*, COALESCE(u.full_name, cu.full_name) AS customer_name, COALESCE(u.email, cu.email) AS customer_email,
+      u.phone AS customer_phone,
       r.full_name AS rider_name, r.phone AS rider_phone,
-      (SELECT COUNT(*) FROM order_items oi WHERE oi.order_id = o.id) AS items_count
+      (SELECT COUNT(*) FROM order_items oi WHERE oi.order_id = o.id) AS items_count,
+      (SELECT string_agg(CONCAT(oi.quantity, ' × ', COALESCE(c.name, 'Unavailable item')), ', ' ORDER BY c.name)
+       FROM order_items oi
+       LEFT JOIN (
+         SELECT id, name FROM wines
+         UNION ALL SELECT id, name FROM dine_in_menu
+         UNION ALL SELECT id, name FROM takeout_menu
+         UNION ALL SELECT id, name FROM lunchbox_menu
+       ) c ON c.id = oi.menu_item_id
+       WHERE oi.order_id = o.id) AS items_summary
   FROM orders o
   LEFT JOIN users u ON u.id = o.user_id
   LEFT JOIN chateau_users cu ON cu.id = o.user_id
@@ -73,8 +83,8 @@ router.post('/', authenticate, requireRole('customer', 'admin'), asyncHandler(as
   }
 
   const result = await query(
-    `INSERT INTO orders (user_id, delivery_address, total_amount)
-     VALUES ($1, $2, $3) RETURNING *`,
+    `INSERT INTO orders (user_id, delivery_address, total_amount, payment_method)
+     VALUES ($1, $2, $3, 'whatsapp') RETURNING *`,
     [user_id, delivery_address, total_amount],
   );
   const order = result.rows[0];

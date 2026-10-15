@@ -211,28 +211,11 @@ const App = () => {
     event.preventDefault();
     if (!session?.token) { navigate('/auth'); return; }
     const form = new FormData(event.currentTarget);
-    const deliveryAddress = form.get('address') || 'Not specified';
-    const paymentMethod = form.get('payment') || 'cash_on_delivery';
+    const customerName = form.get('name') || session.user.full_name || 'Customer';
+    const customerPhone = form.get('phone') || session.user.phone || '';
+    const fulfillmentType = form.get('delivery_option') || 'delivery';
+    const deliveryAddress = fulfillmentType === 'pickup' ? 'Pickup from Château' : (form.get('address') || 'Not specified');
     try {
-      if (paymentMethod === 'pesapal') {
-        const paymentResponse = await fetch(`${API_URL}/payments/pesapal/initialize`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.token}` },
-          body: JSON.stringify({
-            delivery_address: deliveryAddress,
-            phone: form.get('phone') || '',
-            latitude: coords?.latitude || null,
-            longitude: coords?.longitude || null,
-            items: cart.map((item) => ({ menu_item_id: item.id, quantity: item.quantity })),
-          }),
-        });
-        const paymentPayload = await paymentResponse.json().catch(() => ({}));
-        if (!paymentResponse.ok) throw new Error(paymentPayload.error || 'Unable to start Pesapal payment');
-        if (!paymentPayload.payment?.redirectUrl) throw new Error('Pesapal did not provide a payment page');
-        window.location.assign(paymentPayload.payment.redirectUrl);
-        return;
-      }
-
       const menuRes = await fetch(`${API_URL}/menu`);
       const menuData = await menuRes.json();
       const nameToId = {};
@@ -248,6 +231,7 @@ const App = () => {
         user_id: session.user.id,
         delivery_address: deliveryAddress,
         total_amount: subtotal,
+        payment_method: 'whatsapp',
         latitude: coords?.latitude || null,
         longitude: coords?.longitude || null,
         items: cart.map((item) => ({
@@ -264,7 +248,32 @@ const App = () => {
       const errorPayload = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(errorPayload.error || 'Failed to place order');
       const data = errorPayload;
-      const placedOrder = { id: data.order.id, number: data.order.id.slice(0, 8), total: Number(data.order.total_amount) };
+      const orderNumber = data.order.id.slice(0, 8);
+      const orderItems = cart.map((item) => ({
+        name: item.name,
+        quantity: item.quantity,
+        unitPrice: Number(item.price),
+        lineTotal: Number(item.price) * item.quantity,
+      }));
+      const whatsappMessage = [
+        'Hello Château254, I have placed an order through the website.',
+        `Order reference: #${orderNumber}`,
+        `Name: ${customerName}`,
+        `Phone: ${customerPhone}`,
+        `${fulfillmentType === 'pickup' ? 'Collection' : 'Delivery address'}: ${deliveryAddress}`,
+        'Items:',
+        ...orderItems.map((item) => `• ${item.quantity} × ${item.name} — KES ${item.lineTotal.toLocaleString()}`),
+        `Total: KES ${subtotal.toLocaleString()}`,
+        'Please confirm availability and arrange payment with me on WhatsApp.',
+      ].join('\n');
+      const placedOrder = {
+        id: data.order.id,
+        number: orderNumber,
+        total: Number(data.order.total_amount),
+        customer: { name: customerName, phone: customerPhone },
+        items: orderItems,
+        whatsappUrl: `https://wa.me/254114100680?text=${encodeURIComponent(whatsappMessage)}`,
+      };
       setOrder(placedOrder);
       localStorage.setItem('chateau254_last_order', placedOrder.id);
       setLastOrderId(placedOrder.id);

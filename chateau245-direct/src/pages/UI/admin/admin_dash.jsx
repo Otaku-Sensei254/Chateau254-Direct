@@ -472,12 +472,14 @@ const OrdersContent = ({ orders, onUpdateStatus, updatingOrder, riders, formatCu
                 <div className="admin-order-id"><span>ORDER</span><strong>#{order.id.slice(0, 8)}</strong></div>
                 <span className={`admin-order-status status-${order.status || 'unknown'}`}><i />{statusLabel}</span>
               </header>
-              <div className="admin-order-customer"><span className="admin-order-customer-avatar">{initials || 'CU'}</span><div><strong>{customerName}</strong><span>{order.customer_email || 'Customer'}</span></div></div>
+              <div className="admin-order-customer"><span className="admin-order-customer-avatar">{initials || 'CU'}</span><div><strong>{customerName}</strong><span>{order.customer_email || 'Customer'}</span>{order.customer_phone && <span>{order.customer_phone}</span>}</div></div>
               <div className="admin-order-summary">
                 <div><span>Items</span><strong>{order.items_count || 0} <small>{Number(order.items_count) === 1 ? 'item' : 'items'}</small></strong></div>
                 <div><span>Order total</span><strong className="admin-order-total">{formatCurrency(order.total_amount)}</strong></div>
               </div>
+              {order.items_summary && <p className="admin-order-items-summary"><strong>Order items:</strong> {order.items_summary}</p>}
               <div className="admin-order-address"><FiMap /><span title={order.delivery_address || ''}>{order.delivery_address || 'Address not provided'}</span></div>
+              {order.payment_method === 'whatsapp' && <p className="admin-order-items-summary"><strong>Payment:</strong> To arrange on WhatsApp · unpaid</p>}
               <footer className="admin-order-card-footer">
                 <div className="admin-order-time"><span>Placed {formatTime(order.created_at)} · {order.created_at ? new Date(order.created_at).toLocaleDateString('en-KE', { day: 'numeric', month: 'short' }) : '—'}</span>
                   {order.status === 'out_for_delivery' && order.rider_name && <strong>Rider: {order.rider_name}</strong>}
@@ -514,12 +516,14 @@ const OrderTable = ({ orders, formatCurrency, formatTime, compact }) => orders.l
         <div className="admin-order-id"><span>ORDER</span><strong>#{order.id.slice(0, 8)}</strong></div>
         <span className={`admin-order-status status-${order.status || 'unknown'}`}><i />{statusLabel}</span>
       </header>
-      <div className="admin-order-customer"><span className="admin-order-customer-avatar">{initials || 'CU'}</span><div><strong>{customerName}</strong><span>{order.customer_email || 'Customer'}</span></div></div>
+      <div className="admin-order-customer"><span className="admin-order-customer-avatar">{initials || 'CU'}</span><div><strong>{customerName}</strong><span>{order.customer_email || 'Customer'}</span>{order.customer_phone && <span>{order.customer_phone}</span>}</div></div>
       <div className="admin-order-summary">
         <div><span>Items</span><strong>{order.items_count || 0} <small>{Number(order.items_count) === 1 ? 'item' : 'items'}</small></strong></div>
         <div><span>Order total</span><strong className="admin-order-total">{formatCurrency(order.total_amount)}</strong></div>
       </div>
+      {order.items_summary && <p className="admin-order-items-summary"><strong>Order items:</strong> {order.items_summary}</p>}
       <div className="admin-order-address"><FiMap /><span title={order.delivery_address || ''}>{order.delivery_address || 'Address not provided'}</span></div>
+      {order.payment_method === 'whatsapp' && <p className="admin-order-items-summary"><strong>Payment:</strong> To arrange on WhatsApp · unpaid</p>}
       <footer className="admin-order-card-footer">
         <div className="admin-order-time"><span>Placed {formatTime(order.created_at)} · {order.created_at ? new Date(order.created_at).toLocaleDateString('en-KE', { day: 'numeric', month: 'short' }) : '—'}</span>
           {order.status === 'out_for_delivery' && order.rider_name && <strong>Rider: {order.rider_name}</strong>}

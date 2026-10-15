@@ -109,3 +109,13 @@
     font-size: 13px;
     margin: 0 0 28px;
 }
+
+.booking-whatsapp-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    width: fit-content;
+    margin: 18px auto 0;
+    text-decoration: none;
+}

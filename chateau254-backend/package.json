@@ -12,6 +12,7 @@
     "db:schema": "node scripts/migrate.js",
     "db:seed": "node scripts/seed.js",
     "sync:cellar": "node scripts/sync-wine-cellar.js",
+    "wines:enrich": "node scripts/enrich-invoice-wines.js",
     "test": "node --check server.js"
   },
   "keywords": [],

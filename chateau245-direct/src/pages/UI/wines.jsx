@@ -410,10 +410,18 @@ const getColorBadgeClass = (color) => {
 
 const getConfidenceBadgeClass = (confidence) => {
   switch (confidence) {
-    case 'confirmed': return 'confidence-confirmed';
-    case 'likely': return 'confidence-likely';
-    case 'unconfirmed': return 'confidence-unconfirmed';
-    default: return '';
+    case 'confirmed':
+    case 'verified':
+      return 'confidence-confirmed';
+    case 'likely':
+      return 'confidence-likely';
+    case 'unconfirmed':
+    case 'uncertain':
+      return 'confidence-unconfirmed';
+    case 'source_list':
+      return 'confidence-source';
+    default:
+      return '';
   }
 };
 

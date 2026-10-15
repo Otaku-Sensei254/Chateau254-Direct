@@ -9,6 +9,7 @@ const Checkout = ({ subtotal, placeOrder, api, token, user, onRequireAuth }) => 
   const CARD_PAYMENT_ENABLED = false;
   const [coords, setCoords] = useState(null);
   const [showMap, setShowMap] = useState(false);
+  const [fulfillmentType, setFulfillmentType] = useState('delivery');
   const [reverseStatus, setReverseStatus] = useState(null);
   const [copied, setCopied] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState('mpesa');
@@ -86,14 +87,7 @@ const Checkout = ({ subtotal, placeOrder, api, token, user, onRequireAuth }) => 
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
-    // If M-Pesa STK Push is selected, handle it separately
-    if (paymentMethod === 'mpesa' && mpesaPaymentType === 'stkpush') {
-      await handleMpesaStkPush();
-      return;
-    }
-    
-    // For other payment methods, use the original placeOrder
+    // Payment is temporarily handled with the Château team over WhatsApp.
     placeOrder(event, coords);
   };
 
@@ -164,6 +158,7 @@ const Checkout = ({ subtotal, placeOrder, api, token, user, onRequireAuth }) => 
     }, 5000); // 5s cadence stays well under Daraja's 30-queries/min spike limit
   };
 
+  // eslint-disable-next-line no-unused-vars -- Retained for when the M-Pesa flow is re-enabled.
   const handleMpesaStkPush = async () => {
     if (!token) {
       setPayModal({
@@ -275,7 +270,7 @@ const Checkout = ({ subtotal, placeOrder, api, token, user, onRequireAuth }) => 
             <div className="checkout-fields">
               <label className="checkout-field"><span>Full name</span><input ref={nameRef} name="name" placeholder="Your name" defaultValue={user?.full_name || ''} required /></label>
               <label className="checkout-field"><span>Phone number</span><input ref={phoneRef} name="phone" type="tel" placeholder="+254 712 345 678" defaultValue={user?.phone || ''} required /></label>
-              <label className="checkout-field checkout-field-wide"><span>Delivery address</span><textarea ref={addressRef} name="address" placeholder="Search on map below or type your address" required /></label>
+              {fulfillmentType === 'delivery' && <label className="checkout-field checkout-field-wide"><span>Delivery address</span><textarea ref={addressRef} name="address" placeholder="Search on map below or type your address" required /></label>}
             </div>
           </section>
 
@@ -307,13 +302,13 @@ const Checkout = ({ subtotal, placeOrder, api, token, user, onRequireAuth }) => 
             </div>
             <div className="checkout-option-grid">
               <label className="checkout-option">
-                <input type="radio" name="delivery_option" defaultChecked />
+                <input type="radio" name="delivery_option" value="delivery" checked={fulfillmentType === 'delivery'} onChange={() => setFulfillmentType('delivery')} />
                 <span className="checkout-option-icon"><FiTruck /></span>
                 <span className="checkout-option-copy"><strong>Delivery</strong><small>45–60 min · No delivery fee</small></span>
                 <span className="checkout-option-check"><FiCheck /></span>
               </label>
               <label className="checkout-option">
-                <input type="radio" name="delivery_option" />
+                <input type="radio" name="delivery_option" value="pickup" checked={fulfillmentType === 'pickup'} onChange={() => setFulfillmentType('pickup')} />
                 <span className="checkout-option-icon"><FiMapPin /></span>
                 <span className="checkout-option-copy"><strong>Pick up</strong><small>Collect from Château · Free</small></span>
                 <span className="checkout-option-check"><FiCheck /></span>
@@ -321,7 +316,8 @@ const Checkout = ({ subtotal, placeOrder, api, token, user, onRequireAuth }) => 
             </div>
           </section>
 
-          <section className="checkout-section">
+          {/* Payment gateway is paused; saved orders are followed by a WhatsApp handoff. */}
+          {false && <section className="checkout-section">
             <div className="checkout-section-heading">
               <span className="checkout-step">04</span>
               <div><h2>Payment method</h2><p>Choose how you would like to settle your order.</p></div>
@@ -594,7 +590,7 @@ const Checkout = ({ subtotal, placeOrder, api, token, user, onRequireAuth }) => 
               </div>
             )}
 
-          </section>
+          </section>}
 
         </div>
 
@@ -603,11 +599,11 @@ const Checkout = ({ subtotal, placeOrder, api, token, user, onRequireAuth }) => 
           <div className="checkout-summary-top"><span className="cart-section-kicker">Order total</span><h2>Almost ready</h2><p>Review your order before placing it.</p></div>
           <Summary subtotal={subtotal} />
           <div className="checkout-trust"><FiClock /><span><strong>Freshly prepared</strong><small>We'll start as soon as your order is confirmed.</small></span></div>
-          <div className="checkout-trust"><FiLock /><span><strong>Safe and secure</strong><small>Your details are only used to fulfil this order.</small></span></div>
+          <div className="checkout-trust"><FiLock /><span><strong>Payment arranged directly</strong><small>Message Château254 on WhatsApp after placing your order.</small></span></div>
           <button className="primary-button full checkout-submit" type="submit" disabled={isProcessingMpesa}>
-            {isProcessingMpesa ? 'Processing...' : 'Place order'} <FiArrowRight />
+            {isProcessingMpesa ? 'Saving order...' : 'Place order'} <FiArrowRight />
           </button>
-          <p className="checkout-note">By placing your order, you confirm that your delivery details are correct.</p>
+          <p className="checkout-note">Your order will be saved for the Château team. No payment will be taken online.</p>
         </aside>
       </form>
 

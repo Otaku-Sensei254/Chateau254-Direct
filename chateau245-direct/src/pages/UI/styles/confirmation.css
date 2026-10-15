@@ -51,6 +51,45 @@
     color: var(--muted);
 }
 
+.confirmation-order-items {
+    display: grid;
+    gap: 8px;
+    margin: 8px 0;
+    padding: 12px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    list-style: none;
+}
+
+.confirmation-order-items li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--ink);
+    font-size: 12px;
+}
+
+.confirmation-order-items li span {
+    color: var(--ink);
+    font-size: inherit;
+    font-weight: 500;
+}
+
+.confirmation-order-items li strong {
+    flex-shrink: 0;
+    font: 700 12px sans-serif;
+}
+
+.confirmation-whatsapp-button,
+.booking-whatsapp-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    margin: 24px auto 18px;
+    text-decoration: none;
+}
+
 .text-button {
     border: 0;
     background: transparent;

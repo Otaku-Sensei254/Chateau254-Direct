@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FiArrowLeft, FiCalendar, FiSave, FiUser, FiUsers, FiClipboard, FiX } from 'react-icons/fi';
+import { FiArrowLeft, FiCalendar, FiSave, FiUser, FiUsers, FiClipboard, FiX, FiMessageCircle } from 'react-icons/fi';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
@@ -8,7 +8,7 @@ const today = () => new Date().toISOString().slice(0, 16);
 const Booking = ({ user, token, selectedItems = [], onClearSelections }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -16,6 +16,9 @@ const Booking = ({ user, token, selectedItems = [], onClearSelections }) => {
     setLoading(true);
     const form = new FormData(event.currentTarget);
     const partySize = Number(form.get('party_size'));
+    const customerName = form.get('name');
+    const diningTime = form.get('dining_time');
+    const notes = form.get('notes') || '';
     if (!partySize || partySize < 1) {
       setError('Please enter the number of guests.');
       setLoading(false);
@@ -27,11 +30,11 @@ const Booking = ({ user, token, selectedItems = [], onClearSelections }) => {
       return;
     }
     const body = {
-      customer_name: form.get('name'),
+      customer_name: customerName,
       party_size: partySize,
       preferred_item: selectedItems.length ? selectedItems.map((i) => i.name).join(', ') : null,
-      dining_time: form.get('dining_time'),
-      notes: [form.get('notes') || '', selectedItems.length ? `Selected items: ${selectedItems.map((i) => `${i.name} — KES ${Number(i.price).toLocaleString()}`).join(', ')}` : ''].filter(Boolean).join('\n'),
+      dining_time: diningTime,
+      notes: [notes, selectedItems.length ? `Selected items: ${selectedItems.map((i) => `${i.name} — KES ${Number(i.price).toLocaleString()}`).join(', ')}` : ''].filter(Boolean).join('\n'),
     };
     try {
       const res = await fetch(`${API_URL}/bookings`, {
@@ -39,8 +42,25 @@ const Booking = ({ user, token, selectedItems = [], onClearSelections }) => {
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(body),
       });
-      if (!res.ok) throw new Error('Failed to create reservation');
-      setSubmitted(true);
+      const result = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(result.error || 'Failed to create reservation');
+      const booking = result.booking;
+      const bookingReference = booking?.id ? booking.id.slice(0, 8) : 'pending';
+      const message = [
+        'Hello Château254, I have submitted a table reservation through the website.',
+        `Reservation reference: #${bookingReference}`,
+        `Name: ${customerName}`,
+        `Phone: ${user?.phone || 'Not provided'}`,
+        `Guests: ${partySize}`,
+        `Preferred date and time: ${new Date(diningTime).toLocaleString('en-KE')}`,
+        selectedItems.length ? `Selected items: ${selectedItems.map((item) => `${item.name} — KES ${Number(item.price).toLocaleString()}`).join(', ')}` : '',
+        notes ? `Notes: ${notes}` : '',
+        'Please confirm my reservation on WhatsApp.',
+      ].filter(Boolean).join('\n');
+      setSubmitted({
+        reference: bookingReference,
+        whatsappUrl: `https://wa.me/254114100680?text=${encodeURIComponent(message)}`,
+      });
       onClearSelections?.();
     } catch (err) {
       setError(err.message || 'Something went wrong. Please try again.');
@@ -55,9 +75,12 @@ const Booking = ({ user, token, selectedItems = [], onClearSelections }) => {
       <div className="booking-success">
         <div className="booking-success-icon"><FiSave /></div>
         <h2>Reservation received!</h2>
-        <p className="booking-success-text">Thank you, {user?.full_name || 'friend'}. Your table request has been sent to the restaurant.</p>
+        <p className="booking-success-text">Thank you, {user?.full_name || 'friend'}. Your table request #{submitted.reference} has been saved for the restaurant.</p>
         <p className="booking-success-hint">The team will confirm your booking and assign a table shortly.</p>
-        <button className="primary-button" onClick={() => setSubmitted(false)}>Make another booking</button>
+        <button className="text-button" onClick={() => setSubmitted(null)}>Make another booking</button>
+        <a className="primary-button booking-whatsapp-button" href={submitted.whatsappUrl} target="_blank" rel="noopener noreferrer">
+          <FiMessageCircle /> Message Château on WhatsApp
+        </a>
       </div>
     </main>;
   }

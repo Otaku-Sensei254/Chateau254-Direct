@@ -38,6 +38,7 @@ export const normalizeCellarWine = (wine) => ({
   producer: wine.producer || '',
   producerRegion: wine.producerRegion || '',
   collection: wine.collection || '',
+  brand: wine.brand || '',
   image: wine.image || '',
   rating: toRating(wine),
   /* Only ever `price` -- the figure the admin menu edits and the cart settles on.

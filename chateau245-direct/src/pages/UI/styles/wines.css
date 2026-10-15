@@ -1106,6 +1106,24 @@
   border: 1px solid var(--danger-edge);
 }
 
+.wine-badge.confidence-verified {
+  background: var(--success-tint);
+  color: var(--success-edge-ink);
+  border: 1px solid var(--success-edge);
+}
+
+.wine-badge.confidence-uncertain {
+  background: var(--surface-page);
+  color: var(--brand-strong);
+  border: 1px solid var(--danger-edge);
+}
+
+.wine-badge.confidence-source {
+  background: var(--info-tint);
+  color: var(--info-edge-ink);
+  border: 1px solid var(--info-edge);
+}
+
 .wine-badge.rating {
   background: var(--surface-subtle);
   color: var(--danger-edge-ink);

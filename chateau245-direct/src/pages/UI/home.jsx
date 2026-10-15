@@ -230,6 +230,9 @@ const Home = ({ api, onDining, onLunchAndBar, onEvents, onTakeout, onWines, onAu
             <button className="cta-button cta-dining" onClick={onDining}>
               <GiMeal /> Fine Dining
             </button>
+            <button className="cta-button cta-cellar is-disabled" disabled title="Wine Cellar coming soon">
+              <GiWineGlass />Wine Cellar
+            </button>
             {/* Take-Out entry point kept here for when the home page button is restored. */}
             <button className="cta-button cta-takeout is-disabled" disabled title="Take out Menu coming soon">
               <RiEBike2Fill /> Take Out
@@ -237,9 +240,6 @@ const Home = ({ api, onDining, onLunchAndBar, onEvents, onTakeout, onWines, onAu
            
             <button className="cta-button cta-events" onClick={onEvents}>
               <GiPartyPopper />Events
-            </button>
-            <button className="cta-button cta-cellar is-disabled" disabled title="Wine Cellar coming soon">
-              <GiWineGlass />Wine Cellar
             </button>
           </div>
         </div>
