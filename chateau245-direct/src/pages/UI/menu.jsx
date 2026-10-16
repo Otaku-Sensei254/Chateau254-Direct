@@ -17,7 +17,7 @@ import { useToast } from "../../contexts/ToastContext";
 import { useNavigate } from "react-router-dom";
 import AccountRequiredModal from "../../components/ui/AccountRequiredModal";
 import { LoaderSkeleton, MenuCardSkeleton } from "../../components/ui/loaders-skeleton";
-import WineCellarDisclaimer from '../../components/WineCellarDisclaimer';
+
 
 const parseOfferPercent = (offerText = "") => {
   const match = String(offerText).match(/(\d+(?:\.\d+)?)\s*%/);
@@ -130,15 +130,6 @@ const Menu = ({ api,
 /* Reserving needs an account so the venue knows who is arriving. Guests get
       told why and sent to sign in rather than silently losing the selection. */
   const requestReservation = async (item) => {
-    if (!user) {
-      setAuthPromptOpen(true);
-      return;
-    }
-    
-    // For dine-in reservations, we can optionally process payment before confirming
-    // This ensures the venue gets paid upfront for table reservations
-    // In a real implementation, this would integrate with the existing Pesapal payment system
-    
     try {
       // For now, we'll process the reservation directly
       // In the future, this could include:
@@ -418,7 +409,7 @@ const Menu = ({ api,
         </div>
       </div>
 
-      <WineCellarDisclaimer show={true} />
+
 
       {activePromo && (
         <div className="promo-banner promo-modal" role="status" aria-live="polite" onClick={(event) => { if (event.target === event.currentTarget) dismissPromotion(activePromo.id); }}>
@@ -590,6 +581,7 @@ const Menu = ({ api,
       </div>
 
       {/* Offers & Curated Specials Carousel */}
+      {offers.length > 0 && (
       <section className="offers-section" aria-label="Special Offers">
         <div className="offers-header">
           <div className="offers-header-left">
@@ -697,6 +689,8 @@ const Menu = ({ api,
           )} */}
         </div>
       </section>
+      )}
+
 
       {mode && MODE_LABELS[mode] && (
         <div className="mode-badge">{MODE_LABELS[mode]}</div>
@@ -756,7 +750,7 @@ const Menu = ({ api,
         {loading ? (
           [1, 2, 3, 4, 5, 6].map((n) => <MenuCardSkeleton key={n} />)
         ) : (
-          items.map((item) => {
+          items.filter((item) => !(isDineIn && item.subcategory === 'Bar Bites & Sandwiches')).map((item) => {
             const isOnOffer = Boolean(
               item.on_offer || item.on_Offer || item.classification?.on_offer || item.classification?.on_Offer
             );

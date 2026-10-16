@@ -10,7 +10,7 @@ import './styles/StaggeredMenu.css';
 
 const defaultMenuItems = [
   { label: 'Wine Cellar', link: '/wines' },
-  { label: 'Packages', ariaLabel: 'Packages', link: '/packages' },
+  // { label: 'Packages', ariaLabel: 'Packages', link: '/packages' },
 
   {
     label: 'Menus',
@@ -489,9 +489,13 @@ export const StaggeredMenu = ({
         </nav>
 
         <div className="sm-header-actions">
-          {userName && (
+          {userName ? (
             <button className="sm-welcome" onClick={onProfile} type="button">
               <FiUser size={16} /> <span>Hi, {firstName}</span>
+            </button>
+          ) : (
+            <button className="sm-welcome" onClick={() => handleNavigate('/auth')} type="button">
+              <FiUser size={16} /> <span>Sign in</span>
             </button>
           )}
 

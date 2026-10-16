@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FiArrowLeft, FiCalendar, FiSave, FiUser, FiUsers, FiClipboard, FiX, FiMessageCircle } from 'react-icons/fi';
+import { FiArrowLeft, FiCalendar, FiSave, FiUser, FiUsers, FiClipboard, FiX, FiMessageCircle, FiPhone } from 'react-icons/fi';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
@@ -17,8 +17,19 @@ const Booking = ({ user, token, selectedItems = [], onClearSelections }) => {
     const form = new FormData(event.currentTarget);
     const partySize = Number(form.get('party_size'));
     const customerName = form.get('name');
+    const customerPhone = form.get('phone') || '';
     const diningTime = form.get('dining_time');
     const notes = form.get('notes') || '';
+    if (!customerName) {
+      setError('Please enter your name.');
+      setLoading(false);
+      return;
+    }
+    if (!user && !customerPhone) {
+      setError('Please enter your phone number.');
+      setLoading(false);
+      return;
+    }
     if (!partySize || partySize < 1) {
       setError('Please enter the number of guests.');
       setLoading(false);
@@ -34,12 +45,14 @@ const Booking = ({ user, token, selectedItems = [], onClearSelections }) => {
       party_size: partySize,
       preferred_item: selectedItems.length ? selectedItems.map((i) => i.name).join(', ') : null,
       dining_time: diningTime,
-      notes: [notes, selectedItems.length ? `Selected items: ${selectedItems.map((i) => `${i.name} — KES ${Number(i.price).toLocaleString()}`).join(', ')}` : ''].filter(Boolean).join('\n'),
+      notes: [customerPhone ? `Phone: ${customerPhone}` : '', notes, selectedItems.length ? `Selected items: ${selectedItems.map((i) => `${i.name} — KES ${Number(i.price).toLocaleString()}`).join(', ')}` : ''].filter(Boolean).join('\n'),
     };
     try {
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers.Authorization = `Bearer ${token}`;
       const res = await fetch(`${API_URL}/bookings`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers,
         body: JSON.stringify(body),
       });
       const result = await res.json().catch(() => ({}));
@@ -50,7 +63,7 @@ const Booking = ({ user, token, selectedItems = [], onClearSelections }) => {
         'Hello Château254, I have submitted a table reservation through the website.',
         `Reservation reference: #${bookingReference}`,
         `Name: ${customerName}`,
-        `Phone: ${user?.phone || 'Not provided'}`,
+          `Phone: ${customerPhone || user?.phone || 'Not provided'}`,
         `Guests: ${partySize}`,
         `Preferred date and time: ${new Date(diningTime).toLocaleString('en-KE')}`,
         selectedItems.length ? `Selected items: ${selectedItems.map((item) => `${item.name} — KES ${Number(item.price).toLocaleString()}`).join(', ')}` : '',
@@ -94,6 +107,10 @@ const Booking = ({ user, token, selectedItems = [], onClearSelections }) => {
         <div className="booking-input"><FiUser /><input id="booking-name" name="name" type="text" placeholder="Jane Wanjiku" defaultValue={user?.full_name || ''} required /></div>
       </div>
 
+      <div className="booking-field">
+        <label htmlFor="booking-phone">Phone number</label>
+        <div className="booking-input"><FiPhone /><input id="booking-phone" name="phone" type="tel" placeholder="+254 700 000 000" defaultValue={user?.phone || ''} required={!user} /></div>
+      </div>
       <div className="booking-field">
         <label htmlFor="booking-party">Number of guests</label>
         <div className="booking-input"><FiUsers /><input id="booking-party" name="party_size" type="number" min="1" max="20" defaultValue="2" required /></div>

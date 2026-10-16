@@ -13,19 +13,27 @@ export default function InstallButton({ alwaysVisible = false, className = '' })
       return; // Already installed, don't show button
     }
 
+    // Show the button immediately (no need to wait for beforeinstallprompt)
+    setIsVisible(true);
+
     const handleBeforeInstallPrompt = (e) => {
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault();
       // Stash the event so it can be triggered later
       setDeferredPrompt(e);
-      // Update UI to notify the user they can install the PWA
-      setIsVisible(true);
+    };
+
+    const handleAppInstalled = () => {
+      setIsVisible(false);
+      setDeferredPrompt(null);
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
     };
   }, []);
 

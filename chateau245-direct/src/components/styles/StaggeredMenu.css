@@ -685,7 +685,7 @@
    Smaller screens (<= 900px): Hides inline menu items, shows hamburger.
    ========================================================================== */
 
-@media (max-width: 900px) {
+@media (max-width: 960px) {
   .sm-desktop-nav {
     display: none !important;
   }

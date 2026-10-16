@@ -15,6 +15,8 @@ import ViewItem from './pages/UI/view_item';
 import EventsPage from './pages/UI/events';
 import AppHeader from './components/Navigation';
 import AppFooter from './components/AppFooter';
+import MembershipPromptModal from './components/MembershipPromptModal';
+import InstallAppModal from './components/InstallAppModal';
 import Auth from './pages/auth/auth';
 import AdminDashboard from './pages/UI/admin/admin_dash';
 import RiderDashboard from './pages/rider/rider_dash';
@@ -402,7 +404,7 @@ const App = () => {
         <Route path="/auth" element={<Auth onSuccess={handleAuthSuccess} onBack={() => navigate('/')} />} />
         <Route path="/admin/*" element={<ProtectedRoute user={session?.user} roles={['admin']}><AdminDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
         <Route path="/rider" element={<ProtectedRoute user={session?.user} roles={['rider']}><RiderDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
-        <Route path="/booking" element={<ProtectedRoute user={session?.user}><Booking user={session?.user} token={session?.token} selectedItems={dineInSelections} onClearSelections={() => setDineInSelections([])} /></ProtectedRoute>} />
+        <Route path="/booking" element={<Booking user={session?.user} token={session?.token} selectedItems={dineInSelections} onClearSelections={() => setDineInSelections([])} />} />
         <Route path="/menu" element={menuElement} />
         {/* Print/QR friendly addresses: a bare path with no query string, so
             scanners cannot mis-read "?" or "&" and invent the wrong host. */}
@@ -438,6 +440,8 @@ const App = () => {
         <Route path="/404" element={<NotFound onHome={() => navigate('/menu')} onBack={handleBack} />} />
         <Route path="*" element={<NotFound onHome={() => navigate('/menu')} onBack={handleBack} />} />
       </Routes>
+      <MembershipPromptModal />
+      <InstallAppModal />
       {showAppFooter && <AppFooter />}
     </div>
   </SocketProvider>;

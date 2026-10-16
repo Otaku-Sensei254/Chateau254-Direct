@@ -52,3 +52,20 @@ html,
 .dark-date-input::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
+
+/* Uniform input fields across the app */
+input, textarea, select {
+  border: 1px solid var(--border, #d4c9b0);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  background: var(--surface, #fff);
+  color: var(--text, #222);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--accent, #c9a96c);
+  box-shadow: 0 0 0 3px rgba(201, 169, 108, 0.18);
+}

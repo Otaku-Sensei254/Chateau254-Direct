@@ -278,3 +278,53 @@
         gap: 10px;
     }
 }
+
+.profile-loyalty {
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.profile-loyalty h3 {
+  margin: 0 0 12px;
+  font: 700 15px Georgia, serif;
+  color: var(--wine);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-loyalty-bar {
+  margin-bottom: 10px;
+}
+
+.profile-loyalty-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.profile-loyalty-bar-track {
+  height: 8px;
+  background: var(--surface-deep);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.profile-loyalty-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--wine));
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.profile-loyalty-note {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 10px;
+  line-height: 1.5;
+}

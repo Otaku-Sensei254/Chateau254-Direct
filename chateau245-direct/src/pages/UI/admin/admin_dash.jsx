@@ -102,7 +102,7 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
     const data = await res.json();
     setMenu(data.items || []);
     if (data.categories) setAllCategories(data.categories);
-    if (data.subcategories) setAllSubcategories(data.subcategories);
+    if (data.subcategories) setAllSubcategories(data.subcategories.filter((s) => !['Bar Bites & Sandwiches', 'Chateau Lunchbox'].includes(s)));
   }, [api, headers]);
 
   const loadAll = useCallback(async () => {
@@ -547,7 +547,7 @@ const MenuContent = ({ menu, setEditingItem, onDelete, fetchMenu, menuFilters, s
   ];
 
   const categories = useMemo(() => ['All', ...allCategories], [allCategories]);
-  const subcategories = useMemo(() => ['All', ...allSubcategories], [allSubcategories]);
+  const subcategories = useMemo(() => ['All', ...allSubcategories.filter((s) => !['Bar Bites & Sandwiches', 'Chateau Lunchbox'].includes(s))], [allSubcategories]);
 
   const setMenuTypeFilter = (menuType) => {
     setMenuFilters((prev) => ({ ...prev, menuType, category: 'All', subcategory: 'All' }));

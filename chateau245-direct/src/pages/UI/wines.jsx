@@ -27,7 +27,7 @@ import { addBottle, fetchCellar, fetchMyRatings, importBottles, saveRating } fro
 import AccountRequiredModal from '../../components/ui/AccountRequiredModal';
 import { useToast } from '../../contexts/ToastContext';
 import { WineCardSkeleton } from '../../components/ui/loaders-skeleton';
-import WineCellarDisclaimer from '../../components/WineCellarDisclaimer';
+
 import './styles/wines.css';
 
 // Stylized realistic Italian Wine Bottle Graphic for wines without direct photos
@@ -731,7 +731,7 @@ const WinesPage = ({ user, token, addToCart, addDineInItem, onGoToReservations, 
         )}
       </header>
 
-      <WineCellarDisclaimer show={true} />
+
 
       {/* Filters */}
       <div className="wines-filters">
@@ -949,12 +949,6 @@ const WinesPage = ({ user, token, addToCart, addDineInItem, onGoToReservations, 
                         <Star size={11} fill="currentColor" /> {wine.avgRating.toFixed(1)} ({wine.ratingVotes})
                       </span>
                     )}
-                    <span
-                      className={`wine-badge ${getConfidenceBadgeClass(wine.confidence)}`}
-                      style={{ padding: '2px 8px', fontSize: '11px', marginLeft: 'auto' }}
-                    >
-                      {wine.confidence}
-                    </span>
                   </div>
                   {wine.grape && (
                     <div className="wine-card-grape">
@@ -1181,12 +1175,6 @@ const WinesPage = ({ user, token, addToCart, addDineInItem, onGoToReservations, 
                   </span>
                   <span className="wine-badge category">
                     {selectedWine.category_filter}
-                  </span>
-                  <span className={`wine-badge ${getConfidenceBadgeClass(selectedWine.confidence)}`}>
-                    {selectedWine.confidence === 'confirmed' && <CheckCircle2 size={13} />}
-                    {selectedWine.confidence === 'likely' && <AlertCircle size={13} />}
-                    {selectedWine.confidence === 'unconfirmed' && <HelpCircle size={13} />}
-                    {selectedWine.confidence}
                   </span>
                   {selectedWine.rating?.found && (
                     <span className="wine-badge rating">

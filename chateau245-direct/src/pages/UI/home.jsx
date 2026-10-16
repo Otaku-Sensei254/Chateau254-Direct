@@ -11,7 +11,8 @@ import { Link } from "react-router-dom";
 import { GiMeal } from "react-icons/gi";
 import { GiPartyPopper, GiWineGlass } from "react-icons/gi";
 import { FiPlayCircle, FiVolume2, FiVolumeX } from "react-icons/fi";
-import WineCellarDisclaimer from '../../components/WineCellarDisclaimer';
+import entranceVideo from "../../components/Vid/entrance.mp4";
+
 const typewriterPhrases = [
   "Welcome to Chateau254",
   "Serene Dining",
@@ -114,6 +115,17 @@ const Home = ({ api, onDining, onLunchAndBar, onEvents, onTakeout, onWines, onAu
 
   return (
     <main className="home-page">
+      <video
+        className="home-background-video"
+        autoPlay
+        muted
+        loop
+        playsInline
+        aria-hidden="true"
+        tabIndex={-1}
+      >
+        <source src={entranceVideo} type="video/mp4" />
+      </video>
       <div className="home-overlay" />
       <nav className="home-nav">
         <Brand />
@@ -230,7 +242,7 @@ const Home = ({ api, onDining, onLunchAndBar, onEvents, onTakeout, onWines, onAu
             <button className="cta-button cta-dining" onClick={onDining}>
               <GiMeal /> Fine Dining
             </button>
-            <button className="cta-button cta-cellar is-disabled" disabled title="Wine Cellar coming soon">
+            <button className="cta-button cta-cellar" onClick={onWines}>
               <GiWineGlass />Wine Cellar
             </button>
             {/* Take-Out entry point kept here for when the home page button is restored. */}
@@ -250,7 +262,7 @@ const Home = ({ api, onDining, onLunchAndBar, onEvents, onTakeout, onWines, onAu
           </div>
         </div>
       </section>
-      <WineCellarDisclaimer show={true} />
+
       <div className="home-foot">
         <span>
           <FiMapPin /> General Mathenge The Promenade, Nairobi

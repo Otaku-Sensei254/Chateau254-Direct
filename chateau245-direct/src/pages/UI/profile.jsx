@@ -70,6 +70,31 @@ const Profile = ({ user, token, onBack, onLogout, onTrack, onBooking, onCellar }
   const totalSpent = orders.filter((o) => o.status === 'completed').reduce((sum, o) => sum + Number(o.total_amount), 0);
   const totalOrders = orders.length;
 
+  // Loyalty rewards progress (client-side estimate)
+  const wineBottles = orders.reduce((n, o) => n + (o.items || []).filter((i) => (i.category || '').toLowerCase() === 'wine').reduce((s, i) => s + (i.quantity || 1), 0), 0);
+  const wineProgress = wineBottles % 24;
+  const wineFree = Math.floor(wineBottles / 24);
+
+  const takeoutItems = orders.filter((o) => (o.order_type || '').toLowerCase().includes('take') || o.fulfillment === 'takeout').reduce((n, o) => n + (o.items || []).reduce((s, i) => s + (i.quantity || 1), 0), 0);
+  const takeoutProgress = takeoutItems % 14;
+  const takeoutFree = Math.floor(takeoutItems / 14);
+
+  const reservationCount = bookings.length;
+  const reservationProgress = reservationCount % 14;
+  const reservationFree = Math.floor(reservationCount / 14);
+
+  const ProgressBar = ({ value, max, label }) => (
+    <div style={{ marginBottom: 8 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+        <span>{label}</span>
+        <span>{value}/{max}</span>
+      </div>
+      <div style={{ height: 8, background: 'var(--surface-subtle)', borderRadius: 4, overflow: 'hidden', marginTop: 4 }}>
+        <div style={{ width: `${Math.min(100, (value / max) * 100)}%`, height: '100%', background: 'linear-gradient(90deg, #c9a96c, #9e7f49)' }} />
+      </div>
+    </div>
+  );
+
   return <main className="content-page profile-page">
     <div className="profile-top">
       <button className="back-button" aria-label="Go back" onClick={onBack}><FiArrowLeft /></button>
@@ -97,6 +122,24 @@ const Profile = ({ user, token, onBack, onLogout, onTrack, onBooking, onCellar }
       <div className="profile-stat">
         <FiStar />
         <div><span>Total spent</span><strong>KES {totalSpent.toLocaleString()}</strong></div>
+      </div>
+    </div>
+    <div className="profile-loyalty">
+      <h3><FiAward /> Loyalty Rewards</h3>
+      <div>
+        <div className="profile-loyalty-bar">
+          <div className="profile-loyalty-bar-label"><span>{`Wine: ${wineBottles} bottles (${wineFree} free earned)`}</span><span>{wineProgress}/24</span></div>
+          <div className="profile-loyalty-bar-track"><div className="profile-loyalty-bar-fill" style={{ width: `${Math.min(100, (wineProgress / 24) * 100)}%` }} /></div>
+        </div>
+        <div className="profile-loyalty-bar">
+          <div className="profile-loyalty-bar-label"><span>{`Takeout: ${takeoutItems} items (${takeoutFree} free earned)`}</span><span>{takeoutProgress}/14</span></div>
+          <div className="profile-loyalty-bar-track"><div className="profile-loyalty-bar-fill" style={{ width: `${Math.min(100, (takeoutProgress / 14) * 100)}%` }} /></div>
+        </div>
+        <div className="profile-loyalty-bar">
+          <div className="profile-loyalty-bar-label"><span>{`Reservations: ${reservationCount} (${reservationFree} free earned)`}</span><span>{reservationProgress}/14</span></div>
+          <div className="profile-loyalty-bar-track"><div className="profile-loyalty-bar-fill" style={{ width: `${Math.min(100, (reservationProgress / 14) * 100)}%` }} /></div>
+        </div>
+        <p className="profile-loyalty-note">Every 24 wine bottles, the 25th is on the house. Every 14 takeout items, the 15th is on the house. Every 14 reservations, the 15th is on the house.</p>
       </div>
     </div>
     <div className="user-actions">

@@ -1,7 +1,7 @@
 const express = require('express');
 const asyncHandler = require('../middleware/async.middleware');
 const { query } = require('../config/db');
-const { authenticate, requireRole } = require('../middleware/auth.middleware');
+const { authenticate, requireRole, optionalAuthenticate } = require('../middleware/auth.middleware');
 
 const router = express.Router();
 
@@ -24,7 +24,7 @@ router.get('/me', authenticate, asyncHandler(async (req, res) => {
   res.json({ bookings: result.rows });
 }));
 
-router.post('/', authenticate, asyncHandler(async (req, res) => {
+router.post('/', optionalAuthenticate, asyncHandler(async (req, res) => {
   const { customer_name, party_size, preferred_item, dining_time, notes } = req.body;
   if (!customer_name || !party_size || !dining_time) {
     return res.status(400).json({ error: 'Customer name, party size, and dining time are required' });
@@ -33,7 +33,7 @@ router.post('/', authenticate, asyncHandler(async (req, res) => {
   const result = await query(
     `INSERT INTO bookings (user_id, customer_name, party_size, preferred_item, dining_time, notes)
      VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-    [req.user.id, customer_name, party_size, preferred_item || null, dining_time, notes || ''],
+    [req.user?.id || null, customer_name, party_size, preferred_item || null, dining_time, notes || ''],
   );
 
   const booking = result.rows[0];
