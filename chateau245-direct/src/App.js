@@ -22,7 +22,6 @@ import AdminDashboard from './pages/UI/admin/admin_dash';
 import RiderDashboard from './pages/rider/rider_dash';
 import Booking from './pages/UI/booking';
 import FullMenu from './pages/UI/full_menu';
-import WinesPage from './pages/UI/wines';
 import Cellar from './pages/UI/cellar';
 import Feed from './pages/UI/feed';
 import NotFound from './pages/UI/not_found';
@@ -399,7 +398,7 @@ const App = () => {
     <div className={`app-shell${showAppHeader ? ' has-app-header' : ''}`}>
       {showAppHeader && <AppHeader cartCount={cartCount} userName={session?.user?.full_name} onCart={() => navigate('/cart')} onProfile={() => navigate('/profile')} api={API_URL} />}
       <Routes>
-        <Route path="/" element={<GuestRoute user={session?.user}><Home api={API_URL} onDining={() => { switchMode('dining'); navigate('/menu'); }} onLunchAndBar={() => { switchMode('lunchbox'); navigate('/menu'); }} onEvents={() => navigate('/events')} onWines={() => navigate('/wines')} onAuth={() => navigate('/auth')} /></GuestRoute>} />
+        <Route path="/" element={<GuestRoute user={session?.user}><Home api={API_URL} onDining={() => { switchMode('dining'); navigate('/menu'); }} onLunchAndBar={() => { switchMode('lunchbox'); navigate('/menu'); }} onEvents={() => navigate('/events')} onAuth={() => navigate('/auth')} /></GuestRoute>} />
         <Route path="/events" element={<EventsPage user={session?.user} onExploreCatering={() => { switchMode('events'); navigate('/menu'); }} />} />
         <Route path="/auth" element={<Auth onSuccess={handleAuthSuccess} onBack={() => navigate('/')} />} />
         <Route path="/admin/*" element={<ProtectedRoute user={session?.user} roles={['admin']}><AdminDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
@@ -429,13 +428,13 @@ const App = () => {
         <Route path="/cart" element={<Cart cart={cart} user={session?.user} subtotal={subtotal} changeQuantity={changeQuantity} onCheckout={() => navigate('/checkout')} onMenu={() => navigate('/menu')} onBack={handleBack} />} />
         <Route path="/checkout" element={<Checkout subtotal={subtotal} placeOrder={placeOrder} api={API_URL} token={session?.token} user={session?.user} onRequireAuth={() => navigate('/auth')} />} />
         <Route path="/payment-result" element={<ProtectedRoute user={session?.user}><PaymentResult api={API_URL} token={session?.token} onSuccess={handlePaymentSuccess} onMenu={() => navigate('/menu')} /></ProtectedRoute>} />
-        <Route path="/my-cellar" element={<Cellar user={session?.user} token={session?.token} onMenu={() => navigate('/wines')} onBack={handleBack} />} />
+        <Route path="/my-cellar" element={<Cellar user={session?.user} token={session?.token} onMenu={() => navigate('/menu')} onBack={handleBack} />} />
 
         <Route path="/confirmation" element={<Confirmation order={order} onTrack={() => navigate('/track')} onMenu={() => navigate('/menu')} />} />
         <Route path="/track" element={<Tracking order={order} token={session?.token} api={API_URL} onMenu={() => navigate('/menu')} />} />
         <Route path="/tracking" element={<Navigate to="/track" replace />} />
         <Route path="/profile" element={<ProfileRoute user={session?.user}><Profile user={session?.user} token={session?.token} onBack={handleBack} onLogout={handleLogout} onTrack={(o) => { setOrder({ id: o.id, number: o.id.slice(0, 8), total: Number(o.total_amount) }); navigate('/track'); }} onBooking={() => navigate('/booking')} onCellar={() => navigate('/my-cellar')} /></ProfileRoute>} />
-        <Route path="/wines" element={<WinesPage user={session?.user} token={session?.token} addToCart={addToCart} addDineInItem={addDineInItem} onRequireAuth={() => navigate('/auth')} reservationCount={dineInSelections.length} onGoToReservations={() => navigate('/booking')} />} />
+        <Route path="/wines" element={<Navigate to="/menu" replace />} />
         <Route path="/feed" element={<Feed session={session} />} />
         <Route path="/404" element={<NotFound onHome={() => navigate('/menu')} onBack={handleBack} />} />
         <Route path="*" element={<NotFound onHome={() => navigate('/menu')} onBack={handleBack} />} />

@@ -29,7 +29,7 @@ const getGreeting = () => {
   return "Good night";
 };
 
-const Home = ({ api, onDining, onLunchAndBar, onEvents, onTakeout, onWines, onAuth }) => {
+const Home = ({ api, onDining, onLunchAndBar, onEvents, onTakeout, onAuth }) => {
   const [currentPhrase, setCurrentPhrase] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
@@ -242,7 +242,7 @@ const Home = ({ api, onDining, onLunchAndBar, onEvents, onTakeout, onWines, onAu
             <button className="cta-button cta-dining" onClick={onDining}>
               <GiMeal /> Fine Dining
             </button>
-            <button className="cta-button cta-cellar" onClick={onWines}>
+            <button className="cta-button cta-cellar is-disabled" disabled title="Wine Cellar coming soon">
               <GiWineGlass />Wine Cellar
             </button>
             {/* Take-Out entry point kept here for when the home page button is restored. */}

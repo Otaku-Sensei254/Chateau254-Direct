@@ -17,7 +17,7 @@ const AppFooter = () => (
         <div className="app-footer-column">
           <h2>Explore</h2>
           <Link to="/menu">Menus <FiArrowUpRight /></Link>
-          <Link to="/wines">Wine Cellar <FiArrowUpRight /></Link>
+          <Link to="/my-cellar">My Cellar <FiArrowUpRight /></Link>
           <Link to="/events">Events <FiArrowUpRight /></Link>
           <Link to="/feed">Feed <FiArrowUpRight /></Link>
         </div>

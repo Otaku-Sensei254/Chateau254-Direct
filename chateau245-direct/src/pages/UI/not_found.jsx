@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiSearch, FiArrowLeft, FiCompass, FiCalendar, FiHome } from 'react-icons/fi';
 import { GiWineBottle, GiMeal } from 'react-icons/gi';
-import { PiWineFill } from 'react-icons/pi';
 import './styles/notFound.css';
 
 const NotFound = ({ onHome, onBack }) => {
@@ -30,12 +29,6 @@ const NotFound = ({ onHome, onBack }) => {
       subtitle: 'Your Saved Bottles',
       icon: GiWineBottle,
       path: '/my-cellar',
-    },
-    {
-      title: 'Wine Collection',
-      subtitle: 'Curated Pours',
-      icon: PiWineFill,
-      path: '/wines',
     },
     {
       title: 'Reservations',
