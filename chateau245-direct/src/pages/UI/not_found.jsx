@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiSearch, FiArrowLeft, FiCompass, FiCalendar, FiHome } from 'react-icons/fi';
 import { GiWineBottle, GiMeal } from 'react-icons/gi';
-import { PiWineFill } from 'react-icons/pi';
 import './styles/notFound.css';
 
 const NotFound = ({ onHome, onBack }) => {
@@ -24,12 +23,6 @@ const NotFound = ({ onHome, onBack }) => {
       subtitle: 'Dine-in & Lunch & Bar',
       icon: GiMeal,
       path: '/menu',
-    },
-    {
-      title: 'Wine Collection',
-      subtitle: 'Curated Pours',
-      icon: PiWineFill,
-      path: '/wines',
     },
     {
       title: 'My Cellar',
