@@ -83,17 +83,7 @@ const Profile = ({ user, token, onBack, onLogout, onTrack, onBooking, onCellar }
   const reservationProgress = reservationCount % 14;
   const reservationFree = Math.floor(reservationCount / 14);
 
-  const ProgressBar = ({ value, max, label }) => (
-    <div style={{ marginBottom: 8 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-        <span>{label}</span>
-        <span>{value}/{max}</span>
-      </div>
-      <div style={{ height: 8, background: 'var(--surface-subtle)', borderRadius: 4, overflow: 'hidden', marginTop: 4 }}>
-        <div style={{ width: `${Math.min(100, (value / max) * 100)}%`, height: '100%', background: 'linear-gradient(90deg, #c9a96c, #9e7f49)' }} />
-      </div>
-    </div>
-  );
+
 
   return <main className="content-page profile-page">
     <div className="profile-top">

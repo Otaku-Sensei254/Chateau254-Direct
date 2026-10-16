@@ -10,9 +10,6 @@ import {
   MapPin,
   Search,
   RotateCcw,
-  CheckCircle2,
-  AlertCircle,
-  HelpCircle,
   BookOpen,
   Tag,
   Filter,
@@ -408,22 +405,6 @@ const getColorBadgeClass = (color) => {
   return 'color-red';
 };
 
-const getConfidenceBadgeClass = (confidence) => {
-  switch (confidence) {
-    case 'confirmed':
-    case 'verified':
-      return 'confidence-confirmed';
-    case 'likely':
-      return 'confidence-likely';
-    case 'unconfirmed':
-    case 'uncertain':
-      return 'confidence-unconfirmed';
-    case 'source_list':
-      return 'confidence-source';
-    default:
-      return '';
-  }
-};
 
 const WinesPage = ({ user, token, addToCart, addDineInItem, onGoToReservations, onRequireAuth, reservationCount = 0 }) => {
   const { addToast } = useToast();
