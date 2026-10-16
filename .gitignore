@@ -29,5 +29,8 @@ chateau254-backend/server.log
 
 # database backups
 db_backups/
+/*.js
 chateau254-backend/scripts/seed-admin-riders.js
 merge-duplicate-wines-local.js
+chateau245-direct/src/components/data/chateau254_wine_pricing_final.xlsx
+chateau254-backend/scripts/update-prices.js

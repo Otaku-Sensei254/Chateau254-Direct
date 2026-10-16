@@ -3,12 +3,14 @@ import { gsap } from 'gsap';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FiShoppingBag, FiUser, FiTwitter, FiChevronDown, FiX, FiInstagram, } from 'react-icons/fi';
 import { RiWhatsappLine } from "react-icons/ri";
-import { GiHamburgerMenu, GiWineBottle } from 'react-icons/gi';
+import { GiHamburgerMenu } from 'react-icons/gi';
 import Brand from './Brand';
 import InstallButton from './InstallButton';
 import './styles/StaggeredMenu.css';
 
 const defaultMenuItems = [
+  { label: 'Wine Cellar', link: '/wines' },
+  { label: 'My Cellar', link: '/my-cellar' },
   // { label: 'Packages', ariaLabel: 'Packages', link: '/packages' },
 
   {
@@ -21,6 +23,7 @@ const defaultMenuItems = [
       { label: 'Lunch & Bar', link: '/menu?mode=lunchbox' },
       /* Take-Out is temporarily disabled - shows tooltip on hover */
       { label: 'Take-Out', link: '/menu?mode=takeout', disabled: true, tooltip: 'Take out Menu coming soon' },
+      { label: 'Wine Cellar', link: '/wines' },
     ]
   },
   { label: 'Events', ariaLabel: 'Events', link: '/events' },
@@ -370,12 +373,15 @@ export const StaggeredMenu = ({
 
   const isItemActive = (it) => {
     if (it.isDropdown) {
-      return location.pathname.startsWith('/menu');
+      return location.pathname === '/wines' || location.pathname.startsWith('/menu');
     }
     return location.pathname === it.link;
   };
 
   const isSubItemActive = (sub) => {
+    if (sub.link === '/wines') {
+      return location.pathname === '/wines';
+    }
     if (sub.link.includes('mode=takeout')) {
       return location.pathname.startsWith('/menu') && location.search.includes('takeout');
     }
@@ -529,14 +535,6 @@ export const StaggeredMenu = ({
               <span className="user-info-greeting">Hi, {firstName}</span>
             </button>
           )}
-          <button
-            type="button"
-            className="user-info-cellar"
-            onClick={() => handleNavigate('/my-cellar')}
-          >
-            <span className="user-info-avatar user-info-avatar--cellar" aria-hidden="true"><GiWineBottle size={15} /></span>
-            <span>My Cellar</span>
-          </button>
         </div>
         <div className="sm-panel-inner">
           <ul className="sm-panel-list" data-numbering={displayItemNumbering || undefined}>
