@@ -878,43 +878,303 @@ const MenuEditor = ({ item, onSave, onClose }) => {
     }
   };
 
-  return <div className="admin-modal-backdrop"><form className="admin-modal" onSubmit={handleEditorSubmit}><button type="button" className="admin-modal-close" onClick={onClose}><FiX /></button><p className="eyebrow">Catalog management</p><h2>{item ? 'Edit menu item' : 'Add menu item'}</h2>
-    <div className="admin-modal-form">
-      {selectedCategory === 'Wine' ? (<input type="hidden" name="menu_type" value="wine" />) : (<label>Menu type<select name="menu_type" defaultValue={selectedMenuType} onChange={(e) => setSelectedMenuType(e.target.value)}><option value="dine_in">Dine-In</option><option value="takeout">Take-Out</option><option value="lunchbox">Lunchbox</option></select></label>)}
-      <label>Item name<input name="name" defaultValue={item?.name || ''} required /></label>
-      <label>Category<select name="category" defaultValue={selectedCategory} onChange={(e) => { setSelectedCategory(e.target.value); setSelectedSubcategory(''); if (e.target.value === 'Wine') setSelectedMenuType('wine'); else setSelectedMenuType((prev) => prev || 'dine_in'); }}><option>Meals</option><option>Wine</option><option>Drinks</option><option>Desserts</option></select></label>
-      <label>Subcategory<select name="subcategory" defaultValue={selectedSubcategory} onChange={(e) => setSelectedSubcategory(e.target.value)}><option value="">-- select subcategory --</option>{subcategoryOptions.map((opt) => <option key={opt} value={opt}>{opt}</option>)}</select></label>
-      {selectedCategory === 'Wine' ? (
-        <>
-          <label>Base price (KES)<input name="base_price" type="number" min="0" step="1" defaultValue={basePrice} onChange={(e) => setBasePrice(Number(e.target.value))} required /></label>
-          <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>Final price = base × 1.18 × 1.35  = <strong>{basePrice ? Math.round((Number(basePrice) * 1.18 * 1.35) / 100) * 100 : 0}</strong></p>
-        </>
-      ) : (
-        <label>Price (KES)<input name="price" type="number" min="0" step="0.01" defaultValue={item?.price || ''} required /></label>
-      )}
-      <label>Description<textarea name="description" rows="2" defaultValue={item?.description || ''} placeholder="Short description shown on menu cards..." /></label>
-      {showWineFields && <><label>Wine type<select name="wine_type" defaultValue={item?.wineType || item?.wine_type || ''}><option value="">-- select type --</option><option>Red</option><option>White</option><option>Rosé</option><option>Sparkling</option><option>Orange</option><option>Dessert</option></select></label>
-      <label>Grape<input name="grape" defaultValue={item?.grape || ''} placeholder="e.g. Cabernet Sauvignon, Chardonnay..." /></label>
-      <label>Region<input name="region" defaultValue={item?.region || ''} placeholder="e.g. Tuscany, Stellenbosch, Bordeaux..." /></label></>}
-      <label className="admin-toggle-label">
-        <input type="checkbox" name="on_offer" checked={onOffer} onChange={(e) => setOnOffer(e.target.checked)} />
-        On offer
-      </label>
-      <label>Offer text<input name="offer" value={offerText} onChange={(e) => setOfferText(e.target.value)} placeholder="e.g. 10% off, Free delivery..." /></label>
-      <label>
-        Image
-        <input id="menu-image-input" name="image" type="hidden" defaultValue={item?.image || ''} />
-        <div className="admin-upload-row">
-          <button type="button" className="admin-upload-button" onClick={() => fileRef.current?.click()} disabled={isConverting}>
-            <FiUpload /> {isConverting ? 'Processing...' : fileName || 'Choose image'}
-          </button>
-          {preview && <button type="button" className="admin-upload-clear" onClick={clearImage} disabled={isConverting}>Remove</button>}
+  return (
+    <div
+      className="admin-modal-backdrop"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <form className="admin-modal admin-modal--menu" onSubmit={handleEditorSubmit}>
+        <button type="button" className="admin-modal-close" onClick={onClose} aria-label="Close modal">
+          <FiX />
+        </button>
+        <div className="admin-modal-header">
+          <span className="admin-modal-eyebrow">Catalog Management</span>
+          <h2 className="admin-modal-title">{item ? 'Edit Menu Item' : 'Add Menu Item'}</h2>
         </div>
-        <input ref={fileRef} name="image_file" type="file" accept="image/jpeg,image/png,image/webp" onChange={handleFileChange} disabled={isConverting} style={{ display: 'none' }} />
-        {preview && <img className="admin-modal-image-preview" src={preview} alt="Preview" onError={(e) => { e.target.style.display = 'none'; }} />}
-      </label>
+
+        <div className="admin-modal-form admin-menu-modal-form">
+          <div className="admin-form-group">
+            <label className="admin-field-label" htmlFor="menu-item-name">
+              Item Name <span className="admin-field-required">*</span>
+            </label>
+            <input
+              id="menu-item-name"
+              name="name"
+              defaultValue={item?.name || ''}
+              placeholder="e.g. Herb Crusted Salmon, Ribeye Steak..."
+              required
+              className="admin-form-input"
+            />
+          </div>
+
+          <div className="admin-form-grid-2">
+            <div className="admin-form-group">
+              <label className="admin-field-label" htmlFor="menu-item-category">Category</label>
+              <select
+                id="menu-item-category"
+                name="category"
+                defaultValue={selectedCategory}
+                onChange={(e) => {
+                  setSelectedCategory(e.target.value);
+                  setSelectedSubcategory('');
+                  if (e.target.value === 'Wine') setSelectedMenuType('wine');
+                  else setSelectedMenuType((prev) => prev || 'dine_in');
+                }}
+                className="admin-form-select"
+              >
+                <option value="Meals">Meals</option>
+                <option value="Wine">Wine</option>
+                <option value="Drinks">Drinks</option>
+                <option value="Desserts">Desserts</option>
+              </select>
+            </div>
+
+            {selectedCategory === 'Wine' ? (
+              <input type="hidden" name="menu_type" value="wine" />
+            ) : (
+              <div className="admin-form-group">
+                <label className="admin-field-label" htmlFor="menu-item-type">Menu Type</label>
+                <select
+                  id="menu-item-type"
+                  name="menu_type"
+                  defaultValue={selectedMenuType}
+                  onChange={(e) => setSelectedMenuType(e.target.value)}
+                  className="admin-form-select"
+                >
+                  <option value="dine_in">Dine-In</option>
+                  <option value="takeout">Take-Out</option>
+                  <option value="lunchbox">Lunchbox</option>
+                </select>
+              </div>
+            )}
+
+            <div className="admin-form-group">
+              <label className="admin-field-label" htmlFor="menu-item-subcategory">Subcategory</label>
+              <select
+                id="menu-item-subcategory"
+                name="subcategory"
+                defaultValue={selectedSubcategory}
+                onChange={(e) => setSelectedSubcategory(e.target.value)}
+                className="admin-form-select"
+              >
+                <option value="">-- Select subcategory --</option>
+                {subcategoryOptions.map((opt) => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
+            </div>
+
+            {selectedCategory !== 'Wine' && (
+              <div className="admin-form-group">
+                <label className="admin-field-label" htmlFor="menu-item-price">
+                  Price (KES) <span className="admin-field-required">*</span>
+                </label>
+                <input
+                  id="menu-item-price"
+                  name="price"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  defaultValue={item?.price || ''}
+                  placeholder="e.g. 1500"
+                  required
+                  className="admin-form-input"
+                />
+              </div>
+            )}
+          </div>
+
+          {selectedCategory === 'Wine' && (
+            <div className="admin-wine-pricing-box">
+              <div className="admin-form-group">
+                <label className="admin-field-label" htmlFor="menu-wine-base-price">
+                  Base Wholesale Price (KES) <span className="admin-field-required">*</span>
+                </label>
+                <input
+                  id="menu-wine-base-price"
+                  name="base_price"
+                  type="number"
+                  min="0"
+                  step="1"
+                  defaultValue={basePrice}
+                  onChange={(e) => setBasePrice(Number(e.target.value))}
+                  placeholder="e.g. 2400"
+                  required
+                  className="admin-form-input"
+                />
+              </div>
+              <div className="admin-wine-calc-card">
+                <div className="admin-wine-calc-header">
+                  <span>Price Formula</span>
+                  <span className="admin-wine-calc-badge">Base × 1.18 VAT × 1.35 Margin</span>
+                </div>
+                <div className="admin-wine-calc-total">
+                  <span>Final Catalog Price:</span>
+                  <strong>KES {basePrice ? (Math.round((Number(basePrice) * 1.18 * 1.35) / 100) * 100).toLocaleString() : '0'}</strong>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="admin-form-group">
+            <label className="admin-field-label" htmlFor="menu-item-desc">Description</label>
+            <textarea
+              id="menu-item-desc"
+              name="description"
+              rows="3"
+              defaultValue={item?.description || ''}
+              placeholder="Short description, taste notes, or preparation details shown on menu cards..."
+              className="admin-form-textarea"
+            />
+          </div>
+
+          {showWineFields && (
+            <div className="admin-wine-fields-card">
+              <div className="admin-card-section-title">Wine Attributes</div>
+              <div className="admin-form-grid-3">
+                <div className="admin-form-group">
+                  <label className="admin-field-label" htmlFor="menu-wine-type">Wine Type</label>
+                  <select
+                    id="menu-wine-type"
+                    name="wine_type"
+                    defaultValue={item?.wineType || item?.wine_type || ''}
+                    className="admin-form-select"
+                  >
+                    <option value="">-- Select type --</option>
+                    <option value="Red">Red</option>
+                    <option value="White">White</option>
+                    <option value="Rosé">Rosé</option>
+                    <option value="Sparkling">Sparkling</option>
+                    <option value="Orange">Orange</option>
+                    <option value="Dessert">Dessert</option>
+                  </select>
+                </div>
+                <div className="admin-form-group">
+                  <label className="admin-field-label" htmlFor="menu-wine-grape">Grape</label>
+                  <input
+                    id="menu-wine-grape"
+                    name="grape"
+                    defaultValue={item?.grape || ''}
+                    placeholder="e.g. Cabernet Sauvignon"
+                    className="admin-form-input"
+                  />
+                </div>
+                <div className="admin-form-group">
+                  <label className="admin-field-label" htmlFor="menu-wine-region">Region</label>
+                  <input
+                    id="menu-wine-region"
+                    name="region"
+                    defaultValue={item?.region || ''}
+                    placeholder="e.g. Stellenbosch, Bordeaux"
+                    className="admin-form-input"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className={`admin-offer-card ${onOffer ? 'is-active' : ''}`}>
+            <label className="admin-switch-container">
+              <div className="admin-switch-info">
+                <span className="admin-switch-title">Promotional Offer</span>
+                <span className="admin-switch-desc">Display a promotional banner or discount badge on this item</span>
+              </div>
+              <div className="admin-switch-wrapper">
+                <input
+                  type="checkbox"
+                  name="on_offer"
+                  checked={onOffer}
+                  onChange={(e) => setOnOffer(e.target.checked)}
+                  className="admin-switch-input"
+                />
+                <span className="admin-switch-slider"></span>
+              </div>
+            </label>
+            {onOffer && (
+              <div className="admin-offer-input-wrap">
+                <label className="admin-field-label" htmlFor="menu-item-offer">Offer Badge Text</label>
+                <input
+                  id="menu-item-offer"
+                  name="offer"
+                  value={offerText}
+                  onChange={(e) => setOfferText(e.target.value)}
+                  placeholder="e.g. 10% Off, Chef's Special, Happy Hour..."
+                  className="admin-form-input"
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="admin-photo-card">
+            <label className="admin-field-label">Item Photography</label>
+            <input id="menu-image-input" name="image" type="hidden" defaultValue={item?.image || ''} />
+            <input
+              ref={fileRef}
+              name="image_file"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              onChange={handleFileChange}
+              disabled={isConverting}
+              style={{ display: 'none' }}
+            />
+            <div className="admin-upload-controls">
+              <button
+                type="button"
+                className="admin-upload-button"
+                onClick={() => fileRef.current?.click()}
+                disabled={isConverting}
+              >
+                <FiUpload /> {isConverting ? 'Processing image...' : (fileName || (preview ? 'Change image' : 'Choose image'))}
+              </button>
+              {preview && (
+                <button
+                  type="button"
+                  className="admin-upload-clear"
+                  onClick={clearImage}
+                  disabled={isConverting}
+                >
+                  <FiTrash2 /> Remove
+                </button>
+              )}
+            </div>
+            {preview && (
+              <div className="admin-image-preview-frame">
+                <img src={preview} alt="Preview" onError={(e) => { e.target.style.display = 'none'; }} />
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="admin-modal-actions">
+          <button
+            type="button"
+            className="admin-modal-cancel"
+            onClick={onClose}
+            disabled={isConverting || saving}
+          >
+            Cancel
+          </button>
+          <button
+            className="admin-primary admin-modal-submit"
+            type="submit"
+            disabled={isConverting || saving}
+          >
+            {saving ? (
+              <>
+                <FiSave /> Saving item...
+              </>
+            ) : (
+              <>
+                <FiSave /> {item ? 'Save Changes' : 'Add Menu Item'}
+              </>
+            )}
+          </button>
+        </div>
+      </form>
     </div>
-    <button className="admin-primary" type="submit" disabled={isConverting || saving}>{saving ? (<><FiSave /> Saving...</>) : (<><FiSave /> Save item</>)}</button></form></div>;
+  );
 };
 
 const RiderEditor = ({ onSave, onClose }) => <div className="admin-modal-backdrop"><form className="admin-modal" onSubmit={onSave}><button type="button" className="admin-modal-close" onClick={onClose}><FiX /></button><p className="eyebrow">Delivery team</p><h2>Add rider</h2><label>Full name<input name="name" placeholder="Peter Banda" required /></label><label>Phone number<input name="phone" type="tel" placeholder="0712 987 654" required /></label><button className="admin-primary" type="submit"><FiSave /> Add rider</button></form></div>;

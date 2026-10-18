@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FiArrowLeft, FiArrowRight, FiMail, FiLock, FiUser, FiPhone, FiEye, FiEyeOff } from 'react-icons/fi';
+import { FiArrowLeft, FiArrowRight, FiMail, FiLock, FiUser, FiPhone, FiEye, FiEyeOff, FiAlertCircle } from 'react-icons/fi';
 import Brand from '../../components/Brand';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
@@ -33,54 +33,133 @@ const Auth = ({ onSuccess, onBack }) => {
     }
   };
 
-  return <main className="auth-page">
-    <div className="auth-panel">
-      <button className="auth-back" onClick={onBack}><FiArrowLeft /> Back</button>
-      <div className="auth-brand"><Brand /></div>
-      <div className="auth-heading">
-        <p className="eyebrow">Your table awaits</p>
-        <h1>{mode === 'signin' ? 'Welcome back.' : 'Join the table.'}</h1>
-        <p>{mode === 'signin' ? 'Sign in to continue your Château254 experience.' : 'Create an account and make every order feel special.'}</p>
+  return (
+    <main className="auth-page">
+      <div className="auth-panel">
+        <button type="button" className="auth-back" onClick={onBack}>
+          <FiArrowLeft /> Back to Château254
+        </button>
+
+        <div className="auth-brand">
+          <Brand />
+        </div>
+
+        <div className="auth-heading">
+          <p className="eyebrow">Your table awaits</p>
+          <h1>{mode === 'signin' ? 'Welcome back.' : 'Join the table.'}</h1>
+          <p>
+            {mode === 'signin'
+              ? 'Sign in to continue your Château254 experience.'
+              : 'Create an account and make every order feel special.'}
+          </p>
+        </div>
+
+        <div className="auth-tabs" role="tablist">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={mode === 'signin'}
+            className={`auth-tab ${mode === 'signin' ? 'active' : ''}`}
+            onClick={() => {
+              setMode('signin');
+              setError('');
+            }}
+          >
+            Sign In
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={mode === 'signup'}
+            className={`auth-tab ${mode === 'signup' ? 'active' : ''}`}
+            onClick={() => {
+              setMode('signup');
+              setError('');
+            }}
+          >
+            Create Account
+          </button>
+        </div>
+
+        <form className="auth-form" onSubmit={handleSubmit}>
+          {mode === 'signup' && (
+            <>
+              <label>
+                <span>Full name</span>
+                <div className="auth-input">
+                  <FiUser />
+                  <input name="name" type="text" placeholder="Your Name" required />
+                </div>
+              </label>
+              <label>
+                <span>Phone number</span>
+                <div className="auth-input">
+                  <FiPhone />
+                  <input name="phone" type="tel" placeholder="+254 7XX XXX XXX" required />
+                </div>
+              </label>
+            </>
+          )}
+          <label>
+            <span>Email address</span>
+            <div className="auth-input">
+              <FiMail />
+              <input name="email" type="email" placeholder="you@example.com" required />
+            </div>
+          </label>
+          <label>
+            <span>Password</span>
+            <div className="auth-input">
+              <FiLock />
+              <input
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Enter your password"
+                minLength="6"
+                required
+              />
+              <button
+                type="button"
+                className="auth-toggle-password"
+                onClick={() => setShowPassword((prev) => !prev)}
+                tabIndex={-1}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <FiEyeOff /> : <FiEye />}
+              </button>
+            </div>
+          </label>
+          {mode === 'signin' && (
+            <button className="forgot-password" type="button">
+              Forgot password?
+            </button>
+          )}
+          {error && (
+            <div className="auth-error" role="alert">
+              <FiAlertCircle />
+              <span>{error}</span>
+            </div>
+          )}
+          <button className="primary-button auth-submit" type="submit" disabled={loading}>
+            {loading ? 'Please wait...' : mode === 'signin' ? 'Sign in' : 'Create account'}
+            {!loading && <FiArrowRight />}
+          </button>
+        </form>
+        <p className="auth-switch">
+          {mode === 'signin' ? "Don't have an account?" : 'Already have an account?'}{' '}
+          <button
+            type="button"
+            onClick={() => {
+              setMode(mode === 'signin' ? 'signup' : 'signin');
+              setError('');
+            }}
+          >
+            {mode === 'signin' ? 'Sign up' : 'Sign in'}
+          </button>
+        </p>
       </div>
-{/* Social sign-in is not configured yet. Left in place (commented out, not
-          deleted) so it can be restored once the Google and Apple credentials
-          and callback URLs are in place. The divider went with it: with no
-          social buttons above, "or continue with email" reads oddly.
-          <div className="auth-socials">
-            <button className="social-button" onClick={() => setError('Social sign-in is demo-only for now. Use email and password.')}><strong>G</strong> Continue with Google</button>
-            <button className="social-button" onClick={() => setError('Social sign-in is demo-only for now. Use email and password.')}><strong></strong> Continue with Apple</button>
-          </div>
-          <div className="auth-divider"><span>or continue with email</span></div>
-      */}
-      <form className="auth-form" onSubmit={handleSubmit}>
-        {mode === 'signup' && (
-          <>
-            <label>
-              <span>Full name</span>
-              <div className="auth-input">
-                <FiUser />
-                <input name="name" type="text" placeholder="Your Name" required />
-              </div>
-            </label>
-            <label>
-              <span>Phone number</span>
-              <div className="auth-input">
-                <FiPhone />
-                <input name="phone" type="tel" placeholder="+254 7XX XXX XXX" required />
-              </div>
-            </label>
-          </>
-        )}
-        <label><span>Email address</span><div className="auth-input"><FiMail /><input name="email" type="email" placeholder="you@example.com" required /></div></label>
-        <label><span>Password</span><div className="auth-input"><FiLock /><input name="password" type={showPassword ? 'text' : 'password'} placeholder="Enter your password" minLength="6" required /><button type="button" className="auth-toggle-password" onClick={() => setShowPassword((prev) => !prev)} tabIndex={-1}>{showPassword ? <FiEyeOff /> : <FiEye />}</button></div></label>
-        {mode === 'signin' && <button className="forgot-password" type="button">Forgot password?</button>}
-        {error && <p className="auth-error" role="alert">{error}</p>}
-        <button className="primary-button auth-submit" type="submit" disabled={loading}>{loading ? 'Please wait...' : mode === 'signin' ? 'Sign in' : 'Create account'} {!loading && <FiArrowRight />}</button>
-      </form>
-      <p className="auth-switch">{mode === 'signin' ? "Don't have an account?" : 'Already have an account?'} <button onClick={() => setMode(mode === 'signin' ? 'signup' : 'signin')}>{mode === 'signin' ? 'Sign up' : 'Sign in'}</button></p>
-      {/* <small className="auth-demo-note">Demo mode: authentication is simulated.</small> */}
-    </div>
-  </main>;
+    </main>
+  );
 };
 
 export default Auth;
