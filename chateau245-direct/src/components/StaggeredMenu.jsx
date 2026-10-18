@@ -9,6 +9,7 @@ import InstallButton from './InstallButton';
 import './styles/StaggeredMenu.css';
 
 const defaultMenuItems = [
+  { label: 'Wine Cellar', link: '/wines' },
   { label: 'My Cellar', link: '/my-cellar' },
   // { label: 'Packages', ariaLabel: 'Packages', link: '/packages' },
 
@@ -22,6 +23,7 @@ const defaultMenuItems = [
       { label: 'Lunch & Bar', link: '/menu?mode=lunchbox' },
       /* Take-Out is temporarily disabled - shows tooltip on hover */
       { label: 'Take-Out', link: '/menu?mode=takeout', disabled: true, tooltip: 'Take out Menu coming soon' },
+      { label: 'Wine Cellar', link: '/wines' },
     ]
   },
   { label: 'Events', ariaLabel: 'Events', link: '/events' },
@@ -371,12 +373,15 @@ export const StaggeredMenu = ({
 
   const isItemActive = (it) => {
     if (it.isDropdown) {
-      return location.pathname.startsWith('/menu');
+      return location.pathname === '/wines' || location.pathname.startsWith('/menu');
     }
     return location.pathname === it.link;
   };
 
   const isSubItemActive = (sub) => {
+    if (sub.link === '/wines') {
+      return location.pathname === '/wines';
+    }
     if (sub.link.includes('mode=takeout')) {
       return location.pathname.startsWith('/menu') && location.search.includes('takeout');
     }
