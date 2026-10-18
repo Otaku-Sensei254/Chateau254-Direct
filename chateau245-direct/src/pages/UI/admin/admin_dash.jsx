@@ -162,11 +162,15 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
     let imageUrl = form.get('image') || '';
     const imageFile = form.get('image_file');
 
+    const isWine = form.get('category') === 'Wine';
+    const enteredBasePrice = Number(form.get('base_price')) || 0;
+    const calculatedPrice = isWine ? Math.round((enteredBasePrice * 1.18 * 1.35) / 100) * 100 : Number(form.get('price'));
+
     const body = {
       name: form.get('name'),
       category: form.get('category'),
       subcategory: form.get('subcategory') || null,
-      price: Number(form.get('price')),
+      price: calculatedPrice,
       description: form.get('description') || '',
       image_url: imageUrl,
       menu_type: menuType,
@@ -816,6 +820,16 @@ const MenuEditor = ({ item, onSave, onClose }) => {
   const [selectedSubcategory, setSelectedSubcategory] = useState(item?.subcategory || '');
   const [onOffer, setOnOffer] = useState(Boolean(item?.on_offer));
   const [offerText, setOfferText] = useState(item?.offer || '');
+  const [saving, setSaving] = useState(false);
+  const [basePrice, setBasePrice] = useState(item && selectedCategory === 'Wine' ? Math.round(Number(item?.price || 0) / (1.18 * 1.35)) : '');
+
+  useEffect(() => {
+    if (selectedCategory === 'Wine' && item) {
+      setBasePrice(Math.round(Number(item?.price || 0) / (1.18 * 1.35)));
+    } else if (selectedCategory !== 'Wine') {
+      setBasePrice('');
+    }
+  }, [selectedCategory, item]);
 
   const MEAL_SUBCATEGORIES = ['Appetizers', 'Soups', 'Salads', 'Mains', 'Farinaceous Delicacies', 'Chateau Classics', 'Chateau Lunchbox', 'Bar Bites & Sandwiches', 'Platters & Boards', 'Desserts', 'Beverages', 'Fast Food', 'Combos'];
   const WINE_SUBCATEGORIES = ['Red', 'White', 'Rosé', 'Sparkling', 'Orange', 'Dessert'];
@@ -855,13 +869,29 @@ const MenuEditor = ({ item, onSave, onClose }) => {
     if (fileRef.current) fileRef.current.value = '';
   };
 
-  return <div className="admin-modal-backdrop"><form className="admin-modal" onSubmit={onSave}><button type="button" className="admin-modal-close" onClick={onClose}><FiX /></button><p className="eyebrow">Catalog management</p><h2>{item ? 'Edit menu item' : 'Add menu item'}</h2>
+  const handleEditorSubmit = async (e) => {
+    setSaving(true);
+    try {
+      await onSave(e);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return <div className="admin-modal-backdrop"><form className="admin-modal" onSubmit={handleEditorSubmit}><button type="button" className="admin-modal-close" onClick={onClose}><FiX /></button><p className="eyebrow">Catalog management</p><h2>{item ? 'Edit menu item' : 'Add menu item'}</h2>
     <div className="admin-modal-form">
       {selectedCategory === 'Wine' ? (<input type="hidden" name="menu_type" value="wine" />) : (<label>Menu type<select name="menu_type" defaultValue={selectedMenuType} onChange={(e) => setSelectedMenuType(e.target.value)}><option value="dine_in">Dine-In</option><option value="takeout">Take-Out</option><option value="lunchbox">Lunchbox</option></select></label>)}
       <label>Item name<input name="name" defaultValue={item?.name || ''} required /></label>
       <label>Category<select name="category" defaultValue={selectedCategory} onChange={(e) => { setSelectedCategory(e.target.value); setSelectedSubcategory(''); if (e.target.value === 'Wine') setSelectedMenuType('wine'); else setSelectedMenuType((prev) => prev || 'dine_in'); }}><option>Meals</option><option>Wine</option><option>Drinks</option><option>Desserts</option></select></label>
       <label>Subcategory<select name="subcategory" defaultValue={selectedSubcategory} onChange={(e) => setSelectedSubcategory(e.target.value)}><option value="">-- select subcategory --</option>{subcategoryOptions.map((opt) => <option key={opt} value={opt}>{opt}</option>)}</select></label>
-      <label>Price (KES)<input name="price" type="number" min="0" defaultValue={item?.price || ''} required /></label>
+      {selectedCategory === 'Wine' ? (
+        <>
+          <label>Base price (KES)<input name="base_price" type="number" min="0" step="1" defaultValue={basePrice} onChange={(e) => setBasePrice(Number(e.target.value))} required /></label>
+          <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>Final price = base × 1.18 × 1.35  = <strong>{basePrice ? Math.round((Number(basePrice) * 1.18 * 1.35) / 100) * 100 : 0}</strong></p>
+        </>
+      ) : (
+        <label>Price (KES)<input name="price" type="number" min="0" step="0.01" defaultValue={item?.price || ''} required /></label>
+      )}
       <label>Description<textarea name="description" rows="2" defaultValue={item?.description || ''} placeholder="Short description shown on menu cards..." /></label>
       {showWineFields && <><label>Wine type<select name="wine_type" defaultValue={item?.wineType || item?.wine_type || ''}><option value="">-- select type --</option><option>Red</option><option>White</option><option>Rosé</option><option>Sparkling</option><option>Orange</option><option>Dessert</option></select></label>
       <label>Grape<input name="grape" defaultValue={item?.grape || ''} placeholder="e.g. Cabernet Sauvignon, Chardonnay..." /></label>
@@ -884,7 +914,7 @@ const MenuEditor = ({ item, onSave, onClose }) => {
         {preview && <img className="admin-modal-image-preview" src={preview} alt="Preview" onError={(e) => { e.target.style.display = 'none'; }} />}
       </label>
     </div>
-    <button className="admin-primary" type="submit" disabled={isConverting}><FiSave /> Save item</button></form></div>;
+    <button className="admin-primary" type="submit" disabled={isConverting || saving}>{saving ? (<><FiSave /> Saving...</>) : (<><FiSave /> Save item</>)}</button></form></div>;
 };
 
 const RiderEditor = ({ onSave, onClose }) => <div className="admin-modal-backdrop"><form className="admin-modal" onSubmit={onSave}><button type="button" className="admin-modal-close" onClick={onClose}><FiX /></button><p className="eyebrow">Delivery team</p><h2>Add rider</h2><label>Full name<input name="name" placeholder="Peter Banda" required /></label><label>Phone number<input name="phone" type="tel" placeholder="0712 987 654" required /></label><button className="admin-primary" type="submit"><FiSave /> Add rider</button></form></div>;
