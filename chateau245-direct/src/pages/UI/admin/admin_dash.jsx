@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { FiBarChart2, FiCalendar, FiChevronDown, FiChevronLeft, FiChevronRight, FiDownload, FiEdit2, FiGift, FiGrid, FiLogOut, FiMenu, FiPackage, FiPlus, FiSave, FiSearch, FiSettings, FiShoppingBag, FiTable, FiTrash2, FiTruck, FiUpload, FiUsers, FiX, FiMap, FiCheckCircle, FiClock, FiUser, FiPhone } from 'react-icons/fi';
+import { FiBarChart2, FiCalendar, FiChevronDown, FiChevronLeft, FiChevronRight, FiDownload, FiEdit2, FiGift, FiGrid, FiLogOut, FiMenu, FiPackage, FiPlus, FiSave, FiSearch, FiSettings, FiShoppingBag, FiTable, FiTrash2, FiTruck, FiUpload, FiUsers, FiX, FiMap, FiCheckCircle, FiClock, FiUser, FiPhone, FiVolume2, FiVolumeX } from 'react-icons/fi';
 import Brand from '../../../components/Brand';
 import AdminFleetMap from '../../../components/AdminFleetMap';
 import { useSocket } from '../../../contexts/SocketContext';
@@ -7,6 +7,7 @@ import { useToast } from '../../../contexts/ToastContext';
 import { AdminWorkspaceSkeleton, LoaderSkeleton } from '../../../components/ui/loaders-skeleton';
 import { GrBlog } from "react-icons/gr";
 import MediaContent from '../../../components/feed/MediaContent';
+import { playSoundNotification, unlockAudio } from '../../../utils/soundEffects';
 const AdminDashboard = ({ user, token, api, onLogout }) => {
   const [activePage, setActivePage] = useState('Dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -34,22 +35,44 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
   const { isConnected, joinRoom, leaveRoom, on, off } = useSocket();
   const { addToast } = useToast();
 
+  const [soundEnabled, setSoundEnabled] = useState(() => {
+    try {
+      return window.localStorage.getItem('admin_sound_enabled') !== 'false';
+    } catch {
+      return true;
+    }
+  });
+
+  const toggleSound = () => {
+    setSoundEnabled((prev) => {
+      const next = !prev;
+      try {
+        window.localStorage.setItem('admin_sound_enabled', String(next));
+      } catch {}
+      if (next) {
+        unlockAudio();
+        playSoundNotification('test');
+        addToast?.('Notification sounds enabled', 'info', 2000);
+      } else {
+        addToast?.('Notification sounds muted', 'info', 2000);
+      }
+      return next;
+    });
+  };
+
   useEffect(() => {
-    if (!isConnected) return;
-    joinRoom('admin');
-    const handleOrderCreated = () => fetchOrders();
-    const handleOrderStatusChanged = () => fetchOrders();
-    const handleRiderLocation = () => fetchRiders();
-    const handleBookingCreated = () => fetchBookings();
-    const handleBookingUpdated = () => { fetchBookings(); fetchTables(); };
-    on('order:created', handleOrderCreated);
-    on('order:status_changed', handleOrderStatusChanged);
-    on('rider:location_updated', handleRiderLocation);
-    on('booking:created', handleBookingCreated);
-    on('booking:updated', handleBookingUpdated);
-    return () => { leaveRoom('admin'); off('order:created', handleOrderCreated); off('order:status_changed', handleOrderStatusChanged); off('rider:location_updated', handleRiderLocation); off('booking:created', handleBookingCreated); off('booking:updated', handleBookingUpdated); };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isConnected]);
+    const handleFirstInteraction = () => {
+      unlockAudio();
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('keydown', handleFirstInteraction);
+    };
+    window.addEventListener('click', handleFirstInteraction, { once: true });
+    window.addEventListener('keydown', handleFirstInteraction, { once: true });
+    return () => {
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('keydown', handleFirstInteraction);
+    };
+  }, []);
 
   const fetchOrders = useCallback(async () => {
     const res = await fetch(`${api}/orders`, { headers });
@@ -118,6 +141,66 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
   }, [fetchOrders, fetchMenu, fetchCustomers, fetchRiders, fetchBookings, fetchTables]);
 
   useEffect(() => { loadAll(); }, [loadAll]);
+
+  useEffect(() => {
+    if (!isConnected) return;
+    joinRoom('admin');
+
+    const handleOrderCreated = (data) => {
+      fetchOrders();
+      if (soundEnabled) playSoundNotification('order:created');
+      const orderRef = data?.order?.id ? '#' + data.order.id.slice(0, 8) : 'new order';
+      addToast?.(`🔔 New order placed! ${orderRef}`, 'info', 5000);
+    };
+
+    const handleOrderStatusChanged = (data) => {
+      fetchOrders();
+      const status = data?.order?.status;
+      const orderRef = data?.order?.id ? '#' + data.order.id.slice(0, 8) : 'order';
+      if (status === 'delivered') {
+        if (soundEnabled) playSoundNotification('order:delivered');
+        addToast?.(`🎉 Order ${orderRef} delivered successfully!`, 'success', 5000);
+      } else if (status) {
+        if (soundEnabled) playSoundNotification('order:status_changed');
+        addToast?.(`Order ${orderRef} status updated: ${status.replace(/_/g, ' ')}`, 'info', 4000);
+      }
+    };
+
+    const handleRiderLocation = () => fetchRiders();
+
+    const handleBookingCreated = (data) => {
+      fetchBookings();
+      if (soundEnabled) playSoundNotification('booking:created');
+      const guest = data?.booking?.customer_name || 'Guest';
+      const ref = data?.booking?.id ? ' #' + data.booking.id.slice(0, 8) : '';
+      addToast?.(`🥂 New reservation${ref} from ${guest}!`, 'info', 5000);
+    };
+
+    const handleBookingUpdated = (data) => {
+      fetchBookings();
+      fetchTables();
+      if (soundEnabled) playSoundNotification('booking:updated');
+      const status = data?.booking?.status;
+      if (status) {
+        addToast?.(`Reservation updated: ${status.replace(/_/g, ' ')}`, 'info', 3000);
+      }
+    };
+
+    on('order:created', handleOrderCreated);
+    on('order:status_changed', handleOrderStatusChanged);
+    on('rider:location_updated', handleRiderLocation);
+    on('booking:created', handleBookingCreated);
+    on('booking:updated', handleBookingUpdated);
+
+    return () => {
+      leaveRoom('admin');
+      off('order:created', handleOrderCreated);
+      off('order:status_changed', handleOrderStatusChanged);
+      off('rider:location_updated', handleRiderLocation);
+      off('booking:created', handleBookingCreated);
+      off('booking:updated', handleBookingUpdated);
+    };
+  }, [isConnected, soundEnabled, fetchOrders, fetchBookings, fetchTables, fetchRiders, addToast, joinRoom, leaveRoom, on, off]);
 
   const selectPage = (page) => {
     setActivePage(page);
@@ -417,7 +500,7 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
       <div className="admin-account"><div className="admin-profile"><span>{user?.full_name?.slice(0, 2).toUpperCase() || 'AD'}</span><div><strong>{user?.full_name || 'Admin'}</strong><small>Administrator</small></div></div><button className="admin-logout" onClick={onLogout} title={sidebarCollapsed ? 'Logout' : undefined}><FiLogOut /><span>Logout</span></button></div>
     </aside>
     <section className="admin-workspace">
-      <header className="admin-topbar"><div><p className="eyebrow">Château254 management</p><h1>{activePage}</h1></div><div className="admin-top-actions"><div className="admin-top-avatar">{user?.full_name?.slice(0, 2).toUpperCase() || 'AD'}</div></div></header>
+      <header className="admin-topbar"><div><p className="eyebrow">Château254 management</p><h1>{activePage}</h1></div><div className="admin-top-actions"><button type="button" className={`admin-sound-toggle ${soundEnabled ? 'is-enabled' : 'is-muted'}`} onClick={toggleSound} title={soundEnabled ? 'Mute notification sounds' : 'Enable notification sounds'} aria-label={soundEnabled ? 'Mute notification sounds' : 'Enable notification sounds'}>{soundEnabled ? <FiVolume2 /> : <FiVolumeX />}</button><div className="admin-top-avatar">{user?.full_name?.slice(0, 2).toUpperCase() || 'AD'}</div></div></header>
       {activePage === 'Dashboard' && <DashboardContent orders={orders} todayOrders={todayOrders} completedToday={completedToday} totalSales={totalSales} formatCurrency={formatCurrency} formatTime={formatTime} onOpenOrders={() => setActivePage('Orders')} customers={customers} />}
       {activePage === 'Orders' && <OrdersContent orders={orders} onUpdateStatus={updateOrderStatus} updatingOrder={updatingOrder} riders={riders} formatCurrency={formatCurrency} formatTime={formatTime} />}
       {activePage === 'Reservations' && <ReservationsContent bookings={bookings} tables={tables} customers={customers} onAssignTable={assignTableToBooking} onUnassignTable={unassignTableFromBooking} formatTime={formatTime} />}

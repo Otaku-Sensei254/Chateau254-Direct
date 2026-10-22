@@ -300,6 +300,37 @@
     font-size: 18px;
 }
 
+.admin-sound-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    border-radius: 50% !important;
+    border: 1px solid var(--border) !important;
+    background: var(--surface-raised) !important;
+    color: var(--text-muted) !important;
+    font-size: 16px !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.admin-sound-toggle:hover {
+    border-color: var(--gold-pale) !important;
+    color: var(--text-strong) !important;
+    transform: translateY(-1px);
+}
+
+.admin-sound-toggle.is-enabled {
+    color: var(--gold) !important;
+    border-color: rgba(var(--gold-rgb), 0.38) !important;
+    background: rgba(var(--gold-rgb), 0.1) !important;
+}
+
+.admin-sound-toggle.is-muted {
+    opacity: 0.6;
+}
+
 .admin-top-avatar {
     width: 35px;
     height: 35px;
