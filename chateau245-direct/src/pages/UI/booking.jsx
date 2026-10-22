@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FiArrowLeft, FiCalendar, FiSave, FiUser, FiUsers, FiClipboard, FiX, FiMessageCircle, FiPhone } from 'react-icons/fi';
+import { FiArrowLeft, FiCalendar, FiCheckCircle, FiUser, FiUsers, FiClipboard, FiX, FiMessageCircle, FiPhone, FiAlertCircle, FiShoppingBag } from 'react-icons/fi';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
@@ -16,10 +16,11 @@ const Booking = ({ user, token, selectedItems = [], onClearSelections }) => {
     setLoading(true);
     const form = new FormData(event.currentTarget);
     const partySize = Number(form.get('party_size'));
-    const customerName = form.get('name');
-    const customerPhone = form.get('phone') || '';
+    const customerName = form.get('name')?.trim();
+    const customerPhone = form.get('phone')?.trim() || '';
     const diningTime = form.get('dining_time');
-    const notes = form.get('notes') || '';
+    const notes = form.get('notes')?.trim() || '';
+
     if (!customerName) {
       setError('Please enter your name.');
       setLoading(false);
@@ -35,18 +36,21 @@ const Booking = ({ user, token, selectedItems = [], onClearSelections }) => {
       setLoading(false);
       return;
     }
-    if (!form.get('dining_time')) {
+    if (!diningTime) {
       setError('Please choose a dining time.');
       setLoading(false);
       return;
     }
+
     const body = {
       customer_name: customerName,
+      customer_phone: customerPhone,
       party_size: partySize,
       preferred_item: selectedItems.length ? selectedItems.map((i) => i.name).join(', ') : null,
       dining_time: diningTime,
-      notes: [customerPhone ? `Phone: ${customerPhone}` : '', notes, selectedItems.length ? `Selected items: ${selectedItems.map((i) => `${i.name} — KES ${Number(i.price).toLocaleString()}`).join(', ')}` : ''].filter(Boolean).join('\n'),
+      notes: notes,
     };
+
     try {
       const headers = { 'Content-Type': 'application/json' };
       if (token) headers.Authorization = `Bearer ${token}`;
@@ -59,19 +63,33 @@ const Booking = ({ user, token, selectedItems = [], onClearSelections }) => {
       if (!res.ok) throw new Error(result.error || 'Failed to create reservation');
       const booking = result.booking;
       const bookingReference = booking?.id ? booking.id.slice(0, 8) : 'pending';
+      const formattedDiningTime = new Date(diningTime).toLocaleString('en-KE', {
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+      });
       const message = [
         'Hello Château254, I have submitted a table reservation through the website.',
         `Reservation reference: #${bookingReference}`,
         `Name: ${customerName}`,
-          `Phone: ${customerPhone || user?.phone || 'Not provided'}`,
+        `Phone: ${customerPhone || user?.phone || 'Not provided'}`,
         `Guests: ${partySize}`,
-        `Preferred date and time: ${new Date(diningTime).toLocaleString('en-KE')}`,
+        `Preferred date and time: ${formattedDiningTime}`,
         selectedItems.length ? `Selected items: ${selectedItems.map((item) => `${item.name} — KES ${Number(item.price).toLocaleString()}`).join(', ')}` : '',
         notes ? `Notes: ${notes}` : '',
         'Please confirm my reservation on WhatsApp.',
       ].filter(Boolean).join('\n');
+
       setSubmitted({
         reference: bookingReference,
+        name: customerName,
+        phone: customerPhone || user?.phone,
+        partySize,
+        diningTime: formattedDiningTime,
+        notes,
         whatsappUrl: `https://wa.me/254114100680?text=${encodeURIComponent(message)}`,
       });
       onClearSelections?.();
@@ -83,73 +101,224 @@ const Booking = ({ user, token, selectedItems = [], onClearSelections }) => {
   };
 
   if (submitted) {
-    return <main className="content-page booking-page">
-      <div className="profile-top"><button className="back-button" aria-label="Go back"><FiArrowLeft /></button><h1>Reservation request</h1></div>
-      <div className="booking-success">
-        <div className="booking-success-icon"><FiSave /></div>
-        <h2>Reservation received!</h2>
-        <p className="booking-success-text">Thank you, {user?.full_name || 'friend'}. Your table request #{submitted.reference} has been saved for the restaurant.</p>
-        <p className="booking-success-hint">The team will confirm your booking and assign a table shortly.</p>
-        <button className="text-button" onClick={() => setSubmitted(null)}>Make another booking</button>
-        <a className="primary-button booking-whatsapp-button" href={submitted.whatsappUrl} target="_blank" rel="noopener noreferrer">
-          <FiMessageCircle /> Message Château on WhatsApp
-        </a>
-      </div>
-    </main>;
+    return (
+      <main className="content-page booking-page">
+        <div className="booking-top-bar">
+          <button type="button" className="auth-back" onClick={() => setSubmitted(null)}>
+            <FiArrowLeft /> Back
+          </button>
+        </div>
+
+        <div className="booking-success-card">
+          <div className="booking-success-emblem">
+            <FiCheckCircle />
+          </div>
+          <span className="booking-ref-badge">Reservation #{submitted.reference}</span>
+          <h2 className="booking-success-title">Reservation Received!</h2>
+          <p className="booking-success-desc">
+            Thank you, <strong>{submitted.name}</strong>. Your table request has been received by Château254.
+          </p>
+
+          <div className="booking-summary-box">
+            <div className="booking-summary-row">
+              <span>Date & Time</span>
+              <strong>{submitted.diningTime}</strong>
+            </div>
+            <div className="booking-summary-row">
+              <span>Party Size</span>
+              <strong>{submitted.partySize} {submitted.partySize === 1 ? 'Guest' : 'Guests'}</strong>
+            </div>
+            {submitted.phone && (
+              <div className="booking-summary-row">
+                <span>Contact Phone</span>
+                <strong>{submitted.phone}</strong>
+              </div>
+            )}
+            {submitted.notes && (
+              <div className="booking-summary-row">
+                <span>Guest Notes</span>
+                <strong>{submitted.notes}</strong>
+              </div>
+            )}
+          </div>
+
+          <div className="booking-success-actions">
+            <a
+              className="booking-whatsapp-cta-button"
+              href={submitted.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FiMessageCircle /> Message Chateau on whatsapp to confirm my reservation
+            </a>
+            <button
+              type="button"
+              className="booking-secondary-button"
+              onClick={() => setSubmitted(null)}
+            >
+              Make another reservation
+            </button>
+          </div>
+        </div>
+      </main>
+    );
   }
 
-  return <main className="content-page booking-page">
-    <div className="profile-top"><button className="back-button" aria-label="Go back" onClick={() => window.history.back()}><FiArrowLeft /></button><h1>Book a table</h1></div>
-
-    <form className="booking-form" onSubmit={handleSubmit}>
-      <div className="booking-field">
-        <label htmlFor="booking-name">Your name</label>
-        <div className="booking-input"><FiUser /><input id="booking-name" name="name" type="text" placeholder="Jane Wanjiku" defaultValue={user?.full_name || ''} required /></div>
+  return (
+    <main className="content-page booking-page">
+      <div className="booking-top-bar">
+        <button type="button" className="auth-back" onClick={() => window.history.back()}>
+          <FiArrowLeft /> Back
+        </button>
       </div>
 
-      <div className="booking-field">
-        <label htmlFor="booking-phone">Phone number</label>
-        <div className="booking-input"><FiPhone /><input id="booking-phone" name="phone" type="tel" placeholder="+254 700 000 000" defaultValue={user?.phone || ''} required={!user} /></div>
-      </div>
-      <div className="booking-field">
-        <label htmlFor="booking-party">Number of guests</label>
-        <div className="booking-input"><FiUsers /><input id="booking-party" name="party_size" type="number" min="1" max="20" defaultValue="2" required /></div>
-      </div>
-
-      <div className="booking-field">
-        <label htmlFor="booking-time">Preferred dining time</label>
-        <div className="booking-input"><FiCalendar /><input id="booking-time" name="dining_time" type="datetime-local" min={today()} defaultValue={today()} required /></div>
+      <div className="booking-header">
+        <span className="booking-eyebrow">Table Reservation</span>
+        <h1 className="booking-title">Book a Table</h1>
+        <p className="booking-subtitle">
+          Reserve your bespoke dining and wine experience at Château254.
+        </p>
       </div>
 
-      <div className="booking-field">
-        <label>Selected items</label>
-        {selectedItems.length === 0 ? (
-          <p style={{ color: 'var(--text-muted)', fontSize: '13px' }}>No items selected yet. Browse the Dine-in menu and add items before booking.</p>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {selectedItems.map((item) => (
-              <div key={item.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', padding: '8px 10px', border: '1px solid var(--border)', borderRadius: '8px', background: 'var(--surface-raised)' }}>
-                <div>
-                  <strong>{item.name}</strong>
-                  <span style={{ marginLeft: '8px', color: 'var(--text-muted)', fontSize: '12px' }}>KES {Number(item.price).toLocaleString()}</span>
+      <form className="booking-card" onSubmit={handleSubmit}>
+        <div className="booking-grid-2">
+          <div className="booking-field">
+            <label className="booking-field-label" htmlFor="booking-name">
+              Your Name <span className="booking-field-required">*</span>
+            </label>
+            <div className="booking-input">
+              <FiUser />
+              <input
+                id="booking-name"
+                name="name"
+                type="text"
+                placeholder="e.g. Jane Wanjiku"
+                defaultValue={user?.full_name || ''}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="booking-field">
+            <label className="booking-field-label" htmlFor="booking-phone">
+              Phone Number {!user && <span className="booking-field-required">*</span>}
+            </label>
+            <div className="booking-input">
+              <FiPhone />
+              <input
+                id="booking-phone"
+                name="phone"
+                type="tel"
+                placeholder="+254 7XX XXX XXX"
+                defaultValue={user?.phone || ''}
+                required={!user}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="booking-grid-2">
+          <div className="booking-field">
+            <label className="booking-field-label" htmlFor="booking-party">
+              Number of Guests <span className="booking-field-required">*</span>
+            </label>
+            <div className="booking-input">
+              <FiUsers />
+              <input
+                id="booking-party"
+                name="party_size"
+                type="number"
+                min="1"
+                max="30"
+                defaultValue="2"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="booking-field">
+            <label className="booking-field-label" htmlFor="booking-time">
+              Preferred Dining Time <span className="booking-field-required">*</span>
+            </label>
+            <div className="booking-input">
+              <FiCalendar />
+              <input
+                id="booking-time"
+                name="dining_time"
+                type="datetime-local"
+                min={today()}
+                defaultValue={today()}
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="booking-field">
+          <label className="booking-field-label">Pre-selected Menu Items</label>
+          {selectedItems.length === 0 ? (
+            <div className="booking-empty-items">
+              <FiShoppingBag />
+              <span>No items selected yet. You can browse our Dine-In menu to pre-select dishes and wines before reserving.</span>
+            </div>
+          ) : (
+            <div className="booking-selected-list">
+              {selectedItems.map((item) => (
+                <div key={item.id} className="booking-selected-item">
+                  <div className="booking-item-meta">
+                    <strong>{item.name}</strong>
+                    <span className="booking-item-price">KES {Number(item.price).toLocaleString()}</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="booking-item-remove"
+                    onClick={() => onClearSelections?.((prev) => prev.filter((i) => i.id !== item.id))}
+                    aria-label={`Remove ${item.name}`}
+                  >
+                    <FiX />
+                  </button>
                 </div>
-                <button type="button" onClick={() => onClearSelections((prev) => prev.filter((i) => i.id !== item.id))} style={{ background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer' }}><FiX /></button>
-              </div>
-            ))}
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="booking-field">
+          <label className="booking-field-label" htmlFor="booking-notes">
+            Notes & Special Requests
+          </label>
+          <div className="booking-textarea">
+            <FiClipboard />
+            <textarea
+              id="booking-notes"
+              name="notes"
+              placeholder="Dietary restrictions, allergies, seating preference (terrace, wine cellar, cozy booth)..."
+              rows={3}
+            />
+          </div>
+        </div>
+
+        <div className="booking-whatsapp-callout">
+          <FiMessageCircle className="booking-whatsapp-icon" />
+          <div className="booking-whatsapp-text">
+            <strong>Instant WhatsApp Confirmation</strong>
+            <span>After requesting your reservation, you can tap to message Château on WhatsApp with your details.</span>
+          </div>
+        </div>
+
+        {error && (
+          <div className="auth-error" role="alert">
+            <FiAlertCircle />
+            <span>{error}</span>
           </div>
         )}
-      </div>
 
-      <div className="booking-field">
-        <label htmlFor="booking-notes">Notes for the restaurant</label>
-        <div className="booking-textarea"><FiClipboard /><textarea id="booking-notes" name="notes" placeholder="Allergies, special occasion, window seat, etc." rows={4} /></div>
-      </div>
-
-      {error && <p className="auth-error" role="alert">{error}</p>}
-
-      <button className="primary-button auth-submit" type="submit" disabled={loading}>{loading ? 'Saving...' : 'Request reservation'}</button>
-    </form>
-  </main>;
+        <button className="booking-submit-button" type="submit" disabled={loading}>
+          {loading ? 'Reserving...' : 'Request Reservation'}
+        </button>
+      </form>
+    </main>
+  );
 };
 
 export default Booking;

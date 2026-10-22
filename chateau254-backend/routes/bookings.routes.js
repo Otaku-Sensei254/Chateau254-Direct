@@ -6,9 +6,23 @@ const { authenticate, requireRole, optionalAuthenticate } = require('../middlewa
 const router = express.Router();
 
 const bookingQuery = `
-  SELECT b.*, t.table_number
+  SELECT b.*, t.table_number,
+         COALESCE(b.customer_phone, u.phone) AS customer_phone,
+         CASE WHEN u.id IS NOT NULL OR EXISTS (
+           SELECT 1 FROM users cu
+           WHERE cu.phone IS NOT NULL AND cu.phone != ''
+             AND (
+               cu.phone = b.customer_phone
+               OR (
+                 LENGTH(REGEXP_REPLACE(cu.phone, '[^0-9]', '', 'g')) >= 9
+                 AND LENGTH(REGEXP_REPLACE(COALESCE(b.customer_phone, ''), '[^0-9]', '', 'g')) >= 9
+                 AND RIGHT(REGEXP_REPLACE(cu.phone, '[^0-9]', '', 'g'), 9) = RIGHT(REGEXP_REPLACE(COALESCE(b.customer_phone, ''), '[^0-9]', '', 'g'), 9)
+               )
+             )
+         ) THEN TRUE ELSE FALSE END AS is_member
   FROM bookings b
   LEFT JOIN tables t ON t.id = b.table_id
+  LEFT JOIN users u ON u.id = b.user_id
 `;
 
 router.get('/', authenticate, requireRole('admin'), asyncHandler(async (req, res) => {
@@ -25,25 +39,50 @@ router.get('/me', authenticate, asyncHandler(async (req, res) => {
 }));
 
 router.post('/', optionalAuthenticate, asyncHandler(async (req, res) => {
-  const { customer_name, party_size, preferred_item, dining_time, notes } = req.body;
+  const { customer_name, customer_phone, party_size, preferred_item, dining_time, notes } = req.body;
   if (!customer_name || !party_size || !dining_time) {
     return res.status(400).json({ error: 'Customer name, party size, and dining time are required' });
   }
 
+  let userId = req.user?.id || null;
+  const phone = (customer_phone || req.user?.phone || '').trim();
+
+  if (!userId && phone) {
+    const userMatch = await query(
+      `SELECT id FROM users
+       WHERE phone IS NOT NULL AND phone != ''
+         AND (
+           phone = $1
+           OR (
+             LENGTH(REGEXP_REPLACE(phone, '[^0-9]', '', 'g')) >= 9
+             AND LENGTH(REGEXP_REPLACE($1, '[^0-9]', '', 'g')) >= 9
+             AND RIGHT(REGEXP_REPLACE(phone, '[^0-9]', '', 'g'), 9) = RIGHT(REGEXP_REPLACE($1, '[^0-9]', '', 'g'), 9)
+           )
+         )
+       LIMIT 1`,
+      [phone]
+    );
+    if (userMatch.rowCount) {
+      userId = userMatch.rows[0].id;
+    }
+  }
+
   const result = await query(
-    `INSERT INTO bookings (user_id, customer_name, party_size, preferred_item, dining_time, notes)
-     VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-    [req.user?.id || null, customer_name, party_size, preferred_item || null, dining_time, notes || ''],
+    `INSERT INTO bookings (user_id, customer_name, customer_phone, party_size, preferred_item, dining_time, notes)
+     VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+    [userId, customer_name, phone || null, party_size, preferred_item || null, dining_time, notes || ''],
   );
 
   const booking = result.rows[0];
+  const fullBooking = await query(`${bookingQuery} WHERE b.id = $1`, [booking.id]);
+  const emittedBooking = fullBooking.rows[0] || booking;
 
   const io = req.app.get('io');
   if (io) {
-    io.to('admin').emit('booking:created', { booking });
+    io.to('admin').emit('booking:created', { booking: emittedBooking });
   }
 
-  res.status(201).json({ booking });
+  res.status(201).json({ booking: emittedBooking });
 }));
 
 router.patch('/:id/table', authenticate, requireRole('admin'), asyncHandler(async (req, res) => {
@@ -76,12 +115,15 @@ router.patch('/:id/table', authenticate, requireRole('admin'), asyncHandler(asyn
     [table_id],
   );
 
+  const fullBooking = await query(`${bookingQuery} WHERE b.id = $1`, [req.params.id]);
+  const emittedBooking = fullBooking.rows[0] || result.rows[0];
+
   const io = req.app.get('io');
   if (io) {
-    io.to('admin').emit('booking:updated', { booking: result.rows[0] });
+    io.to('admin').emit('booking:updated', { booking: emittedBooking });
   }
 
-  res.json({ booking: result.rows[0] });
+  res.json({ booking: emittedBooking });
 }));
 
 router.delete('/:id/table', authenticate, requireRole('admin'), asyncHandler(async (req, res) => {
@@ -102,12 +144,15 @@ router.delete('/:id/table', authenticate, requireRole('admin'), asyncHandler(asy
     );
   }
 
+  const fullBooking = await query(`${bookingQuery} WHERE b.id = $1`, [req.params.id]);
+  const emittedBooking = fullBooking.rows[0] || result.rows[0];
+
   const io = req.app.get('io');
   if (io) {
-    io.to('admin').emit('booking:updated', { booking: result.rows[0] });
+    io.to('admin').emit('booking:updated', { booking: emittedBooking });
   }
 
-  res.json({ booking: result.rows[0] });
+  res.json({ booking: emittedBooking });
 }));
 
 module.exports = router;

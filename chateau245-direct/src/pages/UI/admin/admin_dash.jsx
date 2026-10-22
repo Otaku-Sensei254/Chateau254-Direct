@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { FiBarChart2, FiCalendar, FiChevronDown, FiChevronLeft, FiChevronRight, FiDownload, FiEdit2, FiGift, FiGrid, FiLogOut, FiMenu, FiPackage, FiPlus, FiSave, FiSearch, FiSettings, FiShoppingBag, FiTable, FiTrash2, FiTruck, FiUpload, FiUsers, FiX, FiMap, FiCheckCircle, FiClock, FiUser } from 'react-icons/fi';
+import { FiBarChart2, FiCalendar, FiChevronDown, FiChevronLeft, FiChevronRight, FiDownload, FiEdit2, FiGift, FiGrid, FiLogOut, FiMenu, FiPackage, FiPlus, FiSave, FiSearch, FiSettings, FiShoppingBag, FiTable, FiTrash2, FiTruck, FiUpload, FiUsers, FiX, FiMap, FiCheckCircle, FiClock, FiUser, FiPhone } from 'react-icons/fi';
 import Brand from '../../../components/Brand';
 import AdminFleetMap from '../../../components/AdminFleetMap';
 import { useSocket } from '../../../contexts/SocketContext';
@@ -420,7 +420,7 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
       <header className="admin-topbar"><div><p className="eyebrow">Château254 management</p><h1>{activePage}</h1></div><div className="admin-top-actions"><div className="admin-top-avatar">{user?.full_name?.slice(0, 2).toUpperCase() || 'AD'}</div></div></header>
       {activePage === 'Dashboard' && <DashboardContent orders={orders} todayOrders={todayOrders} completedToday={completedToday} totalSales={totalSales} formatCurrency={formatCurrency} formatTime={formatTime} onOpenOrders={() => setActivePage('Orders')} customers={customers} />}
       {activePage === 'Orders' && <OrdersContent orders={orders} onUpdateStatus={updateOrderStatus} updatingOrder={updatingOrder} riders={riders} formatCurrency={formatCurrency} formatTime={formatTime} />}
-      {activePage === 'Reservations' && <ReservationsContent bookings={bookings} tables={tables} onAssignTable={assignTableToBooking} onUnassignTable={unassignTableFromBooking} formatTime={formatTime} />}
+      {activePage === 'Reservations' && <ReservationsContent bookings={bookings} tables={tables} customers={customers} onAssignTable={assignTableToBooking} onUnassignTable={unassignTableFromBooking} formatTime={formatTime} />}
       {activePage === 'Tables' && <TablesContent tables={tables} setEditingTable={setEditingTable} onSave={saveTable} onDelete={deleteTable} onUpdateStatus={updateTableStatus} />}
       {activePage === 'Menu' && <MenuContent menu={menu} setEditingItem={setEditingItem} onDelete={deleteMenuItem} fetchMenu={fetchMenu} menuFilters={menuFilters} setMenuFilters={setMenuFilters} allCategories={allCategories} allSubcategories={allSubcategories} />}
       {activePage === 'Customers' && <CustomersContent customers={customers} />}
@@ -1179,7 +1179,7 @@ const MenuEditor = ({ item, onSave, onClose }) => {
 
 const RiderEditor = ({ onSave, onClose }) => <div className="admin-modal-backdrop"><form className="admin-modal" onSubmit={onSave}><button type="button" className="admin-modal-close" onClick={onClose}><FiX /></button><p className="eyebrow">Delivery team</p><h2>Add rider</h2><label>Full name<input name="name" placeholder="Peter Banda" required /></label><label>Phone number<input name="phone" type="tel" placeholder="0712 987 654" required /></label><button className="admin-primary" type="submit"><FiSave /> Add rider</button></form></div>;
 
-const ReservationsContent = ({ bookings, tables, onAssignTable, onUnassignTable, formatTime }) => {
+const ReservationsContent = ({ bookings, tables, customers = [], onAssignTable, onUnassignTable, formatTime }) => {
   const [filter, setFilter] = useState('all');
   const [assigningId, setAssigningId] = useState(null);
   const availableTables = tables.filter((t) => t.status === 'available');
@@ -1193,6 +1193,14 @@ const ReservationsContent = ({ bookings, tables, onAssignTable, onUnassignTable,
     { label: 'Completed', value: 'completed', count: counts.completed },
     { label: 'Cancelled', value: 'cancelled', count: counts.cancelled },
   ];
+
+  const cleanGuestNotes = (notes) => {
+    if (!notes) return '';
+    return notes
+      .replace(/Phone:\s*[^\n\r]+(\r?\n)?/gi, '')
+      .replace(/Selected items:\s*[^\n\r]+(\r?\n)?/gi, '')
+      .trim();
+  };
 
   return <><div className="admin-content-heading"><div><p className="eyebrow">Table reservations</p><h2>Reservations</h2></div></div>
     <section className="admin-orders-panel admin-reservations-panel" aria-label="Reservations list">
@@ -1209,12 +1217,47 @@ const ReservationsContent = ({ bookings, tables, onAssignTable, onUnassignTable,
           const guestName = booking.customer_name || 'Guest';
           const statusLabel = booking.status?.replace(/_/g, ' ') || 'Unknown';
           const diningDate = booking.dining_time ? new Date(booking.dining_time).toLocaleDateString('en-KE', { weekday: 'short', day: 'numeric', month: 'short' }) : 'Date not set';
+          const rawPhone = booking.customer_phone || (booking.notes?.match(/Phone:\s*([^\n\r]+)/i)?.[1]) || booking.phone || '';
+          const isMember = Boolean(
+            booking.is_member ||
+            booking.user_id ||
+            (rawPhone && customers.some((c) => {
+              if (!c.phone) return false;
+              const cDigits = c.phone.replace(/[^0-9]/g, '');
+              const bDigits = rawPhone.replace(/[^0-9]/g, '');
+              return cDigits && bDigits && (cDigits === bDigits || (cDigits.length >= 9 && bDigits.length >= 9 && cDigits.slice(-9) === bDigits.slice(-9)));
+            }))
+          );
+          const guestNote = cleanGuestNotes(booking.notes);
+
           return <article className="admin-order-card admin-reservation-card" key={booking.id}>
             <header className="admin-order-card-header">
               <div className="admin-order-id"><span>RESERVATION</span><strong>#{booking.id.slice(0, 8)}</strong></div>
               <span className={`admin-order-status status-${booking.status || 'unknown'}`}><i />{statusLabel}</span>
             </header>
-            <div className="admin-order-customer"><span className="admin-order-customer-avatar"><FiUser /></span><div><strong>{guestName}</strong><span>Reservation for {booking.party_size} {Number(booking.party_size) === 1 ? 'guest' : 'guests'}</span></div></div>
+            <div className="admin-order-customer admin-reservation-customer">
+              <span className="admin-order-customer-avatar"><FiUser /></span>
+              <div className="admin-reservation-customer-info">
+                <div className="admin-reservation-customer-top">
+                  <strong>{guestName}</strong>
+                  <span className={`admin-member-badge ${isMember ? 'is-member' : 'is-guest'}`}>
+                    {isMember ? 'Member' : 'Guest'}
+                  </span>
+                </div>
+                {rawPhone ? (
+                  <div className="admin-reservation-phone">
+                    <FiPhone />
+                    <a href={`tel:${rawPhone}`}>{rawPhone}</a>
+                  </div>
+                ) : (
+                  <div className="admin-reservation-phone admin-reservation-phone--none">
+                    <FiPhone />
+                    <span>No phone provided</span>
+                  </div>
+                )}
+                <span className="admin-reservation-party-desc">Reservation for {booking.party_size} {Number(booking.party_size) === 1 ? 'guest' : 'guests'}</span>
+              </div>
+            </div>
             <div className="admin-order-summary">
               <div><span>Party size</span><strong>{booking.party_size} <small>{Number(booking.party_size) === 1 ? 'guest' : 'guests'}</small></strong></div>
               <div><span>Seating</span><strong className="admin-reservation-table-name">{booking.table_number ? `Table ${booking.table_number}` : 'Unassigned'}</strong></div>
@@ -1223,7 +1266,7 @@ const ReservationsContent = ({ bookings, tables, onAssignTable, onUnassignTable,
               <div><FiCalendar /><span>{diningDate}</span><strong>{formatTime(booking.dining_time)}</strong></div>
               {booking.preferred_item && <div><FiGift /><span>Preference</span><strong>{booking.preferred_item}</strong></div>}
             </div>
-            {booking.notes && <p className="admin-reservation-notes"><strong>Guest note</strong>{booking.notes}</p>}
+            {guestNote ? <p className="admin-reservation-notes"><strong>Guest note</strong>{guestNote}</p> : null}
             <footer className="admin-order-card-footer">
               <div className="admin-order-time"><span>Booked {booking.created_at ? new Date(booking.created_at).toLocaleDateString('en-KE', { day: 'numeric', month: 'short' }) : '—'}</span></div>
               <div className="admin-order-actions">

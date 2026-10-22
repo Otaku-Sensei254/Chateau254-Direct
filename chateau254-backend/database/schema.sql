@@ -306,6 +306,7 @@ CREATE TABLE IF NOT EXISTS bookings (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES users(id) ON DELETE SET NULL,
   customer_name VARCHAR(120) NOT NULL,
+  customer_phone VARCHAR(60),
   party_size INTEGER NOT NULL CHECK (party_size > 0),
   preferred_item VARCHAR(160),
   dining_time TIMESTAMPTZ NOT NULL,
@@ -315,6 +316,7 @@ CREATE TABLE IF NOT EXISTS bookings (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS customer_phone VARCHAR(60);
 
 CREATE INDEX IF NOT EXISTS orders_status_idx ON orders(status);
 CREATE INDEX IF NOT EXISTS orders_user_id_idx ON orders(user_id);

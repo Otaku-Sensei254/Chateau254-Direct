@@ -832,6 +832,90 @@
 .admin-order-status.status-cancelled { background: var(--danger-tint); border-color: rgba(198, 40, 40, .14); color: var(--danger); }
 .admin-order-status.status-unknown { background: var(--surface-muted); color: var(--text-muted); }
 
+.admin-reservation-customer {
+    align-items: flex-start;
+}
+
+.admin-reservation-customer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+    flex: 1;
+}
+
+.admin-reservation-customer-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.admin-reservation-customer-top strong {
+    font-size: 13px;
+    color: var(--text-strong);
+}
+
+.admin-member-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-size: 9.5px;
+    font-weight: 750;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.admin-member-badge.is-member {
+    background: rgba(var(--gold-rgb), .16);
+    color: var(--gold);
+    border: 1px solid rgba(var(--gold-rgb), .35);
+}
+
+.admin-member-badge.is-guest {
+    background: var(--surface-muted);
+    color: var(--text-muted);
+    border: 1px solid var(--border-soft);
+}
+
+.admin-reservation-phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.admin-reservation-phone svg {
+    color: var(--gold);
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.admin-reservation-phone a {
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.admin-reservation-phone a:hover {
+    color: var(--gold);
+    text-decoration: underline;
+}
+
+.admin-reservation-phone--none span {
+    color: var(--text-faint);
+    font-style: italic;
+    font-size: 11px;
+}
+
+.admin-reservation-party-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
 .admin-reservation-details {
     display: grid;
     gap: 9px;
