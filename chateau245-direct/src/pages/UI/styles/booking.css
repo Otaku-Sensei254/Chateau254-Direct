@@ -124,7 +124,7 @@
 .booking-input svg {
     position: absolute;
     left: 14px;
-    color: var(--text-faint);
+    color: #fff;
     font-size: 16px;
     pointer-events: none;
     transition: color 0.2s ease;
@@ -497,4 +497,10 @@
 .booking-secondary-button:hover {
     color: var(--gold);
     text-decoration: underline;
+}
+
+/* Make the native date-picker indicator white for visibility */
+.booking-input input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
 }

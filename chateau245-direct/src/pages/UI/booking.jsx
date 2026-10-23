@@ -251,7 +251,7 @@ const Booking = ({ user, token, selectedItems = [], onClearSelections }) => {
               Preferred Dining Time <span className="booking-field-required">*</span>
             </label>
             <div className="booking-input">
-              <FiCalendar />
+              <FiCalendar style={{ color: '#fff' }} />
               <input
                 id="booking-time"
                 name="dining_time"
