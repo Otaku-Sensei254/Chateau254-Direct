@@ -3,7 +3,15 @@ import { FiArrowLeft, FiCalendar, FiCheckCircle, FiUser, FiUsers, FiClipboard, F
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-const today = () => new Date().toISOString().slice(0, 16);
+const today = () => {
+  const now = new Date();
+  // Round up to the next 30-minute interval to avoid duplicate default timestamps
+  const minutes = now.getMinutes();
+  const rounded = minutes < 30 ? 30 : 60;
+  now.setMinutes(rounded, 0, 0);
+  if (rounded === 60) now.setHours(now.getHours() + 1);
+  return now.toISOString().slice(0, 16);
+};
 
 const Booking = ({ user, token, selectedItems = [], onClearSelections }) => {
   const [loading, setLoading] = useState(false);
@@ -92,6 +100,8 @@ const Booking = ({ user, token, selectedItems = [], onClearSelections }) => {
         notes,
         whatsappUrl: `https://wa.me/254114100680?text=${encodeURIComponent(message)}`,
       });
+      // Auto-open WhatsApp so the guest only needs to press Send
+      window.open(`https://wa.me/254114100680?text=${encodeURIComponent(message)}`, '_blank');
       onClearSelections?.();
     } catch (err) {
       setError(err.message || 'Something went wrong. Please try again.');

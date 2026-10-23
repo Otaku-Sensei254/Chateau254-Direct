@@ -1353,7 +1353,7 @@ const ReservationsContent = ({ bookings, tables, customers = [], onAssignTable, 
             <footer className="admin-order-card-footer">
               <div className="admin-order-time"><span>Booked {booking.created_at ? new Date(booking.created_at).toLocaleDateString('en-KE', { day: 'numeric', month: 'short' }) : '—'}</span></div>
               <div className="admin-order-actions">
-                {assigningId === booking.id && availableTables.length > 0 && <>
+                {!booking.table_id && assigningId === booking.id && availableTables.length > 0 && <>
                   <select className="admin-order-rider" aria-label={`Choose a table for reservation ${booking.id.slice(0, 8)}`} value="" onChange={(e) => { if (e.target.value) onAssignTable(booking.id, e.target.value); setAssigningId(null); }}>
                     <option value="">Choose table</option>
                     {availableTables.map((table) => <option key={table.id} value={table.id}>Table {table.table_number} · {table.capacity} seats</option>)}
