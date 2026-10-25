@@ -1,14 +1,108 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FiArrowLeft, FiArrowRight, FiMail, FiLock, FiUser, FiPhone, FiEye, FiEyeOff, FiAlertCircle } from 'react-icons/fi';
 import Brand from '../../components/Brand';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID || '175951330735-25k2nh44r67hjrl2loc0bo8duj750vb8.apps.googleusercontent.com';
 
 const Auth = ({ onSuccess, onBack }) => {
   const [mode, setMode] = useState('signin');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const googleBtnRef = useRef(null);
+
+  const [googleUser, setGoogleUser] = useState(null);
+  const [googleToken, setGoogleToken] = useState(null);
+  const [phonePrompt, setPhonePrompt] = useState(false);
+  const [phoneValue, setPhoneValue] = useState('');
+
+  const handleGoogleCredential = async (response) => {
+    setError('');
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/auth/google`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ credential: response.credential }),
+      });
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || 'Google sign-in failed');
+      if (!result.user.phone) {
+        setGoogleUser(result.user);
+        setGoogleToken(result.token);
+        setPhonePrompt(true);
+      } else {
+        onSuccess(result.user, result.token);
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePhoneSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/auth/phone`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${googleToken}` },
+        body: JSON.stringify({ phone: phoneValue }),
+      });
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || 'Failed to save phone');
+      onSuccess(result.user, googleToken);
+      setPhonePrompt(false);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // Load Google Identity Services script
+    if (document.getElementById('google-gis-script')) {
+      if (window.google?.accounts?.id) {
+        window.google.accounts.id.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: handleGoogleCredential,
+        });
+        if (googleBtnRef.current) {
+          window.google.accounts.id.renderButton(googleBtnRef.current, {
+            theme: 'outline',
+            size: 'large',
+            width: '100%',
+            text: 'signin_with',
+          });
+        }
+      }
+      return;
+    }
+    const script = document.createElement('script');
+    script.id = 'google-gis-script';
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    script.onload = () => {
+      window.google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleGoogleCredential,
+      });
+      if (googleBtnRef.current) {
+        window.google.accounts.id.renderButton(googleBtnRef.current, {
+          theme: 'outline',
+          size: 'large',
+          width: '100%',
+          text: 'signin_with',
+        });
+      }
+    };
+    document.head.appendChild(script);
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -32,6 +126,45 @@ const Auth = ({ onSuccess, onBack }) => {
       setLoading(false);
     }
   };
+
+  if (phonePrompt) {
+    return (
+      <main className="auth-page">
+        <div className="auth-panel">
+          <div className="auth-heading">
+            <p className="eyebrow">One more step</p>
+            <h1>Enter your phone number.</h1>
+            <p>We need your phone number to confirm reservations and orders.</p>
+          </div>
+          <form className="auth-form" onSubmit={handlePhoneSubmit}>
+            <label>
+              <span>Phone number</span>
+              <div className="auth-input">
+                <FiPhone />
+                <input
+                  name="phone"
+                  type="tel"
+                  placeholder="+254 7XX XXX XXX"
+                  required
+                  value={phoneValue}
+                  onChange={(e) => setPhoneValue(e.target.value)}
+                />
+              </div>
+            </label>
+            {error && (
+              <div className="auth-error" role="alert">
+                <FiAlertCircle />
+                <span>{error}</span>
+              </div>
+            )}
+            <button className="primary-button auth-submit" type="submit" disabled={loading}>
+              {loading ? 'Saving...' : 'Continue'}
+            </button>
+          </form>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="auth-page">
@@ -145,6 +278,10 @@ const Auth = ({ onSuccess, onBack }) => {
             {!loading && <FiArrowRight />}
           </button>
         </form>
+        <div className="auth-divider">
+          <span>or</span>
+        </div>
+        <div ref={googleBtnRef} className="auth-google-btn" />
         <p className="auth-switch">
           {mode === 'signin' ? "Don't have an account?" : 'Already have an account?'}{' '}
           <button
