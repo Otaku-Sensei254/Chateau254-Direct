@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 export default function InstallButton({ alwaysVisible = false, className = '' }) {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [unavailable, setUnavailable] = useState(false);
 
   useEffect(() => {
     // Check if already installed (standalone mode)
