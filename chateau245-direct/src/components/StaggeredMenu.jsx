@@ -26,7 +26,7 @@ const defaultMenuItems = [
       { label: 'Wine Cellar', link: '/wines' },
     ]
   },
-  { label: 'Events', ariaLabel: 'Events', link: '/events' },
+  { label: 'Events', ariaLabel: 'Events', link: '/events', popup: 'Events coming soon!' },
   { label: 'Feed', ariaLabel: 'Feed', link: '/feed' },
   { label: 'Reserve', ariaLabel: 'Reserve', link: '/booking' },
 ];
@@ -65,6 +65,7 @@ export const StaggeredMenu = ({
   const [open, setOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [desktopDropdownOpen, setDesktopDropdownOpen] = useState(false);
+  const [showEventsPopup, setShowEventsPopup] = useState(false);
   const desktopTimeoutRef = useRef(null);
   const desktopDropdownRef = useRef(null);
   const mobileDropdownRef = useRef(null);
@@ -478,11 +479,17 @@ export const StaggeredMenu = ({
                 <li key={idx} className="sm-desktop-item">
                   <button
                     type="button"
-                    className={`sm-desktop-link ${isItemActive(it) ? 'active' : ''}`}
-                    onClick={() => handleNavigate(it.link)}
+                    className={`sm-desktop-link ${isItemActive(it) ? 'active' : ''} ${it.disabled ? 'is-disabled' : ''}`}
+                    onClick={it.popup ? () => setShowEventsPopup(true) : (it.disabled ? undefined : () => handleNavigate(it.link))}
+                    disabled={it.disabled}
+                    aria-disabled={it.disabled}
+                    title={it.disabled && it.tooltip ? it.tooltip : undefined}
                   >
                     {it.label}
                   </button>
+                  {it.disabled && it.tooltip && (
+                    <div className="sm-dropdown-tooltip">{it.tooltip}</div>
+                  )}
                 </li>
               );
             })}
@@ -589,10 +596,13 @@ export const StaggeredMenu = ({
                   ) : (
                     <button
                       type="button"
-                      className="sm-panel-item"
+                      className={`sm-panel-item ${it.disabled ? 'is-disabled' : ''}`}
                       aria-label={it.ariaLabel}
                       data-index={idx + 1}
-                      onClick={() => handleNavigate(it.link)}
+                      onClick={it.popup ? () => { closeMenu(); setShowEventsPopup(true); } : (it.disabled ? undefined : () => handleNavigate(it.link))}
+                      disabled={it.disabled}
+                      aria-disabled={it.disabled}
+                      title={it.disabled && it.tooltip ? it.tooltip : undefined}
                     >
                       <span className="sm-panel-itemLabel">{it.label}</span>
                     </button>
@@ -627,6 +637,47 @@ export const StaggeredMenu = ({
           )}
         </div>
       </aside>
+      {showEventsPopup && (
+        <div
+          style={{
+            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)',
+            zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            backdropFilter: 'blur(4px)',
+          }}
+          onClick={() => setShowEventsPopup(false)}
+        >
+          <div
+            style={{
+              background: 'linear-gradient(135deg, #1a1410, #2c1f14)',
+              color: '#f5ebd3', padding: '2.5rem 2rem 2rem 2rem', borderRadius: '14px',
+              maxWidth: '400px', width: '90%', position: 'relative', textAlign: 'center',
+              border: '1px solid rgba(201,169,108,0.5)',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.6)',
+              fontFamily: "'Montserrat', sans-serif",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setShowEventsPopup(false)}
+              aria-label="Close"
+              style={{
+                position: 'absolute', top: 10, right: 14,
+                background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(201,169,108,0.3)',
+                color: '#f5ebd3', fontSize: '1.2rem', cursor: 'pointer',
+                borderRadius: '50%', width: '30px', height: '30px', lineHeight: '1',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}
+            >×</button>
+            <h2 style={{
+              fontFamily: "'Cormorant Garamond', serif", fontSize: '1.8rem',
+              color: '#c9a96c', marginBottom: '0.75rem', fontWeight: 600,
+            }}>Events Coming Soon</h2>
+            <p style={{ fontSize: '1rem', lineHeight: 1.6, color: '#d8cdb0', marginBottom: '0' }}>
+              Our events page is currently under development. Stay tuned for exciting updates!
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -50,7 +50,10 @@ a{
    Replaces the text wordmark. The artwork is a 1.91:1 wide crest, so width is
    always derived from a per-surface height rather than set directly, which
    keeps it from pushing the header taller than its padding budget. */
-.brand-emblem {
+/* Brand Wordmark (Text Logo)
+   -------------------------------------------------------------------------- */
+.brand-emblem,
+.brand-wordmark {
     display: inline-flex;
     align-items: center;
     flex: 0 0 auto;
@@ -58,6 +61,59 @@ a{
     cursor: pointer;
     user-select: none;
     text-decoration: none;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+}
+
+.brand-wordmark:hover {
+    transform: scale(1.03);
+}
+
+.brand-wordmark:active {
+    transform: scale(0.98);
+}
+
+.brand-wordmark:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
+.brand-wordmark-text {
+    display: inline-flex;
+    align-items: baseline;
+    font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(22px, 2.5vw, 27px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 1px;
+}
+
+.brand-wordmark-main {
+    color: var(--wine, #b08d45);
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    filter: drop-shadow(0 1px 4px rgba(176, 141, 69, 0.35));
+    transition: filter 0.2s ease, opacity 0.2s ease;
+}
+
+.brand-wordmark:hover .brand-wordmark-main {
+    filter: drop-shadow(0 2px 8px rgba(176, 141, 69, 0.55));
+}
+
+.brand-wordmark-num {
+    color: #ffffff;
+    font-weight: 800;
+    font-family: 'Playfair Display', Georgia, serif;
+    margin-left: 3px;
+    letter-spacing: 0.8px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+@media (max-width: 540px) {
+    .brand-wordmark-text {
+        font-size: 20px;
+        letter-spacing: 0.8px;
+    }
 }
 
 .brand-emblem picture {
@@ -71,8 +127,6 @@ a{
     max-width: 100%;
     object-fit: contain;
     transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
-    /* The crest is gold on transparent, so a soft gold bloom keeps it from
-       dissolving into a dark navbar without adding a hard-edged plate. */
     filter: drop-shadow(0 1px 6px rgba(var(--gold-rgb), 0.28));
 }
 

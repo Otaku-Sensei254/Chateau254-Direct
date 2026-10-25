@@ -1,6 +1,7 @@
 @import './pages/UI/styles/shared.css';
 @import './pages/UI/styles/home.css';
 @import './pages/UI/styles/menu.css';
+@import './pages/UI/styles/full_menu.css';
 @import './pages/UI/styles/view_item.css';
 @import './pages/UI/styles/cart.css';
 @import './pages/UI/styles/checkout.css';

@@ -105,11 +105,12 @@ const ProfileRoute = ({ user, children }) => {
   return children;
 };
 
-const ItemRoute = ({ user, addToCart, addDineInItem, isDineIn, onRequireAuth, onWineFactSelect, onWinePairingSelect, catalogs }) => {
+const ItemRoute = ({ user, addToCart, addDineInItem, isDineIn, onRequireAuth, onWineFactSelect, onWinePairingSelect, catalogs, menuItems }) => {
   const { itemId } = useParams();
   const navigate = useNavigate();
   const { addToast } = useToast();
-  const item = Object.values(catalogs || {}).flat().find((catalogItem) => catalogItem.id === itemId);
+  const item = Object.values(catalogs || {}).flat().find((catalogItem) => catalogItem.id === itemId)
+    || (menuItems || []).find((catalogItem) => catalogItem.id === itemId);
   /* Dine-in dishes are reserved for the table, never carted. The detail page is
      reachable straight from the Fine Dining menu, so without passing the mode
      down it would offer "Add to cart" and quietly undo that rule. */
@@ -117,7 +118,13 @@ const ItemRoute = ({ user, addToCart, addDineInItem, isDineIn, onRequireAuth, on
     addDineInItem?.(reserved);
     addToast(`${reserved.name} reserved for your table`, 'success');
   };
-  return <ViewItem item={item} user={user} addToCart={addToCart} onRequireAuth={onRequireAuth} addDineInItem={isDineIn ? handleReserve : null} onBack={() => navigate('/menu')} onCart={() => navigate('/cart')} onWineFactSelect={onWineFactSelect} onWinePairingSelect={onWinePairingSelect} />;
+  return <ViewItem item={item} user={user} addToCart={addToCart} onRequireAuth={onRequireAuth} addDineInItem={isDineIn ? handleReserve : null} onBack={() => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate('/menu');
+    }
+  }} onCart={() => navigate('/cart')} onWineFactSelect={onWineFactSelect} onWinePairingSelect={onWinePairingSelect} />;
 };
 
 const App = () => {
@@ -139,6 +146,10 @@ const App = () => {
   const navigate = useNavigate();
   const { addToast } = useToast();
   const isProgrammaticNav = useRef(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   useEffect(() => {
     fetch(`${API_URL}/menu?all=true`)
@@ -411,7 +422,7 @@ const App = () => {
         <Route path="/lunch-and-bar" element={menuElement} />
         <Route path="/takeout" element={menuElement} />
         <Route path="/dine-in" element={menuElement} />
-        <Route path="/full-menu" element={<FullMenu onMakeOrder={() => { switchMode('takeout'); navigate('/menu'); }} onReserveTable={() => navigate('/booking')} />} />
+        <Route path="/full-menu" element={<FullMenu onMakeOrder={() => { switchMode('takeout'); navigate('/menu'); }} onReserveTable={() => navigate('/booking')} addDineInItem={addDineInItem} onViewItem={(item) => navigate(`/item/${item.id}`)} />} />
         <Route path="/item/:itemId" element={<ItemRoute user={session?.user} addToCart={addToCart} addDineInItem={addDineInItem} isDineIn={mode === 'dining'} onRequireAuth={() => navigate('/auth')} onWineFactSelect={(field, value) => {
           setFilter('Wine');
           setQuery('');
@@ -425,7 +436,7 @@ const App = () => {
           setWineClassFilter(null);
           setWinePairingFilter(pairingName);
           navigate('/menu');
-        }} catalogs={catalogs} />} />
+        }} catalogs={catalogs} menuItems={menuItems} />} />
         <Route path="/cart" element={<Cart cart={cart} user={session?.user} subtotal={subtotal} changeQuantity={changeQuantity} onCheckout={() => navigate('/checkout')} onMenu={() => navigate('/menu')} onBack={handleBack} />} />
         <Route path="/checkout" element={<Checkout subtotal={subtotal} placeOrder={placeOrder} api={API_URL} token={session?.token} user={session?.user} onRequireAuth={() => navigate('/auth')} />} />
         <Route path="/payment-result" element={<ProtectedRoute user={session?.user}><PaymentResult api={API_URL} token={session?.token} onSuccess={handlePaymentSuccess} onMenu={() => navigate('/menu')} /></ProtectedRoute>} />

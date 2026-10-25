@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FiArrowLeft, FiPlus, FiCalendar, FiShoppingBag, FiTag, FiCheckCircle, FiClipboard, FiRadio, FiExternalLink } from 'react-icons/fi';
 import AccountRequiredModal from '../../components/ui/AccountRequiredModal';
 import { PiWineFill } from "react-icons/pi";
@@ -133,6 +133,10 @@ const ViewItem = ({ item, user, addToCart, addDineInItem, onRequireAuth, onBack,
   const [authPromptOpen, setAuthPromptOpen] = useState(false);
   const [selectedPricing, setSelectedPricing] = useState('paired');
   const [selectedPrice, setSelectedPrice] = useState(item?.price || 0);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [item?.id]);
 
   if (loading) {
     return (

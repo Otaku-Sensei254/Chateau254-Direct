@@ -884,7 +884,7 @@
 }
 
 .menu-card p {
-    color: "white";
+    color: var(--text-soft);
     font-size: 10px;
     line-height: 1.45;
     min-height: 29px;

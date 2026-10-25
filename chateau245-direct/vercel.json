@@ -14,6 +14,31 @@
       "handle": "filesystem"
     },
     {
+      "src": "^/product/[^/]+/?$",
+      "dest": "/wines",
+      "status": 301
+    },
+    {
+      "src": "^/product-category/.*$",
+      "dest": "/wines",
+      "status": 301
+    },
+    {
+      "src": "^/shop/?$",
+      "dest": "/wines",
+      "status": 301
+    },
+    {
+      "src": "^/brand/?$",
+      "dest": "/wines",
+      "status": 301
+    },
+    {
+      "src": "^/an-unforgettable-evening-of-flavors-fine-wine/?$",
+      "dest": "/events",
+      "status": 301
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
