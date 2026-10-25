@@ -18,6 +18,7 @@ import AppFooter from './components/AppFooter';
 import MembershipPromptModal from './components/MembershipPromptModal';
 import InstallAppModal from './components/InstallAppModal';
 import Auth from './pages/auth/auth';
+import { authClient } from './lib/auth';
 import AdminDashboard from './pages/UI/admin/admin_dash';
 import RiderDashboard from './pages/rider/rider_dash';
 import Booking from './pages/UI/booking';
@@ -353,10 +354,11 @@ const App = () => {
     navigate(user.role === 'admin' ? '/admin' : user.role === 'rider' ? '/rider' : '/menu');
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try { await authClient.signOut(); } catch (e) { /* ignore */ }
     localStorage.removeItem('chateau254_session');
     setSession(null);
-    navigate('/');
+    setTimeout(() => navigate('/'), 0);
   };
 
   useEffect(() => {

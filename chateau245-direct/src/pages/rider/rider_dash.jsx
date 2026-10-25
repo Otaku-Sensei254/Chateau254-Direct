@@ -1,5 +1,21 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { FiCheck, FiClock, FiLogOut, FiMapPin, FiMenu, FiPhone, FiTruck, FiX, FiRefreshCw, FiChevronRight, FiNavigation, FiAlertTriangle } from 'react-icons/fi';
+import {
+  FiCheck,
+  FiClock,
+  FiLogOut,
+  FiMapPin,
+  FiMenu,
+  FiPhone,
+  FiTruck,
+  FiX,
+  FiRefreshCw,
+  FiNavigation,
+  FiAlertTriangle,
+  FiExternalLink,
+  FiCopy,
+  FiPackage,
+  FiRadio,
+} from 'react-icons/fi';
 import { useSocket } from '../../contexts/SocketContext';
 import useLocationTracker from '../../hooks/useLocationTracker';
 import RiderMap from '../../components/RiderMap';
@@ -20,6 +36,7 @@ const RiderDashboard = ({ user, token, api, onLogout }) => {
   const [routeInfo, setRouteInfo] = useState(null);
   const [routeLoading, setRouteLoading] = useState(false);
   const [navigating, setNavigating] = useState(false);
+  const [copiedId, setCopiedId] = useState(null);
 
   const headers = useMemo(() => ({ Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }), [token]);
   const { isConnected, joinRoom, leaveRoom, on, off } = useSocket();
@@ -99,7 +116,6 @@ const RiderDashboard = ({ user, token, api, onLogout }) => {
   const fetchRoute = useCallback(async (orderId) => {
     if (!orderId || !riderLocation) return;
     setRouteLoading(true);
-    setRouteInfo(null);
     try {
       const res = await fetch(`${api}/orders/${orderId}/route`, { headers });
       if (res.ok) {
@@ -163,6 +179,13 @@ const RiderDashboard = ({ user, token, api, onLogout }) => {
     }
   };
 
+  const handleCopyAddress = (text, id) => {
+    if (!text) return;
+    navigator.clipboard?.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
   const selectedDelivery = deliveries.find((o) => o.id === selectedId) || null;
   const selectedLocation = selectedId ? customerLocations[selectedId] : null;
 
@@ -171,226 +194,494 @@ const RiderDashboard = ({ user, token, api, onLogout }) => {
     return new Date(dateStr).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
   };
   const formatCurrency = (amount) => `KES ${Number(amount).toLocaleString()}`;
-  const formatDistance = (m) => m >= 1000 ? `${(m / 1000).toFixed(1)} km` : `${Math.round(m)} m`;
-  const formatDuration = (s) => { const mins = Math.round(s / 60); return mins >= 60 ? `${Math.floor(mins / 60)}h ${mins % 60}m` : `${mins} min`; };
+  const formatDistance = (m) => (!m ? '—' : m >= 1000 ? `${(m / 1000).toFixed(1)} km` : `${Math.round(m)} m`);
+  const formatDuration = (s) => {
+    if (!s) return '—';
+    const mins = Math.round(s / 60);
+    return mins >= 60 ? `${Math.floor(mins / 60)}h ${mins % 60}m` : `${mins} min`;
+  };
 
-  if (loading) return <div className="rider-layout"><section className="rider-content"><div className="rider-page"><div style={{ textAlign: 'center', padding: '4rem 2rem' }}><FiRefreshCw className="spin" size={32} /><p>Loading...</p></div></div></section></div>;
-  if (error) return <div className="rider-layout"><section className="rider-content"><div className="rider-page"><div style={{ textAlign: 'center', padding: '4rem 2rem' }}><p>{error}</p><button onClick={loadAll}>Retry</button></div></div></section></div>;
-
-  return <div className="rider-layout">
-    <button className="rider-mobile-toggle" onClick={() => setSidebarOpen(true)} aria-label="Open rider navigation"><FiMenu /></button>
-    {sidebarOpen && <button className="rider-scrim" onClick={() => setSidebarOpen(false)} />}
-    <aside className={`rider-sidebar ${sidebarOpen ? 'open' : ''}`}>
-      <div className="rider-sidebar-brand"><span className="rider-brand-mark">♜</span><span>CHÂTEAU<span>254</span><small>RIDER PORTAL</small></span><button onClick={() => setSidebarOpen(false)}><FiX /></button></div>
-      <div className="rider-profile">
-        <div className="rider-avatar">{rider?.full_name?.slice(0, 2).toUpperCase() || 'RD'}</div>
-        <div>
-          <strong>{rider?.full_name || 'Rider'}</strong>
-          <small>{rider?.status === 'online' ? 'Online' : rider?.status === 'on_break' ? 'On break' : 'Offline'}</small>
-        </div>
-      </div>
-      <nav className="rider-nav">
-        <button className={activeTab === 'deliveries' ? 'active' : ''} onClick={() => setActiveTab('deliveries')}><FiTruck /> Deliveries <b>{deliveries.length}</b></button>
-        <button className={activeTab === 'history' ? 'active' : ''} onClick={() => setActiveTab('history')}><FiClock /> History</button>
-      </nav>
-      <div style={{ padding: '0 1rem' }}>
-        <div className="rider-status" onClick={toggleOnlineStatus} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 12px', borderRadius: '8px', background: rider?.status === 'online' ? 'var(--surface-muted)' : 'var(--surface-sunken)', border: `1px solid ${rider?.status === 'online' ? '#4CAF50' : 'var(--border)'}` }}>
-          <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: rider?.status === 'online' ? '#4CAF50' : 'var(--text-faint)' }} />
-          <span style={{ fontSize: '14px', fontWeight: 500 }}>{rider?.status === 'online' ? 'Online — Accepting deliveries' : 'Go online'}</span>
-        </div>
-        {rider?.status === 'online' && (
-          <div style={{ marginTop: '8px', padding: '8px 12px', borderRadius: '8px', background: gpsError ? 'var(--surface-hover)' : riderLocation ? 'var(--surface-muted)' : 'var(--surface-hover)', border: `1px solid ${gpsError ? '#FF9800' : riderLocation ? '#4CAF50' : '#FFC107'}`, fontSize: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            {gpsError ? (
-              <><FiAlertTriangle size={14} color="#FF9800" /><span style={{ color: 'var(--warning)' }}>GPS: {gpsError}</span></>
-            ) : riderLocation ? (
-              <><FiMapPin size={14} color="#4CAF50" /><span style={{ color: 'var(--success-strong)' }}>GPS active{accuracy ? ` (~${Math.round(accuracy)}m)` : ''}</span></>
-            ) : (
-              <><FiRefreshCw className="spin" size={14} color="#F9A825" /><span style={{ color: 'var(--warning-soft)' }}>Getting GPS fix...</span></>
-            )}
+  if (loading) {
+    return (
+      <div className="rider-layout">
+        <section className="rider-content">
+          <div className="rider-page" style={{ textAlign: 'center', padding: '6rem 2rem' }}>
+            <FiRefreshCw className="spin" size={36} color="var(--gold-deep)" />
+            <h3 style={{ marginTop: '16px', color: 'var(--text-strong)' }}>Loading Rider Dispatch...</h3>
           </div>
-        )}
+        </section>
       </div>
-      <button className="rider-logout" onClick={onLogout}><FiLogOut /> Sign out</button>
-    </aside>
+    );
+  }
 
-    <section className="rider-content">
-      <div className="rider-page" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+  if (error) {
+    return (
+      <div className="rider-layout">
+        <section className="rider-content">
+          <div className="rider-page" style={{ textAlign: 'center', padding: '6rem 2rem' }}>
+            <FiAlertTriangle size={42} color="var(--warning)" style={{ marginBottom: '12px' }} />
+            <h3 style={{ color: 'var(--text-strong)', margin: '0 0 8px' }}>Connection Error</h3>
+            <p style={{ color: 'var(--text-muted)', margin: '0 0 16px' }}>{error}</p>
+            <button className="rider-refresh-btn" onClick={loadAll}>
+              <FiRefreshCw size={14} /> Retry Connection
+            </button>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
-        {activeTab === 'deliveries' && <>
-          <div style={{ display: 'grid', gridTemplateColumns: selectedDelivery ? 'var(--rider-grid-cols)' : '1fr', gap: '1rem', minHeight: 'calc(100vh - 140px)' }}>
+  return (
+    <div className="rider-layout">
+      {/* Mobile Sidebar Hamburger Toggle */}
+      <button
+        className="rider-mobile-toggle"
+        onClick={() => setSidebarOpen(true)}
+        aria-label="Open Rider Navigation"
+      >
+        <FiMenu />
+      </button>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div>
-                  <p className="eyebrow">Active deliveries</p>
-                  <h2 style={{ margin: 0, fontSize: '1.25rem' }}>{deliveries.length} order{deliveries.length !== 1 ? 's' : ''} assigned</h2>
+      {/* Scrim Overlay */}
+      {sidebarOpen && (
+        <button
+          className="rider-scrim"
+          onClick={() => setSidebarOpen(false)}
+          aria-label="Close Navigation"
+        />
+      )}
+
+      {/* Left Sidebar */}
+      <aside className={`rider-sidebar ${sidebarOpen ? 'open' : ''}`}>
+        <div className="rider-sidebar-brand">
+          <span className="rider-brand-mark">♜</span>
+          <div className="brand-text">
+            <span>CHÂTEAU <span className="brand-gold">254</span></span>
+            <small>Rider Dispatch Portal</small>
+          </div>
+          <button
+            className="rider-sidebar-close"
+            onClick={() => setSidebarOpen(false)}
+            aria-label="Close Sidebar"
+          >
+            <FiX />
+          </button>
+        </div>
+
+        {/* Rider Profile Card */}
+        <div className="rider-profile-card">
+          <div className="rider-avatar">
+            {rider?.full_name?.slice(0, 2).toUpperCase() || 'RD'}
+          </div>
+          <div className="rider-profile-info">
+            <span className="rider-profile-name">{rider?.full_name || user?.full_name || 'Rider'}</span>
+            <span className="rider-profile-badge">
+              <span className={`dot ${rider?.status === 'online' ? 'online' : 'offline'}`} />
+              {rider?.status === 'online' ? 'Online & Active' : 'Offline'}
+            </span>
+          </div>
+        </div>
+
+        {/* Tab Navigation */}
+        <nav className="rider-nav">
+          <button
+            type="button"
+            className={`rider-nav-btn ${activeTab === 'deliveries' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('deliveries'); setSidebarOpen(false); }}
+          >
+            <FiTruck size={17} />
+            <span>Active Deliveries</span>
+            {deliveries.length > 0 && <span className="rider-nav-badge">{deliveries.length}</span>}
+          </button>
+          <button
+            type="button"
+            className={`rider-nav-btn ${activeTab === 'history' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('history'); setSidebarOpen(false); }}
+          >
+            <FiClock size={17} />
+            <span>Delivery History</span>
+            {completed.length > 0 && (
+              <span className="rider-nav-badge" style={{ background: 'var(--surface-muted)', color: 'var(--text-on-dark-muted)' }}>
+                {completed.length}
+              </span>
+            )}
+          </button>
+        </nav>
+
+        {/* Status Switch & GPS Diagnostics */}
+        <div className="rider-sidebar-controls">
+          <div
+            className={`rider-status-switch ${rider?.status === 'online' ? 'online' : 'offline'}`}
+            onClick={toggleOnlineStatus}
+            role="button"
+            tabIndex={0}
+            title="Toggle online availability"
+          >
+            <span className="rider-status-switch-label">
+              <span className="rider-status-pulse-dot" />
+              {rider?.status === 'online' ? 'Online · Accepting Orders' : 'Go Online'}
+            </span>
+            <span style={{ fontSize: '11px', opacity: 0.8 }}>
+              {rider?.status === 'online' ? 'Active' : 'Offline'}
+            </span>
+          </div>
+
+          {rider?.status === 'online' && (
+            <div className={`rider-gps-pill ${gpsError ? 'warning' : riderLocation ? 'active' : ''}`}>
+              {gpsError ? (
+                <>
+                  <FiAlertTriangle size={15} color="#ffb74d" />
+                  <span>GPS Error: {gpsError}</span>
+                </>
+              ) : riderLocation ? (
+                <>
+                  <FiRadio size={15} color="#81c784" />
+                  <span>GPS Connected {accuracy ? `(±${Math.round(accuracy)}m)` : ''}</span>
+                </>
+              ) : (
+                <>
+                  <FiRefreshCw className="spin" size={14} color="var(--gold-deep)" />
+                  <span>Acquiring satellite fix...</span>
+                </>
+              )}
+            </div>
+          )}
+
+          <button type="button" className="rider-logout-btn" onClick={onLogout}>
+            <FiLogOut size={16} /> Sign out
+          </button>
+        </div>
+      </aside>
+
+      {/* Main Delivery Cockpit Section */}
+      <section className="rider-content">
+        <div className="rider-page">
+          {/* Top Header Bar */}
+          <header className="rider-page-header">
+            <div className="rider-header-left">
+              <p className="eyebrow">Delivery Cockpit</p>
+              <h1>{activeTab === 'deliveries' ? 'Active Dispatch & Routes' : 'Past Delivery History'}</h1>
+            </div>
+
+            <div className="rider-header-actions">
+              <div className={`rider-live-chip ${isConnected ? 'connected' : ''}`}>
+                <span className="rider-live-chip-dot" />
+                <span>{isConnected ? 'Live Sync' : 'Reconnecting...'}</span>
+              </div>
+              <button
+                type="button"
+                className="rider-refresh-btn"
+                onClick={() => { fetchActiveOrders(); fetchCompletedOrders(); }}
+              >
+                <FiRefreshCw size={14} /> Refresh
+              </button>
+            </div>
+          </header>
+
+          {/* DELIVERIES TAB */}
+          {activeTab === 'deliveries' && (
+            <div className={`rider-dispatch-grid ${!selectedDelivery ? 'single-column' : ''}`}>
+              {/* Left Column: Assigned Orders Dispatch Queue */}
+              <div className="rider-queue-panel">
+                <div className="rider-queue-header">
+                  <h3>Assigned Orders</h3>
+                  <span className="rider-queue-count">{deliveries.length}</span>
                 </div>
-                <button onClick={() => fetchActiveOrders()} style={{ background: 'none', border: '1px solid #ddd', borderRadius: '8px', padding: '6px 12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px' }}><FiRefreshCw size={14} /> Refresh</button>
+
+                {!deliveries.length ? (
+                  <div className="rider-empty-queue">
+                    <div className="rider-empty-queue-icon">
+                      <FiTruck />
+                    </div>
+                    <h3>No Active Deliveries</h3>
+                    <p>You have no pending orders. Stay online to receive incoming drop-offs in real time.</p>
+                    {rider?.status !== 'online' && (
+                      <button
+                        type="button"
+                        className="rider-act-btn nav-primary"
+                        onClick={toggleOnlineStatus}
+                        style={{ minWidth: '180px' }}
+                      >
+                        Go Online Now
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="rider-queue-list">
+                    {deliveries.map((order) => {
+                      const isSelected = order.id === selectedId;
+                      const isPreparing = order.status === 'preparing';
+
+                      return (
+                        <div
+                          key={order.id}
+                          className={`rider-order-card ${isSelected ? 'selected' : ''}`}
+                          onClick={() => { setSelectedId(order.id); setActiveTab('deliveries'); }}
+                        >
+                          <div className="rider-card-top-row">
+                            <span className="rider-order-id-badge">#{order.id.slice(0, 8)}</span>
+                            <span className={`rider-status-pill ${isPreparing ? 'status-pickup' : 'status-delivery'}`}>
+                              {isPreparing ? <FiPackage size={12} /> : <FiTruck size={12} />}
+                              {isPreparing ? 'Ready for Pickup' : 'Out for Delivery'}
+                            </span>
+                          </div>
+
+                          <h4 className="rider-card-customer">{order.customer_name || 'Customer'}</h4>
+
+                          <p className="rider-card-address">
+                            <FiMapPin size={14} />
+                            <span>{order.delivery_address || 'No address provided'}</span>
+                          </p>
+
+                          <div className="rider-card-bottom-row">
+                            <span className="rider-card-price">{formatCurrency(order.total_amount)}</span>
+                            <span className="rider-card-time">{formatTime(order.created_at)}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
 
-              {!deliveries.length ? (
-                <div style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--text-faint)', background: 'var(--surface-subtle)', borderRadius: '12px', border: '1px dashed #ddd' }}>
-                  <FiCheck size={40} style={{ marginBottom: '0.75rem', opacity: 0.3 }} />
-                  <h3 style={{ margin: '0 0 0.25rem', color: 'var(--text)' }}>No active deliveries</h3>
-                  <p style={{ margin: 0, fontSize: '14px' }}>Go online to start receiving orders</p>
-                </div>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  {deliveries.map((order) => {
-                    const isSelected = order.id === selectedId;
-                    const isPreparing = order.status === 'preparing';
-                    return (
-                      <div
-                        key={order.id}
-                        onClick={() => { setSelectedId(order.id); setActiveTab('deliveries'); }}
-                        style={{
-                          padding: '14px 16px',
-                          borderRadius: '10px',
-                          border: `2px solid ${isSelected ? '#e53935' : 'var(--surface-deep)'}`,
-                          background: isSelected ? 'var(--surface-subtle)' : 'var(--surface-raised)',
-                          cursor: 'pointer',
-                          transition: 'all 0.15s',
-                        }}
-                      >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-                          <div>
-                            <span style={{ fontSize: '12px', fontWeight: 600, color: '#e53935', background: 'var(--surface-hover)', padding: '2px 8px', borderRadius: '4px' }}>#{order.id.slice(0, 8)}</span>
-                            <span style={{ marginLeft: '8px', fontSize: '12px', color: isPreparing ? '#FF9800' : '#4CAF50', fontWeight: 500 }}>{isPreparing ? 'Ready for pickup' : 'Out for delivery'}</span>
-                          </div>
-                          <FiChevronRight size={16} color={isSelected ? '#e53935' : 'var(--border-strong)'} />
+              {/* Right Column: Live Map Cockpit & Action Controls */}
+              {selectedDelivery && (
+                <div className="rider-cockpit">
+                  {/* Cockpit Top Bar */}
+                  <div className="rider-cockpit-bar">
+                    <div className="rider-cockpit-dest">
+                      <div className="rider-cockpit-dest-icon">
+                        <FiMapPin size={20} />
+                      </div>
+                      <div className="rider-cockpit-dest-text">
+                        <strong>{selectedDelivery.customer_name || 'Customer'}</strong>
+                        <span>{selectedDelivery.delivery_address || 'Address pending...'}</span>
+                      </div>
+                    </div>
+
+                    <div className="rider-cockpit-tools">
+                      {selectedDelivery.delivery_address && (
+                        <a
+                          href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(selectedDelivery.delivery_address)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="rider-external-map-btn"
+                          title="Open navigation in Google Maps app"
+                        >
+                          <FiExternalLink size={14} />
+                          <span>Google Maps</span>
+                        </a>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Route Quick Metrics */}
+                  <div className="rider-metrics-bar">
+                    <div className="rider-metric-item">
+                      <div className="rider-metric-icon blue">
+                        <FiNavigation size={18} />
+                      </div>
+                      <div className="rider-metric-text">
+                        <span className="rider-metric-value">
+                          {routeLoading ? (
+                            <FiRefreshCw className="spin" size={15} style={{ verticalAlign: 'middle' }} />
+                          ) : (
+                            formatDistance(routeInfo?.distance)
+                          )}
+                        </span>
+                        <span className="rider-metric-label">Route Distance</span>
+                      </div>
+                    </div>
+
+                    <div className="rider-metric-item">
+                      <div className="rider-metric-icon green">
+                        <FiClock size={18} />
+                      </div>
+                      <div className="rider-metric-text">
+                        <span className="rider-metric-value">
+                          {routeLoading ? (
+                            <FiRefreshCw className="spin" size={15} style={{ verticalAlign: 'middle' }} />
+                          ) : (
+                            formatDuration(routeInfo?.duration)
+                          )}
+                        </span>
+                        <span className="rider-metric-label">Estimated ETA</span>
+                      </div>
+                    </div>
+
+                    <div className="rider-metric-item">
+                      <div className="rider-metric-icon gold">
+                        {selectedDelivery.status === 'preparing' ? <FiPackage size={18} /> : <FiTruck size={18} />}
+                      </div>
+                      <div className="rider-metric-text">
+                        <span className="rider-metric-value" style={{ fontSize: '15px' }}>
+                          {selectedDelivery.status === 'preparing' ? 'At Kitchen' : 'En Route'}
+                        </span>
+                        <span className="rider-metric-label">Current Stage</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* The Interactive Route Map */}
+                  <RiderMap
+                    riderLocation={riderLocation}
+                    customerLocation={selectedLocation}
+                    orderAddress={selectedDelivery.delivery_address}
+                    onRouteCalculated={(calculatedRoute) => {
+                      if (calculatedRoute && !routeInfo) {
+                        setRouteInfo(calculatedRoute);
+                      }
+                    }}
+                  />
+
+                  {/* Order Details Card */}
+                  <div className="rider-details-card">
+                    <h4>Delivery Details</h4>
+                    <div className="rider-details-grid">
+                      <div className="rider-detail-row">
+                        <span className="rider-detail-label">Recipient</span>
+                        <span className="rider-detail-value">{selectedDelivery.customer_name || 'Guest'}</span>
+                      </div>
+
+                      {selectedDelivery.customer_phone && (
+                        <div className="rider-detail-row">
+                          <span className="rider-detail-label">Direct Contact</span>
+                          <a href={`tel:${selectedDelivery.customer_phone}`} className="rider-detail-value phone-link">
+                            <FiPhone size={14} /> {selectedDelivery.customer_phone}
+                          </a>
                         </div>
-                        <p style={{ margin: '0 0 4px', fontWeight: 600, fontSize: '14px' }}>{order.customer_name || 'Customer'}</p>
-                        <p style={{ margin: '0 0 4px', fontSize: '13px', color: 'var(--success-deep)', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          <FiMapPin size={12} /> {order.delivery_address?.slice(0, 50) || 'No address'}{order.delivery_address?.length > 50 ? '...' : ''}
-                        </p>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px' }}>
-                          <span style={{ fontSize: '13px', fontWeight: 600 }}>{formatCurrency(order.total_amount)}</span>
-                          <span style={{ fontSize: '12px', color: 'var(--text-faint)' }}>{formatTime(order.created_at)}</span>
+                      )}
+
+                      <div className="rider-detail-row" style={{ gridColumn: '1 / -1' }}>
+                        <span className="rider-detail-label">Drop-off Address</span>
+                        <div className="rider-address-copy-row">
+                          <span className="rider-detail-value">{selectedDelivery.delivery_address || '—'}</span>
+                          {selectedDelivery.delivery_address && (
+                            <button
+                              type="button"
+                              className="rider-copy-btn"
+                              onClick={() => handleCopyAddress(selectedDelivery.delivery_address, selectedDelivery.id)}
+                            >
+                              <FiCopy size={12} /> {copiedId === selectedDelivery.id ? 'Copied!' : 'Copy'}
+                            </button>
+                          )}
                         </div>
                       </div>
-                    );
-                  })}
+
+                      <div className="rider-detail-row">
+                        <span className="rider-detail-label">Total Payment</span>
+                        <span className="rider-detail-value" style={{ color: 'var(--brand)', fontSize: '16px' }}>
+                          {formatCurrency(selectedDelivery.total_amount)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Tactile Big Action Command Buttons */}
+                  <div className="rider-actions-bar">
+                    {selectedLocation && (
+                      <button
+                        type="button"
+                        className="rider-act-btn nav-primary"
+                        onClick={() => setNavigating(true)}
+                      >
+                        <FiNavigation size={18} />
+                        <span>Start Turn-by-Turn</span>
+                      </button>
+                    )}
+
+                    {selectedDelivery.customer_phone && (
+                      <a
+                        href={`tel:${selectedDelivery.customer_phone}`}
+                        className="rider-act-btn call-secondary"
+                      >
+                        <FiPhone size={17} />
+                        <span>Call Customer</span>
+                      </a>
+                    )}
+
+                    <button
+                      type="button"
+                      disabled={updatingId === selectedDelivery.id}
+                      className={`rider-act-btn ${selectedDelivery.status === 'preparing' ? 'stage-pickup' : 'stage-complete'}`}
+                      onClick={() => {
+                        if (selectedDelivery.status === 'preparing') {
+                          updateStatus(selectedDelivery.id, 'out_for_delivery');
+                        } else {
+                          updateStatus(selectedDelivery.id, 'completed');
+                        }
+                      }}
+                    >
+                      {updatingId === selectedDelivery.id ? (
+                        <FiRefreshCw className="spin" size={17} />
+                      ) : (
+                        <FiCheck size={18} />
+                      )}
+                      <span>
+                        {updatingId === selectedDelivery.id
+                          ? 'Updating Status...'
+                          : selectedDelivery.status === 'preparing'
+                          ? 'Pick Up Order'
+                          : 'Mark as Delivered'}
+                      </span>
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
+          )}
 
-            {selectedDelivery && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                <div style={{ background: 'var(--surface-raised)', borderRadius: '12px', border: '1px solid #e8e8e8', overflow: 'hidden' }}>
-                  <div className="rider-map-container" style={{ height: '300px' }}>
-                    <RiderMap
-                      riderLocation={riderLocation}
-                      customerLocation={selectedLocation}
-                      orderAddress={selectedDelivery.delivery_address}
-                    />
-                  </div>
-                </div>
-
-                {routeLoading && (
-                  <div style={{ textAlign: 'center', padding: '0.75rem', color: 'var(--success-deep)', fontSize: '13px' }}>
-                    <FiRefreshCw className="spin" size={14} style={{ marginRight: '6px' }} /> Calculating route...
-                  </div>
-                )}
-
-                {routeInfo && (
-                  <div className="rider-route-info" style={{ display: 'flex', gap: '0.75rem' }}>
-                    <div style={{ flex: 1, background: 'var(--surface-subtle)', borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-                      <FiNavigation size={16} color="#2196F3" style={{ marginBottom: '4px' }} />
-                      <div style={{ fontSize: '18px', fontWeight: 700 }}>{formatDistance(routeInfo.distance)}</div>
-                      <div style={{ fontSize: '12px', color: 'var(--success-deep)' }}>Distance</div>
-                    </div>
-                    <div style={{ flex: 1, background: 'var(--surface-subtle)', borderRadius: '10px', padding: '12px', textAlign: 'center' }}>
-                      <FiClock size={16} color="#4CAF50" style={{ marginBottom: '4px' }} />
-                      <div style={{ fontSize: '18px', fontWeight: 700 }}>{formatDuration(routeInfo.duration)}</div>
-                      <div style={{ fontSize: '12px', color: 'var(--success-deep)' }}>ETA</div>
-                    </div>
-                  </div>
-                )}
-
-                <div style={{ background: 'var(--surface-raised)', borderRadius: '12px', border: '1px solid #e8e8e8', padding: '16px' }}>
-                  <h3 style={{ margin: '0 0 12px', fontSize: '14px' }}>Order Details</h3>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}><span style={{ color: 'var(--success-deep)' }}>Customer</span><span style={{ fontWeight: 600 }}>{selectedDelivery.customer_name || '—'}</span></div>
-                    {selectedDelivery.customer_phone && (
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
-                        <span style={{ color: 'var(--success-deep)' }}>Phone</span>
-                        <a href={`tel:${selectedDelivery.customer_phone}`} style={{ fontWeight: 600, color: '#e53935', textDecoration: 'none' }}>{selectedDelivery.customer_phone}</a>
+          {/* HISTORY TAB */}
+          {activeTab === 'history' && (
+            <div>
+              {completed.length ? (
+                <div className="rider-history-list">
+                  {completed.map((order) => (
+                    <div key={order.id} className="rider-history-card">
+                      <div className="rider-history-main">
+                        <div className="rider-history-top">
+                          <span className="rider-history-id">#{order.id.slice(0, 8)}</span>
+                          <span className="rider-status-pill status-delivery">
+                            <FiCheck size={12} /> Delivered
+                          </span>
+                          <span className="rider-history-time">
+                            {formatTime(order.updated_at || order.created_at)}
+                          </span>
+                        </div>
+                        <h4 className="rider-history-customer">{order.customer_name || 'Customer'}</h4>
+                        <p className="rider-history-address">{order.delivery_address || 'N/A'}</p>
                       </div>
-                    )}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}><span style={{ color: 'var(--success-deep)' }}>Address</span><span style={{ fontWeight: 600, textAlign: 'right', maxWidth: '60%' }}>{selectedDelivery.delivery_address || '—'}</span></div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}><span style={{ color: 'var(--success-deep)' }}>Total</span><span style={{ fontWeight: 700 }}>{formatCurrency(selectedDelivery.total_amount)}</span></div>
-                  </div>
+                      <div className="rider-history-amount">
+                        {formatCurrency(order.total_amount)}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-
-                <div className="rider-action-buttons" style={{ display: 'flex', gap: '0.5rem' }}>
-                  {selectedLocation && (
-                    <button onClick={() => setNavigating(true)} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '12px', background: '#2196F3', color: 'var(--surface-raised)', border: 'none', borderRadius: '10px', fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}>
-                      <FiNavigation size={16} /> Navigate
-                    </button>
-                  )}
-                  {selectedDelivery.customer_phone && (
-                    <a href={`tel:${selectedDelivery.customer_phone}`} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '12px', background: 'var(--surface-sunken)', color: 'var(--text)', border: '1px solid #ddd', borderRadius: '10px', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>
-                      <FiPhone size={16} /> Call
-                    </a>
-                  )}
-                  <button
-                    disabled={updatingId === selectedDelivery.id}
-                    onClick={() => {
-                      if (selectedDelivery.status === 'preparing') updateStatus(selectedDelivery.id, 'out_for_delivery');
-                      else updateStatus(selectedDelivery.id, 'completed');
-                    }}
-                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '12px', background: selectedDelivery.status === 'preparing' ? '#FF9800' : '#4CAF50', color: 'var(--surface-raised)', border: 'none', borderRadius: '10px', fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}
-                  >
-                    <FiCheck size={16} /> {updatingId === selectedDelivery.id ? 'Updating...' : selectedDelivery.status === 'preparing' ? 'Pick up order' : 'Mark delivered'}
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </>}
-
-        {activeTab === 'history' && <>
-          <div>
-            <p className="eyebrow">Past deliveries</p>
-            <h2 style={{ margin: '0 0 1rem', fontSize: '1.25rem' }}>{completed.length} completed</h2>
-          </div>
-          {completed.length ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              {completed.map((order) => (
-                <div key={order.id} style={{ padding: '14px 16px', borderRadius: '10px', border: '1px solid var(--border)', background: 'var(--surface-raised)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                    <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--success)', background: 'var(--surface-muted)', padding: '2px 8px', borderRadius: '4px' }}>#{order.id.slice(0, 8)}</span>
-                    <span style={{ fontSize: '12px', color: 'var(--success)', fontWeight: 500 }}><FiCheck size={12} /> Completed</span>
+              ) : (
+                <div className="rider-empty-queue">
+                  <div className="rider-empty-queue-icon">
+                    <FiClock />
                   </div>
-                  <p style={{ margin: '0 0 4px', fontWeight: 600, fontSize: '14px' }}>{order.customer_name || 'Customer'}</p>
-                  <p style={{ margin: '0 0 4px', fontSize: '13px', color: 'var(--success-deep)' }}><FiMapPin size={12} /> {order.delivery_address || 'N/A'}</p>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '6px' }}>
-                    <span style={{ fontSize: '13px', fontWeight: 600 }}>{formatCurrency(order.total_amount)}</span>
-                    <span style={{ fontSize: '12px', color: 'var(--text-faint)' }}>{formatTime(order.updated_at || order.created_at)}</span>
-                  </div>
+                  <h3>No Delivered Orders Yet</h3>
+                  <p>Completed drop-offs from your shift will be recorded here.</p>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-faint)' }}>
-              <FiClock size={40} style={{ marginBottom: '0.75rem', opacity: 0.3 }} />
-              <p>No completed deliveries yet</p>
+              )}
             </div>
           )}
-        </>}
+        </div>
+      </section>
 
-      </div>
-    </section>
-
-    {navigating && selectedDelivery && selectedLocation && (
-      <NavigationPage
-        order={selectedDelivery}
-        riderLocation={riderLocation}
-        customerLocation={selectedLocation}
-        onClose={() => setNavigating(false)}
-      />
-    )}
-  </div>;
+      {/* Turn-by-Turn Fullscreen Navigation HUD */}
+      {navigating && selectedDelivery && selectedLocation && (
+        <NavigationPage
+          order={selectedDelivery}
+          riderLocation={riderLocation}
+          customerLocation={selectedLocation}
+          onClose={() => setNavigating(false)}
+        />
+      )}
+    </div>
+  );
 };
 
 export default RiderDashboard;

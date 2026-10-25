@@ -1,42 +1,44 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { FiArrowLeft, FiArrowRight, FiMail, FiLock, FiUser, FiPhone, FiEye, FiEyeOff, FiAlertCircle } from 'react-icons/fi';
 import Brand from '../../components/Brand';
+import { authClient } from '../../lib/auth';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID || '175951330735-25k2nh44r67hjrl2loc0bo8duj750vb8.apps.googleusercontent.com';
 
 const Auth = ({ onSuccess, onBack }) => {
   const [mode, setMode] = useState('signin');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const googleBtnRef = useRef(null);
 
   const [googleToken, setGoogleToken] = useState(null);
   const [phonePrompt, setPhonePrompt] = useState(false);
   const [phoneValue, setPhoneValue] = useState('');
 
-  const handleGoogleCredential = async (response) => {
+  const handleNeonGoogle = async () => {
     setError('');
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/auth/google`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ credential: response.credential }),
-      });
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.error || 'Google sign-in failed');
-      if (!result.user.phone) {
-        setGoogleToken(result.token);
-        setPhonePrompt(true);
-      } else {
-        onSuccess(result.user, result.token);
-      }
+      await authClient.signIn.social({ provider: 'google', callbackURL: window.location.origin + '/auth' });
     } catch (err) {
-      setError(err.message);
-    } finally {
+      setError(err.message || 'Google sign-in failed');
       setLoading(false);
+    }
+  };
+
+  const completeNeonSignIn = async (token) => {
+    const res = await fetch(`${API_URL}/auth/neon`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token }),
+    });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error || 'Neon sign-in failed');
+    if (result.needsPhone) {
+      setGoogleToken(result.token);
+      setPhonePrompt(true);
+    } else {
+      onSuccess(result.user, result.token);
     }
   };
 
@@ -62,44 +64,17 @@ const Auth = ({ onSuccess, onBack }) => {
   };
 
   useEffect(() => {
-    // Load Google Identity Services script
-    if (document.getElementById('google-gis-script')) {
-      if (window.google?.accounts?.id) {
-        window.google.accounts.id.initialize({
-          client_id: GOOGLE_CLIENT_ID,
-          callback: handleGoogleCredential,
-        });
-        if (googleBtnRef.current) {
-          window.google.accounts.id.renderButton(googleBtnRef.current, {
-            theme: 'outline',
-            size: 'large',
-            width: '100%',
-            text: 'signin_with',
-          });
+    // After redirect back from Neon Auth, complete sign-in
+    (async () => {
+      try {
+        const session = await authClient.getSession();
+        if (session && session.data && session.data.session && session.data.session.token) {
+          await completeNeonSignIn(session.data.session.token);
         }
+      } catch (e) {
+        // no session, ignore
       }
-      return;
-    }
-    const script = document.createElement('script');
-    script.id = 'google-gis-script';
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.defer = true;
-    script.onload = () => {
-      window.google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: handleGoogleCredential,
-      });
-      if (googleBtnRef.current) {
-        window.google.accounts.id.renderButton(googleBtnRef.current, {
-          theme: 'outline',
-          size: 'large',
-          width: '100%',
-          text: 'signin_with',
-        });
-      }
-    };
-    document.head.appendChild(script);
+    })();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -280,7 +255,9 @@ const Auth = ({ onSuccess, onBack }) => {
         <div className="auth-divider">
           <span>or</span>
         </div>
-        <div ref={googleBtnRef} className="auth-google-btn" />
+        <button type="button" className="primary-button auth-submit" onClick={handleNeonGoogle} disabled={loading} style={{background:"#fff",color:"#000",border:"1px solid #ddd"}}>
+          {loading ? 'Please wait...' : 'Continue with Google'}
+        </button>
         <p className="auth-switch">
           {mode === 'signin' ? "Don't have an account?" : 'Already have an account?'}{' '}
           <button

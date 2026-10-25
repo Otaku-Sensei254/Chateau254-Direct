@@ -222,4 +222,46 @@ router.put('/phone', authenticate, asyncHandler(async (req, res) => {
   res.json({ user: { id: user.id, full_name: user.full_name, email: user.email, phone: user.phone, role: 'customer', roles: ['customer'], loyalty_points: user.loyalty_points || 0, created_at: user.created_at } });
 }));
 
+const { createRemoteJWKSet, jwtVerify } = require('jose');
+const NEON_JWKS = createRemoteJWKSet(new URL('https://ep-noisy-cloud-axhxnu7n.neonauth.c-4.us-east-2.aws.neon.tech/chateau254/auth/.well-known/jwks.json'));
+
+// POST /auth/neon — verify Neon Auth JWT and create/find user
+router.post('/neon', asyncHandler(async (req, res) => {
+  const { token } = req.body;
+  if (!token) return res.status(400).json({ error: 'Neon token is required' });
+
+  let payload;
+  try {
+    const { payload: p } = await jwtVerify(token, NEON_JWKS);
+    payload = p;
+  } catch (err) {
+    return res.status(401).json({ error: 'Invalid Neon token' });
+  }
+
+  const email = (payload.email || '').toLowerCase();
+  if (!email) return res.status(400).json({ error: 'Email not available in token' });
+  const name = payload.name || payload.given_name || 'Neon User';
+
+  let result = await query('SELECT id, full_name, email, phone, loyalty_points, created_at FROM users WHERE email = $1', [email]);
+  let user;
+  if (result.rowCount) {
+    user = result.rows[0];
+  } else {
+    const staffResult = await query('SELECT id, full_name, email, created_at FROM chateau_users WHERE email = $1', [email]);
+    if (staffResult.rowCount) {
+      user = { ...staffResult.rows[0], phone: null, loyalty_points: 0 };
+    } else {
+      const insertResult = await query(
+        'INSERT INTO users (full_name, email, password_hash, phone) VALUES ($1, $2, $3, $4) RETURNING id, full_name, email, phone, loyalty_points, created_at',
+        [name, email, null, null]
+      );
+      user = insertResult.rows[0];
+    }
+  }
+
+  const roles = user.roles || ['customer'];
+  const publicUserObj = { id: user.id, full_name: user.full_name, email: user.email, phone: user.phone || null, role: roles[0] || 'customer', roles, loyalty_points: user.loyalty_points || 0, created_at: user.created_at };
+  res.json({ user: publicUserObj, token: tokenFor(publicUserObj), needsPhone: !user.phone });
+}));
+
 module.exports = router;

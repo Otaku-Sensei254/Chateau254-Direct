@@ -1,77 +1,111 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { FiMapPin } from 'react-icons/fi';
+import { FiMapPin, FiCrosshair, FiMaximize2, FiMinimize2, FiLayers } from 'react-icons/fi';
 import { getRouteFromOSRM } from '../utils/geocoding';
 
-const createIcon = (color, size = 32) => {
-  return L.divIcon({
-    className: 'custom-marker',
-    html: `<div style="
-      width: ${size}px;
-      height: ${size}px;
-      background-color: ${color};
-      border-radius: 50%;
-      border: 3px solid white;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    "></div>`,
-    iconSize: [size, size],
-    iconAnchor: [size / 2, size / 2],
-  });
-};
+const createRiderMarker = () => L.divIcon({
+  className: 'custom-rider-icon',
+  html: `
+    <div class="rider-marker-pin">
+      <div class="rider-marker-pulse"></div>
+      <div class="rider-marker-core">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+        </svg>
+      </div>
+    </div>
+  `,
+  iconSize: [38, 38],
+  iconAnchor: [19, 19],
+});
 
-const stepIcon = (type, modifier) => {
-  const arrows = {
-    depart: '&#8593;', arrive: '&#9679;',
-    turn_left: '&#8592;', turn_right: '&#8594;',
-    turn_slight_left: '&#8617;', turn_slight_right: '&#8618;',
-    turn_sharp_left: '&#8617;', turn_sharp_right: '&#8618;',
-    turn_uturn: '&#8634;',
-    continue: '&#8593;', merge: '&#8593;',
-    roundabout: '&#8635;', rotary: '&#8635;',
-    'end of road': '&#8593;',
-    'new name': '&#8593;',
-  };
-  const key = type + (modifier ? `_${modifier}` : '');
-  const symbol = arrows[key] || arrows[type] || '&#8593;';
-  return L.divIcon({
-    className: 'step-marker',
-    html: `<div style="
-      width:22px;height:22px;background:var(--info);color:var(--surface-page);border-radius:50%;
-      display:flex;align-items:center;justify-content:center;font-size:12px;
-      border:2px solid var(--surface-page);box-shadow:0 1px 4px rgba(0,0,0,0.3);
-    ">${symbol}</div>`,
-    iconSize: [22, 22],
-    iconAnchor: [11, 11],
-  });
-};
+const createCustomerMarker = () => L.divIcon({
+  className: 'custom-customer-icon',
+  html: `
+    <div class="dest-marker-pin">
+      <div class="dest-marker-badge">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+        </svg>
+      </div>
+      <div class="dest-marker-shadow"></div>
+    </div>
+  `,
+  iconSize: [38, 38],
+  iconAnchor: [19, 32],
+});
 
-const riderIcon = createIcon('#2196F3', 36);
-const customerIcon = createIcon('#4CAF50', 36);
-const restaurantIcon = createIcon('#FF9800', 32);
+const createRestaurantMarker = () => L.divIcon({
+  className: 'custom-restaurant-icon',
+  html: `
+    <div class="dest-marker-pin">
+      <div class="dest-marker-badge" style="background: var(--brand, #761329);">
+        <span style="font-size: 15px; font-weight: bold; line-height: 1;">♜</span>
+      </div>
+      <div class="dest-marker-shadow"></div>
+    </div>
+  `,
+  iconSize: [38, 38],
+  iconAnchor: [19, 32],
+});
 
-const MapUpdater = ({ center, zoom }) => {
+const riderIcon = createRiderMarker();
+const customerIcon = createCustomerMarker();
+const restaurantIcon = createRestaurantMarker();
+
+const MapController = ({ riderLocation, customerLocation, recenterSignal, fitBoundsSignal }) => {
   const map = useMap();
 
   useEffect(() => {
-    if (center) {
-      map.setView(center, zoom || map.getZoom());
+    if (riderLocation && customerLocation) {
+      const bounds = L.latLngBounds([
+        [riderLocation.latitude, riderLocation.longitude],
+        [customerLocation.latitude, customerLocation.longitude],
+      ]);
+      map.fitBounds(bounds, { padding: [48, 48], maxZoom: 16 });
+    } else if (riderLocation) {
+      map.setView([riderLocation.latitude, riderLocation.longitude], 15);
+    } else if (customerLocation) {
+      map.setView([customerLocation.latitude, customerLocation.longitude], 15);
     }
-  }, [center, zoom, map]);
+  }, [riderLocation, customerLocation, map]);
+
+  useEffect(() => {
+    if (!recenterSignal || !riderLocation) return;
+    map.flyTo([riderLocation.latitude, riderLocation.longitude], 16, { duration: 0.6 });
+  }, [recenterSignal, riderLocation, map]);
+
+  useEffect(() => {
+    if (!fitBoundsSignal) return;
+    if (riderLocation && customerLocation) {
+      const bounds = L.latLngBounds([
+        [riderLocation.latitude, riderLocation.longitude],
+        [customerLocation.latitude, customerLocation.longitude],
+      ]);
+      map.flyToBounds(bounds, { padding: [48, 48], maxZoom: 16, duration: 0.6 });
+    }
+  }, [fitBoundsSignal, riderLocation, customerLocation, map]);
 
   return null;
 };
 
-const RiderMap = ({ riderLocation, customerLocation, restaurantLocation, orderAddress, steps }) => {
+const RiderMap = ({
+  riderLocation,
+  customerLocation,
+  restaurantLocation,
+  orderAddress,
+  onRouteCalculated,
+}) => {
   const [route, setRoute] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [recenterSignal, setRecenterSignal] = useState(0);
+  const [fitBoundsSignal, setFitBoundsSignal] = useState(0);
 
   const calculateRoute = useCallback(async () => {
-    if (!riderLocation || !customerLocation) return;
+    if (!riderLocation?.latitude || !customerLocation?.latitude) return;
 
     setLoading(true);
     try {
@@ -82,26 +116,36 @@ const RiderMap = ({ riderLocation, customerLocation, restaurantLocation, orderAd
         customerLocation.longitude
       );
       setRoute(routeData);
+      if (onRouteCalculated && routeData) {
+        onRouteCalculated(routeData);
+      }
     } catch (error) {
       console.error('Failed to calculate route:', error);
     } finally {
       setLoading(false);
     }
-  }, [riderLocation, customerLocation]);
+  }, [riderLocation, customerLocation, onRouteCalculated]);
 
   useEffect(() => {
     calculateRoute();
   }, [calculateRoute]);
 
-  const defaultCenter = riderLocation
-    ? [riderLocation.latitude, riderLocation.longitude]
-    : customerLocation
-    ? [customerLocation.latitude, customerLocation.longitude]
-    : null;
+  const defaultCenter = useMemo(() => {
+    if (riderLocation?.latitude && riderLocation?.longitude) {
+      return [riderLocation.latitude, riderLocation.longitude];
+    }
+    if (customerLocation?.latitude && customerLocation?.longitude) {
+      return [customerLocation.latitude, customerLocation.longitude];
+    }
+    return [-1.2921, 36.8219]; // Default Nairobi
+  }, [riderLocation, customerLocation]);
 
-  const routeCoordinates = route?.geometry?.coordinates?.map((coord) => [coord[1], coord[0]]) || [];
+  const routeCoordinates = useMemo(() => {
+    return route?.geometry?.coordinates?.map((coord) => [coord[1], coord[0]]) || [];
+  }, [route]);
 
   const formatDistance = (meters) => {
+    if (!meters) return '—';
     if (meters >= 1000) {
       return `${(meters / 1000).toFixed(1)} km`;
     }
@@ -109,7 +153,8 @@ const RiderMap = ({ riderLocation, customerLocation, restaurantLocation, orderAd
   };
 
   const formatDuration = (seconds) => {
-    const mins = Math.floor(seconds / 60);
+    if (!seconds) return '—';
+    const mins = Math.round(seconds / 60);
     if (mins >= 60) {
       const hours = Math.floor(mins / 60);
       const remainMins = mins % 60;
@@ -119,132 +164,164 @@ const RiderMap = ({ riderLocation, customerLocation, restaurantLocation, orderAd
   };
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-      {!defaultCenter && (
+    <div className={`rider-map-card ${isFullscreen ? 'fullscreen' : ''}`}>
+      {!riderLocation && !customerLocation && (
         <div style={{
           position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'center', background: 'var(--surface-sunken)',
-          color: 'var(--success-deep)', zIndex: 1000, gap: '8px',
+          color: 'var(--text-soft)', zIndex: 1000, gap: '10px',
         }}>
-          <FiMapPin size={28} color="var(--text-faint)" />
-          <div style={{ fontSize: '14px', fontWeight: 600 }}>Waiting for GPS...</div>
-          <div style={{ fontSize: '12px', color: 'var(--text-faint)' }}>Allow location access to continue</div>
+          <FiMapPin size={32} color="var(--gold-deep)" />
+          <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-strong)' }}>Acquiring Live Coordinates...</div>
+          <div style={{ fontSize: '12.5px', color: 'var(--text-muted)' }}>Waiting for rider GPS or delivery destination</div>
         </div>
       )}
 
-      {defaultCenter ? (
-      <MapContainer
-        center={defaultCenter}
-        zoom={14}
-        style={{ width: '100%', height: '100%' }}
-        scrollWheelZoom={true}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-
-        <MapUpdater center={defaultCenter} zoom={14} />
-
-        {riderLocation && (
-          <Marker
-            position={[riderLocation.latitude, riderLocation.longitude]}
-            icon={riderIcon}
-          >
-            <Popup>
-              <strong>Rider</strong>
-              {riderLocation.name && <p>{riderLocation.name}</p>}
-            </Popup>
-          </Marker>
-        )}
-
-        {customerLocation && (
-          <Marker
-            position={[customerLocation.latitude, customerLocation.longitude]}
-            icon={customerIcon}
-          >
-            <Popup>
-              <strong>Delivery Location</strong>
-              {orderAddress && <p>{orderAddress}</p>}
-            </Popup>
-          </Marker>
-        )}
-
-        {restaurantLocation && (
-          <Marker
-            position={[restaurantLocation.latitude, restaurantLocation.longitude]}
-            icon={restaurantIcon}
-          >
-            <Popup>
-              <strong>Restaurant</strong>
-              <p>Château254</p>
-            </Popup>
-          </Marker>
-        )}
-
-        {steps && steps.map((step, i) => {
-          const loc = step.maneuver?.location;
-          if (!loc) return null;
-          const [lng, lat] = loc;
-          if (!lat || !lng) return null;
-          const isEndpoint = step.maneuver?.type === 'depart' || step.maneuver?.type === 'arrive';
-          if (isEndpoint) return null;
-          return (
-            <Marker
-              key={i}
-              position={[lat, lng]}
-              icon={stepIcon(step.maneuver?.type, step.maneuver?.modifier)}
-            >
-              <Popup><small>{step.maneuver?.type} {step.maneuver?.modifier || ''}</small></Popup>
-            </Marker>
-          );
-        })}
-
-        {routeCoordinates.length > 0 && (
-          <Polyline
-            positions={routeCoordinates}
-            color="#2196F3"
-            weight={4}
-            opacity={0.7}
-          />
-        )}
-      </MapContainer>
-      ) : null}
-
-      {loading && (
-        <div style={{
-          position: 'absolute',
-          top: '10px',
-          right: '10px',
-          background: 'var(--surface-raised)',
-          padding: '8px 12px',
-          borderRadius: '4px',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-          zIndex: 1000,
-        }}>
-          Calculating route...
-        </div>
-      )}
-
+      {/* Floating in-map HUD chip */}
       {route && (
-        <div style={{
-          position: 'absolute',
-          bottom: '10px',
-          left: '10px',
-          background: 'var(--surface-raised)',
-          padding: '12px',
-          borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-          zIndex: 1000,
-          maxWidth: '200px',
-        }}>
-          <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>Route Info</div>
-          <div style={{ fontSize: '14px', color: 'var(--success-deep)' }}>
-            <p style={{ margin: '2px 0' }}>Distance: {formatDistance(route.distance)}</p>
-            <p style={{ margin: '2px 0' }}>Duration: {formatDuration(route.duration)}</p>
+        <div className="rider-map-hud-chip">
+          <div className="rider-hud-stat">
+            <span className="val">{formatDistance(route.distance)}</span>
+            <span className="lbl">Distance</span>
           </div>
+          <div className="rider-hud-divider" />
+          <div className="rider-hud-stat">
+            <span className="val">{formatDuration(route.duration)}</span>
+            <span className="lbl">Est. Time</span>
+          </div>
+          {loading && (
+            <div style={{ fontSize: '11px', color: 'var(--gold-deep)', fontWeight: 600 }}>
+              Updating...
+            </div>
+          )}
         </div>
       )}
+
+      {/* Floating control buttons */}
+      <div className="rider-map-control-group">
+        {riderLocation && (
+          <button
+            type="button"
+            className="rider-map-ctrl-btn"
+            onClick={() => setRecenterSignal((s) => s + 1)}
+            title="Recenter on my location"
+            aria-label="Recenter on my location"
+          >
+            <FiCrosshair size={18} />
+          </button>
+        )}
+        {riderLocation && customerLocation && (
+          <button
+            type="button"
+            className="rider-map-ctrl-btn"
+            onClick={() => setFitBoundsSignal((s) => s + 1)}
+            title="Fit route to screen"
+            aria-label="Fit route to screen"
+          >
+            <FiLayers size={18} />
+          </button>
+        )}
+        <button
+          type="button"
+          className="rider-map-ctrl-btn"
+          onClick={() => setIsFullscreen((prev) => !prev)}
+          title={isFullscreen ? 'Exit fullscreen' : 'Expand map view'}
+          aria-label={isFullscreen ? 'Exit fullscreen' : 'Expand map view'}
+        >
+          {isFullscreen ? <FiMinimize2 size={18} /> : <FiMaximize2 size={18} />}
+        </button>
+      </div>
+
+      <div className="rider-map-viewport">
+        <MapContainer
+          center={defaultCenter}
+          zoom={14}
+          style={{ width: '100%', height: '100%' }}
+          scrollWheelZoom={true}
+          zoomControl={false}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+
+          <MapController
+            riderLocation={riderLocation}
+            customerLocation={customerLocation}
+            recenterSignal={recenterSignal}
+            fitBoundsSignal={fitBoundsSignal}
+          />
+
+          {riderLocation?.latitude && riderLocation?.longitude && (
+            <Marker
+              position={[riderLocation.latitude, riderLocation.longitude]}
+              icon={riderIcon}
+            >
+              <Popup>
+                <div style={{ fontWeight: 700, fontSize: '13px' }}>Your Location (Rider)</div>
+                <div style={{ fontSize: '11.5px', color: '#666', marginTop: '2px' }}>
+                  {riderLocation.name || 'Live GPS Active'}
+                </div>
+              </Popup>
+            </Marker>
+          )}
+
+          {customerLocation?.latitude && customerLocation?.longitude && (
+            <Marker
+              position={[customerLocation.latitude, customerLocation.longitude]}
+              icon={customerIcon}
+            >
+              <Popup>
+                <div style={{ fontWeight: 700, fontSize: '13px', color: '#2e7d32' }}>
+                  Delivery Destination
+                </div>
+                {orderAddress && (
+                  <div style={{ fontSize: '12px', color: '#333', marginTop: '3px' }}>
+                    {orderAddress}
+                  </div>
+                )}
+              </Popup>
+            </Marker>
+          )}
+
+          {restaurantLocation?.latitude && restaurantLocation?.longitude && (
+            <Marker
+              position={[restaurantLocation.latitude, restaurantLocation.longitude]}
+              icon={restaurantIcon}
+            >
+              <Popup>
+                <div style={{ fontWeight: 700, fontSize: '13px', color: '#761329' }}>
+                  Château 254 Cellar & Kitchen
+                </div>
+              </Popup>
+            </Marker>
+          )}
+
+          {/* Dual-layer route polyline for high contrast visibility */}
+          {routeCoordinates.length > 0 && (
+            <>
+              {/* Outer casing */}
+              <Polyline
+                positions={routeCoordinates}
+                color="#0d47a1"
+                weight={7}
+                opacity={0.35}
+                lineCap="round"
+                lineJoin="round"
+              />
+              {/* Inner vibrant route line */}
+              <Polyline
+                positions={routeCoordinates}
+                color="#2196F3"
+                weight={4.5}
+                opacity={0.95}
+                lineCap="round"
+                lineJoin="round"
+              />
+            </>
+          )}
+        </MapContainer>
+      </div>
     </div>
   );
 };
