@@ -223,6 +223,7 @@ const Auth = ({ onSuccess, onBack }) => {
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Enter your password"
                 minLength="6"
+                autoComplete="current-password"
                 required
               />
               <button
