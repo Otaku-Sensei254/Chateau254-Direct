@@ -88,6 +88,25 @@ a{
     letter-spacing: 1px;
 }
 
+.brand-wordmark-lockup {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.brand-wordmark-tagline {
+    display: block;
+    font-family: 'Montserrat', Arial, sans-serif;
+    font-size: 8.5px;
+    font-weight: 400;
+    letter-spacing: 2.2px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1;
+    padding-left: 1px;
+    white-space: nowrap;
+}
+
 .brand-wordmark-main {
     color: var(--wine, #b08d45);
     font-weight: 700;
@@ -113,6 +132,9 @@ a{
     .brand-wordmark-text {
         font-size: 20px;
         letter-spacing: 0.8px;
+    }
+    .brand-wordmark-tagline {
+        display: none;
     }
 }
 

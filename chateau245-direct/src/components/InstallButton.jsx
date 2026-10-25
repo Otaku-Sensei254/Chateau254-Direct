@@ -13,14 +13,13 @@ export default function InstallButton({ alwaysVisible = false, className = '' })
       return; // Already installed, don't show button
     }
 
-    // Show the button immediately (no need to wait for beforeinstallprompt)
-    setIsVisible(true);
-
     const handleBeforeInstallPrompt = (e) => {
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault();
       // Stash the event so it can be triggered later
       setDeferredPrompt(e);
+      // Show the button now that install is available
+      setIsVisible(true);
     };
 
     const handleAppInstalled = () => {
@@ -39,8 +38,6 @@ export default function InstallButton({ alwaysVisible = false, className = '' })
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) {
-      setUnavailable(true);
-      window.setTimeout(() => setUnavailable(false), 3200);
       return;
     }
 
@@ -65,7 +62,7 @@ export default function InstallButton({ alwaysVisible = false, className = '' })
       className={`install-app-button ${className}`.trim()}
       onClick={handleInstallClick}
       type="button"
-      aria-label={unavailable ? 'Installation is available from your browser menu' : 'Install Chateau254 app'}
+      aria-label="Install Chateau254 app"
       style={{
         padding: '8px 16px',
         background: 'var(--accent-nav)',
@@ -84,7 +81,7 @@ export default function InstallButton({ alwaysVisible = false, className = '' })
       onMouseEnter={(e) => e.target.style.background = 'var(--accent-nav-deep)'}
       onMouseLeave={(e) => e.target.style.background = 'var(--accent-nav)'}
     >
-      {unavailable ? 'Use browser menu to install' : '📥 Install App'}
+      📥 Install App
     </button>
   );
 }
