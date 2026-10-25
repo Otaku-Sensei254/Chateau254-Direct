@@ -12,7 +12,6 @@ const Auth = ({ onSuccess, onBack }) => {
   const [showPassword, setShowPassword] = useState(false);
   const googleBtnRef = useRef(null);
 
-  const [googleUser, setGoogleUser] = useState(null);
   const [googleToken, setGoogleToken] = useState(null);
   const [phonePrompt, setPhonePrompt] = useState(false);
   const [phoneValue, setPhoneValue] = useState('');
@@ -29,7 +28,6 @@ const Auth = ({ onSuccess, onBack }) => {
       const result = await res.json();
       if (!res.ok) throw new Error(result.error || 'Google sign-in failed');
       if (!result.user.phone) {
-        setGoogleUser(result.user);
         setGoogleToken(result.token);
         setPhonePrompt(true);
       } else {
@@ -102,6 +100,7 @@ const Auth = ({ onSuccess, onBack }) => {
       }
     };
     document.head.appendChild(script);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = async (event) => {
