@@ -18,6 +18,7 @@ import AppFooter from './components/AppFooter';
 import MembershipPromptModal from './components/MembershipPromptModal';
 import InstallAppModal from './components/InstallAppModal';
 import Auth from './pages/auth/auth';
+import PageLoader from './components/ui/PageLoader';
 import { authClient } from './lib/auth';
 import AdminDashboard from './pages/UI/admin/admin_dash';
 import RiderDashboard from './pages/rider/rider_dash';
@@ -141,6 +142,8 @@ const App = () => {
   const [order, setOrder] = useState(null);
   const [lastOrderId, setLastOrderId] = useState(loadLastOrder);
   const [session, setSession] = useState(storedSession);
+  const [initialLoading, setInitialLoading] = useState(true);
+  useEffect(() => { const t = setTimeout(() => setInitialLoading(false), 600); return () => clearTimeout(t); }, []);
   const [dineInSelections, setDineInSelections] = useState([]);
   const [menuItems, setMenuItems] = useState([]);
   const location = useLocation();
@@ -407,6 +410,8 @@ const App = () => {
   const menuElement = (
     <Menu api={API_URL} items={visibleItems} offerItems={menuItems} user={session?.user} categories={activeCategories} filter={filter} setFilter={(cat) => { setFilter(cat); if (cat !== 'Wine') setWineClassFilter(null); }} query={query} setQuery={setQuery} addToCart={addToCart} cartCount={cartCount} onCart={() => navigate('/cart')} onViewItem={(item) => navigate(`/item/${item.id}`)} onBooking={() => navigate('/booking')} wineFilter={wineFilter} onClearWineFilter={() => { setWineFilter(null); setWinePairingFilter(null); }} wineClassFilter={wineClassFilter} setWineClassFilter={setWineClassFilter} mode={mode} onRequireAuth={() => navigate('/auth')} winePairingFilter={winePairingFilter} onClearWinePairingFilter={() => setWinePairingFilter(null)} onBack={handleBack} dineInSelections={dineInSelections} addDineInItem={addDineInItem} />
   );
+
+  if (initialLoading) return <PageLoader />;
 
   return <SocketProvider token={session?.token}>
     <div className={`app-shell${showAppHeader ? ' has-app-header' : ''}`}>

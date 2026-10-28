@@ -816,7 +816,10 @@ const Menu = ({ api,
         }))}
       </div>
       {!loading && !items.length && (
-        <div className="empty-state">Not found. Try another search.</div>
+        <div className="empty-state" style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
+          <p style={{ fontSize: '20px', marginBottom: '8px', fontWeight: 600 }}>No items found</p>
+          <p>Try adjusting your search or filters.</p>
+        </div>
       )}
       {cartCount > 0 && (
         <button className="floating-cart" onClick={onCart}>
