@@ -81,7 +81,7 @@
 .cellar-hero-eyebrow {
     font-size: 11px;
     letter-spacing: 2.5px;
-    color: var(--gold-deep);
+    color: white;
     text-transform: uppercase;
     margin: 0 0 12px;
     font-weight: 500;
@@ -97,7 +97,7 @@
 
 .cellar-hero-desc {
     font-size: 13px;
-    color: var(--text-faint);
+    color: white;
     line-height: 1.6;
     margin: 0;
     max-width: 380px;
