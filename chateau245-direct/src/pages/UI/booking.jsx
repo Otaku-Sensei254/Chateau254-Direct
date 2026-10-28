@@ -91,6 +91,19 @@ const Booking = ({ user, token, selectedItems = [], onClearSelections }) => {
         'Please confirm my reservation on WhatsApp.',
       ].filter(Boolean).join('\n');
 
+      // Send a copy to email via Web3Forms (fire-and-forget, doesn't block the flow)
+      const web3Data = new FormData();
+      web3Data.append('access_key', process.env.REACT_APP_WEB3FORMS_ACCESS_KEY || '');
+      web3Data.append('subject', `New Table Reservation #${bookingReference}`);
+      web3Data.append('from_name', 'Château254 Website');
+      web3Data.append('name', customerName);
+      web3Data.append('phone', customerPhone || user?.phone || 'Not provided');
+      web3Data.append('guests', String(partySize));
+      web3Data.append('dining_time', formattedDiningTime);
+      web3Data.append('preferred_items', selectedItems.length ? selectedItems.map((i) => i.name).join(', ') : 'None');
+      web3Data.append('notes', notes || 'None');
+      fetch('https://api.web3forms.com/submit', { method: 'POST', body: web3Data }).catch(() => {});
+
       setSubmitted({
         reference: bookingReference,
         name: customerName,
