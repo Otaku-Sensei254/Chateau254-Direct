@@ -135,6 +135,7 @@ router.post('/signin', asyncHandler(async (req, res) => {
     return res.json({ user, token: tokenFor(user) });
   }
 
+  
   const customerResult = await findCustomerByEmail(normalizedEmail);
   if (!customerResult.rowCount) return res.status(401).json({ error: 'Account not found' });
   const record = customerResult.rows[0];
