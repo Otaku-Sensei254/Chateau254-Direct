@@ -254,9 +254,8 @@ const RiderDashboard = ({ user, token, api, onLogout }) => {
       {/* Left Sidebar */}
       <aside className={`rider-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="rider-sidebar-brand">
-          <span className="rider-brand-mark">♜</span>
           <div className="brand-text">
-            <span>CHÂTEAU <span className="brand-gold">254</span></span>
+            <span className="brand-gold">CHÂTEAU254</span>
             <small>Rider Dispatch Portal</small>
           </div>
           <button

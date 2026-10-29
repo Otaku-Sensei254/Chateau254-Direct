@@ -1682,6 +1682,12 @@
     padding: 28px 32px;
 }
 
+.admin-modal--staff {
+    width: min(100%, 520px);
+    max-height: min(100vh - 40px, 680px);
+    padding: 28px 32px;
+}
+
 .admin-modal-header {
     margin-bottom: 20px;
     padding-bottom: 14px;
@@ -1825,6 +1831,50 @@
     padding-bottom: 6px;
 }
 
+.admin-staff-modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 0 8px 6px 0;
+}
+
+.admin-staff-password-note {
+    display: grid;
+    gap: 5px;
+    padding: 14px 16px;
+    border: 1px solid rgba(var(--gold-rgb), 0.22);
+    border-radius: 10px;
+    background: var(--surface-subtle, rgba(255, 255, 255, 0.03));
+    color: var(--text-muted);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.admin-staff-password-note__label {
+    color: var(--text-faint);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.admin-staff-password-note strong {
+    color: var(--gold-pale);
+    font-size: 14px;
+    letter-spacing: 0.02em;
+}
+
+.admin-staff-form-message {
+    margin: 0;
+    padding: 11px 13px;
+    border: 1px solid rgba(218, 100, 89, 0.35);
+    border-radius: 8px;
+    background: rgba(218, 100, 89, 0.08);
+    color: #e7a49b;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
 .admin-form-group {
     display: flex;
     flex-direction: column;
@@ -1860,6 +1910,11 @@
 
 @media (max-width: 640px) {
     .admin-modal--menu {
+        padding: 22px 18px;
+        width: 100%;
+        max-height: 94vh;
+    }
+    .admin-modal--staff {
         padding: 22px 18px;
         width: 100%;
         max-height: 94vh;

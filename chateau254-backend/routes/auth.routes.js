@@ -1,4 +1,5 @@
 const express = require('express');
+const emailService = require('../services/email.service');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('../middleware/async.middleware');
@@ -115,6 +116,7 @@ router.post('/signup', asyncHandler(async (req, res) => {
     [name.trim(), normalizedEmail, passwordHash, phone?.trim() || null],
   );
   const user = publicUser({ ...result.rows[0], roles: ['customer'] });
+  emailService.send(normalizedEmail, 'Welcome to Château254', emailService.welcomeEmail(name.trim()));
   res.status(201).json({ user, token: tokenFor(user) });
 }));
 
@@ -157,12 +159,13 @@ router.post('/forgot-password', asyncHandler(async (req, res) => {
   const normalizedEmail = email.trim().toLowerCase();
 
   // Find user in users or chateau_users
-  const userResult = await query('SELECT id, email FROM users WHERE email = $1', [normalizedEmail]);
+  const userResult = await query('SELECT id, full_name, email FROM users WHERE email = $1', [normalizedEmail]);
   let userId = userResult.rowCount ? userResult.rows[0].id : null;
+  let userName = userResult.rowCount ? userResult.rows[0].full_name : null;
 
   if (!userId) {
-    const staffResult = await query('SELECT id, email FROM chateau_users WHERE email = $1', [normalizedEmail]);
-    if (staffResult.rowCount) userId = staffResult.rows[0].id;
+    const staffResult = await query('SELECT id, full_name, email FROM chateau_users WHERE email = $1', [normalizedEmail]);
+    if (staffResult.rowCount) { userId = staffResult.rows[0].id; userName = staffResult.rows[0].full_name; }
   }
 
   if (!userId) {
@@ -179,9 +182,10 @@ router.post('/forgot-password', asyncHandler(async (req, res) => {
   await query('DELETE FROM password_reset_tokens WHERE user_id = $1', [userId]);
   await query('INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES ($1, $2, $3)', [userId, resetToken, expiresAt]);
 
-  // TODO: Send email via Resend when domain is verified
-  // For now, return the token (admin can share manually)
-  res.json({ message: 'If an account exists, a reset link has been sent.', resetToken, resetLink: `/auth?reset=${resetToken}` });
+  const frontendUrl = process.env.FRONTEND_URL || 'https://www.chateau254.co.ke';
+  const link = `${frontendUrl}/auth?reset=${resetToken}`;
+  emailService.send(normalizedEmail, 'Reset your Château254 password', emailService.resetPasswordEmail(userName || 'there', link));
+  res.json({ message: 'If an account exists, a reset link has been sent.' });
 }));
 
 // POST /auth/reset-password — validate token and update password

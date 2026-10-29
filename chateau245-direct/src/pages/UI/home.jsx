@@ -155,7 +155,7 @@ const Home = ({ api, onDining, onLunchAndBar, onEvents, onTakeout, onWines, onAu
               <div className="promo-copy">
                 <span className="promo-kicker">Château feature</span>
                 {activePromo.title && <h3>{activePromo.title}</h3>}
-                <p>{activePromo.message}</p>
+                <div className="promo-message-scroll"><p>{activePromo.message}</p></div>
                 <button className="promo-cta-btn" onClick={() => { onLunchAndBar(); dismissPromotion(activePromo.id); }}>
                   View Lunch & Bar
                 </button>

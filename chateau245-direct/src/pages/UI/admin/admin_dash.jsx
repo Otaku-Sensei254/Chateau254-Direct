@@ -22,6 +22,7 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
   const [menu, setMenu] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [riders, setRiders] = useState([]);
+  const [staff, setStaff] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [tables, setTables] = useState([]);
   const [editingItem, setEditingItem] = useState(null);
@@ -88,6 +89,12 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
     setCustomers(data.customers || []);
   }, [api, headers]);
 
+  const fetchStaff = useCallback(async () => {
+    const res = await fetch(`${api}/staff`, { headers });
+    if (!res.ok) throw new Error('Failed to load staff');
+    const data = await res.json();
+    setStaff(data.staff || []);
+  }, [api, headers]);
   const fetchRiders = useCallback(async () => {
     const res = await fetch(`${api}/riders`, { headers });
     if (!res.ok) throw new Error('Failed to load riders');
@@ -132,13 +139,13 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
     setLoading(true);
     setError(null);
     try {
-      await Promise.all([fetchOrders(), fetchMenu(), fetchCustomers(), fetchRiders(), fetchBookings(), fetchTables()]);
+      await Promise.all([fetchOrders(), fetchMenu(), fetchCustomers(), fetchRiders(), fetchStaff(), fetchBookings(), fetchTables()]);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  }, [fetchOrders, fetchMenu, fetchCustomers, fetchRiders, fetchBookings, fetchTables]);
+  }, [fetchOrders, fetchMenu, fetchCustomers, fetchRiders, fetchStaff, fetchBookings, fetchTables]);
 
   useEffect(() => { loadAll(); }, [loadAll]);
 
@@ -490,6 +497,7 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
           { label: 'Menu', icon: FiPackage },
           { label: 'Customers', icon: FiUsers },
           { label: 'Riders', icon: FiTruck },
+          { label: 'Staff', icon: FiUser },
           { label: 'Fleet Map', icon: FiMap },
           { label: 'Reports', icon: FiBarChart2 },
           { label: 'Promotions', icon: FiGift },
@@ -508,6 +516,7 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
       {activePage === 'Menu' && <MenuContent menu={menu} setEditingItem={setEditingItem} onDelete={deleteMenuItem} fetchMenu={fetchMenu} menuFilters={menuFilters} setMenuFilters={setMenuFilters} allCategories={allCategories} allSubcategories={allSubcategories} />}
       {activePage === 'Customers' && <CustomersContent customers={customers} />}
       {activePage === 'Riders' && <RidersContent riders={riders} onAdd={() => setRiderEditorOpen(true)} onRemove={removeRider} />}
+      {activePage === 'Staff' && <StaffContent staff={staff} api={api} headers={headers} onRefresh={fetchStaff} />}
       {activePage === 'Fleet Map' && <FleetMapContent token={token} api={api} />}
       {activePage === 'Promotions' && <PromotionsContent api={api} headers={headers} addToast={addToast} />}
       {activePage === 'Media' && <MediaContent api={api} headers={headers} addToast={addToast} />}
@@ -1197,7 +1206,7 @@ const MenuEditor = ({ item, onSave, onClose }) => {
               ref={fileRef}
               name="image_file"
               type="file"
-              accept="image/jpeg,image/png,image/webp"
+              accept="image/*"
               onChange={handleFileChange}
               disabled={isConverting}
               style={{ display: 'none' }}
@@ -1623,18 +1632,25 @@ const PromotionsContent = ({ api, headers, addToast }) => {
     resetForm();
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (preview && preview.startsWith('blob:')) URL.revokeObjectURL(preview);
     const url = URL.createObjectURL(file);
     setPreview(url);
     setFileName(file.name);
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setForm((prev) => ({ ...prev, image_url: reader.result }));
-    };
-    reader.readAsDataURL(file);
+    setForm((prev) => ({ ...prev, image_url: '' }));
+    try {
+      const fd = new FormData();
+      fd.append('image', file);
+      const res = await fetch(`${api}/promotions/upload`, { method: 'POST', headers: { Authorization: headers.Authorization }, body: fd });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Upload failed');
+      setForm((prev) => ({ ...prev, image_url: data.imageUrl }));
+      setPreview(data.imageUrl);
+    } catch (err) {
+      addToast(err.message || 'Image upload failed', 'error');
+    }
   };
 
   const clearImage = () => {
@@ -1667,6 +1683,7 @@ const PromotionsContent = ({ api, headers, addToast }) => {
       if (!res.ok) throw new Error('Failed to save promotion');
       addToast(editingPromo ? 'Promotion updated' : 'Promotion created', 'success');
       resetForm();
+      setIsPromoModalOpen(false);
       await fetchPromotions();
     } catch (err) {
       addToast(err.message || 'Save failed', 'error');
@@ -1733,7 +1750,7 @@ const PromotionsContent = ({ api, headers, addToast }) => {
                   </button>
                   {preview && <button type="button" className="admin-upload-clear" onClick={clearImage}>Remove</button>}
                 </div>
-                <input ref={fileRef} name="image_file" type="file" accept="image/jpeg,image/png,image/webp" onChange={handleFileChange} style={{ display: 'none' }} />
+                <input ref={fileRef} name="image_file" type="file" accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
                 {preview && <img className="admin-modal-image-preview" src={preview} alt="Preview" onError={(e) => { e.target.style.display = 'none'; }} />}
               </label>
               <label>Link URL<input name="link_url" value={form.link_url} onChange={(e) => setForm((prev) => ({ ...prev, link_url: e.target.value }))} placeholder="https://..." /></label>
@@ -1751,3 +1768,108 @@ const PromotionsContent = ({ api, headers, addToast }) => {
 };
 
 export default AdminDashboard;
+
+
+const StaffContent = ({ staff, api, headers, onRefresh }) => {
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [role, setRole] = useState('staff');
+  const [phone, setPhone] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState('');
+  const add = async (e) => {
+    e.preventDefault();
+    setBusy(true); setMsg('');
+    try {
+      const res = await fetch(`${api}/staff`, { method: 'POST', headers, body: JSON.stringify({ name, email, role, phone }) });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed');
+      setMsg(`Added ${data.staff.full_name} as ${role}. Default password: staff@chateau254`);
+      setName(''); setEmail(''); setRole('staff'); setPhone(''); setOpen(false);
+      onRefresh();
+    } catch (err) { setMsg(err.message); }
+    finally { setBusy(false); }
+  };
+  const remove = async (id) => {
+    if (!window.confirm('Remove this staff member?')) return;
+    await fetch(`${api}/staff/${id}`, { method: 'DELETE', headers });
+    onRefresh();
+  };
+  return (
+    <>
+      <div className="admin-content-heading" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div><p className="eyebrow">Team</p><h2>Staff</h2></div>
+        <button className="admin-primary" onClick={() => { setMsg(''); setOpen(true); }}><FiPlus /> Add staff</button>
+      </div>
+      {msg && !open && <p style={{ marginBottom: 12, color: 'var(--text-muted)' }}>{msg}</p>}
+      <div className="admin-table-wrap">
+        <table className="admin-table">
+          <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th></th></tr></thead>
+          <tbody>
+            {staff.map((s) => (
+              <tr key={s.id}>
+                <td><strong>{s.full_name}</strong></td>
+                <td>{s.email}</td>
+                <td style={{ textTransform: 'capitalize' }}>{(s.roles || []).join(', ')}</td>
+                <td>{new Date(s.created_at).toLocaleDateString()}</td>
+                <td><button onClick={() => remove(s.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--danger, #e55)' }}><FiTrash2 /></button></td>
+              </tr>
+            ))}
+            {!staff.length && <tr><td colSpan={5} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-faint)' }}>No staff yet</td></tr>}
+          </tbody>
+        </table>
+      </div>
+      {open && (
+        <div className="admin-modal-backdrop" onClick={(e) => { if (e.target === e.currentTarget && !busy) setOpen(false); }}>
+          <form className="admin-modal admin-modal--staff" onSubmit={add}>
+            <button type="button" className="admin-modal-close" onClick={() => setOpen(false)} aria-label="Close modal" disabled={busy}>
+              <FiX />
+            </button>
+            <div className="admin-modal-header">
+              <span className="admin-modal-eyebrow">Team Management</span>
+              <h2 className="admin-modal-title">Add Staff Member</h2>
+            </div>
+
+            <div className="admin-modal-form admin-staff-modal-form">
+              {msg && <p className="admin-staff-form-message" role="alert">{msg}</p>}
+              <div className="admin-form-group">
+                <label className="admin-field-label" htmlFor="staff-full-name">Full Name <span className="admin-field-required">*</span></label>
+                <input id="staff-full-name" className="admin-form-input" placeholder="e.g. Peter Banda" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" required />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-field-label" htmlFor="staff-email">Email Address <span className="admin-field-required">*</span></label>
+                <input id="staff-email" className="admin-form-input" placeholder="name@chateau254.co.ke" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" required />
+              </div>
+              {role === 'rider' && (
+                <div className="admin-form-group">
+                  <label className="admin-field-label" htmlFor="staff-phone">Phone Number</label>
+                  <input id="staff-phone" className="admin-form-input" placeholder="+254 7XX XXX XXX" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required />
+                </div>
+              )}
+              <div className="admin-form-group">
+                <label className="admin-field-label" htmlFor="staff-role">Team Role</label>
+                <select id="staff-role" className="admin-form-select" value={role} onChange={(e) => setRole(e.target.value)}>
+                  <option value="staff">Staff</option>
+                  <option value="rider">Rider</option>
+                </select>
+              </div>
+              <div className="admin-staff-password-note">
+                <span className="admin-staff-password-note__label">Temporary sign-in password</span>
+                <strong>staff@chateau254</strong>
+                <span>Ask the team member to change it after their first sign-in.</span>
+              </div>
+            </div>
+
+            <div className="admin-modal-actions">
+              <button type="button" className="admin-modal-cancel" onClick={() => setOpen(false)} disabled={busy}>Cancel</button>
+              <button type="submit" className="admin-primary admin-modal-submit" disabled={busy}>
+                {busy ? 'Adding staff…' : <><FiPlus /> Add Staff Member</>}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+    </>
+  );
+};

@@ -1,4 +1,5 @@
 const express = require('express');
+const emailService = require('../services/email.service');
 const asyncHandler = require('../middleware/async.middleware');
 const { query } = require('../config/db');
 const { authenticate, requireRole, optionalAuthenticate } = require('../middleware/auth.middleware');
@@ -82,6 +83,13 @@ router.post('/', optionalAuthenticate, asyncHandler(async (req, res) => {
     io.to('admin').emit('booking:created', { booking: emittedBooking });
   }
 
+  if (userId) {
+    const u = await query('SELECT email, full_name FROM users WHERE id = $1', [userId]);
+    if (u.rowCount && u.rows[0].email) {
+      const b = emittedBooking;
+      emailService.send(u.rows[0].email, 'Reservation received - Château254', emailService.reservationEmail(b.customer_name, (b.id||'').slice(0,8), new Date(b.dining_time).toLocaleString('en-KE'), b.party_size));
+    }
+  }
   res.status(201).json({ booking: emittedBooking });
 }));
 

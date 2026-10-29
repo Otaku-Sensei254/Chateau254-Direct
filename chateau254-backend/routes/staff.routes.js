@@ -4,6 +4,7 @@ const { query } = require('../config/db');
 const { authenticate, requireRole } = require('../middleware/auth.middleware');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
+const emailService = require('../services/email.service');
 
 const router = express.Router();
 
@@ -17,7 +18,7 @@ router.get('/', authenticate, requireRole('admin'), asyncHandler(async (req, res
      FROM chateau_users u
      JOIN user_roles ur ON ur.user_id = u.id
      JOIN roles r ON r.id = ur.role_id
-     WHERE r.name = 'staff'
+     WHERE r.name IN ('staff','rider')
      GROUP BY u.id
      ORDER BY u.created_at DESC`
   );
@@ -26,13 +27,18 @@ router.get('/', authenticate, requireRole('admin'), asyncHandler(async (req, res
 
 // POST /api/staff — create a staff user
 router.post('/', authenticate, requireRole('admin'), asyncHandler(async (req, res) => {
-  const { name, email, phone, password } = req.body;
-  if (!name || !email || !password) {
-    return res.status(400).json({ error: 'Name, email, and password are required' });
+  const { name, email, role, phone } = req.body;
+  if (!name || !email) {
+    return res.status(400).json({ error: 'Name and email are required' });
   }
-  if (password.length < 6) {
-    return res.status(400).json({ error: 'Password must be at least 6 characters' });
+  const roleName = (role || 'staff').trim().toLowerCase();
+  if (roleName === 'rider' && !phone) return res.status(400).json({ error: 'Phone is required for riders' });
+  const roleRow = await query('SELECT id, name FROM roles WHERE name = $1', [roleName]);
+  if (!roleRow.rowCount) {
+    return res.status(400).json({ error: `Unknown role: ${roleName}` });
   }
+  const roleId = roleRow.rows[0].id;
+  const password = 'staff@chateau254';
 
   const normalizedEmail = email.trim().toLowerCase();
 
@@ -51,8 +57,12 @@ router.post('/', authenticate, requireRole('admin'), asyncHandler(async (req, re
 
   const user = result.rows[0];
 
-  // Assign staff role
-  await query('INSERT INTO user_roles (user_id, role_id) VALUES ($1, $2)', [user.id, STAFF_ROLE_ID]);
+  // Assign role
+  await query('INSERT INTO user_roles (user_id, role_id) VALUES ($1, $2)', [user.id, roleId]);
+
+  if (roleName === 'rider') {
+    await query('INSERT INTO riders (user_id, full_name, phone) VALUES ($1, $2, $3)', [user.id, name.trim(), phone.trim()]);
+  }
 
   // Generate password reset token (for email when Resend is ready)
   const resetToken = crypto.randomBytes(32).toString('hex');
@@ -62,8 +72,11 @@ router.post('/', authenticate, requireRole('admin'), asyncHandler(async (req, re
     [user.id, resetToken, expiresAt]
   );
 
+  const frontendUrl = (process.env.FRONTEND_URL || 'https://www.chateau254.co.ke').replace(/\/+$/, '');
+  const staffLoginLink = `${frontendUrl}/auth`;
+  emailService.send(normalizedEmail, 'Welcome to Château254 Staff', emailService.staffWelcomeEmail(name.trim(), normalizedEmail, roleName, staffLoginLink));
   res.status(201).json({
-    staff: { ...user, roles: ['staff'] },
+    staff: { ...user, roles: [roleName] },
     resetToken, // returned so admin can share link manually until email is wired
     resetLink: `/auth?reset=${resetToken}`,
   });

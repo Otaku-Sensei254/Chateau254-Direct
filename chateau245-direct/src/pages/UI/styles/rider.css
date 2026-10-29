@@ -58,7 +58,7 @@
 }
 
 .rider-sidebar-brand .brand-gold {
-  color: var(--gold-deep);
+  color: var(--wine, #b08d45);
 }
 
 .rider-sidebar-brand small {
@@ -81,7 +81,7 @@
   margin-left: auto;
   border: 0;
   background: transparent;
-  color: var(--text-on-accent);
+  color:white;
   font-size: 20px;
   cursor: pointer;
   padding: 4px;

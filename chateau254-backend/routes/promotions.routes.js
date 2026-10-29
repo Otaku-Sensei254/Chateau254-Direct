@@ -13,7 +13,7 @@ const imageUpload = multer({
   limits: { fileSize: env.r2MaxFileSize, files: 1 },
   fileFilter: (req, file, callback) => {
     if (!ALLOWED_IMAGE_TYPES.has(file.mimetype)) {
-      const error = new Error('Only JPEG, PNG, and WebP images are allowed');
+      const error = new Error('Only JPEG, PNG, WebP, GIF, AVIF, BMP, TIFF, and SVG images are allowed');
       error.statusCode = 400;
       return callback(error);
     }
