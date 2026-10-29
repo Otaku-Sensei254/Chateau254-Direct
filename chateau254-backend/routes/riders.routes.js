@@ -65,6 +65,8 @@ router.patch('/me/orders/:orderId/status', authenticate, requireRole('rider'), a
     [status, req.params.orderId, riderId],
   );
   if (!result.rowCount) return res.status(404).json({ error: 'Order not found or not assigned to you' });
+  const io = req.app.get('io');
+  if (io) io.to('admin').emit('order:status_changed', { order: result.rows[0] });
   res.json({ order: result.rows[0] });
 }));
 
