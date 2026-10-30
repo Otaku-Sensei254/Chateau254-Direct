@@ -24,6 +24,7 @@ const staffRoutes = require('./routes/staff.routes');
 const { notFound, errorHandler } = require('./middleware/error.middleware');
 
 const app = express();
+app.get('/health', (req, res) => res.json({ status: 'ok', service: 'chateau254', time: new Date().toISOString() }));
 const httpServer = createServer(app);
 
 let server = null;
