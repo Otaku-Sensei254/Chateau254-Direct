@@ -9,47 +9,15 @@
       }
     }
   ],
-  "routes": [
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "^/product/[^/]+/?$",
-      "dest": "/wines",
-      "status": 301
-    },
-    {
-      "src": "^/product-category/.*$",
-      "dest": "/wines",
-      "status": 301
-    },
-    {
-      "src": "^/shop/?$",
-      "dest": "/wines",
-      "status": 301
-    },
-    {
-      "src": "^/brand/?$",
-      "dest": "/wines",
-      "status": 301
-    },
-    {
-      "src": "^/an-unforgettable-evening-of-flavors-fine-wine/?$",
-      "dest": "/events",
-      "status": 301
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html",
-      "headers": {
-        "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
-        "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://apis.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' data:; connect-src 'self' https://chateau254-direct-production.up.railway.app wss://chateau254-direct-production.up.railway.app https://*.googleapis.com https://accounts.google.com; frame-ancestors 'none'; base-uri 'self'",
-        "X-Frame-Options": "DENY",
-        "X-Content-Type-Options": "nosniff",
-        "Referrer-Policy": "strict-origin-when-cross-origin",
-        "Permissions-Policy": "geolocation=(), microphone=(), camera=()"
-      }
-    }
+  "redirects": [
+    { "source": "/product/:path*", "destination": "/wines", "statusCode": 301 },
+    { "source": "/product-category/:path*", "destination": "/wines", "statusCode": 301 },
+    { "source": "/shop", "destination": "/wines", "statusCode": 301 },
+    { "source": "/brand", "destination": "/wines", "statusCode": 301 },
+    { "source": "/an-unforgettable-evening-of-flavors-fine-wine", "destination": "/events", "statusCode": 301 }
+  ],
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
     {
