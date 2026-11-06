@@ -5,8 +5,9 @@ const verifyToken = (header) => {
   const token = header && header.startsWith('Bearer ') ? header.slice(7) : null;
   if (!token) return null;
   try {
-    return jwt.verify(token, env.jwtSecret);
+    return jwt.verify(token, env.jwtSecret, { algorithms: ['HS256'] });
   } catch (error) {
+    console.warn('[auth] JWT verification failed:', error.name);
     return null;
   }
 };

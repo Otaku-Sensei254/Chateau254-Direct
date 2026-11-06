@@ -70,7 +70,7 @@ router.post('/', optionalAuthenticate, asyncHandler(async (req, res) => {
   const { customer_name, customer_phone, delivery_address, total_amount, latitude, longitude, items = [] } = req.body;
   if (!delivery_address || total_amount === undefined) return res.status(400).json({ error: 'Delivery address and total amount are required' });
 
-  let resolvedUserId = req.user?.id || req.body.user_id || null;
+  let resolvedUserId = req.user?.id || null;
   if (!resolvedUserId) {
     // Guest checkout: find or create a user by phone (or name)
     const name = (customer_name || 'Guest').trim();

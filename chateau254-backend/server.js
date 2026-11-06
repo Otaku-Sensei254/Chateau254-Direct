@@ -1,4 +1,5 @@
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -49,7 +50,7 @@ const allowedOrigins = [
 const isAllowedOrigin = (origin, callback) => {
   const allowed = !origin
     || allowedOrigins.includes(origin)
-    || /^https:\/\/chateau254-git-[^/]+\.vercel\.app$/.test(origin);
+    || /^https:\/\/chateau254-git-(main|develop|staging)\.vercel\.app$/.test(origin);
   callback(null, allowed);
 };
 
@@ -68,7 +69,7 @@ app.use(cors({ origin: isAllowedOrigin, credentials: true }));
    genuinely malformed JSON request from a multipart upload that was mislabelled
    as JSON. The error handler uses it to return an actionable message. */
 app.use(express.json({
-  limit: '500mb',
+  limit: '2mb',
   verify: (req, res, buf) => { req.rawBodyPrefix = buf.subarray(0, 16).toString('latin1'); },
 }));
 app.use(express.urlencoded({ extended: false }));
@@ -78,7 +79,8 @@ app.get('/', (req, res) => {
   res.json({ name: 'Château254 API', version: '1.0.0', docs: '/api/health' });
 });
 app.use('/api/health', healthRoutes);
-app.use('/api/auth', authRoutes);
+const authLimiter = rateLimit({ windowMs: 15*60*1000, max: 20, standardHeaders: true, legacyHeaders: false });
+app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/menu', menuRoutes);
 app.use('/api/orders', ordersRoutes);
 app.use('/api/customers', customersRoutes);
