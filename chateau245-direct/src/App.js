@@ -226,10 +226,9 @@ const App = () => {
 
   const placeOrder = async (event, coords) => {
     event.preventDefault();
-    if (!session?.token) { navigate('/auth'); return; }
     const form = new FormData(event.currentTarget);
-    const customerName = form.get('name') || session.user.full_name || 'Customer';
-    const customerPhone = form.get('phone') || session.user.phone || '';
+    const customerName = form.get('name') || session?.user?.full_name || 'Customer';
+    const customerPhone = form.get('phone') || session?.user?.phone || '';
     const fulfillmentType = form.get('delivery_option') || 'delivery';
     const deliveryAddress = fulfillmentType === 'pickup' ? 'Pickup from Château' : (form.get('address') || 'Not specified');
     try {
@@ -245,7 +244,9 @@ const App = () => {
       }
 
       const body = {
-        user_id: session.user.id,
+        user_id: session?.user?.id,
+        customer_name: customerName,
+        customer_phone: customerPhone,
         delivery_address: deliveryAddress,
         total_amount: subtotal,
         payment_method: 'whatsapp',
@@ -259,7 +260,7 @@ const App = () => {
       };
       const res = await fetch(`${API_URL}/orders`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.token}` },
+        headers: { 'Content-Type': 'application/json', ...(session?.token ? { Authorization: `Bearer ${session.token}` } : {}) },
         body: JSON.stringify(body),
       });
       const errorPayload = await res.json().catch(() => ({}));
@@ -293,6 +294,7 @@ const App = () => {
       };
       setOrder(placedOrder);
       localStorage.setItem('chateau254_last_order', placedOrder.id);
+      window.open(placedOrder.whatsappUrl, '_blank');
       setLastOrderId(placedOrder.id);
       setCart([]);
       navigate('/confirmation');
@@ -417,7 +419,7 @@ const App = () => {
     <div className={`app-shell${showAppHeader ? ' has-app-header' : ''}`}>
       {showAppHeader && <AppHeader cartCount={cartCount} userName={session?.user?.full_name} onCart={() => navigate('/cart')} onProfile={() => navigate('/profile')} api={API_URL} />}
       <Routes>
-        <Route path="/" element={<GuestRoute user={session?.user}><Home api={API_URL} onDining={() => { switchMode('dining'); navigate('/menu'); }} onLunchAndBar={() => { switchMode('lunchbox'); navigate('/menu'); }} onEvents={() => navigate('/events')} onWines={() => navigate('/wines')} onAuth={() => navigate('/auth')} /></GuestRoute>} />
+        <Route path="/" element={<GuestRoute user={session?.user}><Home api={API_URL} onDining={() => { switchMode('dining'); navigate('/menu'); }} onLunchAndBar={() => { switchMode('lunchbox'); navigate('/menu'); }} onEvents={() => navigate('/events')} onWines={() => navigate('/wines')} onTakeout={() => navigate('/takeout')} onAuth={() => navigate('/auth')} /></GuestRoute>} />
         <Route path="/events" element={<EventsPage user={session?.user} onExploreCatering={() => { switchMode('events'); navigate('/menu'); }} />} />
         <Route path="/auth" element={<Auth onSuccess={handleAuthSuccess} onBack={() => navigate('/')} />} />
         <Route path="/admin/*" element={<ProtectedRoute user={session?.user} roles={['admin']}><AdminDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />

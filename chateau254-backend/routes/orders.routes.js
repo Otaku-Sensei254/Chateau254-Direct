@@ -1,7 +1,7 @@
 const express = require('express');
 const asyncHandler = require('../middleware/async.middleware');
 const { query } = require('../config/db');
-const { authenticate, requireRole } = require('../middleware/auth.middleware');
+const { authenticate, optionalAuthenticate, requireRole } = require('../middleware/auth.middleware');
 
 const router = express.Router();
 
@@ -66,13 +66,33 @@ router.get('/:id', authenticate, asyncHandler(async (req, res) => {
   res.json({ order: { ...result.rows[0], items: items.rows } });
 }));
 
-router.post('/', authenticate, requireRole('customer', 'admin'), asyncHandler(async (req, res) => {
-  const { user_id, delivery_address, total_amount, latitude, longitude, items = [] } = req.body;
-  if (!user_id || !delivery_address || total_amount === undefined) return res.status(400).json({ error: 'User, delivery address, and total amount are required' });
+router.post('/', optionalAuthenticate, asyncHandler(async (req, res) => {
+  const { customer_name, customer_phone, delivery_address, total_amount, latitude, longitude, items = [] } = req.body;
+  if (!delivery_address || total_amount === undefined) return res.status(400).json({ error: 'Delivery address and total amount are required' });
 
-  const userCheck = await query('SELECT id FROM users WHERE id = $1', [user_id]);
+  let resolvedUserId = req.user?.id || req.body.user_id || null;
+  if (!resolvedUserId) {
+    // Guest checkout: find or create a user by phone (or name)
+    const name = (customer_name || 'Guest').trim();
+    const phone = (customer_phone || '').trim() || null;
+    let found = null;
+    if (phone) {
+      const r = await query('SELECT id FROM users WHERE phone = $1 LIMIT 1', [phone]);
+      if (r.rowCount) found = r.rows[0].id;
+    }
+    if (!found) {
+      const r = await query(
+        'INSERT INTO users (full_name, email, password_hash, phone) VALUES ($1, $2, $3, $4) RETURNING id',
+        [name, null, null, phone],
+      );
+      found = r.rows[0].id;
+    }
+    resolvedUserId = found;
+  }
+
+  const userCheck = await query('SELECT id FROM users WHERE id = $1', [resolvedUserId]);
   if (!userCheck.rowCount) {
-    const legacyUser = await query('SELECT id, full_name, email FROM chateau_users WHERE id = $1', [user_id]);
+    const legacyUser = await query('SELECT id, full_name, email FROM chateau_users WHERE id = $1', [resolvedUserId]);
     if (legacyUser.rowCount) {
       const u = legacyUser.rows[0];
       await query(
@@ -85,7 +105,7 @@ router.post('/', authenticate, requireRole('customer', 'admin'), asyncHandler(as
   const result = await query(
     `INSERT INTO orders (user_id, delivery_address, total_amount, payment_method)
      VALUES ($1, $2, $3, 'whatsapp') RETURNING *`,
-    [user_id, delivery_address, total_amount],
+    [resolvedUserId, delivery_address, total_amount],
   );
   const order = result.rows[0];
 
@@ -94,7 +114,7 @@ router.post('/', authenticate, requireRole('customer', 'admin'), asyncHandler(as
       `INSERT INTO customer_locations (user_id, latitude, longitude, updated_at)
        VALUES ($1, $2, $3, NOW())
        ON CONFLICT (user_id) DO UPDATE SET latitude = $2, longitude = $3, updated_at = NOW()`,
-      [user_id, latitude, longitude],
+      [resolvedUserId, latitude, longitude],
     ).catch(() => {});
   }
 

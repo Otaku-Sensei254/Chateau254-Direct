@@ -246,7 +246,7 @@ const Home = ({ api, onDining, onLunchAndBar, onEvents, onTakeout, onWines, onAu
               <GiWineGlass />Wine Cellar
             </button>
             {/* Take-Out entry point kept here for when the home page button is restored. */}
-            <button className="cta-button cta-takeout is-disabled" disabled title="Take out Menu coming soon">
+            <button className="cta-button cta-takeout" onClick={onTakeout}>
               <RiEBike2Fill /> Take Out
             </button>
            

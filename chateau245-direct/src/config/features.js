@@ -13,7 +13,7 @@
    only the public Take-Out menu is withheld. Admin can still manage the
    take-out items in the meantime. */
 export const FEATURES = {
-  takeout: false,
+  takeout: true,
 };
 
 /* Convenience helpers so call sites read as intent, not as flag plumbing. */

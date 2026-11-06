@@ -52,7 +52,7 @@ const WINE_CELLAR_COLUMNS = `producer, producer_region AS "producerRegion", coll
   avg_rating AS "avgRating", rating_votes AS "ratingVotes"`;
 
 const WINE_COLUMNS = `id, name, description, price, category, subcategory, image_url AS "image", is_available AS "availability", on_offer, offer, wine_type AS "wineType", region, grape, tasting_notes AS "tastingNotes", order_index, 'wine' AS "menuType", ${WINE_CELLAR_COLUMNS}`;
-const FOOD_COLUMNS = `id, name, description, price, category, subcategory, image_url AS "image", is_available AS "availability", on_offer, offer, order_index, NULL AS "wineType", NULL AS region, NULL AS grape, NULL AS "tastingNotes"`;
+const FOOD_COLUMNS = `id, name, description, sides, price, category, subcategory, image_url AS "image", is_available AS "availability", on_offer, offer, order_index, NULL AS "wineType", NULL AS region, NULL AS grape, NULL AS "tastingNotes"`;
 
 const imageUpload = multer({
   storage: multer.memoryStorage(),
@@ -134,15 +134,15 @@ router.get('/', asyncHandler(async (req, res) => {
 }));
 
 router.post('/', authenticate, requireRole('admin'), asyncHandler(async (req, res) => {
-  const { name, description, price, category, subcategory, image_url, on_offer, offer, menu_type } = req.body;
+  const { name, description, sides, price, category, subcategory, image_url, on_offer, offer, menu_type } = req.body;
   if (!name || price === undefined || !category) return res.status(400).json({ error: 'Name, price, and category are required' });
 
   const table = resolveTable(menu_type);
   const result = await query(
-    `INSERT INTO ${table} (name, description, price, category, subcategory, image_url, on_offer, offer, order_index)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, COALESCE((SELECT MAX(order_index) FROM ${table}), -1) + 1)
+    `INSERT INTO ${table} (name, description, sides, price, category, subcategory, image_url, on_offer, offer, order_index)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, COALESCE((SELECT MAX(order_index) FROM ${table}), -1) + 1)
      RETURNING *`,
-    [name.trim(), description || '', price, category, subcategory || null, image_url || null, Boolean(on_offer), offer || null],
+    [name.trim(), description || '', sides || '', price, category, subcategory || null, image_url || null, Boolean(on_offer), offer || null],
   );
 
   const menuTypeResult = MENU_TYPE_ALIASES[(menu_type || '').toLowerCase()];
@@ -150,7 +150,7 @@ router.post('/', authenticate, requireRole('admin'), asyncHandler(async (req, re
 }));
 
 router.patch('/:id', authenticate, requireRole('admin'), asyncHandler(async (req, res) => {
-  const { name, description, price, category, subcategory, image_url, is_available, on_offer, offer, menu_type } = req.body;
+  const { name, description, sides, price, category, subcategory, image_url, is_available, on_offer, offer, menu_type } = req.body;
   const table = resolveTable(menu_type);
   const existing = await query(`SELECT image_url FROM ${table} WHERE id = $1`, [req.params.id]);
   if (!existing.rowCount) return res.status(404).json({ error: 'Menu item not found' });
@@ -159,12 +159,12 @@ router.patch('/:id', authenticate, requireRole('admin'), asyncHandler(async (req
   const result = await query(
     `UPDATE ${table} SET
       name = COALESCE($1, name), description = COALESCE($2, description),
-      price = COALESCE($3, price), category = COALESCE($4, category),
-      subcategory = COALESCE($5, subcategory),
-      image_url = COALESCE($6, image_url), is_available = COALESCE($7, is_available),
-      on_offer = COALESCE($8, on_offer), offer = COALESCE($9, offer),
-      updated_at = NOW() WHERE id = $10 RETURNING *`,
-    [name, description, price, category, subcategory, image_url, is_available, on_offer, offer, req.params.id],
+      sides = COALESCE($3, sides), price = COALESCE($4, price), category = COALESCE($5, category),
+      subcategory = COALESCE($6, subcategory),
+      image_url = COALESCE($7, image_url), is_available = COALESCE($8, is_available),
+      on_offer = COALESCE($9, on_offer), offer = COALESCE($10, offer),
+      updated_at = NOW() WHERE id = $11 RETURNING *`,
+    [name, description, sides, price, category, subcategory, image_url, is_available, on_offer, offer, req.params.id],
   );
   if (!result.rowCount) return res.status(404).json({ error: 'Menu item not found' });
 

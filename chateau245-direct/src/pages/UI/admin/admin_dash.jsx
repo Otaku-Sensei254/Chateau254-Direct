@@ -262,6 +262,7 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
       subcategory: form.get('subcategory') || null,
       price: calculatedPrice,
       description: form.get('description') || '',
+      sides: form.get('sides') || '',
       image_url: imageUrl,
       menu_type: menuType,
       is_available: true,
@@ -1118,6 +1119,18 @@ const MenuEditor = ({ item, onSave, onClose }) => {
               rows="3"
               defaultValue={item?.description || ''}
               placeholder="Short description, taste notes, or preparation details shown on menu cards..."
+              className="admin-form-textarea"
+            />
+          </div>
+
+          <div className="admin-form-group">
+            <label className="admin-field-label" htmlFor="menu-item-sides">Sides</label>
+            <textarea
+              id="menu-item-sides"
+              name="sides"
+              rows="3"
+              defaultValue={item?.sides || ''}
+              placeholder="Sides / accompaniments (one per line or comma-separated)..."
               className="admin-form-textarea"
             />
           </div>

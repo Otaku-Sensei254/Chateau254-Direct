@@ -22,7 +22,7 @@ const defaultMenuItems = [
       { label: 'Fine Dining', link: '/menu?mode=dining' },
       { label: 'Lunch & Bar', link: '/menu?mode=lunchbox' },
       /* Take-Out is temporarily disabled - shows tooltip on hover */
-      { label: 'Take-Out', link: '/menu?mode=takeout', disabled: true, tooltip: 'Take out Menu coming soon' },
+      { label: 'Take-Out', link: '/menu?mode=takeout', disabled: false },
       { label: 'Wine Cellar', link: '/wines' },
     ]
   },

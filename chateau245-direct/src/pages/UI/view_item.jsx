@@ -189,6 +189,7 @@ const ViewItem = ({ item, user, addToCart, addDineInItem, onRequireAuth, onBack,
           )}
         </div>
         <p className="detail-description">{item.description}</p>
+        {item.sides && <div className="detail-sides"><span>Sides</span><p>{item.sides}</p></div>}
         {item.notes && <div className="tasting-notes"><span>Tasting notes</span><p>{item.notes}</p></div>}
 
         <WinePairing winePairing={item.winePairing} onWinePairingSelect={onWinePairingSelect} />
@@ -200,12 +201,12 @@ const ViewItem = ({ item, user, addToCart, addDineInItem, onRequireAuth, onBack,
             passes addDineInItem only when the item was opened from the Fine
             Dining menu, so the same page keeps "Add to cart" for every other
             menu mode. */}
-        {addDineInItem ? (
+        {item?.menuType === 'takeout' ? (
+          <button className="primary-button detail-add" onClick={() => addToCart({ ...item, price: selectedPrice })}><FiPlus /> Order now</button>
+        ) : addDineInItem ? (
           <button
             className="primary-button detail-add"
             onClick={() => {
-              /* Reservations need an account, so a guest is prompted to sign in
-                 rather than silently losing the dish they picked. */
               if (!user) {
                 setAuthPromptOpen(true);
                 return;

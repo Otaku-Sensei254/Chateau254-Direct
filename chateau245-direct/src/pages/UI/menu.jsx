@@ -779,6 +779,7 @@ const Menu = ({ api,
                   <div>
                     <h2>{item.name}</h2>
                     <p>{item.description}</p>
+                    {item.sides && <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: 4 }}><strong>Sides:</strong> {item.sides}</p>}
            <div className="menu-card-price-row">
              {offerPrice ? (
                <>
