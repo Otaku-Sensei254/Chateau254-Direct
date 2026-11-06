@@ -105,10 +105,7 @@ router.post('/signup', asyncHandler(async (req, res) => {
   if (password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters' });
   const normalizedEmail = email.trim().toLowerCase();
 
-  const existingStaff = await query('SELECT id FROM chateau_users WHERE email = $1', [normalizedEmail]);
-  if (existingStaff.rowCount) return res.status(409).json({ error: 'An account with this email already exists' });
-  const existingCustomer = await query('SELECT id FROM users WHERE email = $1', [normalizedEmail]);
-  if (existingCustomer.rowCount) return res.status(409).json({ error: 'An account with this email already exists' });
+  if (existingStaff.rowCount || existingCustomer.rowCount) return res.status(409).json({ error: 'Unable to create account with this email' });
 
   const passwordHash = await bcrypt.hash(password, 12);
   const result = await query(

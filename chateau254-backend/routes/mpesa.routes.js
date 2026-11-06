@@ -105,7 +105,7 @@ router.post('/callback', asyncHandler(async (req, res) => {
   }
   const payload = req.body || {};
 
-  console.log('[M-Pesa] Callback received:', JSON.stringify(payload));
+  console.log('[M-Pesa] Callback received:', payload.CheckoutRequestID, payload.ResultCode);
 
   const checkoutRequestId = payload.CheckoutRequestID;
   const merchantRequestId = payload.MerchantRequestID;

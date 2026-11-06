@@ -43,7 +43,10 @@ router.get('/', authenticate, asyncHandler(async (req, res) => {
 }));
 
 router.get('/:id', authenticate, asyncHandler(async (req, res) => {
-  const result = await query(`${orderQuery} WHERE o.id = $1`, [req.params.id]);
+  const isAdminOrRider = req.user.roles?.some((r) => ['admin', 'rider'].includes(r)) || ['admin', 'rider'].includes(req.user.role);
+  const result = isAdminOrRider
+    ? await query(`${orderQuery} WHERE o.id = $1`, [req.params.id])
+    : await query(`${orderQuery} WHERE o.id = $1 AND o.user_id = $2`, [req.params.id, req.user.id]);
   if (!result.rowCount) return res.status(404).json({ error: 'Order not found' });
 
   // order_items.menu_item_id references whichever of the four live menu tables the item
