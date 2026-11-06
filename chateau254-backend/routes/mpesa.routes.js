@@ -91,7 +91,18 @@ router.post('/stkpush', authenticate, asyncHandler(async (req, res) => {
   }
 }));
 
+const SAFARICOM_IPS = new Set([
+  '196.201.214.200','196.201.214.206','196.201.213.114','196.201.214.207',
+  '196.201.214.208','196.201.212.127','196.201.212.128','196.201.212.129',
+  '196.201.212.132','196.201.212.136','196.201.212.138','127.0.0.1','::1',
+]);
+
 router.post('/callback', asyncHandler(async (req, res) => {
+  const callerIp = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
+  if (process.env.NODE_ENV === 'production' && !SAFARICOM_IPS.has(callerIp)) {
+    console.warn('[M-Pesa] Callback rejected from IP:', callerIp);
+    return res.status(403).json({ error: 'Forbidden' });
+  }
   const payload = req.body || {};
 
   console.log('[M-Pesa] Callback received:', JSON.stringify(payload));

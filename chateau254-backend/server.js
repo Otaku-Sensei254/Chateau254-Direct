@@ -80,7 +80,13 @@ app.get('/', (req, res) => {
 });
 app.use('/api/health', healthRoutes);
 const authLimiter = rateLimit({ windowMs: 15*60*1000, max: 20, standardHeaders: true, legacyHeaders: false });
+const uploadLimiter = rateLimit({ windowMs: 15*60*1000, max: 30, standardHeaders: true, legacyHeaders: false });
+const paymentLimiter = rateLimit({ windowMs: 15*60*1000, max: 10, standardHeaders: true, legacyHeaders: false });
 app.use('/api/auth', authLimiter, authRoutes);
+app.use('/api/payments/pesapal', paymentLimiter, pesapalRoutes);
+app.use('/api/payments/mpesa', paymentLimiter, mpesaRoutes);
+app.use('/api/promotions', uploadLimiter, promotionsRoutes);
+app.use('/api/feed', uploadLimiter, feedRoutes);
 app.use('/api/menu', menuRoutes);
 app.use('/api/orders', ordersRoutes);
 app.use('/api/customers', customersRoutes);
@@ -98,10 +104,32 @@ app.use('/api/staff', staffRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
+const jwt = require('jsonwebtoken');
+
+// Socket.io: authenticate handshake via JWT (Bearer token in auth.token or query).
+io.use((socket, next) => {
+  const token = socket.handshake.auth?.token || socket.handshake.query?.token;
+  if (!token) return next(); // anonymous allowed for public rooms; role gating below
+  try {
+    socket.user = jwt.verify(token, env.jwtSecret, { algorithms: ['HS256'] });
+  } catch (e) {
+    socket.user = null;
+  }
+  next();
+});
+
 io.on('connection', (socket) => {
   console.log(`Socket connected: ${socket.id}`);
 
   socket.on('join_room', (room) => {
+    // Gate privileged rooms by authenticated role.
+    if (room === 'admin') {
+      const roles = socket.user?.roles || (socket.user?.role ? [socket.user.role] : []);
+      if (!roles.includes('admin')) {
+        socket.emit('error', { message: 'Not authorized to join admin room' });
+        return;
+      }
+    }
     socket.join(room);
     console.log(`Socket ${socket.id} joined room: ${room}`);
   });

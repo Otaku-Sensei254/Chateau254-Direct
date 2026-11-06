@@ -38,7 +38,7 @@ router.post('/', authenticate, requireRole('admin'), asyncHandler(async (req, re
     return res.status(400).json({ error: `Unknown role: ${roleName}` });
   }
   const roleId = roleRow.rows[0].id;
-  const password = 'staff@chateau254';
+  const password = crypto.randomBytes(9).toString('base64').replace(/[^a-zA-Z0-9]/g, '').slice(0, 12) || 'Tmp' + crypto.randomBytes(4).toString('hex');
 
   const normalizedEmail = email.trim().toLowerCase();
 
@@ -77,7 +77,8 @@ router.post('/', authenticate, requireRole('admin'), asyncHandler(async (req, re
   emailService.send(normalizedEmail, 'Welcome to Château254 Staff', emailService.staffWelcomeEmail(name.trim(), normalizedEmail, roleName, staffLoginLink));
   res.status(201).json({
     staff: { ...user, roles: [roleName] },
-    resetToken, // returned so admin can share link manually until email is wired
+    temporaryPassword: password,
+    resetToken,
     resetLink: `/auth?reset=${resetToken}`,
   });
 }));

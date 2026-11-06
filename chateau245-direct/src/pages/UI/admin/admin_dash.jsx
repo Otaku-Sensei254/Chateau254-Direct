@@ -1798,7 +1798,7 @@ const StaffContent = ({ staff, api, headers, onRefresh }) => {
       const res = await fetch(`${api}/staff`, { method: 'POST', headers, body: JSON.stringify({ name, email, role, phone }) });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed');
-      setMsg(`Added ${data.staff.full_name} as ${role}. Default password: staff@chateau254`);
+      setMsg(`Added ${data.staff.full_name} as ${role}. Temporary password: ${data.temporaryPassword}`);
       setName(''); setEmail(''); setRole('staff'); setPhone(''); setOpen(false);
       onRefresh();
     } catch (err) { setMsg(err.message); }
