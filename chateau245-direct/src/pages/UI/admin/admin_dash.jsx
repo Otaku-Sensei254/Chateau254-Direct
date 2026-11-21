@@ -784,16 +784,12 @@ const ReportsContent = ({ api, headers, addToast }) => {
 
   const kes = (value) => `KES ${Number(value || 0).toLocaleString('en-KE')}`;
 
-  const reportUrl = (selected) => {
-    const params = new URLSearchParams({ period: selected });
-    if (selected === 'month' && month) params.set('month', month);
-    return `${api}/reports?${params.toString()}`;
-  };
-
   const fetchReport = useCallback(async (selected) => {
     setLoading(true);
     try {
-      const res = await fetch(reportUrl(selected), { headers });
+      const params = new URLSearchParams({ period: selected });
+      if (selected === 'month' && month) params.set('month', month);
+      const res = await fetch(`${api}/reports?${params.toString()}`, { headers });
       if (!res.ok) throw new Error('Failed to load report');
       setReport(await res.json());
     } catch (err) {
