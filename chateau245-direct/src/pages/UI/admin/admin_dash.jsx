@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FiBarChart2, FiCalendar, FiChevronDown, FiChevronLeft, FiChevronRight, FiDownload, FiEdit2, FiGift, FiGrid, FiLogOut, FiMenu, FiPackage, FiPlus, FiSave, FiSearch, FiSettings, FiShoppingBag, FiTable, FiTrash2, FiTruck, FiUpload, FiUsers, FiX, FiMap, FiCheckCircle, FiClock, FiUser, FiPhone, FiVolume2, FiVolumeX } from 'react-icons/fi';
 import Brand from '../../../components/Brand';
+import XmasTree from '../../../components/images/XmasTree.png';
+import fallingSnow from '../../../components/images/fallingSnow.png';
 import AdminFleetMap from '../../../components/AdminFleetMap';
 import { useSocket } from '../../../contexts/SocketContext';
 import { useToast } from '../../../contexts/ToastContext';
@@ -8,7 +10,7 @@ import { AdminWorkspaceSkeleton, LoaderSkeleton } from '../../../components/ui/l
 import { GrBlog } from "react-icons/gr";
 import MediaContent from '../../../components/feed/MediaContent';
 import { playSoundNotification, unlockAudio } from '../../../utils/soundEffects';
-const AdminDashboard = ({ user, token, api, onLogout }) => {
+const AdminDashboard = ({ user, token, api, onLogout, theme, onThemeChange }) => {
   const [activePage, setActivePage] = useState('Dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
@@ -522,7 +524,7 @@ const AdminDashboard = ({ user, token, api, onLogout }) => {
       {activePage === 'Promotions' && <PromotionsContent api={api} headers={headers} addToast={addToast} />}
       {activePage === 'Media' && <MediaContent api={api} headers={headers} addToast={addToast} />}
       {activePage === 'Reports' && <ReportsContent api={api} headers={headers} addToast={addToast} />}
-      {activePage === 'Settings' && <PlaceholderContent title={activePage} />}
+      {activePage === 'Settings' && <ThemeSettings theme={theme} onThemeChange={onThemeChange} />}
       {editingItem && <MenuEditor item={editingItem === true ? null : editingItem} onSave={saveMenuItem} onClose={() => setEditingItem(null)} />}
       {editingTable && <TableEditor table={editingTable === true ? null : editingTable} onSave={saveTable} onClose={() => setEditingTable(null)} />}
       {riderEditorOpen && <RiderEditor onSave={addRider} onClose={() => setRiderEditorOpen(false)} />}
@@ -773,16 +775,25 @@ const REPORTS_PERIODS = [
 
 const ReportsContent = ({ api, headers, addToast }) => {
   const [period, setPeriod] = useState('today');
+  const now = new Date();
+  const defaultMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  const [month, setMonth] = useState(defaultMonth);
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
 
   const kes = (value) => `KES ${Number(value || 0).toLocaleString('en-KE')}`;
 
+  const reportUrl = (selected) => {
+    const params = new URLSearchParams({ period: selected });
+    if (selected === 'month' && month) params.set('month', month);
+    return `${api}/reports?${params.toString()}`;
+  };
+
   const fetchReport = useCallback(async (selected) => {
     setLoading(true);
     try {
-      const res = await fetch(`${api}/reports?period=${selected}`, { headers });
+      const res = await fetch(reportUrl(selected), { headers });
       if (!res.ok) throw new Error('Failed to load report');
       setReport(await res.json());
     } catch (err) {
@@ -791,14 +802,16 @@ const ReportsContent = ({ api, headers, addToast }) => {
     } finally {
       setLoading(false);
     }
-  }, [api, headers, addToast]);
+  }, [api, headers, addToast, month]);
 
-  useEffect(() => { fetchReport(period); }, [period, fetchReport]);
+  useEffect(() => { fetchReport(period); }, [period, month, fetchReport]);
 
   const downloadPdf = async () => {
     setDownloading(true);
     try {
-      const res = await fetch(`${api}/reports/pdf?period=${period}`, { headers });
+      const pdfParams = new URLSearchParams({ period });
+      if (period === 'month' && month) pdfParams.set('month', month);
+      const res = await fetch(`${api}/reports/pdf?${pdfParams.toString()}`, { headers });
       if (!res.ok) throw new Error('Failed to generate the PDF');
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
@@ -837,6 +850,20 @@ const ReportsContent = ({ api, headers, addToast }) => {
         <button key={option.value} className={`admin-category-tab ${period === option.value ? 'active' : ''}`} onClick={() => setPeriod(option.value)}>{option.label}</button>
       ))}
     </div>
+    {period === 'month' && (
+      <div className="admin-month-picker" style={{ marginTop: 10 }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: 'var(--muted)', fontWeight: 600 }}>
+          <FiCalendar size={14} />
+          Select month:
+          <input
+            type="month"
+            value={month}
+            onChange={(e) => setMonth(e.target.value)}
+            className="admin-month-input"
+          />
+        </label>
+      </div>
+    )}
 
     {loading && <div className="admin-placeholder"><div className="admin-placeholder-icon"><FiBarChart2 /></div><h2>Loading report</h2><p>Pulling the latest figures</p></div>}
 
@@ -899,7 +926,88 @@ const ReportsContent = ({ api, headers, addToast }) => {
   </>;
 };
 
-const PlaceholderContent = ({ title }) => <div className="admin-placeholder"><div className="admin-placeholder-icon"><FiSettings /></div><h2>{title} workspace</h2><p>This section is ready for your {title.toLowerCase()} tools and data.</p></div>;
+const THEMES = [
+  { value: 'christmas', label: 'Christmas Festive', desc: 'Holiday vibe with black bg, red, green & yellow flashing lights, falling snow & tree' },
+  { value: 'black-gold', label: 'Black & Gold', desc: 'Signature midnight luxury dark rebrand with gold accents' },
+  { value: '', label: 'Default (Cream & Burgundy)', desc: 'Original heritage cream and burgundy house style' },
+];
+
+const themePreview = (value) => {
+  switch (value) {
+    case 'black-gold':
+      return (
+        <div style={{ background: '#0b0a08', color: '#f6f1e6', padding: '6px 10px', borderRadius: 8, display: 'inline-flex', gap: 8, alignItems: 'center', border: '1px solid #3f382d' }}>
+          <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ffd700', boxShadow: '0 0 8px #ffd700' }} />
+          <strong>Black & Gold</strong>
+        </div>
+      );
+    case 'christmas':
+      return (
+        <div style={{ background: '#0b0a08', color: '#f6f1e6', padding: '6px 10px', borderRadius: 8, display: 'inline-flex', gap: 6, alignItems: 'center', border: '1px solid #b08d45' }}>
+          <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#ff2222', boxShadow: '0 0 8px #ff0000' }} />
+          <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#2ebd4e', boxShadow: '0 0 8px #2ebd4e' }} />
+          <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#ffd700', boxShadow: '0 0 8px #ffd700' }} />
+          <strong style={{ letterSpacing: '0.5px' }}>Christmas</strong>
+        </div>
+      );
+    default:
+      return (
+        <div style={{ background: '#f7f3ef', color: '#211d1b', padding: '6px 10px', borderRadius: 8, display: 'inline-flex', gap: 8, alignItems: 'center', border: '1px solid #e9e1dc' }}>
+          <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#761329' }} />
+          <strong>Cream & Burgundy</strong>
+        </div>
+      );
+  }
+};
+
+const ThemeSettings = ({ theme, onThemeChange }) => {
+  const { addToast } = useToast();
+  const selected = theme || 'christmas';
+
+  const handleSelect = (value) => {
+    onThemeChange(value);
+    addToast?.(value === 'christmas' ? 'Christmas theme activated — festive lights and falling snow on!' : `Theme switched to ${value || 'Default'}`, 'success', 2500);
+  };
+
+  return (
+    <>
+      <div className="admin-content-heading">
+        <div>
+          <p className="eyebrow">Appearance & Seasons</p>
+          <h2>Theme Control</h2>
+        </div>
+      </div>
+      <p style={{ marginBottom: 20, color: 'var(--text-muted)' }}>Choose the festive season theme for the restaurant. The Christmas theme maintains the luxury black background while adding animated red, green and yellow flashing lights, falling snowflakes, ribbons and Christmas tree decor.</p>
+      <div className="admin-theme-grid">
+        {THEMES.map((t) => {
+          const active = selected === t.value || (!selected && t.value === 'christmas');
+          return (
+            <button key={t.value} className={`admin-theme-card ${active ? 'active' : ''}`} onClick={() => handleSelect(t.value)} aria-pressed={active} title={t.desc}>
+              <div className="admin-theme-card-preview">{themePreview(t.value)}</div>
+              <div className="admin-theme-card-info">
+                <strong>{t.label}</strong>
+                <span>{t.desc}</span>
+              </div>
+              {t.value === 'christmas' && <img src={XmasTree} alt="Christmas tree" className="admin-theme-card-tree" style={{ display: active ? 'block' : 'none' }} />}
+              {active && <span className="admin-theme-active-badge">Active</span>}
+            </button>
+          );
+        })}
+      </div>
+      {selected === 'christmas' && (
+        <div className="admin-theme-note">
+          <img src={fallingSnow} alt="snow" className="admin-theme-snow-img" style={{ width: 50, height: 'auto', opacity: 0.8, marginRight: 10 }} />
+          <div>
+            <strong>Christmas theme live</strong>
+            <p style={{ margin: '4px 0 0', fontSize: '12px', color: 'var(--text-soft)' }}>
+              Preserves the luxury black background with animated green, red and yellow flashing lights across the top, dual-layer falling snow with swaying snowflakes, and holiday tree accents.
+            </p>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
 
 const MenuEditor = ({ item, onSave, onClose }) => {
   const fileRef = useRef(null);

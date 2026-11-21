@@ -28,6 +28,7 @@ import WinesPage from './pages/UI/wines';
 import Cellar from './pages/UI/cellar';
 import Feed from './pages/UI/feed';
 import NotFound from './pages/UI/not_found';
+import ChristmasOverlay from './components/ChristmasOverlay';
 import { isTakeoutEnabled } from './config/features';
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
@@ -142,6 +143,28 @@ const App = () => {
   const [order, setOrder] = useState(null);
   const [lastOrderId, setLastOrderId] = useState(loadLastOrder);
   const [session, setSession] = useState(storedSession);
+  const [theme, setTheme] = useState(() => {
+    try {
+      return window.localStorage.getItem('chateau254_theme') || 'christmas';
+    } catch {
+      return 'christmas';
+    }
+  });
+
+  useEffect(() => {
+    fetch(`${API_URL}/settings/theme`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.theme?.activeTheme) {
+          setTheme(data.theme.activeTheme);
+          try {
+            window.localStorage.setItem('chateau254_theme', data.theme.activeTheme);
+          } catch {}
+          document.documentElement.dataset.theme = data.theme.activeTheme;
+        }
+      })
+      .catch(() => {});
+  }, []);
   const [initialLoading, setInitialLoading] = useState(true);
   useEffect(() => { const t = setTimeout(() => setInitialLoading(false), 600); return () => clearTimeout(t); }, []);
   const [dineInSelections, setDineInSelections] = useState([]);
@@ -366,6 +389,34 @@ const App = () => {
     setTimeout(() => navigate('/'), 0);
   };
 
+  const handleSetTheme = async (nextTheme) => {
+    const finalTheme = nextTheme || 'black-gold';
+    try {
+      window.localStorage.setItem('chateau254_theme', finalTheme);
+    } catch {}
+    setTheme(finalTheme);
+    document.documentElement.dataset.theme = finalTheme;
+
+    if (session?.token) {
+      try {
+        await fetch(`${API_URL}/settings/theme`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.token}`,
+          },
+          body: JSON.stringify({ activeTheme: finalTheme }),
+        });
+      } catch (e) {
+        console.error('Failed to sync theme with server', e);
+      }
+    }
+  };
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme || 'black-gold';
+  }, [theme]);
+
   useEffect(() => {
     if (!session?.token) return undefined;
     fetch(`${API_URL}/auth/me`, { headers: { Authorization: `Bearer ${session.token}` } })
@@ -417,12 +468,13 @@ const App = () => {
 
   return <SocketProvider token={session?.token}>
     <div className={`app-shell${showAppHeader ? ' has-app-header' : ''}`}>
+      {theme === 'christmas' && <ChristmasOverlay />}
       {showAppHeader && <AppHeader cartCount={cartCount} userName={session?.user?.full_name} onCart={() => navigate('/cart')} onProfile={() => navigate('/profile')} api={API_URL} />}
       <Routes>
         <Route path="/" element={<GuestRoute user={session?.user}><Home api={API_URL} onDining={() => { switchMode('dining'); navigate('/menu'); }} onLunchAndBar={() => { switchMode('lunchbox'); navigate('/menu'); }} onEvents={() => navigate('/events')} onWines={() => navigate('/wines')} onTakeout={() => navigate('/takeout')} onAuth={() => navigate('/auth')} /></GuestRoute>} />
         <Route path="/events" element={<EventsPage user={session?.user} onExploreCatering={() => { switchMode('events'); navigate('/menu'); }} />} />
         <Route path="/auth" element={<Auth onSuccess={handleAuthSuccess} onBack={() => navigate('/')} />} />
-        <Route path="/admin/*" element={<ProtectedRoute user={session?.user} roles={['admin']}><AdminDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
+        <Route path="/admin/*" element={<ProtectedRoute user={session?.user} roles={['admin']}><AdminDashboard user={session?.user} token={session?.token} api={API_URL} theme={theme} onThemeChange={handleSetTheme} onLogout={handleLogout} /></ProtectedRoute>} />
         <Route path="/rider" element={<ProtectedRoute user={session?.user} roles={['rider']}><RiderDashboard user={session?.user} token={session?.token} api={API_URL} onLogout={handleLogout} /></ProtectedRoute>} />
         <Route path="/booking" element={<Booking user={session?.user} token={session?.token} selectedItems={dineInSelections} onClearSelections={() => setDineInSelections([])} />} />
         <Route path="/menu" element={menuElement} />

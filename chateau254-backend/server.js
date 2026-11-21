@@ -22,6 +22,7 @@ const pesapalRoutes = require('./routes/pesapal.routes');
 const mpesaRoutes = require('./routes/mpesa.routes');
 const cellarRoutes = require('./routes/cellar.routes');
 const staffRoutes = require('./routes/staff.routes');
+const settingsRoutes = require('./routes/settings.routes');
 const { notFound, errorHandler } = require('./middleware/error.middleware');
 
 const app = express();
@@ -97,6 +98,7 @@ app.use('/api/tables', generalLimiter, tablesRoutes);
 app.use('/api/cellar', generalLimiter, cellarRoutes);
 app.use('/api/staff', generalLimiter, staffRoutes);
 app.use('/api/reports', generalLimiter, reportsRoutes);
+app.use('/api/settings', generalLimiter, settingsRoutes);
 app.use('/api/payments/pesapal', pesapalRoutes);
 app.use('/api/payments/mpesa', mpesaRoutes);
 app.use('/api/cellar', cellarRoutes);
@@ -174,6 +176,7 @@ const startServer = async () => {
     await initializePool();
     await feedRoutes.ensureFeedTable();
     await pesapalRoutes.ensurePaymentSchema();
+    await settingsRoutes.ensureSettingsTable();
     server = httpServer.listen(env.port, () => {
       console.log(`Château254 API listening on port ${env.port}`);
     });

@@ -12,6 +12,24 @@ const PERIODS = {
   month: { label: 'This Month', sql: "date_trunc('month', NOW())", next: "INTERVAL '1 month'", step: 'day' },
 };
 
+// Custom month period: resolves date range from a YYYY-MM parameter.
+const resolveCustomMonth = (monthStr) => {
+  const [year, month] = monthStr.split('-').map(Number);
+  if (!year || !month || month < 1 || month > 12) return null;
+  const from = new Date(Date.UTC(year, month - 1, 1));
+  const to = new Date(Date.UTC(year, month, 1));
+  const prevFrom = new Date(Date.UTC(year, month - 2, 1));
+  const prevTo = new Date(Date.UTC(year, month - 1, 1));
+  return {
+    label: from.toLocaleDateString(undefined, { year: 'numeric', month: 'long' }),
+    step: 'day',
+    from_ts: from,
+    to_ts: to,
+    prev_from: prevFrom,
+    prev_to: prevTo,
+  };
+};
+
 // Item names live in whichever of the four tables the item was created in, so any
 // report that groups by item has to resolve across all of them.
 const CATALOG_CTE = `
@@ -29,7 +47,12 @@ const kes = (value) => `KES ${num(value).toLocaleString('en-KE')}`;
 
 // Bounds are resolved by the database rather than the Node process so the reporting
 // window always matches the database timezone instead of the server's.
-const resolvePeriod = async (period) => {
+const resolvePeriod = async (period, month) => {
+  if (period === 'month' && month) {
+    const custom = resolveCustomMonth(month);
+    if (!custom) throw new Error('Invalid month. Use YYYY-MM format.');
+    return { ...PERIODS.month, ...custom };
+  }
   const config = PERIODS[period];
   const { rows } = await query(
     `SELECT ${config.sql} AS from_ts, ${config.sql} + ${config.next} AS to_ts,
@@ -146,8 +169,8 @@ const fetchCategories = async (fromTs, toTs) => {
   return rows.map((row) => ({ category: row.category, quantity: row.quantity, revenue: round2(row.revenue) }));
 };
 
-const buildReport = async (period) => {
-  const config = await resolvePeriod(period);
+const buildReport = async (period, month) => {
+  const config = await resolvePeriod(period, month);
   const [summary, previous, byStatus, series, topItems, categories] = await Promise.all([
     fetchSummary(config.from_ts, config.to_ts),
     fetchSummary(config.prev_from, config.prev_to),
@@ -175,31 +198,37 @@ const buildReport = async (period) => {
   };
 };
 
-const resolvePeriodParam = (req, res) => {
+const resolvePeriodParam = (req) => {
   const period = (req.query.period || 'today').toLowerCase();
+  const month = req.query.month;
   if (!PERIODS[period]) {
-    res.status(400).json({ error: `Unknown period "${req.query.period}". Expected one of: today, week, month.` });
-    return null;
+    return { error: `Unknown period "${req.query.period}". Expected one of: today, week, month.` };
   }
-  return period;
+  return { period, month };
 };
 
 router.get('/', authenticate, requireRole('admin'), asyncHandler(async (req, res) => {
-  const period = resolvePeriodParam(req, res);
-  if (!period) return undefined;
-  return res.json(await buildReport(period));
+  const parsed = resolvePeriodParam(req);
+  if (parsed.error) {
+    res.status(400).json({ error: parsed.error });
+    return undefined;
+  }
+  return res.json(await buildReport(parsed.period, parsed.month));
 }));
 
 router.get('/pdf', authenticate, requireRole('admin'), asyncHandler(async (req, res) => {
-  const period = resolvePeriodParam(req, res);
-  if (!period) return undefined;
+  const parsed = resolvePeriodParam(req);
+  if (parsed.error) {
+    res.status(400).json({ error: parsed.error });
+    return undefined;
+  }
 
-  const report = await buildReport(period);
+  const report = await buildReport(parsed.period, parsed.month);
   const pdf = await buildReportPdf(report);
   const stamp = new Date(report.generatedAt).toISOString().slice(0, 10);
 
   res.setHeader('Content-Type', 'application/pdf');
-  res.setHeader('Content-Disposition', `attachment; filename="chateau254-${period}-${stamp}.pdf"`);
+  res.setHeader('Content-Disposition', `attachment; filename="chateau254-${parsed.period}-${stamp}.pdf"`);
   res.setHeader('Content-Length', pdf.length);
   return res.send(pdf);
 }));

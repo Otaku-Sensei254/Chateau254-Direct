@@ -311,3 +311,479 @@
     --cta-wine-bg-hover: #2a251b;
     --cta-wine-text: #d8bd82;
 }
+
+/* --------------------------------------------------------------------------
+   Christmas theme — retains the original black & gold luxury palette verbatim,
+   with the festive red, green and yellow flashing lights, snowfall, ribbons and tree.
+   -------------------------------------------------------------------------- */
+:root[data-theme="christmas"] {
+    --surface-page: #0b0a08;
+    --surface-raised: #141210;
+    --surface-card: #171512;
+    --surface-sunken: #0f0e0b;
+    --surface-subtle: #1b1815;
+    --surface-hover: #211d18;
+    --surface-muted: #26221c;
+    --surface-deep: #2f2a22;
+    --surface-inverse: #050504;
+
+    --text-strong: #f6f1e6;
+    --text: #ded6c6;
+    --text-soft: #b8ae9a;
+    --text-muted: #948a78;
+    --text-faint: #8c8371;
+    --text-inverse: #f2ece1;
+    --text-on-accent: #14100a;
+
+    --border: #2c2721;
+    --border-soft: #221e19;
+    --border-strong: #3f382d;
+
+    /* Brand & Gold — restored verbatim to original gold */
+    --brand: #b08d45;
+    --brand-strong: #c9a558;
+    --brand-deep: #7a6129;
+    --brand-tint: #241d10;
+
+    --gold: #b08d45;
+    --gold-light: #cba961;
+    --gold-pale: #e0c489;
+    --gold-deep: #8a6c30;
+    --gold-darkest: #5e4a1f;
+    --gold-tint: #2a2211;
+
+    --success: #74b07a;
+    --success-strong: #8cc792;
+    --success-muted: #5f9c66;
+    --success-ink: #1a2a1c;
+    --success-tint: #16241a;
+    --danger: #d3776f;
+    --danger-tint: #2a1715;
+    --warning: #d3a05a;
+    --warning-tint: #2a2113;
+    --info: #7f9ad4;
+    --info-tint: #161d2a;
+
+    --occupied: #b18fd6;
+    --occupied-strong: #c9a9e8;
+    --occupied-tint: #241d2e;
+    --occupied-ink: #3a2f47;
+
+    --varietal-blue: #1c2a36;
+    --varietal-blue-ink: #a8c8dc;
+    --varietal-rose-ink: #f0cdd9;
+
+    --whatsapp: #25d366;
+
+    --border-on-dark: #2f2a22;
+    --border-on-dark-strong: #3f382d;
+    --text-on-dark-muted: #948a78;
+    --text-on-dark-faint: #b8ae9a;
+    --gold-ink: #cba961;
+    --gold-ink-bright: #d3a05a;
+
+    --danger-soft: #d3776f;
+    --danger-ink: #4a2b28;
+    --danger-ink-bright: #e08a82;
+    --warning-soft: #d3a05a;
+    --warning-ink: #e0c489;
+    --info-soft: #7f9ad4;
+    --info-deep: #a8c8dc;
+    --info-ink: #161d2a;
+    --success-ink-alt: #74b07a;
+    --success-ink-light: #1a2a1c;
+    --success-deep: #5f9c66;
+
+    --varietal-red: #c9707f;
+    --varietal-red-deep: #c9a961;
+    --varietal-red-ink: #cba961;
+    --varietal-white: #9dbb7d;
+    --varietal-white-ink: #cba961;
+    --varietal-sparkling-ink: #d3a05a;
+    --varietal-rose-soft: #c98fa0;
+    --varietal-rose-ink: #d9a3b1;
+    --varietal-sparkling-edge: #3f382d;
+    --varietal-amber: #d3a05a;
+
+    --info-edge: #2c3549;
+    --info-edge-ink: #a5b6f0;
+    --success-edge: #23402c;
+    --success-edge-ink: #7fd3a6;
+    --warning-edge-ink: #d3a05a;
+    --danger-edge: #3a2220;
+    --danger-edge-ink: #d3776f;
+
+    --wine: #b08d45;
+    --wine-dark: #7a6129;
+    --ink: #f6f1e6;
+    --cream: #0b0a08;
+    --muted: #948a78;
+    --line: #2c2721;
+
+    --brand-rgb: 176, 141, 69;
+    --brand-deep-rgb: 122, 97, 41;
+    --gold-rgb: 176, 141, 69;
+    --success-rgb: 116, 176, 122;
+    --danger-rgb: 211, 119, 111;
+    --warning-rgb: 211, 160, 90;
+    --info-rgb: 127, 154, 212;
+    --surface-raised-rgb: 23, 21, 18;
+    --rider-grid-cols: 1fr 1fr;
+
+    --accent-nav: #b08d45;
+    --accent-nav-deep: #8a6c30;
+
+    --hero-text: #f6f1e6;
+    --hero-text-soft: #d6cdba;
+    --hero-accent: #d8bd82;
+
+    --cta-primary-text: #14100a;
+
+    --cta-quiet-bg: rgba(20, 18, 14, 0.72);
+    --cta-quiet-bg-hover: rgba(30, 26, 20, 0.9);
+    --cta-quiet-border: rgba(216, 189, 130, 0.42);
+    --cta-quiet-border-hover: rgba(216, 189, 130, 0.75);
+    --cta-quiet-text: #e8dfcc;
+
+    --cta-wine-bg: #1c1913;
+    --cta-wine-bg-hover: #2a251b;
+    --cta-wine-text: #d8bd82;
+}
+
+/* ==========================================================================
+   Christmas Festive Overlay & Lights
+   ========================================================================== */
+
+/* String Lights Bar along top of screen */
+.christmas-lights-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 32px;
+    z-index: 10000;
+    pointer-events: none;
+    overflow: visible;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    padding: 0 40px;
+    background: transparent;
+}
+
+/* Subtle hanging wire connecting bulbs */
+.christmas-lights-bar::before {
+    content: '';
+    position: absolute;
+    top: 0px;
+    left: 0;
+    right: 0;
+    height: 8px;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.25);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 640px) {
+    .christmas-lights-bar {
+        padding: 0 16px;
+    }
+    /* On mobile, keep clean spacing by displaying every other bulb */
+    .christmas-bulb-node:nth-child(even) {
+        display: none;
+    }
+}
+
+.christmas-bulb-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    top: 3px;
+}
+
+.christmas-bulb-cap {
+    width: 6px;
+    height: 5px;
+    background: #1c201d;
+    border-radius: 2px 2px 0 0;
+    border: 1px solid #333d35;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+.christmas-bulb {
+    width: 11px;
+    height: 16px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    position: relative;
+    box-shadow: 0 0 12px 2px currentColor;
+    transition: all 0.3s ease;
+}
+
+/* Red bulb glow & flash */
+.christmas-bulb.red {
+    background: #d00000;
+    color: #ff3b3b;
+    animation: flash-red 1.3s infinite ease-in-out alternate;
+}
+
+/* Green bulb glow & flash */
+.christmas-bulb.green {
+    background: #2e7d32;
+    color: #4caf50;
+    animation: flash-green 1.5s infinite ease-in-out 0.4s alternate;
+}
+
+/* Yellow bulb glow & flash */
+.christmas-bulb.yellow {
+    background: #ffd700;
+    color: #ffea70;
+    animation: flash-yellow 1.1s infinite ease-in-out 0.8s alternate;
+}
+
+@keyframes flash-red {
+    0%, 20% {
+        background: #600000;
+        box-shadow: 0 0 4px rgba(255, 0, 0, 0.3);
+        opacity: 0.45;
+    }
+    60%, 100% {
+        background: #ff1e27;
+        box-shadow: 0 0 16px 5px rgba(255, 30, 40, 0.95), 0 0 30px rgba(255, 50, 50, 0.55);
+        opacity: 1;
+    }
+}
+
+@keyframes flash-green {
+    0%, 20% {
+        background: #0f4018;
+        box-shadow: 0 0 4px rgba(46, 125, 50, 0.3);
+        opacity: 0.45;
+    }
+    60%, 100% {
+        background: #2ebd4e;
+        box-shadow: 0 0 16px 5px rgba(46, 220, 80, 0.95), 0 0 30px rgba(70, 255, 120, 0.55);
+        opacity: 1;
+    }
+}
+
+@keyframes flash-yellow {
+    0%, 20% {
+        background: #665500;
+        box-shadow: 0 0 4px rgba(255, 215, 0, 0.3);
+        opacity: 0.45;
+    }
+    60%, 100% {
+        background: #ffea38;
+        box-shadow: 0 0 18px 6px rgba(255, 235, 56, 0.95), 0 0 32px rgba(255, 240, 90, 0.6);
+        opacity: 1;
+    }
+}
+
+/* ==========================================================================
+   Falling Snow & Snowflakes Animation
+   ========================================================================== */
+
+.christmas-snow-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 998;
+    overflow: hidden;
+}
+
+/* Layer 1: Gentle snowfall drift */
+.christmas-snow-drift-layer1 {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 200%;
+    background-repeat: repeat;
+    background-size: 500px 281px;
+    opacity: 0.35;
+    mix-blend-mode: screen;
+    animation: snow-drift-fall 20s linear infinite;
+}
+
+/* Layer 2: Secondary falling snow layer */
+.christmas-snow-drift-layer2 {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 200%;
+    background-repeat: repeat;
+    background-size: 400px 225px;
+    opacity: 0.25;
+    mix-blend-mode: screen;
+    animation: snow-drift-fall-sway 14s linear infinite;
+}
+
+@keyframes snow-drift-fall {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(50%); }
+}
+
+@keyframes snow-drift-fall-sway {
+    0% { transform: translateY(0) translateX(0); }
+    50% { transform: translateY(25%) translateX(15px); }
+    100% { transform: translateY(50%) translateX(0); }
+}
+
+/* Delicate falling snowflake particles */
+.christmas-snowflake {
+    position: absolute;
+    top: -30px;
+    color: #ffffff;
+    user-select: none;
+    pointer-events: none;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 0 0 16px rgba(200, 230, 255, 0.5);
+    animation: snowflake-fall-down linear infinite;
+    opacity: 0;
+}
+
+@keyframes snowflake-fall-down {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: var(--snow-opacity, 0.7);
+    }
+    90% {
+        opacity: var(--snow-opacity, 0.7);
+    }
+    100% {
+        transform: translateY(105vh) translateX(var(--snow-drift, 30px)) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* ==========================================================================
+   Christmas Ribbons & Tree Accents
+   ========================================================================== */
+
+/* Top Right Red Ribbon */
+.christmas-ribbon-right {
+    position: fixed;
+    top: 6px;
+    right: 12px;
+    width: 95px;
+    height: auto;
+    z-index: 10001;
+    pointer-events: none;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.65));
+    transform-origin: top right;
+    animation: ribbon-sway 4s ease-in-out infinite alternate;
+}
+
+/* Top Left Green Ribbon */
+.christmas-ribbon-left {
+    position: fixed;
+    top: 6px;
+    left: 12px;
+    width: 85px;
+    height: auto;
+    z-index: 10001;
+    pointer-events: none;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.65));
+    transform-origin: top left;
+    animation: ribbon-sway-alt 4.5s ease-in-out infinite alternate;
+}
+
+@keyframes ribbon-sway {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(3deg); }
+}
+
+@keyframes ribbon-sway-alt {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(-3deg); }
+}
+
+/* Remove red ribbon on smaller screens */
+@media (max-width: 768px) {
+    .christmas-ribbon-right {
+        display: none !important;
+    }
+    .christmas-ribbon-left {
+        width: 60px;
+        top: 4px;
+        left: 8px;
+    }
+}
+
+/* Floating Christmas Tree Widget at Bottom Right */
+.christmas-tree-widget {
+    position: fixed;
+    bottom: 22px;
+    right: 22px;
+    z-index: 997;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.christmas-tree-widget:hover {
+    transform: translateY(-4px) scale(1.05);
+}
+
+.christmas-tree-img {
+    width: 68px;
+    height: auto;
+    filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 18px rgba(255, 215, 0, 0.45));
+    animation: tree-gentle-glow 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes tree-gentle-glow {
+    0% {
+        transform: rotate(-1.5deg);
+        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
+    }
+    100% {
+        transform: rotate(1.5deg);
+        filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 22px rgba(255, 215, 0, 0.65));
+    }
+}
+
+.christmas-tree-badge {
+    margin-top: 4px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: rgba(14, 18, 15, 0.88);
+    border: 1px solid rgba(255, 215, 0, 0.5);
+    color: #ffd700;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+}
+
+.christmas-tree-close {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(30, 30, 30, 0.9);
+    border: 1px solid rgba(255, 215, 0, 0.4);
+    color: #e5e5e5;
+    font-size: 13px;
+    line-height: 1;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.christmas-tree-close:hover {
+    background: #c1121f;
+    color: #ffffff;
+}
